@@ -1,0 +1,226 @@
+[
+  {
+    "id": "festival-spring-festivals",
+    "name": "Spring Festivals",
+    "season": null,
+    "day": null,
+    "orderable": false,
+    "description": null
+  },
+  {
+    "id": "festival-new-years-day",
+    "name": "New Year's Day",
+    "season": null,
+    "day": null,
+    "orderable": false,
+    "description": "New Year's Day (元日(がんじつ), Ganjitsu) is the held on the 1st of spring. Various adults in the game may give the protagonist an allowance for the new year. After the protagonist gets married, adults will no longer give any money. If either Noel or Luna are born, the protagonist will have the option to give their child 500G or nothing."
+  },
+  {
+    "id": "festival-cooking-contest",
+    "name": "Cooking Contest",
+    "season": "Spring",
+    "day": 6,
+    "orderable": true,
+    "description": "\"Participants will submit their favorite dish to see who has the best cooking. The creator of the most delicious dish will be the winner.\"\n―Volkanon[src] Spring 6th (Must be ordered with Prince/ss Points.) The Cooking Contest (お料理大会, O-Ryouri Taikai) is a festival in Rune Factory 4. It is held on the 6th of spring and dishes can be submitted to Volkanon between 11:00 and 18:00. Various traits are considered for the dishes assessment, such as HP and RP recovery, cooking level, and if it's self-ma"
+  },
+  {
+    "id": "festival-bean-toss-contest",
+    "name": "Bean Toss Contest",
+    "season": "Spring",
+    "day": 10,
+    "orderable": true,
+    "description": "Spring 10th (Must be ordered with Prince/ss Points.) The Bean Toss Contest (豆まき大会, Mamemaki Taikai) is held on the 10th of spring. Frey or Lest will play the role of a demon and others will throw beans at him or her. Getting hit by green beans will give points and brown beans will give more, then pink. The more times they are hit in a row, the greater the number of points they'll receive. If hit by a Failed Dish, they will lose all their points. Just like the Bean Throwing Festival in Rune Facto"
+  },
+  {
+    "id": "festival-fishing-frenzy-contest",
+    "name": "Fishing Frenzy Contest",
+    "season": "Spring",
+    "day": 15,
+    "orderable": false,
+    "description": "Spring 15th The Fishing Frenzy Contest (大漁釣り大会) is held on the 15th of Spring. Try and catch as many fish as you can in the time limit. Good spots for this are the bridge below the town (small area, so fish respawn & notice you faster) and the town lake."
+  },
+  {
+    "id": "festival-de-fluffing-festival",
+    "name": "De-Fluffing Festival",
+    "season": "Spring",
+    "day": 19,
+    "orderable": true,
+    "description": "Lest chopping off wool *Spring 19th (Must be ordered with Prince/ss Points.) The De-Fluffing Festival (モコモコ感謝祭, Moko-Moko Kanshasai) is held on the 19th of Spring. Try and sheer as much wool off of a giant Wooly as you can in a given time limit. Each attack dealt to the Wooly will earn points, with slower moving weapons being worth more points per hit. Regular sized Woolies will also appear on the field, and can be attacked for fewer points. If you finish shearing one large Wooly before time is "
+  },
+  {
+    "id": "festival-spring-harvest-festival",
+    "name": "Spring Harvest Festival",
+    "season": null,
+    "day": null,
+    "orderable": false,
+    "description": "The Spring Harvest Festival (春の野菜大会, Haru no Yasai Taikai) is held on the 28th of spring. Bring a veggie or flower to Volkanon between 11:00 and 18:00. While the item you bring doesn't need to be seasonal, you will gain extra points if it is. Other things that earn points are crop level, whether or not the vegetable is giant, and duration of growth. After the crop has been evaluated, you will have the chance to appeal it, and three villagers will ask you questions about the crop, or your confide"
+  },
+  {
+    "id": "festival-summer-festivals",
+    "name": "Summer Festivals",
+    "season": null,
+    "day": null,
+    "orderable": false,
+    "description": null
+  },
+  {
+    "id": "festival-beach-day",
+    "name": "Beach Day",
+    "season": null,
+    "day": null,
+    "orderable": false,
+    "description": "Beach Day (湖開き, Mizuumi Hiraki) is held on the 1st of summer. It celebrates the opening of the beach. The townsfolk walk around and talk about the beach and swimming. The bachelors and bachelorettes wear bathing suits as well."
+  },
+  {
+    "id": "festival-turnip-festival",
+    "name": "Turnip Festival",
+    "season": null,
+    "day": null,
+    "orderable": true,
+    "description": "The Turnip Festival (せまるカブ祭り, Semaru Kabu Matsuri) is held on the 11th of summer. (Must be ordered with Prince/ss Points.) Turnips will appear and float across the screen, and you will be provided balls to toss at them. The more turnips you hit in a single toss, the more points each will be worth. Big, pink and gold turnips are worth more points. Yellow balls that appear can hit multiple turnips at once."
+  },
+  {
+    "id": "festival-big-catch-contest",
+    "name": "Big Catch Contest",
+    "season": null,
+    "day": null,
+    "orderable": false,
+    "description": "The Big Catch Contest (大物釣り大会, Oomono Tsuri Taikai) is held on the 15th of summer. Try and catch the largest you can in the time limit. Watch out, though. If you have Dylas in town, he has a tendency to hook things well over 100 inches long. However, whatever the biggest size you caught last year was will carry over, so you only really need to break the record for the previous year."
+  },
+  {
+    "id": "festival-firefly-festival",
+    "name": "Firefly Festival",
+    "season": null,
+    "day": null,
+    "orderable": false,
+    "description": "The Firefly Festival (ほたるび祭り, Hotarubi Matsuri) is held on the 19th of summer. Go on a date with a boyfriend/girlfriend/spouse at Dragon Lake. They must be invited the previous day. The time of meeting will be 19 hundred hours. (If a sub-event is active involving your potential date, they will be unable to be invited.)"
+  },
+  {
+    "id": "festival-buddy-battle",
+    "name": "Buddy Battle",
+    "season": null,
+    "day": null,
+    "orderable": false,
+    "description": "The Buddy Battle (ペット大会, Petto Taikai) is held on the 24th of summer. This is a monster battling contest where you will pick a maximum of two monsters from your barn to fight in a tournament. The higher their level and love level is, the better they will perform because you cannot influence them in any way during the fights. Having monsters with about 6-7 love will just be able to win. A warning, however, if you have Leon in town, his monsters are always in the final round and are very tough to "
+  },
+  {
+    "id": "festival-summer-harvest-festival",
+    "name": "Summer Harvest Festival",
+    "season": null,
+    "day": null,
+    "orderable": false,
+    "description": "The Summer Harvest Festival (夏の野菜大会, Natsu no Yasai Taikai) is held on the 28th of summer. Bring a veggie or flower to Volkanon between 11:00 and 18:00. While the item you bring doesn't need to be seasonal, you will gain extra points if it is. Other things that earn points are crop level, and duration of growth. After the crop has been evaluated, you will have the chance to appeal it, and three villagers will ask you questions about the crop, or your confidence in it. Each question you answer co"
+  },
+  {
+    "id": "festival-fall-festivals",
+    "name": "Fall Festivals",
+    "season": null,
+    "day": null,
+    "orderable": false,
+    "description": null
+  },
+  {
+    "id": "festival-eating-contest",
+    "name": "Eating Contest",
+    "season": "Fall",
+    "day": 4,
+    "orderable": true,
+    "description": "Fall 4th (Must be ordered with Prince/ss Points.) You will be running around the screen, along with a few other villagers, picking up and eating different veggies and ready-made dishes. In order to eat the food quickly to score more points, you need to hit your B-Button rapidly. Large fruit are worth more points than regular ones, but the most points will come from cooked dishes. Don't eat failed dishes or you will lose points!"
+  },
+  {
+    "id": "festival-valentines-day",
+    "name": "Valentine's Day",
+    "season": "Fall",
+    "day": 12,
+    "orderable": false,
+    "description": "Fall 12th On this day, the girls in town will hand out cookies. Any girl with a good standing will give the main character, regardless of their gender, a plain cookie. Any character will accept them, though Frey's cookies will be received as \"Friendship Cookies\" if given to a bachelorette. If Lest has a wife or girlfriend, talk to her before the event and she will arrange a special time to meet up with you and gift hers. Cookies are not sold on this day and must be obtained another way. List of "
+  },
+  {
+    "id": "festival-fish-variety-contest",
+    "name": "Fish Variety Contest",
+    "season": "Fall",
+    "day": 15,
+    "orderable": true,
+    "description": "Autumn 15th (Must be ordered with Prince/ss Points.) Catch as many different types of fish as you can. It is best not to stay in one fishing spot for the whole contest. Use your Airship to fly to other Lakes and Rivers that you have found while exploring. 8+ fish should catch you first place."
+  },
+  {
+    "id": "festival-handicraft-contest",
+    "name": "Handicraft Contest",
+    "season": "Fall",
+    "day": 19,
+    "orderable": true,
+    "description": "Autumn 19th (Must be ordered with Prince/ss Points.) Present a weapon or equipment to Volkanon in the Town Center to be judged. The final score depends on whether the submission is crafted by the player, the crafting recipe's level, the sum of levels and rarity of the ingredients used in both its creation and upgrades, and lastly whether it inherits stats from another equipment. The exact formula is as follows: (Hand-crafted)*200 + (Recipe LV)*3 + (Ing. LV)*6 + (Ing. Rarity)*4 + (Inherit)*60. An"
+  },
+  {
+    "id": "festival-white-day",
+    "name": "White Day",
+    "season": "Fall",
+    "day": 25,
+    "orderable": false,
+    "description": "Fall 25th On this day, the boys in town will handing out cookies. Any guy you're on good terms with may give you one. If you have a husband or boyfriend, talk to him before the event and he will arrange a special time to meet up with you and gift his. List of characters who give out cookies Any bachelor\nPorcoline\nJones\nVolkanon\nBado"
+  },
+  {
+    "id": "festival-autumn-harvest-festival",
+    "name": "Autumn Harvest Festival",
+    "season": "Fall",
+    "day": 28,
+    "orderable": false,
+    "description": "Fall 28th Bring a veggie or flower to Volkanon between 11:00 and 18:00. While the item you bring doesn't need to be seasonal, you will gain extra points if it is. Other things that earn points are crop level, and duration of growth. After the crop has been evaluated, you will have the chance to appeal it, and three villagers will ask you questions about the crop, or your confidence in it. Each question you answer correctly will earn additional points."
+  },
+  {
+    "id": "festival-winter-festivals",
+    "name": "Winter Festivals",
+    "season": null,
+    "day": null,
+    "orderable": false,
+    "description": null
+  },
+  {
+    "id": "festival-turnip-flurry",
+    "name": "Turnip Flurry",
+    "season": "Winter",
+    "day": 5,
+    "orderable": true,
+    "description": "Winter 5th (Must be ordered with Prince/ss Points.) As opposed to throwing balls at turnips as in the Turnip Festival, in the Turnip Flurry you throw turnips at your fellow villagers. In order of least to most, the points go White Turnip, Pink Turnip, Gold Turnip. Throwing a failed dish at an opponent will temporally stun them. This festival can be replayed in the Trophy Room."
+  },
+  {
+    "id": "festival-quiz-contest",
+    "name": "Quiz Contest",
+    "season": "Winter",
+    "day": 13,
+    "orderable": true,
+    "description": "Winter 13th (Must be ordered with Prince/ss Points.) A true or false contest about various people and places around town. Questions range from \"Kiel is a girl,\" to \"The sign over Porcoline's Restaurant is a fork and spoon.\" You and three other villagers will compete in this event, where you will answer questions by moving between boxes drawn in the snow to indicate true or false. There are 7 questions, and for each answered correctly, you will earn one point. The final question is worth anywhere"
+  },
+  {
+    "id": "festival-catch-the-most-squid",
+    "name": "Catch the Most Squid",
+    "season": "Winter",
+    "day": 15,
+    "orderable": true,
+    "description": "Winter 15th (Must be ordered with Prince/ss Points.) Pretty self-explanatory. Catch the most squid in order to win 1st place."
+  },
+  {
+    "id": "festival-christmas",
+    "name": "Christmas",
+    "season": "Winter",
+    "day": 25,
+    "orderable": false,
+    "description": "Winter 25th A couples' event. If you have a boyfriend, girlfriend, or spouse, then talk to them on the 24th and see if they'd be interested in going out with you at 19:00 on this day."
+  },
+  {
+    "id": "festival-winter-harvest-festival",
+    "name": "Winter Harvest Festival",
+    "season": "Winter",
+    "day": 28,
+    "orderable": false,
+    "description": "Winter 28th Bring a veggie or flower to Volkanon between 11:00 and 18:00. While the item you bring doesn't need to be seasonal, you will gain extra points if it is. Other things that earn points are crop level, and duration of growth. After the crop has been evaluated, you will have the chance to appeal it, and three villagers will ask you questions about the crop, or your confidence in it. Each question you answer correctly will earn additional points."
+  },
+  {
+    "id": "festival-new-years-eve",
+    "name": "New Year's Eve",
+    "season": "Winter",
+    "day": 30,
+    "orderable": false,
+    "description": "Winter 30th"
+  }
+]

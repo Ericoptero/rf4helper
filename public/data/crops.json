@@ -1,0 +1,1939 @@
+{
+  "regularCrops": [
+    {
+      "id": "crop-turnip",
+      "name": "Turnip",
+      "itemId": "item-turnip",
+      "goodSeasons": [
+        "Summer",
+        "Fall"
+      ],
+      "badSeasons": [],
+      "growTime": 3,
+      "seedBuy": 10,
+      "harvested": 2,
+      "regrows": false,
+      "cropSell": 13
+    },
+    {
+      "id": "crop-potato",
+      "name": "Potato",
+      "itemId": "item-potato",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 80,
+      "harvested": 3,
+      "regrows": false,
+      "cropSell": 27
+    },
+    {
+      "id": "crop-spinach",
+      "name": "Spinach",
+      "itemId": "item-spinach",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [],
+      "growTime": 2,
+      "seedBuy": 60,
+      "harvested": 2,
+      "regrows": false,
+      "cropSell": 35
+    },
+    {
+      "id": "crop-pumpkin",
+      "name": "Pumpkin",
+      "itemId": "item-pumpkin",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 200,
+      "harvested": 3,
+      "regrows": true,
+      "cropSell": 18
+    },
+    {
+      "id": "crop-radish",
+      "name": "Radish",
+      "itemId": "item-radish",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 5,
+      "seedBuy": 120,
+      "harvested": 1,
+      "regrows": false,
+      "cropSell": 48
+    },
+    {
+      "id": "crop-strawberry",
+      "name": "Strawberry",
+      "itemId": "item-strawberry",
+      "goodSeasons": [
+        "Spring",
+        "Fall"
+      ],
+      "badSeasons": [],
+      "growTime": 16,
+      "seedBuy": 400,
+      "harvested": 6,
+      "regrows": true,
+      "cropSell": 25
+    },
+    {
+      "id": "crop-yam",
+      "name": "Yam",
+      "itemId": "item-yam",
+      "goodSeasons": [
+        "Summer",
+        "Fall"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 8,
+      "seedBuy": 250,
+      "harvested": 5,
+      "regrows": false,
+      "cropSell": 56
+    },
+    {
+      "id": "crop-pink-turnip",
+      "name": "Pink Turnip",
+      "itemId": "item-pink-turnip",
+      "goodSeasons": [
+        "Spring"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 11,
+      "seedBuy": 160,
+      "harvested": 4,
+      "regrows": false,
+      "cropSell": 58
+    },
+    {
+      "id": "crop-cucumber",
+      "name": "Cucumber",
+      "itemId": "item-cucumber",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 5,
+      "seedBuy": 320,
+      "harvested": 5,
+      "regrows": true,
+      "cropSell": 4
+    },
+    {
+      "id": "crop-carrot",
+      "name": "Carrot",
+      "itemId": "item-carrot",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [],
+      "growTime": 10,
+      "seedBuy": 400,
+      "harvested": 3,
+      "regrows": false,
+      "cropSell": 74
+    },
+    {
+      "id": "crop-corn",
+      "name": "Corn",
+      "itemId": "item-corn",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 450,
+      "harvested": 1,
+      "regrows": false,
+      "cropSell": 78
+    },
+    {
+      "id": "crop-leek",
+      "name": "Leek",
+      "itemId": "item-leek",
+      "goodSeasons": [
+        "Spring",
+        "Fall"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 9,
+      "seedBuy": 680,
+      "harvested": 1,
+      "regrows": false,
+      "cropSell": 102
+    },
+    {
+      "id": "crop-hot-hot-fruit",
+      "name": "Hot-Hot Fruit",
+      "itemId": "item-hot-hot-fruit",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 31,
+      "seedBuy": 1200,
+      "harvested": 5,
+      "regrows": false,
+      "cropSell": 106
+    },
+    {
+      "id": "crop-green-pepper",
+      "name": "Green Pepper",
+      "itemId": "item-green-pepper",
+      "goodSeasons": [
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 800,
+      "harvested": 5,
+      "regrows": true,
+      "cropSell": 7
+    },
+    {
+      "id": "crop-cabbage",
+      "name": "Cabbage",
+      "itemId": "item-cabbage",
+      "goodSeasons": [
+        "Spring",
+        "Fall"
+      ],
+      "badSeasons": [],
+      "growTime": 8,
+      "seedBuy": 980,
+      "harvested": 3,
+      "regrows": false,
+      "cropSell": 132
+    },
+    {
+      "id": "crop-onion",
+      "name": "Onion",
+      "itemId": "item-onion",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [],
+      "growTime": 18,
+      "seedBuy": 1480,
+      "harvested": 5,
+      "regrows": false,
+      "cropSell": 140
+    },
+    {
+      "id": "crop-bok-choy",
+      "name": "Bok Choy",
+      "itemId": "item-bok-choy",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 5,
+      "seedBuy": 1000,
+      "harvested": 4,
+      "regrows": false,
+      "cropSell": 220
+    },
+    {
+      "id": "crop-eggplant",
+      "name": "Eggplant",
+      "itemId": "item-eggplant",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 720,
+      "harvested": 4,
+      "regrows": true,
+      "cropSell": 5
+    },
+    {
+      "id": "crop-pineapple",
+      "name": "Pineapple",
+      "itemId": "item-pineapple",
+      "goodSeasons": [
+        "Summer"
+      ],
+      "badSeasons": [
+        "Others"
+      ],
+      "growTime": 28,
+      "seedBuy": 2800,
+      "harvested": 3,
+      "regrows": true,
+      "cropSell": 71
+    },
+    {
+      "id": "crop-tomato",
+      "name": "Tomato",
+      "itemId": "item-tomato",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 1880,
+      "harvested": 3,
+      "regrows": true,
+      "cropSell": 37
+    },
+    {
+      "id": "crop-pink-melongold-melon",
+      "name": "Pink Melon(Gold Melon)",
+      "itemId": "item-pink-melongold-melon",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 2120,
+      "harvested": 2,
+      "regrows": true,
+      "cropSell": 60
+    },
+    {
+      "id": "crop-golden-potato",
+      "name": "Golden Potato",
+      "itemId": "item-golden-potato",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 50,
+      "seedBuy": 4000,
+      "harvested": 3,
+      "regrows": false,
+      "cropSell": 280
+    },
+    {
+      "id": "crop-golden-cabbage",
+      "name": "Golden Cabbage",
+      "itemId": "item-golden-cabbage",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 90,
+      "seedBuy": 5000,
+      "harvested": 3,
+      "regrows": false,
+      "cropSell": 327
+    },
+    {
+      "id": "crop-golden-turnip",
+      "name": "Golden Turnip",
+      "itemId": "item-golden-turnip",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 90,
+      "seedBuy": 10000,
+      "harvested": 3,
+      "regrows": false,
+      "cropSell": 555
+    },
+    {
+      "id": "crop-golden-pumpkin",
+      "name": "Golden Pumpkin",
+      "itemId": "item-golden-pumpkin",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 70,
+      "seedBuy": 4500,
+      "harvested": 3,
+      "regrows": true,
+      "cropSell": 107
+    }
+  ],
+  "giantCrops": [
+    {
+      "id": "crop-tyrant-turnip",
+      "name": "Tyrant Turnip",
+      "itemId": "item-tyrant-turnip",
+      "goodSeasons": [
+        "Summer",
+        "Fall"
+      ],
+      "badSeasons": [],
+      "growTime": 3,
+      "seedBuy": 2,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-princely-potato",
+      "name": "Princely Potato",
+      "itemId": "item-princely-potato",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 3,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-sovereign-spinach",
+      "name": "Sovereign Spinach",
+      "itemId": "item-sovereign-spinach",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [],
+      "growTime": 2,
+      "seedBuy": 2,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-doom-pumpkin",
+      "name": "Doom Pumpkin",
+      "itemId": "item-doom-pumpkin",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 3,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-noble-radish",
+      "name": "Noble Radish",
+      "itemId": "item-noble-radish",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 5,
+      "seedBuy": 1,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-sultan-strawberry",
+      "name": "Sultan Strawberry",
+      "itemId": "item-sultan-strawberry",
+      "goodSeasons": [
+        "Spring",
+        "Fall"
+      ],
+      "badSeasons": [],
+      "growTime": 6,
+      "seedBuy": 6,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-lordly-yam",
+      "name": "Lordly Yam",
+      "itemId": "item-lordly-yam",
+      "goodSeasons": [
+        "Summer",
+        "Fall"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 8,
+      "seedBuy": 5,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-colossal-pink",
+      "name": "Colossal Pink",
+      "itemId": "item-colossal-pink",
+      "goodSeasons": [
+        "Spring"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 11,
+      "seedBuy": 4,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-kaiser-cucumber",
+      "name": "Kaiser Cucumber",
+      "itemId": "item-kaiser-cucumber",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 5,
+      "seedBuy": 5,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-royal-carrot",
+      "name": "Royal Carrot",
+      "itemId": "item-royal-carrot",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [],
+      "growTime": 10,
+      "seedBuy": 3,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-gigant-corn",
+      "name": "Gigant Corn",
+      "itemId": "item-gigant-corn",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 1,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-legendary-leek",
+      "name": "Legendary Leek",
+      "itemId": "item-legendary-leek",
+      "goodSeasons": [
+        "Spring",
+        "Fall"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 9,
+      "seedBuy": 1,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-giant-hot-hot-fruit",
+      "name": "Giant Hot-Hot Fruit",
+      "itemId": "item-giant-hot-hot-fruit",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 31,
+      "seedBuy": 5,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-green-pepper-rex",
+      "name": "Green Pepper Rex",
+      "itemId": "item-green-pepper-rex",
+      "goodSeasons": [
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 5,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-king-cabbage",
+      "name": "King Cabbage",
+      "itemId": "item-king-cabbage",
+      "goodSeasons": [
+        "Spring",
+        "Fall"
+      ],
+      "badSeasons": [],
+      "growTime": 8,
+      "seedBuy": 3,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-ultra-onion",
+      "name": "Ultra Onion",
+      "itemId": "item-ultra-onion",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [],
+      "growTime": 18,
+      "seedBuy": 5,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-boss-bok-choy",
+      "name": "Boss Bok Choy",
+      "itemId": "item-boss-bok-choy",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 5,
+      "seedBuy": 4,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-emperor-eggplant",
+      "name": "Emperor Eggplant",
+      "itemId": "item-emperor-eggplant",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 4,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-king-pineapple",
+      "name": "King Pineapple",
+      "itemId": "item-king-pineapple",
+      "goodSeasons": [
+        "Summer"
+      ],
+      "badSeasons": [
+        "Others"
+      ],
+      "growTime": 28,
+      "seedBuy": 3,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-titan-tomato",
+      "name": "Titan Tomato",
+      "itemId": "item-titan-tomato",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 3,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-conqueror-melon",
+      "name": "Conqueror Melon",
+      "itemId": "item-conqueror-melon",
+      "goodSeasons": [
+        "Spring",
+        "Summer"
+      ],
+      "badSeasons": [
+        "Winter"
+      ],
+      "growTime": 7,
+      "seedBuy": 2,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-gold-prince-potato",
+      "name": "Gold Prince Potato",
+      "itemId": "item-gold-prince-potato",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 50,
+      "seedBuy": 3,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-golden-king-cabbage",
+      "name": "Golden King Cabbage",
+      "itemId": "item-golden-king-cabbage",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 90,
+      "seedBuy": 3,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-golden-tyrant-turnip",
+      "name": "Golden Tyrant Turnip",
+      "itemId": "item-golden-tyrant-turnip",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 90,
+      "seedBuy": 3,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-golden-doom-pumpkin",
+      "name": "Golden Doom Pumpkin",
+      "itemId": "item-golden-doom-pumpkin",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "Summer"
+      ],
+      "growTime": 70,
+      "seedBuy": 3,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    }
+  ],
+  "seeds": [
+    {
+      "id": "crop-fodder-seed",
+      "name": "Fodder Seed",
+      "itemId": "item-fodder-seed",
+      "goodSeasons": [
+        "30 G"
+      ],
+      "badSeasons": [
+        "3 G"
+      ],
+      "growTime": 60,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-grape-tree-seed",
+      "name": "Grape Tree Seed",
+      "itemId": "item-grape-tree-seed",
+      "goodSeasons": [
+        "6000 G"
+      ],
+      "badSeasons": [
+        "600 G"
+      ],
+      "growTime": 120,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-orange-tree-seed",
+      "name": "Orange Tree Seed",
+      "itemId": "item-orange-tree-seed",
+      "goodSeasons": [
+        "5",
+        "000 G"
+      ],
+      "badSeasons": [
+        "500 G"
+      ],
+      "growTime": 80,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-apple-tree-seed",
+      "name": "Apple Tree Seed",
+      "itemId": "item-apple-tree-seed",
+      "goodSeasons": [
+        "7",
+        "000 G"
+      ],
+      "badSeasons": [
+        "700 G"
+      ],
+      "growTime": 150,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-shining-seedtwinkle-seed",
+      "name": "Shining Seed(Twinkle Seed)",
+      "itemId": "item-shining-seedtwinkle-seed",
+      "goodSeasons": [
+        "3",
+        "000 G"
+      ],
+      "badSeasons": [
+        "300 G"
+      ],
+      "growTime": 40,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-shield-seed",
+      "name": "Shield Seed",
+      "itemId": "item-shield-seed",
+      "goodSeasons": [
+        "1",
+        "500 G"
+      ],
+      "badSeasons": [
+        "150 G"
+      ],
+      "growTime": 1000,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-sword-seed",
+      "name": "Sword Seed",
+      "itemId": "item-sword-seed",
+      "goodSeasons": [
+        "1",
+        "500 G"
+      ],
+      "badSeasons": [
+        "150 G"
+      ],
+      "growTime": 1000,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-dungeon-seed",
+      "name": "Dungeon Seed",
+      "itemId": "item-dungeon-seed",
+      "goodSeasons": [
+        "5",
+        "000 G"
+      ],
+      "badSeasons": [
+        "500 G"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    }
+  ],
+  "otherCrops": [
+    {
+      "id": "crop-fodder",
+      "name": "Fodder",
+      "itemId": "item-fodder",
+      "goodSeasons": [
+        "None"
+      ],
+      "badSeasons": [],
+      "growTime": 4,
+      "seedBuy": 1,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-grapes",
+      "name": "Grapes",
+      "itemId": "item-grapes",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "50"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-orange",
+      "name": "Orange",
+      "itemId": "item-orange",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "22"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-apple",
+      "name": "Apple",
+      "itemId": "item-apple",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "62"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-twinkle-treeshining-tree",
+      "name": "Twinkle Tree(Shining Tree)",
+      "itemId": "item-twinkle-treeshining-tree",
+      "goodSeasons": [
+        "Winter"
+      ],
+      "badSeasons": [
+        "38"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-magic-plant-shield",
+      "name": "Magic Plant Shield",
+      "itemId": "item-magic-plant-shield",
+      "goodSeasons": [
+        "None"
+      ],
+      "badSeasons": [
+        "12"
+      ],
+      "growTime": 1,
+      "seedBuy": null,
+      "harvested": -41,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-plant-sword",
+      "name": "Plant Sword",
+      "itemId": "item-plant-sword",
+      "goodSeasons": [
+        "None"
+      ],
+      "badSeasons": [
+        "12"
+      ],
+      "growTime": 1,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-dungeon-flowerfield-dungeon",
+      "name": "Dungeon Flower(Field Dungeon)",
+      "itemId": "item-dungeon-flowerfield-dungeon",
+      "goodSeasons": [
+        "None"
+      ],
+      "badSeasons": [
+        "18"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    }
+  ],
+  "flowers": [
+    {
+      "id": "crop-toyherb",
+      "name": "Toyherb",
+      "itemId": "item-toyherb",
+      "goodSeasons": [
+        "Spr"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 4,
+      "seedBuy": 2,
+      "harvested": 60,
+      "regrows": true,
+      "cropSell": 65
+    },
+    {
+      "id": "crop-moondrop",
+      "name": "Moondrop",
+      "itemId": "item-moondrop",
+      "goodSeasons": [
+        "Spr",
+        "Fall"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 7,
+      "seedBuy": 4,
+      "harvested": 250,
+      "regrows": true,
+      "cropSell": 115
+    },
+    {
+      "id": "crop-pink-cat",
+      "name": "Pink Cat",
+      "itemId": "item-pink-cat",
+      "goodSeasons": [
+        "Sum"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 6,
+      "seedBuy": 3,
+      "harvested": 180,
+      "regrows": true,
+      "cropSell": 110
+    },
+    {
+      "id": "crop-charm-blue",
+      "name": "Charm Blue",
+      "itemId": "item-charm-blue",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 8,
+      "seedBuy": 3,
+      "harvested": 370,
+      "regrows": true,
+      "cropSell": 220
+    },
+    {
+      "id": "crop-cherry-grass",
+      "name": "Cherry Grass",
+      "itemId": "item-cherry-grass",
+      "goodSeasons": [
+        "Spr"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 10,
+      "seedBuy": 4,
+      "harvested": 420,
+      "regrows": true,
+      "cropSell": 230
+    },
+    {
+      "id": "crop-lamp-grass",
+      "name": "Lamp Grass",
+      "itemId": "item-lamp-grass",
+      "goodSeasons": [
+        "Win"
+      ],
+      "badSeasons": [],
+      "growTime": 16,
+      "seedBuy": 3,
+      "harvested": 740,
+      "regrows": true,
+      "cropSell": 650
+    },
+    {
+      "id": "crop-blue-crystal",
+      "name": "Blue Crystal",
+      "itemId": "item-blue-crystal",
+      "goodSeasons": [
+        "Spr"
+      ],
+      "badSeasons": [
+        "Sum",
+        "Fall",
+        "Win"
+      ],
+      "growTime": 55,
+      "seedBuy": 3,
+      "harvested": 30,
+      "regrows": true,
+      "cropSell": 15000
+    },
+    {
+      "id": "crop-ironleaf",
+      "name": "Ironleaf",
+      "itemId": "item-ironleaf",
+      "goodSeasons": [
+        "Win"
+      ],
+      "badSeasons": [
+        "Sum"
+      ],
+      "growTime": 21,
+      "seedBuy": 2,
+      "harvested": 600,
+      "regrows": true,
+      "cropSell": 1111
+    },
+    {
+      "id": "crop-4-leaf-clover",
+      "name": "4-Leaf Clover",
+      "itemId": "item-4-leaf-clover",
+      "goodSeasons": [
+        "Spr",
+        "Fall"
+      ],
+      "badSeasons": [
+        "Sum"
+      ],
+      "growTime": 28,
+      "seedBuy": 3,
+      "harvested": 960,
+      "regrows": true,
+      "cropSell": 980
+    },
+    {
+      "id": "crop-fireflower",
+      "name": "Fireflower",
+      "itemId": "item-fireflower",
+      "goodSeasons": [
+        "Sum"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 42,
+      "seedBuy": 4,
+      "harvested": 5,
+      "regrows": true,
+      "cropSell": 2800
+    },
+    {
+      "id": "crop-green-crystal",
+      "name": "Green Crystal",
+      "itemId": "item-green-crystal",
+      "goodSeasons": [
+        "Sum"
+      ],
+      "badSeasons": [
+        "Spr",
+        "Fall",
+        "Win"
+      ],
+      "growTime": 70,
+      "seedBuy": 3,
+      "harvested": 30,
+      "regrows": true,
+      "cropSell": 17000
+    },
+    {
+      "id": "crop-noel-grass",
+      "name": "Noel Grass",
+      "itemId": "item-noel-grass",
+      "goodSeasons": [
+        "Win"
+      ],
+      "badSeasons": [
+        "Sum"
+      ],
+      "growTime": 33,
+      "seedBuy": 4,
+      "harvested": 2,
+      "regrows": true,
+      "cropSell": 2000
+    },
+    {
+      "id": "crop-autumn-grass",
+      "name": "Autumn Grass",
+      "itemId": "item-autumn-grass",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 29,
+      "seedBuy": 3,
+      "harvested": 2,
+      "regrows": true,
+      "cropSell": 1800
+    },
+    {
+      "id": "crop-pom-pom-grass",
+      "name": "Pom-Pom Grass",
+      "itemId": "item-pom-pom-grass",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 14,
+      "seedBuy": 3,
+      "harvested": 510,
+      "regrows": true,
+      "cropSell": 440
+    },
+    {
+      "id": "crop-red-crystal",
+      "name": "Red Crystal",
+      "itemId": "item-red-crystal",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [
+        "Spr",
+        "Sum",
+        "Win"
+      ],
+      "growTime": 80,
+      "seedBuy": 3,
+      "harvested": 30,
+      "regrows": true,
+      "cropSell": 20000
+    },
+    {
+      "id": "crop-white-crystal",
+      "name": "White Crystal",
+      "itemId": "item-white-crystal",
+      "goodSeasons": [
+        "Win"
+      ],
+      "badSeasons": [
+        "Spr",
+        "Sum",
+        "Fall"
+      ],
+      "growTime": 90,
+      "seedBuy": 3,
+      "harvested": 30,
+      "regrows": true,
+      "cropSell": 22500
+    },
+    {
+      "id": "crop-emery-flower",
+      "name": "Emery Flower",
+      "itemId": "item-emery-flower",
+      "goodSeasons": [
+        "None"
+      ],
+      "badSeasons": [],
+      "growTime": 120,
+      "seedBuy": 2,
+      "harvested": 50,
+      "regrows": true,
+      "cropSell": 55000
+    }
+  ],
+  "giantFlowers": [
+    {
+      "id": "crop-ultra-toyherb",
+      "name": "Ultra Toyherb",
+      "itemId": "item-ultra-toyherb",
+      "goodSeasons": [
+        "Spr"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 4,
+      "seedBuy": 2,
+      "harvested": 350,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-ultra-moondrop-flower",
+      "name": "Ultra Moondrop Flower",
+      "itemId": "item-ultra-moondrop-flower",
+      "goodSeasons": [
+        "Spr",
+        "Fall"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 7,
+      "seedBuy": 4,
+      "harvested": 650,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-king-pink-cat",
+      "name": "King Pink Cat",
+      "itemId": "item-king-pink-cat",
+      "goodSeasons": [
+        "Sum"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 6,
+      "seedBuy": 3,
+      "harvested": 600,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-great-charm-blue",
+      "name": "Great Charm Blue",
+      "itemId": "item-great-charm-blue",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 8,
+      "seedBuy": 3,
+      "harvested": 1,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-king-cherry-grass",
+      "name": "King Cherry Grass",
+      "itemId": "item-king-cherry-grass",
+      "goodSeasons": [
+        "Spr"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 10,
+      "seedBuy": 4,
+      "harvested": 1,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-kaiser-lamp-grass",
+      "name": "Kaiser Lamp Grass",
+      "itemId": "item-kaiser-lamp-grass",
+      "goodSeasons": [
+        "Win"
+      ],
+      "badSeasons": [],
+      "growTime": 16,
+      "seedBuy": 3,
+      "harvested": 3250,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-big-blue-crystal",
+      "name": "Big Blue Crystal",
+      "itemId": "item-big-blue-crystal",
+      "goodSeasons": [
+        "Spr"
+      ],
+      "badSeasons": [
+        "Sum",
+        "Fall",
+        "Win"
+      ],
+      "growTime": 55,
+      "seedBuy": 3,
+      "harvested": 67,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-super-ironleaf",
+      "name": "Super Ironleaf",
+      "itemId": "item-super-ironleaf",
+      "goodSeasons": [
+        "Win"
+      ],
+      "badSeasons": [
+        "Sum"
+      ],
+      "growTime": 21,
+      "seedBuy": 2,
+      "harvested": 5,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-great-4-leaf-clover",
+      "name": "Great 4-Leaf Clover",
+      "itemId": "item-great-4-leaf-clover",
+      "goodSeasons": [
+        "Spr",
+        "Fall"
+      ],
+      "badSeasons": [
+        "Sum"
+      ],
+      "growTime": 28,
+      "seedBuy": 3,
+      "harvested": 5,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-big-fireflower",
+      "name": "Big Fireflower",
+      "itemId": "item-big-fireflower",
+      "goodSeasons": [
+        "Sum"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 42,
+      "seedBuy": 4,
+      "harvested": 14,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-big-green-crystal",
+      "name": "Big Green Crystal",
+      "itemId": "item-big-green-crystal",
+      "goodSeasons": [
+        "Sum"
+      ],
+      "badSeasons": [
+        "Spr",
+        "Fall",
+        "Win"
+      ],
+      "growTime": 70,
+      "seedBuy": 3,
+      "harvested": 76,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-large-noel-grass",
+      "name": "Large Noel Grass",
+      "itemId": "item-large-noel-grass",
+      "goodSeasons": [
+        "Win"
+      ],
+      "badSeasons": [
+        "Sum"
+      ],
+      "growTime": 33,
+      "seedBuy": 4,
+      "harvested": 10,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-big-autumn-grass",
+      "name": "Big Autumn Grass",
+      "itemId": "item-big-autumn-grass",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 29,
+      "seedBuy": 3,
+      "harvested": 9,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-king-pom-pom-grass",
+      "name": "King Pom-Pom Grass",
+      "itemId": "item-king-pom-pom-grass",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [
+        "Win"
+      ],
+      "growTime": 14,
+      "seedBuy": 3,
+      "harvested": 2,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-big-red-crystal",
+      "name": "Big Red Crystal",
+      "itemId": "item-big-red-crystal",
+      "goodSeasons": [
+        "Fall"
+      ],
+      "badSeasons": [
+        "Spr",
+        "Sum",
+        "Win"
+      ],
+      "growTime": 80,
+      "seedBuy": 3,
+      "harvested": 90,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-big-white-crystal",
+      "name": "Big White Crystal",
+      "itemId": "item-big-white-crystal",
+      "goodSeasons": [
+        "Win"
+      ],
+      "badSeasons": [
+        "Spr",
+        "Sum",
+        "Fall"
+      ],
+      "growTime": 90,
+      "seedBuy": 3,
+      "harvested": 101,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-great-emery-flower",
+      "name": "Great Emery Flower",
+      "itemId": "item-great-emery-flower",
+      "goodSeasons": [
+        "None"
+      ],
+      "badSeasons": [],
+      "growTime": 120,
+      "seedBuy": 2,
+      "harvested": 250,
+      "regrows": true,
+      "cropSell": null
+    }
+  ],
+  "wild": [
+    {
+      "id": "crop-bamboo-sprout",
+      "name": "Bamboo Sprout",
+      "itemId": "item-bamboo-sprout",
+      "goodSeasons": [
+        "200G"
+      ],
+      "badSeasons": [
+        "40G"
+      ],
+      "growTime": 0,
+      "seedBuy": 3,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-mushroom",
+      "name": "Mushroom",
+      "itemId": "item-mushroom",
+      "goodSeasons": [
+        "2",
+        "000G"
+      ],
+      "badSeasons": [
+        "10G"
+      ],
+      "growTime": 0,
+      "seedBuy": 1,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-monarch-mushroom",
+      "name": "Monarch Mushroom",
+      "itemId": "item-monarch-mushroom",
+      "goodSeasons": [
+        "-"
+      ],
+      "badSeasons": [
+        "10",
+        "000G"
+      ],
+      "growTime": 0,
+      "seedBuy": 4,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-mealy-apple",
+      "name": "Mealy Apple",
+      "itemId": "item-mealy-apple",
+      "goodSeasons": [
+        "-"
+      ],
+      "badSeasons": [
+        "3000G"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-medicinal-herb",
+      "name": "Medicinal Herb",
+      "itemId": "item-medicinal-herb",
+      "goodSeasons": [
+        "80G"
+      ],
+      "badSeasons": [
+        "8G"
+      ],
+      "growTime": 0,
+      "seedBuy": 1,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-antidote-grass",
+      "name": "Antidote Grass",
+      "itemId": "item-antidote-grass",
+      "goodSeasons": [
+        "150G"
+      ],
+      "badSeasons": [
+        "6G"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-black-grass",
+      "name": "Black Grass",
+      "itemId": "item-black-grass",
+      "goodSeasons": [
+        "120G"
+      ],
+      "badSeasons": [
+        "5G"
+      ],
+      "growTime": 0,
+      "seedBuy": 9,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-orange-grass",
+      "name": "Orange Grass",
+      "itemId": "item-orange-grass",
+      "goodSeasons": [
+        "120G"
+      ],
+      "badSeasons": [
+        "5G"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-red-grass",
+      "name": "Red Grass",
+      "itemId": "item-red-grass",
+      "goodSeasons": [
+        "120G"
+      ],
+      "badSeasons": [
+        "5G"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-yellow-grass",
+      "name": "Yellow Grass",
+      "itemId": "item-yellow-grass",
+      "goodSeasons": [
+        "120G"
+      ],
+      "badSeasons": [
+        "5G"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-blue-grass",
+      "name": "Blue Grass",
+      "itemId": "item-blue-grass",
+      "goodSeasons": [
+        "120G"
+      ],
+      "badSeasons": [
+        "5G"
+      ],
+      "growTime": 0,
+      "seedBuy": 3,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-green-grass",
+      "name": "Green Grass",
+      "itemId": "item-green-grass",
+      "goodSeasons": [
+        "120G"
+      ],
+      "badSeasons": [
+        "5G"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-purple-grass",
+      "name": "Purple Grass",
+      "itemId": "item-purple-grass",
+      "goodSeasons": [
+        "120G"
+      ],
+      "badSeasons": [
+        "5G"
+      ],
+      "growTime": 0,
+      "seedBuy": 2,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-indigo-grass",
+      "name": "Indigo Grass",
+      "itemId": "item-indigo-grass",
+      "goodSeasons": [
+        "120G"
+      ],
+      "badSeasons": [
+        "5G"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-white-grass",
+      "name": "White Grass",
+      "itemId": "item-white-grass",
+      "goodSeasons": [
+        "120G"
+      ],
+      "badSeasons": [
+        "5G"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-weeds",
+      "name": "Weeds",
+      "itemId": "item-weeds",
+      "goodSeasons": [
+        "30G"
+      ],
+      "badSeasons": [
+        "1G"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-withered-grass",
+      "name": "Withered Grass",
+      "itemId": "item-withered-grass",
+      "goodSeasons": [
+        "100G"
+      ],
+      "badSeasons": [
+        "1G"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-ayngondaia-lawn",
+      "name": "Ayngondaia Lawn",
+      "itemId": "item-ayngondaia-lawn",
+      "goodSeasons": [
+        "-"
+      ],
+      "badSeasons": [
+        "33G"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    },
+    {
+      "id": "crop-elli-leaves",
+      "name": "Elli Leaves",
+      "itemId": "item-elli-leaves",
+      "goodSeasons": [
+        "3",
+        "500G"
+      ],
+      "badSeasons": [
+        "250G"
+      ],
+      "growTime": 0,
+      "seedBuy": null,
+      "harvested": 0,
+      "regrows": true,
+      "cropSell": null
+    }
+  ]
+}

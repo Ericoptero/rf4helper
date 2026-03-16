@@ -1,0 +1,2362 @@
+{
+  "shortSwords": [
+    {
+      "id": "item-broadsword",
+      "name": "Broadsword",
+      "level": 1,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 5,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-steel-sword",
+      "name": "Steel Sword",
+      "level": 3,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 29,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-steel-sword",
+      "name": "Steel Sword+",
+      "level": 4,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 48,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-cutlass",
+      "name": "Cutlass",
+      "level": 7,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 58,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-aqua-sword",
+      "name": "Aqua Sword",
+      "level": 15,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 3,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-invisiblade",
+      "name": "Invisiblade",
+      "level": 16,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 5,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-defender",
+      "name": "Defender",
+      "level": 19,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 188,
+        "def": 15,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-burning-sword",
+      "name": "Burning Sword",
+      "level": 20,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 5,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-back-scratcher",
+      "name": "Back Scratcher",
+      "level": 20,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 20,
+        "diz": 20,
+        "crit": 5
+      }
+    },
+    {
+      "id": "item-gorgeous-sword",
+      "name": "Gorgeous Sword",
+      "level": 23,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 232,
+        "int": -5,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-spoon",
+      "name": "Spoon",
+      "level": 25,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 16,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-gaia-sword",
+      "name": "Gaia Sword",
+      "level": 27,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 20,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-snakesword",
+      "name": "Snakesword",
+      "level": 30,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 367,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-veggieblade",
+      "name": "Veggieblade",
+      "level": 32,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 32,
+        "vit": 20,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-luck-blade",
+      "name": "Luck Blade",
+      "level": 35,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 388,
+        "diz": 20,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-platinum-sword",
+      "name": "Platinum Sword",
+      "level": 38,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 428,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-wind-sword",
+      "name": "Wind Sword",
+      "level": 40,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 30,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-chaos-blade",
+      "name": "Chaos Blade",
+      "level": 42,
+      "ingredientCategory": "Dark",
+      "effects": {
+        "atk": 20,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-sakura",
+      "name": "Sakura",
+      "level": 44,
+      "ingredientCategory": "Dark",
+      "effects": {
+        "atk": 15,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-sunspot",
+      "name": "Sunspot",
+      "level": 46,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 30,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-durendal",
+      "name": "Durendal",
+      "level": 50,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 800,
+        "def": 30,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-aerial-blade",
+      "name": "Aerial Blade",
+      "level": 54,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 100,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-grantale",
+      "name": "Grantale",
+      "level": 59,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 250,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-smash-blade",
+      "name": "Smash Blade",
+      "level": 64,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 1880,
+        "diz": 12,
+        "knock": 15,
+        "stun": 15
+      }
+    },
+    {
+      "id": "item-icifier",
+      "name": "Icifier",
+      "level": 68,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 700,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-soul-eater",
+      "name": "Soul Eater",
+      "level": 70,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 1500,
+        "diz": 6,
+        "drain": 5
+      }
+    },
+    {
+      "id": "item-raventine",
+      "name": "Raventine",
+      "level": 74,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 1800,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-star-saber",
+      "name": "Star Saber",
+      "level": 77,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 1800,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-platinum-sword",
+      "name": "Platinum Sword+",
+      "level": 79,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 6050,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-dragon-slayer",
+      "name": "Dragon Slayer",
+      "level": 82,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 7000,
+        "diz": 7
+      }
+    },
+    {
+      "id": "item-rune-blade",
+      "name": "Rune Blade",
+      "level": 85,
+      "ingredientCategory": "Light",
+      "effects": {
+        "atk": 5000,
+        "diz": 6
+      }
+    },
+    {
+      "id": "item-gladius",
+      "name": "Gladius",
+      "level": 90,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 1000,
+        "diz": 6,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-rune-legend",
+      "name": "Rune Legend",
+      "level": 99,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 9999,
+        "diz": 6
+      }
+    }
+  ],
+  "longSwords": [
+    {
+      "id": "item-claymore",
+      "name": "Claymore",
+      "level": 2,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 12,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-zweihaender",
+      "name": "Zweihaender",
+      "level": 6,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 42,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-zweihaender",
+      "name": "Zweihaender+",
+      "level": 11,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 61,
+        "diz": 24,
+        "stun": 15
+      }
+    },
+    {
+      "id": "item-great-sword",
+      "name": "Great Sword",
+      "level": 16,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 120,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-sea-cutter",
+      "name": "Sea Cutter",
+      "level": 21,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 3,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-cyclone-blade",
+      "name": "Cyclone Blade",
+      "level": 25,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 5,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-poison-blade",
+      "name": "Poison Blade",
+      "level": 27,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 25,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-katzbalger",
+      "name": "Katzbalger",
+      "level": 29,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 333,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-earth-shade",
+      "name": "Earth Shade",
+      "level": 30,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 5,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-big-knife",
+      "name": "Big Knife",
+      "level": 32,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 402,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-katana",
+      "name": "Katana",
+      "level": 35,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 5,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-flame-saber",
+      "name": "Flame Saber",
+      "level": 39,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 20,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-bio-smasher",
+      "name": "Bio Smasher",
+      "level": 40,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 60,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-snow-crown",
+      "name": "Snow Crown",
+      "level": 42,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 25,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-dancing-dicer",
+      "name": "Dancing Dicer",
+      "level": 43,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 15,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-flamberge",
+      "name": "Flamberge",
+      "level": 45,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 678,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-flamberge",
+      "name": "Flamberge+",
+      "level": 46,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 750,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-volcanon",
+      "name": "Volcanon",
+      "level": 48,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 30,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-psycho",
+      "name": "Psycho",
+      "level": 50,
+      "ingredientCategory": "Dark",
+      "effects": {
+        "atk": 30,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-shine-blade",
+      "name": "Shine Blade",
+      "level": 52,
+      "ingredientCategory": "Light",
+      "effects": {
+        "atk": 100,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-grand-smasher",
+      "name": "Grand Smasher",
+      "level": 55,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 300,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-belzebuth",
+      "name": "Belzebuth",
+      "level": 58,
+      "ingredientCategory": "Dark",
+      "effects": {
+        "atk": 500,
+        "diz": 12,
+        "crit": 10,
+        "drain": 20
+      }
+    },
+    {
+      "id": "item-orochi",
+      "name": "Orochi",
+      "level": 63,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 2710,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-punisher",
+      "name": "Punisher",
+      "level": 68,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 4444,
+        "diz": 24,
+        "stun": 30
+      }
+    },
+    {
+      "id": "item-steel-slicer",
+      "name": "Steel Slicer",
+      "level": 73,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 4890,
+        "diz": 12,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-moon-shadow",
+      "name": "Moon Shadow",
+      "level": 76,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 25,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-blue-eyed-blade",
+      "name": "Blue-Eyed Blade",
+      "level": 79,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 1850,
+        "diz": 12,
+        "crit": 20
+      }
+    },
+    {
+      "id": "item-balmung",
+      "name": "Balmung",
+      "level": 84,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 8080,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-braveheart",
+      "name": "Braveheart",
+      "level": 89,
+      "ingredientCategory": "Light",
+      "effects": {
+        "atk": 2750,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-force-element",
+      "name": "Force Element",
+      "level": 91,
+      "ingredientCategory": "Light",
+      "effects": {
+        "atk": 5000,
+        "def": 100,
+        "diz": 12
+      }
+    },
+    {
+      "id": "item-heaven-asunder",
+      "name": "Heaven Asunder",
+      "level": 92,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 50,
+        "diz": 12,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-caliburn",
+      "name": "Caliburn",
+      "level": 99,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 5800,
+        "diz": 23
+      }
+    },
+    {
+      "id": "item-dekash",
+      "name": "Dekash",
+      "level": 42,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 50,
+        "diz": 30
+      }
+    },
+    {
+      "id": "item-daicone",
+      "name": "Daicone",
+      "level": 28,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 20,
+        "diz": 12,
+        "knock": 30,
+        "stun": 10
+      }
+    }
+  ],
+  "spears": [
+    {
+      "id": "item-battle-axe",
+      "name": "Battle Axe",
+      "level": 6,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 38,
+        "diz": 2,
+        "crit": 5
+      }
+    },
+    {
+      "id": "item-axe",
+      "name": "Axe",
+      "level": 9,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 42,
+        "diz": 2,
+        "crit": 15
+      }
+    },
+    {
+      "id": "item-battle-scythe",
+      "name": "Battle Scythe",
+      "level": 13,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 70,
+        "diz": 2,
+        "crit": 15
+      }
+    },
+    {
+      "id": "item-pole-axe",
+      "name": "Pole Axe",
+      "level": 16,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 116,
+        "diz": 2,
+        "crit": 7
+      }
+    },
+    {
+      "id": "item-pole-axe",
+      "name": "Pole Axe+",
+      "level": 20,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 163,
+        "diz": 2,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-great-axe",
+      "name": "Great Axe",
+      "level": 23,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 232,
+        "diz": 2,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-tomahawk",
+      "name": "Tomahawk",
+      "level": 28,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 8,
+        "diz": 2,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-basilisk-fang",
+      "name": "Basilisk Fang",
+      "level": 30,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 30,
+        "diz": 2,
+        "crit": 15
+      }
+    },
+    {
+      "id": "item-rock-axe",
+      "name": "Rock Axe",
+      "level": 32,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 20,
+        "diz": 2,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-demon-axe",
+      "name": "Demon Axe",
+      "level": 35,
+      "ingredientCategory": "Dark",
+      "effects": {
+        "atk": 30,
+        "diz": 2,
+        "crit": 12
+      }
+    },
+    {
+      "id": "item-frost-axe",
+      "name": "Frost Axe",
+      "level": 42,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 50,
+        "diz": 2,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-crescent-axe",
+      "name": "Crescent Axe",
+      "level": 46,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 900,
+        "diz": 2,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-crescent-axe",
+      "name": "Crescent Axe+",
+      "level": 47,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 1000,
+        "diz": 2,
+        "crit": 15
+      }
+    },
+    {
+      "id": "item-heat-axe",
+      "name": "Heat Axe",
+      "level": 53,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 150,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-double-edge",
+      "name": "Double Edge",
+      "level": 65,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 2980,
+        "diz": 2,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-alldale",
+      "name": "Alldale",
+      "level": 69,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 4600,
+        "diz": 2,
+        "crit": 8
+      }
+    },
+    {
+      "id": "item-devil-finger",
+      "name": "Devil Finger",
+      "level": 73,
+      "ingredientCategory": null,
+      "effects": {
+        "aRK": 6000,
+        "atk": 2000,
+        "diz": 15,
+        "crit": 5,
+        "stun": 10,
+        "drain": 10
+      }
+    },
+    {
+      "id": "item-executioner",
+      "name": "Executioner",
+      "level": 81,
+      "ingredientCategory": "Dark",
+      "effects": {
+        "atk": 1500,
+        "diz": 2,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-saint-axe",
+      "name": "Saint Axe",
+      "level": 98,
+      "ingredientCategory": "Light",
+      "effects": {
+        "atk": 8500,
+        "diz": 2,
+        "crit": 10
+      }
+    },
+    {
+      "id": "item-lollipop",
+      "name": "Lollipop",
+      "level": 28,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 30,
+        "vit": 50,
+        "diz": 40,
+        "crit": 15
+      }
+    }
+  ],
+  "hammers": [
+    {
+      "id": "item-battle-hammer",
+      "name": "Battle Hammer",
+      "level": 3,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 29,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-hammer",
+      "name": "Hammer",
+      "level": 7,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 40,
+        "diz": 34,
+        "crit": 8,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-toy-hammer",
+      "name": "Toy Hammer",
+      "level": 8,
+      "ingredientCategory": "Light",
+      "effects": {
+        "atk": 25,
+        "diz": 120,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-bat",
+      "name": "Bat",
+      "level": 9,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 54,
+        "diz": 35,
+        "knock": 50,
+        "stun": 15
+      }
+    },
+    {
+      "id": "item-war-hammer",
+      "name": "War Hammer",
+      "level": 11,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 61,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-war-hammer",
+      "name": "War Hammer+",
+      "level": 15,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 98,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-iron-bat",
+      "name": "Iron Bat",
+      "level": 18,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 140,
+        "diz": 35,
+        "knock": 50,
+        "stun": 20
+      }
+    },
+    {
+      "id": "item-great-hammer",
+      "name": "Great Hammer",
+      "level": 22,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 198,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-ice-hammer",
+      "name": "Ice Hammer",
+      "level": 26,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 10,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-bone-hammer",
+      "name": "Bone Hammer",
+      "level": 31,
+      "ingredientCategory": "Dark",
+      "effects": {
+        "atk": 20,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-strong-stone",
+      "name": "Strong Stone",
+      "level": 33,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 430,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-flame-hammer",
+      "name": "Flame Hammer",
+      "level": 36,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 35,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-gigant-hammer",
+      "name": "Gigant Hammer",
+      "level": 38,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 580,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-sky-hammer",
+      "name": "Sky Hammer",
+      "level": 40,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 50,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-graviton-hammer",
+      "name": "Graviton Hammer",
+      "level": 49,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 60,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-spiked-hammer",
+      "name": "Spiked Hammer",
+      "level": 50,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 1250,
+        "diz": 34,
+        "crit": 8,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-crystal-hammer",
+      "name": "Crystal Hammer",
+      "level": 57,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 300,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-schnabel",
+      "name": "Schnabel",
+      "level": 60,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 2200,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-gigant-hammer",
+      "name": "Gigant Hammer+",
+      "level": 71,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 10,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-kongo",
+      "name": "Kongo",
+      "level": 77,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 7122,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-mjolnir",
+      "name": "Mjolnir",
+      "level": 86,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 3000,
+        "diz": 35,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-fatal-crush",
+      "name": "Fatal Crush",
+      "level": 90,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 11500,
+        "diz": 40,
+        "crit": 7,
+        "stun": 10
+      }
+    },
+    {
+      "id": "item-splash-star",
+      "name": "Splash Star",
+      "level": 99,
+      "ingredientCategory": "Light",
+      "effects": {
+        "atk": 7200,
+        "diz": 35,
+        "stun": 10
+      }
+    }
+  ],
+  "dualBlades": [
+    {
+      "id": "item-short-dagger",
+      "name": "Short Dagger",
+      "level": 5,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 28,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-steel-edge",
+      "name": "Steel Edge",
+      "level": 9,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 58,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-frost-edge",
+      "name": "Frost Edge",
+      "level": 13,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 3,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-iron-edge",
+      "name": "Iron Edge",
+      "level": 21,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 132,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-thief-knife",
+      "name": "Thief Knife",
+      "level": 23,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 154,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-wind-edge",
+      "name": "Wind Edge",
+      "level": 25,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 5,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-gorgeous-lx",
+      "name": "Gorgeous Lx",
+      "level": 28,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 232,
+        "vit": 5,
+        "int": -5,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-steel-katana",
+      "name": "Steel Katana",
+      "level": 30,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 276,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-twin-blade",
+      "name": "Twin Blade",
+      "level": 32,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 15,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-rampage",
+      "name": "Rampage",
+      "level": 33,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 372,
+        "diz": 3,
+        "crit": 5
+      }
+    },
+    {
+      "id": "item-salamander",
+      "name": "Salamander",
+      "level": 35,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 20,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-platinum-edge",
+      "name": "Platinum Edge",
+      "level": 37,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 436,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-sonic-dagger",
+      "name": "Sonic Dagger",
+      "level": 39,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 30,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-chaos-edge",
+      "name": "Chaos Edge",
+      "level": 40,
+      "ingredientCategory": "Dark",
+      "effects": {
+        "atk": 15,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-desert-wind",
+      "name": "Desert Wind",
+      "level": 44,
+      "ingredientCategory": "Earth & Wind",
+      "effects": {
+        "atk": 45,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-broken-wall",
+      "name": "Broken Wall",
+      "level": 48,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 50,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-force-divide",
+      "name": "Force Divide",
+      "level": 51,
+      "ingredientCategory": "Fire & Water",
+      "effects": {
+        "atk": 300,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-heart-fire",
+      "name": "Heart Fire",
+      "level": 54,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 180,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-orcus-sword",
+      "name": "Orcus Sword",
+      "level": 57,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 1920,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-deep-blizzard",
+      "name": "Deep Blizzard",
+      "level": 63,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 400,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-dark-invitation",
+      "name": "Dark Invitation",
+      "level": 68,
+      "ingredientCategory": "Dark",
+      "effects": {
+        "atk": 500,
+        "diz": 3,
+        "drain": 5
+      }
+    },
+    {
+      "id": "item-priest-saber",
+      "name": "Priest Saber",
+      "level": 72,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 2500,
+        "def": 88,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-efreet",
+      "name": "Efreet",
+      "level": 74,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 1500,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-dragoon-claw",
+      "name": "Dragoon Claw",
+      "level": 76,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 5220,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-emerald-edge",
+      "name": "Emerald Edge",
+      "level": 79,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 1800,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-rune-edge",
+      "name": "Rune Edge",
+      "level": 87,
+      "ingredientCategory": "Light",
+      "effects": {
+        "atk": 3000,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-earnest-edge",
+      "name": "Earnest Edge",
+      "level": 90,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 9600,
+        "diz": 6,
+        "crit": 8
+      }
+    },
+    {
+      "id": "item-twin-justice",
+      "name": "Twin Justice",
+      "level": 99,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 9500,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-double-scratch",
+      "name": "Double Scratch",
+      "level": 12,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 20,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-acutorimass",
+      "name": "Acutorimass",
+      "level": 23,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 35,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-twin-leeks",
+      "name": "Twin Leeks",
+      "level": 39,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 39,
+        "def": 39,
+        "str": 39,
+        "vit": 39,
+        "int": 39,
+        "diz": 25,
+        "crit": 15
+      }
+    }
+  ],
+  "gloves": [
+    {
+      "id": "item-leather-gloves",
+      "name": "Leather Gloves",
+      "level": 2,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 24,
+        "def": 1,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-brass-knuckles",
+      "name": "Brass Knuckles",
+      "level": 10,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 59,
+        "def": 3,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-kote",
+      "name": "Kote",
+      "level": 16,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 112,
+        "def": 15,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-gloves",
+      "name": "Gloves",
+      "level": 20,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 172,
+        "vit": 20,
+        "diz": 5,
+        "crit": 2
+      }
+    },
+    {
+      "id": "item-bear-claws",
+      "name": "Bear Claws",
+      "level": 28,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 222,
+        "def": 20,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-fists-of-the-earth",
+      "name": "Fists of the Earth",
+      "level": 30,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 5,
+        "def": 10,
+        "int": 15,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-fists-of-fire",
+      "name": "Fists of Fire",
+      "level": 33,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 10,
+        "def": 10,
+        "int": 15,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-fists-of-water",
+      "name": "Fists of Water",
+      "level": 38,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 10,
+        "def": 10,
+        "int": 15,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-dragon-claws",
+      "name": "Dragon Claws",
+      "level": 42,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 592,
+        "def": 40,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-fists-of-dark",
+      "name": "Fists of Dark",
+      "level": 46,
+      "ingredientCategory": "Dark",
+      "effects": {
+        "atk": 30,
+        "def": 15,
+        "int": 15,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-fists-of-wind",
+      "name": "Fists of Wind",
+      "level": 50,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 30,
+        "def": 20,
+        "int": 15,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-fists-of-light",
+      "name": "Fists of Light",
+      "level": 53,
+      "ingredientCategory": "Light",
+      "effects": {
+        "atk": 100,
+        "def": 40,
+        "int": 15,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-cat-punch",
+      "name": "Cat Punch",
+      "level": 57,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 200,
+        "def": 45,
+        "diz": 3,
+        "crit": 5
+      }
+    },
+    {
+      "id": "item-animal-puppets",
+      "name": "Animal Puppets",
+      "level": 60,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 500,
+        "def": 50,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-ironleaf-fists",
+      "name": "Ironleaf Fists",
+      "level": 64,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 800,
+        "def": 60,
+        "diz": 1,
+        "crit": 3
+      }
+    },
+    {
+      "id": "item-caestus",
+      "name": "Caestus",
+      "level": 69,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 1000,
+        "def": 80,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-golem-punch",
+      "name": "Golem Punch",
+      "level": 75,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 4980,
+        "def": 90,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-hand-of-god",
+      "name": "Hand of God",
+      "level": 82,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 2000,
+        "def": 100,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-bazal-katar",
+      "name": "Bazal Katar",
+      "level": 90,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 9800,
+        "def": 300,
+        "diz": 3
+      }
+    },
+    {
+      "id": "item-fenrir",
+      "name": "Fenrir",
+      "level": 99,
+      "ingredientCategory": null,
+      "effects": {
+        "atk": 10000,
+        "def": 500,
+        "diz": 3
+      }
+    }
+  ],
+  "staves": [
+    {
+      "id": "item-rod",
+      "name": "Rod",
+      "level": 2,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 8,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-amethyst-rod",
+      "name": "Amethyst Rod",
+      "level": 6,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 10,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-aquamarine-rod",
+      "name": "Aquamarine Rod",
+      "level": 8,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 11,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-friendly-rod",
+      "name": "Friendly Rod",
+      "level": 13,
+      "ingredientCategory": "Love",
+      "effects": {
+        "atk": 18,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-love-love-rod",
+      "name": "Love-Love Rod",
+      "level": 15,
+      "ingredientCategory": "Love",
+      "effects": {
+        "atk": 35,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-staff",
+      "name": "Staff",
+      "level": 16,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 26,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-emerald-rod",
+      "name": "Emerald Rod",
+      "level": 18,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 42,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-silver-staff",
+      "name": "Silver Staff",
+      "level": 21,
+      "ingredientCategory": "Dark",
+      "effects": {
+        "atk": 47,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-flare-staff",
+      "name": "Flare Staff",
+      "level": 22,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 50,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-ruby-rod",
+      "name": "Ruby Rod",
+      "level": 23,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 56,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-sapphire-rod",
+      "name": "Sapphire Rod",
+      "level": 26,
+      "ingredientCategory": "Light",
+      "effects": {
+        "atk": 60,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-earth-staff",
+      "name": "Earth Staff",
+      "level": 28,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 65,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-lightning-wand",
+      "name": "Lightning Wand",
+      "level": 30,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 72,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-ice-staff",
+      "name": "Ice Staff",
+      "level": 31,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 80,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-diamond-rod",
+      "name": "Diamond Rod",
+      "level": 33,
+      "ingredientCategory": "Dark",
+      "effects": {
+        "atk": 94,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-wizards-staff",
+      "name": "Wizard's Staff",
+      "level": 35,
+      "ingredientCategory": "Light",
+      "effects": {
+        "atk": 105,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-mages-staff",
+      "name": "Mage's Staff",
+      "level": 40,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 162,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-shooting-star-staff",
+      "name": "Shooting Star Staff",
+      "level": 43,
+      "ingredientCategory": "Light",
+      "effects": {
+        "atk": 254,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-hell-branch",
+      "name": "Hell Branch",
+      "level": 49,
+      "ingredientCategory": "Dark",
+      "effects": {
+        "atk": 300,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-crimson-staff",
+      "name": "Crimson Staff",
+      "level": 50,
+      "ingredientCategory": "Fire",
+      "effects": {
+        "atk": 380,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-bubble-staff",
+      "name": "Bubble Staff",
+      "level": 53,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 500,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-gaia-rod",
+      "name": "Gaia Rod",
+      "level": 56,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 980,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-cyclone-rod",
+      "name": "Cyclone Rod",
+      "level": 60,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 1460,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-storm-wand",
+      "name": "Storm Wand",
+      "level": 65,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 1920,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-rune-staff",
+      "name": "Rune Staff",
+      "level": 70,
+      "ingredientCategory": "Light",
+      "effects": {
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-mages-staff",
+      "name": "Mage's Staff+",
+      "level": 76,
+      "ingredientCategory": "Love",
+      "effects": {
+        "atk": 4400,
+        "vit": 60,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-magic-broom",
+      "name": "Magic Broom",
+      "level": 82,
+      "ingredientCategory": "Wind",
+      "effects": {
+        "atk": 5500,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-magic-shot",
+      "name": "Magic Shot",
+      "level": 85,
+      "ingredientCategory": "Love",
+      "effects": {
+        "atk": 7350,
+        "def": 50,
+        "diz": 30,
+        "crit": 50,
+        "knock": 50,
+        "stun": 150
+      }
+    },
+    {
+      "id": "item-hell-curse",
+      "name": "Hell Curse",
+      "level": 87,
+      "ingredientCategory": "Air",
+      "effects": {
+        "atk": 8800,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-algernon",
+      "name": "Algernon",
+      "level": 91,
+      "ingredientCategory": "Earth",
+      "effects": {
+        "atk": 10800,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-sorcerers-wand",
+      "name": "Sorcerer's Wand",
+      "level": 99,
+      "ingredientCategory": "Light",
+      "effects": {
+        "atk": 12960,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-basket",
+      "name": "Basket",
+      "level": 4,
+      "ingredientCategory": "Love",
+      "effects": {
+        "atk": 5,
+        "vit": 20,
+        "crit": 25
+      }
+    },
+    {
+      "id": "item-golden-turnip-staff",
+      "name": "Golden Turnip Staff",
+      "level": 80,
+      "ingredientCategory": "Love",
+      "effects": {
+        "atk": 120,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-sweet-potato-staff",
+      "name": "Sweet Potato Staff",
+      "level": 10,
+      "ingredientCategory": "Love",
+      "effects": {
+        "atk": 10,
+        "diz": 15
+      }
+    },
+    {
+      "id": "item-elvish-harp",
+      "name": "Elvish Harp",
+      "level": 24,
+      "ingredientCategory": "Love",
+      "effects": {
+        "atk": 32,
+        "diz": 30
+      }
+    },
+    {
+      "id": "item-syringe",
+      "name": "Syringe",
+      "level": 29,
+      "ingredientCategory": "Water",
+      "effects": {
+        "atk": 1,
+        "diz": 30,
+        "crit": 30,
+        "knock": 50,
+        "stun": 150
+      }
+    }
+  ],
+  "hoe": [
+    {
+      "id": "item-cheap-hoe",
+      "name": "Cheap Hoe",
+      "level": 5,
+      "ingredientCategory": "Minerals",
+      "effects": {}
+    },
+    {
+      "id": "item-sturdy-hoe",
+      "name": "Sturdy Hoe",
+      "level": 15,
+      "ingredientCategory": "Bronze",
+      "effects": {}
+    },
+    {
+      "id": "item-seasoned-hoe",
+      "name": "Seasoned Hoe",
+      "level": 30,
+      "ingredientCategory": "Silver",
+      "effects": {}
+    },
+    {
+      "id": "item-shiny-hoe",
+      "name": "Shiny Hoe",
+      "level": 45,
+      "ingredientCategory": "Gold",
+      "effects": {}
+    },
+    {
+      "id": "item-blessed-hoe",
+      "name": "Blessed Hoe",
+      "level": 80,
+      "ingredientCategory": "Platinum",
+      "effects": {}
+    }
+  ],
+  "waterpot": [
+    {
+      "id": "item-cheap-waterpot",
+      "name": "Cheap Waterpot",
+      "level": 5,
+      "ingredientCategory": "Minerals",
+      "effects": {}
+    },
+    {
+      "id": "item-tin-waterpot",
+      "name": "Tin Waterpot",
+      "level": 15,
+      "ingredientCategory": "Bronze",
+      "effects": {}
+    },
+    {
+      "id": "item-lion-waterpot",
+      "name": "Lion Waterpot",
+      "level": 30,
+      "ingredientCategory": "Silver",
+      "effects": {}
+    },
+    {
+      "id": "item-rainbow-waterpot",
+      "name": "Rainbow Waterpot",
+      "level": 45,
+      "ingredientCategory": "Gold",
+      "effects": {}
+    },
+    {
+      "id": "item-joy-waterpot",
+      "name": "Joy Waterpot",
+      "level": 80,
+      "ingredientCategory": "Platinum",
+      "effects": {}
+    }
+  ],
+  "sickle": [
+    {
+      "id": "item-cheap-sickle",
+      "name": "Cheap Sickle",
+      "level": 5,
+      "ingredientCategory": "Minerals",
+      "effects": {}
+    },
+    {
+      "id": "item-iron-sickle",
+      "name": "Iron Sickle",
+      "level": 15,
+      "ingredientCategory": "Bronze",
+      "effects": {}
+    },
+    {
+      "id": "item-quality-sickle",
+      "name": "Quality Sickle",
+      "level": 30,
+      "ingredientCategory": "Silver",
+      "effects": {}
+    },
+    {
+      "id": "item-super-sickle",
+      "name": "Super Sickle",
+      "level": 45,
+      "ingredientCategory": "Gold",
+      "effects": {}
+    },
+    {
+      "id": "item-legendary-sickle",
+      "name": "Legendary Sickle",
+      "level": 80,
+      "ingredientCategory": "Platinum",
+      "effects": {}
+    }
+  ],
+  "axe": [
+    {
+      "id": "item-cheap-axe",
+      "name": "Cheap Axe",
+      "level": 5,
+      "ingredientCategory": "Stones",
+      "effects": {}
+    },
+    {
+      "id": "item-chopping-axe",
+      "name": "Chopping Axe",
+      "level": 15,
+      "ingredientCategory": "Bronze",
+      "effects": {}
+    },
+    {
+      "id": "item-lumber-axe",
+      "name": "Lumber Axe",
+      "level": 30,
+      "ingredientCategory": "Silver",
+      "effects": {}
+    },
+    {
+      "id": "item-mountain-axe",
+      "name": "Mountain Axe",
+      "level": 45,
+      "ingredientCategory": "Gold",
+      "effects": {}
+    },
+    {
+      "id": "item-miracle-axe",
+      "name": "Miracle Axe",
+      "level": 80,
+      "ingredientCategory": "Platinum",
+      "effects": {}
+    }
+  ],
+  "hammer": [
+    {
+      "id": "item-cheap-hammer",
+      "name": "Cheap Hammer",
+      "level": 5,
+      "ingredientCategory": "Minerals",
+      "effects": {}
+    },
+    {
+      "id": "item-iron-hammer",
+      "name": "Iron Hammer",
+      "level": 15,
+      "ingredientCategory": "Bronze",
+      "effects": {}
+    },
+    {
+      "id": "item-silver-hammer",
+      "name": "Silver Hammer",
+      "level": 30,
+      "ingredientCategory": "Silver",
+      "effects": {}
+    },
+    {
+      "id": "item-golden-hammer",
+      "name": "Golden Hammer",
+      "level": 45,
+      "ingredientCategory": "Gold",
+      "effects": {}
+    },
+    {
+      "id": "item-platinum-hammer",
+      "name": "Platinum Hammer",
+      "level": 80,
+      "ingredientCategory": "Platinum",
+      "effects": {}
+    }
+  ],
+  "fishingPole": [
+    {
+      "id": "item-cheap-pole",
+      "name": "Cheap Pole",
+      "level": 5,
+      "ingredientCategory": "Sticks and Stems",
+      "effects": {}
+    },
+    {
+      "id": "item-beginners-pole",
+      "name": "Beginner's Pole",
+      "level": 15,
+      "ingredientCategory": "Bronze",
+      "effects": {}
+    },
+    {
+      "id": "item-skilled-pole",
+      "name": "Skilled Pole",
+      "level": 30,
+      "ingredientCategory": "Silver",
+      "effects": {}
+    },
+    {
+      "id": "item-famous-pole",
+      "name": "Famous Pole",
+      "level": 45,
+      "ingredientCategory": "Gold",
+      "effects": {}
+    },
+    {
+      "id": "item-sacred-pole",
+      "name": "Sacred Pole",
+      "level": 80,
+      "ingredientCategory": "Platinum",
+      "effects": {}
+    }
+  ],
+  "levelrarityBonus": [
+    {
+      "id": "item-30",
+      "name": "30",
+      "level": 10,
+      "ingredientCategory": "\"...good quality\"",
+      "effects": {}
+    },
+    {
+      "id": "item-60",
+      "name": "60",
+      "level": 25,
+      "ingredientCategory": "\"A lot of good materials...\"",
+      "effects": {}
+    },
+    {
+      "id": "item-90",
+      "name": "90",
+      "level": 70,
+      "ingredientCategory": "\"...great quality\"",
+      "effects": {}
+    },
+    {
+      "id": "item-120",
+      "name": "120",
+      "level": 200,
+      "ingredientCategory": "\"...almost perfect\"",
+      "effects": {}
+    },
+    {
+      "id": "item-150all-15-materials-at-level-10",
+      "name": "150(all 15 materials at level 10)",
+      "level": 700,
+      "ingredientCategory": "\"...all perfect!\"",
+      "effects": {}
+    }
+  ]
+}

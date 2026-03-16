@@ -1,0 +1,1501 @@
+{
+  "char-frey": {
+    "id": "char-frey",
+    "name": "Frey",
+    "category": "Protagonist",
+    "gifts": {
+      "love": {
+        "items": [],
+        "categories": []
+      },
+      "like": {
+        "items": [],
+        "categories": []
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-lest": {
+    "id": "char-lest",
+    "name": "Lest",
+    "category": "Protagonist",
+    "gifts": {
+      "love": {
+        "items": [],
+        "categories": []
+      },
+      "like": {
+        "items": [],
+        "categories": []
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-luna": {
+    "id": "char-luna",
+    "name": "Luna",
+    "category": "Children",
+    "gifts": {
+      "love": {
+        "items": [],
+        "categories": []
+      },
+      "like": {
+        "items": [],
+        "categories": []
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-noel": {
+    "id": "char-noel",
+    "name": "Noel",
+    "category": "Children",
+    "gifts": {
+      "love": {
+        "items": [],
+        "categories": []
+      },
+      "like": {
+        "items": [],
+        "categories": []
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-amber": {
+    "id": "char-amber",
+    "name": "Amber",
+    "category": "Bachelorettes",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-mixed-smoothie",
+          "item-gold-juice",
+          "item-emery-flower"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-apple",
+          "item-orange",
+          "item-strawberry",
+          "item-pineapple-juice",
+          "item-tomato-juice",
+          "item-grape-juice",
+          "item-orange-juice",
+          "item-apple-juice",
+          "item-fruit-juice",
+          "item-vegetable-juice",
+          "item-mixed-juice",
+          "item-hot-juice",
+          "item-honey",
+          "item-moondrop-flower",
+          "item-charm-blue"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-strawberry-jam",
+          "item-strawberry-milk",
+          "item-fruit-smoothie",
+          "item-veggie-smoothie",
+          "item-ketchup",
+          "item-butter",
+          "item-prelude-to-love"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-ironleaf",
+          "item-super-ironleaf",
+          "item-object-x",
+          "item-scrap-metal",
+          "item-can",
+          "item-rare-can",
+          "item-masu-trout"
+        ],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-clorica": {
+    "id": "char-clorica",
+    "name": "Clorica",
+    "category": "Bachelorettes",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-apple-pie",
+          "item-platinum",
+          "item-orichalcum",
+          "item-diamond",
+          "item-round-stone",
+          "item-shade-stone",
+          "item-white-stone",
+          "item-red-core",
+          "item-yellow-core",
+          "item-blue-core",
+          "item-green-core"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-apple",
+          "item-baked-apple",
+          "item-silver",
+          "item-gold",
+          "item-hot-chocolate"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-grapes"
+        ],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-dolce": {
+    "id": "char-dolce",
+    "name": "Dolce",
+    "category": "Bachelorettes",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-flan",
+          "item-pumpkin-flan",
+          "item-cake",
+          "item-apple-pie",
+          "item-chocolate-cake",
+          "item-cheesecake"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-hot-chocolate",
+          "item-hot-juice",
+          "item-relax-tea",
+          "item-hot-milk",
+          "item-moondrop-flower",
+          "item-ice-cream"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-strawberry-milk",
+          "item-fruit-smoothie",
+          "item-veggie-smoothie",
+          "item-ketchup",
+          "item-butter",
+          "item-prelude-to-love"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-cabbage",
+          "item-king-cabbage",
+          "item-pink-turnip",
+          "item-pink-melon",
+          "item-onion",
+          "item-pumpkin",
+          "item-cucumber",
+          "item-kaiser-cucumber",
+          "item-corn",
+          "item-tomato",
+          "item-yam",
+          "item-potato",
+          "item-princely-potato",
+          "item-carrot",
+          "item-green-pepper",
+          "item-turnip",
+          "item-tyrant-turnip",
+          "item-radish",
+          "item-leek",
+          "item-bok-choy",
+          "item-bamboo-sprout",
+          "item-tomato-juice",
+          "item-grape-juice",
+          "item-orange-juice",
+          "item-scrap-metal",
+          "item-rock"
+        ],
+        "categories": [
+          "Giant Corn",
+          "Mushroom"
+        ]
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-forte": {
+    "id": "char-forte",
+    "name": "Forte",
+    "category": "Bachelorettes",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-chocolate-cake",
+          "item-omelet",
+          "item-union-stew"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [],
+        "categories": [
+          "Eggs",
+          "Egg dishes",
+          "Flowers",
+          "Pot dishes",
+          "Western sweets"
+        ]
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-scrap-metal"
+        ],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-margaret": {
+    "id": "char-margaret",
+    "name": "Margaret",
+    "category": "Bachelorettes",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-gold-juice",
+          "item-pink-melon",
+          "item-pineapple-juice",
+          "item-prelude-to-love"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-shrimp",
+          "item-lobster",
+          "item-apple-pie",
+          "item-cake",
+          "item-choco-cookie",
+          "item-ice-cream",
+          "item-strawberry-milk",
+          "item-flan",
+          "item-strawberry-jam",
+          "item-grape-jam"
+        ],
+        "categories": [
+          "Mushroom"
+        ]
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-squid",
+          "item-sunsquid",
+          "item-grilled-squid",
+          "item-lamp-squid-sashimi",
+          "item-grilled-lamp-squid",
+          "item-squid-sashimi"
+        ],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-xiao-pai": {
+    "id": "char-xiao-pai",
+    "name": "Xiao Pai",
+    "category": "Bachelorettes",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-big-white-crystal",
+          "item-emery-flower"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-toyherb",
+          "item-chinese-manju",
+          "item-gyoza",
+          "item-fried-rice",
+          "item-boiled-gyoza"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-ayngondaia-lawn",
+          "item-cucumber",
+          "item-bamboo-rice",
+          "item-fried-veggies",
+          "item-cabbage-cakes",
+          "item-miso-eggplant",
+          "item-omelet-rice",
+          "item-fried-udon",
+          "item-tempura",
+          "item-udon",
+          "item-baked-onigiri",
+          "item-ketchup"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-tomato",
+          "item-tomato-juice",
+          "item-sandwich",
+          "item-salad",
+          "item-scrap-metal"
+        ],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-arthur": {
+    "id": "char-arthur",
+    "name": "Arthur",
+    "category": "Bachelors",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-salmon-onigiri",
+          "item-turnip-heaven",
+          "item-golden-turnip",
+          "item-golden-tyrant-turnip",
+          "item-salmon-onigiri",
+          "item-turnip-heaven"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-pink-turnip",
+          "item-colossal-pink",
+          "item-turnip",
+          "item-onigiri",
+          "item-pickled-turnip",
+          "item-pickles",
+          "item-sandwich",
+          "item-pickle-mix",
+          "item-brand-glasses",
+          "item-spectacles",
+          "item-intelligent-glasses",
+          "item-tyrant-turnip",
+          "item-curry-manju",
+          "item-chinese-manju",
+          "item-rare-can",
+          "item-can"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-cotton-cloth",
+          "item-recovery-potion",
+          "item-rice-porridge",
+          "item-steamed-gyoza",
+          "item-meat-dumpling",
+          "item-curry-bread",
+          "item-bamboo-rice",
+          "item-fruit-sandwich",
+          "item-relax-tea-leaves",
+          "item-salad",
+          "item-fish-fossil",
+          "item-rockfish-stew"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-grilled-sflounder",
+          "item-scrap-metal",
+          "item-boot"
+        ],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-doug": {
+    "id": "char-doug",
+    "name": "Doug",
+    "category": "Bachelors",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-tempura-bowl"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-rice",
+          "item-onigiri",
+          "item-baked-onigiri",
+          "item-salmon-onigiri",
+          "item-bamboo-rice",
+          "item-egg-bowl",
+          "item-omelet-rice",
+          "item-rice-porridge",
+          "item-milk-porridge",
+          "item-risotto"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-raisin-bread",
+          "item-french-toast",
+          "item-steamed-bread",
+          "item-butter-roll",
+          "item-jam-roll"
+        ],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-dylas": {
+    "id": "char-dylas",
+    "name": "Dylas",
+    "category": "Bachelors",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-lover-sashimi",
+          "item-tuna-sashimi",
+          "item-sunsquid-sashimi",
+          "item-glitter-sashimi",
+          "item-milk-porridge",
+          "item-tuna",
+          "item-glitter-snapper",
+          "item-sunsquid"
+        ],
+        "categories": [
+          "Lover Snapper"
+        ]
+      },
+      "like": {
+        "items": [
+          "item-pike-sashimi",
+          "item-trout-sashimi",
+          "item-cherry-sashimi",
+          "item-needlefish-sashimi",
+          "item-squid-sashimi",
+          "item-girella-sashimi",
+          "item-sardine-sashimi",
+          "item-salmon-sashimi",
+          "item-shrimp-sashimi",
+          "item-char-sashimi",
+          "item-turbot-sashimi",
+          "item-rainbow-sashimi",
+          "item-flounder-sashimi",
+          "item-skipjack-sashimi",
+          "item-lobster-sashimi",
+          "item-snapper-sashimi",
+          "item-lamp-squid-sashimi",
+          "item-fall-sashimi",
+          "item-yellowtail-sashimi",
+          "item-blowfish-sashimi",
+          "item-taimen-sashimi",
+          "item-milk-m",
+          "item-carrot"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-cheese",
+          "item-stew",
+          "item-salmon-onigiri",
+          "item-tempura-bowl",
+          "item-mayonnaise",
+          "item-egg-m"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-cake",
+          "item-chocolate-cake",
+          "item-cookie",
+          "item-yam-of-the-ages",
+          "item-flan",
+          "item-strawberry-jam",
+          "item-grape-jam",
+          "item-marmalade",
+          "item-glazed-yam",
+          "item-chocolate",
+          "item-honey",
+          "item-dumplings",
+          "item-pancakes"
+        ],
+        "categories": [
+          "Chocolate Cookie"
+        ]
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-kiel": {
+    "id": "char-kiel",
+    "name": "Kiel",
+    "category": "Bachelors",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-raccoon-leaf",
+          "item-lightning-mane",
+          "item-right-rock-shard",
+          "item-ambrosias-thorns",
+          "item-crystal-skull",
+          "item-cursed-doll",
+          "item-chocolate-cake",
+          "item-stew"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-honey",
+          "item-glazed-yam",
+          "item-yam-of-the-ages",
+          "item-choco-cookie",
+          "item-baked-apple",
+          "item-cookie",
+          "item-pancakes"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-cabbage",
+          "item-big-birds-comb",
+          "item-salted-masu-trout",
+          "item-conqueror-melon",
+          "item-sapphire",
+          "item-hot-milk",
+          "item-sweet-powder",
+          "item-sweet-potato",
+          "item-raisin-bread"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-weeds",
+          "item-can",
+          "item-boot",
+          "item-disastrous-dish",
+          "item-tuna-sashimi"
+        ],
+        "categories": [
+          "Failed Dish"
+        ]
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-leon": {
+    "id": "char-leon",
+    "name": "Leon",
+    "category": "Bachelors",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-grilled-lamp-squid",
+          "item-salted-r-trout"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-rainbow-trout",
+          "item-grilled-snapper",
+          "item-grilled-gibelio",
+          "item-charm-blue",
+          "item-rainbow-sashimi",
+          "item-lamp-squid-sashimi",
+          "item-grilled-sflounder",
+          "item-grilled-shrimp",
+          "item-salted-char",
+          "item-salted-chub",
+          "item-grilled-snapper",
+          "item-grilled-l-snapper",
+          "item-grilled-skipjack",
+          "item-grilled-mackerel",
+          "item-salted-pike",
+          "item-grilled-turbot",
+          "item-grilled-fflounder",
+          "item-grilled-squid",
+          "item-lamp-squid",
+          "item-rainbow-sashimi",
+          "item-pom-pom-grass"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-salmon-onigiri",
+          "item-pickled-turnip",
+          "item-hot-chocolate",
+          "item-boiled-egg",
+          "item-glazed-yam",
+          "item-grape-liqueur",
+          "item-boiled-pumpkin",
+          "item-masu-trout",
+          "item-squid",
+          "item-salmon",
+          "item-cherry-salmon",
+          "item-moondrop-flower",
+          "item-elli-leaves",
+          "item-pink-cat",
+          "item-cherry-grass",
+          "item-lamp-grass",
+          "item-blue-crystal",
+          "item-ironleaf",
+          "item-super-ironleaf",
+          "item-4-leaf-clover",
+          "item-noel-grass",
+          "item-autumn-grass",
+          "item-antidote-grass",
+          "item-ayngondaia-lawn",
+          "item-char-sashimi",
+          "item-salmon-sashimi",
+          "item-squid-sashimi",
+          "item-poison-powder",
+          "item-spore",
+          "item-poison-king"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-milk-porridge",
+          "item-hot-milk",
+          "item-milk-s",
+          "item-milk-m",
+          "item-milk-l",
+          "item-scrap-metal",
+          "item-rare-can",
+          "item-can",
+          "item-object-x",
+          "item-weeds"
+        ],
+        "categories": [
+          "Failed Dish"
+        ]
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-vishnal": {
+    "id": "char-vishnal",
+    "name": "Vishnal",
+    "category": "Bachelors",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-curry-manju",
+          "item-curry-rice",
+          "item-curry-udon",
+          "item-ultimate-curry",
+          "item-royal-curry",
+          "item-dry-curry"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-ice-cream",
+          "item-meat-dumpling",
+          "item-chinese-manju",
+          "item-omelet-rice",
+          "item-flan",
+          "item-fried-rice",
+          "item-cabbage",
+          "item-king-cabbage",
+          "item-pink-melon",
+          "item-onion",
+          "item-pumpkin",
+          "item-cucumber",
+          "item-kaiser-cucumber",
+          "item-corn",
+          "item-gigant-corn",
+          "item-tomato",
+          "item-yam",
+          "item-potato",
+          "item-princely-potato",
+          "item-carrot",
+          "item-green-pepper",
+          "item-radish",
+          "item-leek",
+          "item-bok-choy",
+          "item-croquettes",
+          "item-gyoza",
+          "item-steamed-gyoza",
+          "item-chinese-manju"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-pickles",
+          "item-salad",
+          "item-miso-eggplant",
+          "item-fried-eggs",
+          "item-bamboo-rice",
+          "item-relax-tea-leaves",
+          "item-onigiri",
+          "item-salmon-onigiri",
+          "item-rice",
+          "item-chocolate",
+          "item-sandwich",
+          "item-fruit-sandwich",
+          "item-wine",
+          "item-milk-s",
+          "item-milk-m",
+          "item-milk-l",
+          "item-egg-s",
+          "item-egg-m",
+          "item-egg-l",
+          "item-mayonnaise",
+          "item-yogurt",
+          "item-honey",
+          "item-curry-powder",
+          "item-pumpkin-flan"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-rock",
+          "item-disastrous-dish",
+          "item-pickled-turnip",
+          "item-pickle-mix",
+          "item-pink-turnip",
+          "item-colossal-pink",
+          "item-turnip",
+          "item-tyrant-turnip"
+        ],
+        "categories": [
+          "Failed Dish"
+        ]
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-bado": {
+    "id": "char-bado",
+    "name": "Bado",
+    "category": "Villagers",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-tempura-bowl",
+          "item-egg-bowl"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-scrap-metal",
+          "item-onigiri",
+          "item-salmon-onigiri"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-udon",
+          "item-curry-udon",
+          "item-tempura-udon",
+          "item-scrap-metal"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-cheese-fondue",
+          "item-iron",
+          "item-bronze"
+        ],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-blossom": {
+    "id": "char-blossom",
+    "name": "Blossom",
+    "category": "Villagers",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-risotto"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-milk-porridge",
+          "item-relax-tea",
+          "item-vegetable-juice",
+          "item-dried-sardines"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-spore"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-illuminata": {
+    "id": "char-illuminata",
+    "name": "Illuminata",
+    "category": "Villagers",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-relax-tea-leaves",
+          "item-relax-tea"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-toast",
+          "item-bread",
+          "item-yam-of-the-ages",
+          "item-cookie",
+          "item-choco-cookie",
+          "item-cake",
+          "item-chocolate-cake",
+          "item-cheesecake",
+          "item-apple-pie",
+          "item-ice-cream",
+          "item-cheese-bread",
+          "item-donut",
+          "item-strawberry-jam",
+          "item-marmalade",
+          "item-pound-cake",
+          "item-chocolate-sponge",
+          "item-toyherb",
+          "item-autumn-grass",
+          "item-dumplings"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-baked-onigiri",
+          "item-fruit-smoothie",
+          "item-medicine-bread",
+          "item-grape-liqueur",
+          "item-ayngondaia-lawn"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-pickle-mix",
+          "item-pickles",
+          "item-disastrous-dish",
+          "item-object-x"
+        ],
+        "categories": [
+          "Failed Dish"
+        ]
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-jones": {
+    "id": "char-jones",
+    "name": "Jones",
+    "category": "Villagers",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-fried-rice"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-moondrop-flower",
+          "item-ultra-moondrop-flower",
+          "item-trout-sashimi",
+          "item-miso-eggplant",
+          "item-tempura",
+          "item-salted-masu-trout",
+          "item-grilled-sflounder",
+          "item-udon",
+          "item-tempura-udon",
+          "item-grilled-miso",
+          "item-flan"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-curry-udon",
+          "item-tempura-bowl"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-disastrous-dish",
+          "item-tomato-juice",
+          "item-ketchup",
+          "item-scrap-metal",
+          "item-devil-blood",
+          "item-can",
+          "item-boot",
+          "item-rare-can",
+          "item-rock",
+          "item-branch"
+        ],
+        "categories": [
+          "Failed Dish"
+        ]
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-lin-fa": {
+    "id": "char-lin-fa",
+    "name": "Lin Fa",
+    "category": "Villagers",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-milk-porridge"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-rice-porridge",
+          "item-tempura-bowl",
+          "item-egg-bowl",
+          "item-onigiri",
+          "item-baked-onigiri",
+          "item-salmon-onigiri",
+          "item-milk-m",
+          "item-meat-dumpling",
+          "item-chinese-manju",
+          "item-bamboo-rice",
+          "item-rice",
+          "item-hot-milk",
+          "item-gyoza"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-hot-chocolate",
+          "item-stew",
+          "item-curry-rice",
+          "item-flan",
+          "item-egg-m"
+        ],
+        "categories": [
+          "Ingredients"
+        ]
+      },
+      "dislike": {
+        "items": [
+          "item-udon",
+          "item-curry-udon",
+          "item-tempura-udon"
+        ],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-nancy": {
+    "id": "char-nancy",
+    "name": "Nancy",
+    "category": "Villagers",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-stew"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-moondrop-flower",
+          "item-omelet",
+          "item-omelet-rice",
+          "item-risotto",
+          "item-cheese-fondue",
+          "item-doria",
+          "item-seafood-doria",
+          "item-gratin",
+          "item-seafood-gratin",
+          "item-cheesecake",
+          "item-flan",
+          "item-pumpkin-flan",
+          "item-cheese"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [
+          "item-mealy-apple",
+          "item-toyherb",
+          "item-pom-pom-grass",
+          "item-fried-rice",
+          "item-french-fries",
+          "item-croquettes",
+          "item-popcorn",
+          "item-corn-cereal",
+          "item-miso-eggplant",
+          "item-fried-eggs",
+          "item-baked-apple",
+          "item-curry-bread",
+          "item-french-toast",
+          "item-donut",
+          "item-fried-udon",
+          "item-pancakes",
+          "item-dry-curry",
+          "item-hot-milk",
+          "item-hot-chocolate",
+          "item-grape-liqueur",
+          "item-boiled-pumpkin",
+          "item-eggplant",
+          "item-relax-tea",
+          "item-union-stew",
+          "item-yam-of-the-ages",
+          "item-cookie",
+          "item-choco-cookie",
+          "item-cake",
+          "item-chocolate-cake",
+          "item-apple-pie",
+          "item-pound-cake",
+          "item-chocolate-sponge",
+          "item-sunsquid",
+          "item-blowfish"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-weeds",
+          "item-withered-grass",
+          "item-object-x",
+          "item-disastrous-dish",
+          "item-rainbow-sashimi",
+          "item-lamp-squid-sashimi",
+          "item-rainbow-trout",
+          "item-lamp-squid",
+          "item-scrap-metal"
+        ],
+        "categories": [
+          "Failed Dish"
+        ]
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-pico": {
+    "id": "char-pico",
+    "name": "Pico",
+    "category": "Villagers",
+    "gifts": {
+      "love": {
+        "items": [],
+        "categories": []
+      },
+      "like": {
+        "items": [],
+        "categories": []
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-porcoline": {
+    "id": "char-porcoline",
+    "name": "Porcoline",
+    "category": "Villagers",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-cabbage",
+          "item-pumpkin"
+        ],
+        "categories": [
+          "Bamboo Shoot",
+          "Mushroom"
+        ]
+      },
+      "like": {
+        "items": [],
+        "categories": []
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-ventuswill": {
+    "id": "char-ventuswill",
+    "name": "Ventuswill",
+    "category": "Villagers",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-pancakes"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-honey"
+        ],
+        "categories": [
+          "Mushroom"
+        ]
+      },
+      "neutral": {
+        "items": [
+          "item-veggie-smoothie"
+        ],
+        "categories": []
+      },
+      "dislike": {
+        "items": [],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-volkanon": {
+    "id": "char-volkanon",
+    "name": "Volkanon",
+    "category": "Villagers",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-relax-tea"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-honey",
+          "item-sweet-potato",
+          "item-lumber"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-barrett": {
+    "id": "char-barrett",
+    "name": "Barrett",
+    "category": "Guest Characters",
+    "gifts": {
+      "love": {
+        "items": [
+          "item-salmon",
+          "item-salted-salmon",
+          "item-salmon-sashimi",
+          "item-skipjack-sashimi"
+        ],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-iron"
+        ],
+        "categories": []
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-withered-grass",
+          "item-eggplant"
+        ],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-ethelberd": {
+    "id": "char-ethelberd",
+    "name": "Ethelberd",
+    "category": "Guest Characters",
+    "gifts": {
+      "love": {
+        "items": [],
+        "categories": []
+      },
+      "like": {
+        "items": [],
+        "categories": []
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-raven": {
+    "id": "char-raven",
+    "name": "Raven",
+    "category": "Guest Characters",
+    "gifts": {
+      "love": {
+        "items": [],
+        "categories": []
+      },
+      "like": {
+        "items": [
+          "item-jewels"
+        ],
+        "categories": [
+          "Elemental Crystals",
+          "Flowers",
+          "Metals"
+        ]
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [
+          "item-skull",
+          "item-fish-fossil",
+          "item-ghost-hood",
+          "item-dragon-bones"
+        ],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  },
+  "char-eliza": {
+    "id": "char-eliza",
+    "name": "Eliza",
+    "category": "Other Characters",
+    "gifts": {
+      "love": {
+        "items": [],
+        "categories": []
+      },
+      "like": {
+        "items": [],
+        "categories": []
+      },
+      "neutral": {
+        "items": [],
+        "categories": []
+      },
+      "dislike": {
+        "items": [],
+        "categories": []
+      },
+      "hate": {
+        "items": [],
+        "categories": []
+      }
+    }
+  }
+}

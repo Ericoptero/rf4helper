@@ -1,0 +1,504 @@
+{
+  "shortSword": [
+    {
+      "id": "rune-power-wave",
+      "name": "Power Wave",
+      "weaponType": "Short Sword",
+      "sell": 130,
+      "buy": 1300,
+      "description": "Charge power to release shock waves."
+    },
+    {
+      "id": "rune-dash-slash",
+      "name": "Dash Slash",
+      "weaponType": "Short Sword",
+      "sell": 100,
+      "buy": 2000,
+      "description": "Closes the gap between enemies in an instant. Good timing may net you an additional leg drop."
+    },
+    {
+      "id": "rune-rush-attack",
+      "name": "Rush Attack",
+      "weaponType": "Short Sword",
+      "sell": 190,
+      "buy": 3800,
+      "description": "Press the button repeatedly for additional attacks and a finisher."
+    },
+    {
+      "id": "rune-round-break",
+      "name": "Round Break",
+      "weaponType": "Short Sword",
+      "sell": 345,
+      "buy": 6900,
+      "description": "A cyclone attack that blows away foes. Great to use when surrounded."
+    },
+    {
+      "id": "rune-mind-thrust",
+      "name": "Mind Thrust",
+      "weaponType": "Short Sword",
+      "sell": 140,
+      "buy": 2800,
+      "description": "Find and attack your enemy's weak point. May inflict status ailments as well."
+    }
+  ],
+  "dualBlades": [
+    {
+      "id": "rune-blitz",
+      "name": "Blitz",
+      "weaponType": "Dual Blades",
+      "sell": 420,
+      "buy": 8400,
+      "description": "Speed up attack rate by sharpening concentration."
+    },
+    {
+      "id": "rune-twin-attack",
+      "name": "Twin Attack",
+      "weaponType": "Dual Blades",
+      "sell": 85,
+      "buy": 1700,
+      "description": "Stab, twist and pull -- like a psychotic mantra. Simple, but effective."
+    },
+    {
+      "id": "rune-storm",
+      "name": "Storm",
+      "weaponType": "Dual Blades",
+      "sell": 225,
+      "buy": 4500,
+      "description": "Execute continuous attacks in the air. Keep pressing the button for additional moves."
+    },
+    {
+      "id": "rune-gust",
+      "name": "Gust",
+      "weaponType": "Dual Blades",
+      "sell": 130,
+      "buy": 2600,
+      "description": "Jump up and soar in the air. Also useful for dodging attacks."
+    },
+    {
+      "id": "rune-rail-strike",
+      "name": "Rail Strike",
+      "weaponType": "Dual Blades",
+      "sell": 190,
+      "buy": 3800,
+      "description": "A jump-spin attack. Dynamic and hard to counter."
+    }
+  ],
+  "longSword": [
+    {
+      "id": "rune-wind-slash",
+      "name": "Wind Slash",
+      "weaponType": "Long Sword",
+      "sell": 170,
+      "buy": 3400,
+      "description": "A vertical jump-spin attack. Keep pressing the button to increase the number of spins."
+    },
+    {
+      "id": "rune-flash-strike",
+      "name": "Flash Strike",
+      "weaponType": "Long Sword",
+      "sell": 490,
+      "buy": 9800,
+      "description": "Blow away foes with one swing. Covers wide areas very effectively."
+    },
+    {
+      "id": "rune-steel-heart",
+      "name": "Steel Heart",
+      "weaponType": "Long Sword",
+      "sell": 190,
+      "buy": 3800,
+      "description": "Become strong enough not to stagger when attacked, but take more damage."
+    },
+    {
+      "id": "rune-delta-strike",
+      "name": "Delta Strike",
+      "weaponType": "Long Sword",
+      "sell": 75,
+      "buy": 1500,
+      "description": "A fluid attack of lunging and cutting."
+    },
+    {
+      "id": "rune-naive-blade",
+      "name": "Naive Blade",
+      "weaponType": "Long Sword",
+      "sell": 275,
+      "buy": 5500,
+      "description": "Anticipate your enemy's attacks and quickly strike back."
+    }
+  ],
+  "spear": [
+    {
+      "id": "rune-hurricane",
+      "name": "Hurricane",
+      "weaponType": "Spear",
+      "sell": null,
+      "buy": null,
+      "description": "A fancy attack with a toss, spin and juggle."
+    },
+    {
+      "id": "rune-reaper-slash",
+      "name": "Reaper Slash",
+      "weaponType": "Spear",
+      "sell": 135,
+      "buy": 2700,
+      "description": "Long-ranged attack. Best used when surrounded."
+    },
+    {
+      "id": "rune-millionstrike",
+      "name": "Millionstrike",
+      "weaponType": "Spear",
+      "sell": 440,
+      "buy": 8800,
+      "description": "A swift stab. Creates shock waves to hit multiple times."
+    },
+    {
+      "id": "rune-axel-disaster",
+      "name": "Axel Disaster",
+      "weaponType": "Spear",
+      "sell": 160,
+      "buy": 3200,
+      "description": "Spinning and boring. Must face the enemy head-on to inflict continuous damage."
+    }
+  ],
+  "axehammer": [
+    {
+      "id": "rune-stardust-upper",
+      "name": "Stardust Upper",
+      "weaponType": "Axe/Hammer",
+      "sell": 95,
+      "buy": 1900,
+      "description": "Knock enemies into the air. They can also be attacked while spinning."
+    },
+    {
+      "id": "rune-grand-impact",
+      "name": "Grand Impact",
+      "weaponType": "Axe/Hammer",
+      "sell": 285,
+      "buy": 5700,
+      "description": "Hit the ground and cause an earthquake. Press the button for multiple hits."
+    },
+    {
+      "id": "rune-tornado-swing",
+      "name": "Tornado Swing",
+      "weaponType": "Axe/Hammer",
+      "sell": 120,
+      "buy": 2400,
+      "description": "Spinning lunge attack. Keep pressing the button to increase the number of spins. Just don't make yourself dizzy!"
+    },
+    {
+      "id": "rune-giga-swing",
+      "name": "Giga Swing",
+      "weaponType": "Axe/Hammer",
+      "sell": 550,
+      "buy": 11000,
+      "description": "With its incredible strength, enemies are blown back until they hit something."
+    }
+  ],
+  "fist": [
+    {
+      "id": "rune-upper-cut",
+      "name": "Upper Cut",
+      "weaponType": "Fist",
+      "sell": 150,
+      "buy": 3000,
+      "description": "Launch enemies into the air."
+    },
+    {
+      "id": "rune-double-kick",
+      "name": "Double Kick",
+      "weaponType": "Fist",
+      "sell": 390,
+      "buy": 7800,
+      "description": "Spin and kick enemies so hard."
+    },
+    {
+      "id": "rune-straight-punch",
+      "name": "Straight Punch",
+      "weaponType": "Fist",
+      "sell": 450,
+      "buy": 9000,
+      "description": "Concentrates and give foes a strong blow."
+    },
+    {
+      "id": "rune-neko-damashi",
+      "name": "Neko Damashi",
+      "weaponType": "Fist",
+      "sell": 325,
+      "buy": 6500,
+      "description": "A legendary technique using palm of the hand to cause distress and surprise all in one!"
+    },
+    {
+      "id": "rune-rush-punch",
+      "name": "Rush Punch",
+      "weaponType": "Fist",
+      "sell": 240,
+      "buy": 5800,
+      "description": "Punch many times at high speed. Enemies are already dead."
+    },
+    {
+      "id": "rune-cyclone",
+      "name": "Cyclone",
+      "weaponType": "Fist",
+      "sell": 600,
+      "buy": 12000,
+      "description": "Blow away enemies by spinning your body super fast."
+    },
+    {
+      "id": "rune-rapid-move",
+      "name": "Rapid Move",
+      "weaponType": "Fist",
+      "sell": 490,
+      "buy": 9800,
+      "description": "Move toward an enemy in an instant. Also useful to dodge attacks."
+    }
+  ],
+  "other": [
+    {
+      "id": "rune-escape",
+      "name": "Escape",
+      "weaponType": "Other",
+      "sell": null,
+      "buy": null,
+      "description": "Used for instant transport. Where it takes you depends on where you use it, but the last stop is always home."
+    },
+    {
+      "id": "rune-greeting-spell",
+      "name": "Greeting Spell",
+      "weaponType": "Other",
+      "sell": 75,
+      "buy": 1500,
+      "description": "If you say hello, even people who don't like you will say hi back. They'll be your special friends. Your special awake friends."
+    }
+  ],
+  "cures": [
+    {
+      "id": "rune-cure",
+      "name": "Cure",
+      "weaponType": "Cures",
+      "sell": 60,
+      "buy": 1200,
+      "description": "Recovers HP, for yourself and for nearby companions. Doesn't recover much, but uses few RP."
+    },
+    {
+      "id": "rune-cure-all",
+      "name": "Cure All",
+      "weaponType": "Cures",
+      "sell": 290,
+      "buy": 5800,
+      "description": "Recovers a lot of HP for you and your companions, even if they're not close by. Uses lots of RP."
+    },
+    {
+      "id": "rune-master-cure",
+      "name": "Master Cure",
+      "weaponType": "Cures",
+      "sell": 490,
+      "buy": 9800,
+      "description": "Greatly recovers HP, but consumes a large amount of RP in the process."
+    },
+    {
+      "id": "rune-medipoison",
+      "name": "Medipoison",
+      "weaponType": "Cures",
+      "sell": 90,
+      "buy": 1800,
+      "description": "A purifying light will cleanse the toxins in your body."
+    },
+    {
+      "id": "rune-mediparalyze",
+      "name": "Mediparalyze",
+      "weaponType": "Cures",
+      "sell": 160,
+      "buy": 3200,
+      "description": "A purifying light will enable you to move once more."
+    },
+    {
+      "id": "rune-mediseal",
+      "name": "Mediseal",
+      "weaponType": "Cures",
+      "sell": 240,
+      "buy": 4800,
+      "description": "A purifying light will bring back your inner power."
+    }
+  ],
+  "fire": [
+    {
+      "id": "rune-fireball",
+      "name": "Fireball",
+      "weaponType": "Fire",
+      "sell": 110,
+      "buy": 2200,
+      "description": "Hurls small fireballs. Can hurl up to 3 at a time."
+    },
+    {
+      "id": "rune-big-fire",
+      "name": "Big Fire",
+      "weaponType": "Fire",
+      "sell": 220,
+      "buy": 4400,
+      "description": "Hurls large fireballs. Can hurl up to 2 at a time."
+    },
+    {
+      "id": "rune-explosion",
+      "name": "Explosion",
+      "weaponType": "Fire",
+      "sell": 350,
+      "buy": 6600,
+      "description": "Hurls giant fireballs that cause explosions on impact, damaging their surroundings."
+    }
+  ],
+  "water": [
+    {
+      "id": "rune-water-laser",
+      "name": "Water Laser",
+      "weaponType": "Water",
+      "sell": 120,
+      "buy": 2400,
+      "description": "Emits a water beam that can penetrate stone. The longer you maintain it, the bigger the impact."
+    },
+    {
+      "id": "rune-parallel-laser",
+      "name": "Parallel Laser",
+      "weaponType": "Water",
+      "sell": 240,
+      "buy": 4800,
+      "description": "Emits 2 water beams that can penetrate stone. The longer you maintain them, the bigger the impact."
+    },
+    {
+      "id": "rune-delta-laser",
+      "name": "Delta Laser",
+      "weaponType": "Water",
+      "sell": 360,
+      "buy": 7200,
+      "description": "Emits 3 water beams that can penetrate stone. Particularly effective when surrounded by foes."
+    }
+  ],
+  "earth": [
+    {
+      "id": "rune-screw-rock",
+      "name": "Screw Rock",
+      "weaponType": "Earth",
+      "sell": 115,
+      "buy": 2300,
+      "description": "Summons sharp rocks that substitute for your fists. Designed for fighter mages."
+    },
+    {
+      "id": "rune-earth-spike",
+      "name": "Earth Spike",
+      "weaponType": "Earth",
+      "sell": 230,
+      "buy": 4600,
+      "description": "Summons stone pillars that track enemies and strike them from below."
+    },
+    {
+      "id": "rune-avenger-rock",
+      "name": "Avenger Rock",
+      "weaponType": "Earth",
+      "sell": 345,
+      "buy": 6900,
+      "description": "Stab its target with a large rock. Also known as the \"drill punch.\""
+    }
+  ],
+  "wind": [
+    {
+      "id": "rune-sonic-wind",
+      "name": "Sonic Wind",
+      "weaponType": "Wind",
+      "sell": 125,
+      "buy": 2500,
+      "description": "Emits spinning wind blades that automatically track and shred their foes to pieces."
+    },
+    {
+      "id": "rune-double-sonic",
+      "name": "Double Sonic",
+      "weaponType": "Wind",
+      "sell": 250,
+      "buy": 5000,
+      "description": "Emits 2 spinning wind blades. Their arched trajectory makes it hard to attack enemies in front."
+    },
+    {
+      "id": "rune-penetrate-sonic",
+      "name": "Penetrate Sonic",
+      "weaponType": "Wind",
+      "sell": 375,
+      "buy": 7500,
+      "description": "Emits 3 spinning wind blades that move freely in multiple directions, shredding to bits all who get in their way."
+    }
+  ],
+  "light": [
+    {
+      "id": "rune-light-barrier",
+      "name": "Light Barrier",
+      "weaponType": "Light",
+      "sell": 150,
+      "buy": 3000,
+      "description": "Emits 2 light balls in front of you, protecting from enemies."
+    },
+    {
+      "id": "rune-shine",
+      "name": "Shine",
+      "weaponType": "Light",
+      "sell": 300,
+      "buy": 6000,
+      "description": "Emits 4 light balls that spin around you, protecting you from enemies."
+    },
+    {
+      "id": "rune-prism",
+      "name": "Prism",
+      "weaponType": "Light",
+      "sell": null,
+      "buy": null,
+      "description": "Emits spinning light balls. Provides complete protection from all enemies for a short while."
+    }
+  ],
+  "dark": [
+    {
+      "id": "rune-dark-ball",
+      "name": "Dark Ball",
+      "weaponType": "Dark",
+      "sell": 140,
+      "buy": 2800,
+      "description": "Emits a dark light ball that travels slowly and destroys everything in its way."
+    },
+    {
+      "id": "rune-dark-snake",
+      "name": "Dark Snake",
+      "weaponType": "Dark",
+      "sell": 280,
+      "buy": 5600,
+      "description": "Emits a dark light ball that snakes forward slowly and destroys everything in its path."
+    },
+    {
+      "id": "rune-darkness",
+      "name": "Darkness",
+      "weaponType": "Dark",
+      "sell": 420,
+      "buy": 8400,
+      "description": "Forbidden spell that summons an entrance to the depths of darkness."
+    }
+  ],
+  "music": [
+    {
+      "id": "rune-iron-waltz",
+      "name": "Iron Waltz",
+      "weaponType": "Music",
+      "sell": 390,
+      "buy": 7800,
+      "description": "A musical score that powers up allied monsters' defense until the end of the day."
+    },
+    {
+      "id": "rune-striking-march",
+      "name": "Striking March",
+      "weaponType": "Music",
+      "sell": 400,
+      "buy": 8000,
+      "description": "A musical score that powers up allied monsters' strength until the end of the day."
+    },
+    {
+      "id": "rune-bonus-concerto",
+      "name": "Bonus Concerto",
+      "weaponType": "Music",
+      "sell": 190,
+      "buy": 3800,
+      "description": "A musical score that inspires allied monsters to do their best in combat.*"
+    }
+  ]
+}

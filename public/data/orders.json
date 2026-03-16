@@ -1,0 +1,387 @@
+[
+  {
+    "id": "order-airship-license",
+    "orderName": "Airship license",
+    "category": "Licenses",
+    "requirement": "Struggling prince (100 tourists)",
+    "rpCost": 300
+  },
+  {
+    "id": "order-bados-accessories",
+    "orderName": "Bado's Accessories",
+    "category": "Shops",
+    "requirement": "Struggling prince (100 tourists)",
+    "rpCost": 500
+  },
+  {
+    "id": "order-blossoms-furniture",
+    "orderName": "Blossom's Furniture",
+    "category": "Shops",
+    "requirement": "Respected Prince (250 tourists)",
+    "rpCost": 800
+  },
+  {
+    "id": "order-lumies-flower-shop",
+    "orderName": "Lumie's Flower Shop",
+    "category": "Shops",
+    "requirement": "Respected Prince (250 tourists)",
+    "rpCost": 500
+  },
+  {
+    "id": "order-blossoms-groceries",
+    "orderName": "Blossom's Groceries",
+    "category": "Shops",
+    "requirement": "Respected Prince (250 tourists)",
+    "rpCost": 500
+  },
+  {
+    "id": "order-jewelry-shop",
+    "orderName": "Jewelry Shop",
+    "category": "Shops",
+    "requirement": "Respected Prince (250 tourists)",
+    "rpCost": 2000
+  },
+  {
+    "id": "order-clothing-shop",
+    "orderName": "Clothing Shop",
+    "category": "Shops",
+    "requirement": "Respected Prince (250 tourists)",
+    "rpCost": 800
+  },
+  {
+    "id": "order-business-lincense",
+    "orderName": "Business Lincense",
+    "category": "Licenses",
+    "requirement": "Reliable Prince (500 tourists)",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-bados-bargain-sale",
+    "orderName": "Bado's Bargain Sale",
+    "category": "Shops",
+    "requirement": "Reliable Prince (500 tourists)",
+    "rpCost": 2000
+  },
+  {
+    "id": "order-fish-market",
+    "orderName": "Fish Market",
+    "category": "Shops",
+    "requirement": "Reliable Prince (500 tourists)",
+    "rpCost": 2000
+  },
+  {
+    "id": "order-furniture-shop",
+    "orderName": "Furniture Shop",
+    "category": "Shops",
+    "requirement": "Reliable Prince (500 tourists)",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-clothing-shop",
+    "orderName": "Clothing Shop",
+    "category": "Shops",
+    "requirement": "Reliable Prince (500 tourists)",
+    "rpCost": 800
+  },
+  {
+    "id": "order-nationalize-baths",
+    "orderName": "Nationalize Baths",
+    "category": "Shops",
+    "requirement": "Reliable Prince (500 tourists)",
+    "rpCost": 35000
+  },
+  {
+    "id": "order-advertise-selphia",
+    "orderName": "Advertise Selphia",
+    "category": "Other",
+    "requirement": "Reliable Prince (500 tourists)",
+    "rpCost": 1500
+  },
+  {
+    "id": "order-magic-shop",
+    "orderName": "Magic Shop",
+    "category": "Shops",
+    "requirement": "Honorable Prince (1000 tourists)",
+    "rpCost": 2500
+  },
+  {
+    "id": "order-ability-shop",
+    "orderName": "Ability Shop",
+    "category": "Shops",
+    "requirement": "Honorable Prince (1000 tourists)",
+    "rpCost": 2500
+  },
+  {
+    "id": "order-wood-to-farm",
+    "orderName": "Wood to farm",
+    "category": "Other",
+    "requirement": "Honorable Prince (1000 tourists)",
+    "rpCost": 500
+  },
+  {
+    "id": "order-rocks-to-farm",
+    "orderName": "Rocks to farm",
+    "category": "Other",
+    "requirement": "Honorable Prince (1000 tourists)",
+    "rpCost": 500
+  },
+  {
+    "id": "order-bgm-rune-factory-1",
+    "orderName": "BGM: Rune Factory 1",
+    "category": "Other",
+    "requirement": "Honorable Prince (1000 tourists)",
+    "rpCost": 50
+  },
+  {
+    "id": "order-bgm-rune-factory-2",
+    "orderName": "BGM: Rune Factory 2",
+    "category": "Other",
+    "requirement": "Honorable Prince (1000 tourists)",
+    "rpCost": 50
+  },
+  {
+    "id": "order-bgm-rune-factory-3",
+    "orderName": "BGM: Rune Factory 3",
+    "category": "Other",
+    "requirement": "Honorable Prince (1000 tourists)",
+    "rpCost": 50
+  },
+  {
+    "id": "order-bgm-rune-factory-4",
+    "orderName": "BGM: Rune Factory 4",
+    "category": "Other",
+    "requirement": "Honorable Prince (1000 tourists)",
+    "rpCost": 50
+  },
+  {
+    "id": "order-bgm-frontier",
+    "orderName": "BGM: Frontier",
+    "category": "Other",
+    "requirement": "Honorable Prince (1000 tourists)",
+    "rpCost": 50
+  },
+  {
+    "id": "order-bgm-tides-destiny",
+    "orderName": "BGM: Tides/Destiny",
+    "category": "Other",
+    "requirement": "Honorable Prince (1000 tourists)",
+    "rpCost": 50
+  },
+  {
+    "id": "order-unlock-volkanon",
+    "orderName": "Unlock Volkanon",
+    "category": "Other",
+    "requirement": "Crown of Crown (2500 tourists)",
+    "rpCost": 9999
+  },
+  {
+    "id": "order-expand-farm",
+    "orderName": "Expand Farm",
+    "category": "Development",
+    "requirement": "Shipping catalogue 10%",
+    "rpCost": 500
+  },
+  {
+    "id": "order-expand-farm",
+    "orderName": "Expand Farm",
+    "category": "Development",
+    "requirement": "Shipping catalogue 10%",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-expand-farm",
+    "orderName": "Expand Farm",
+    "category": "Development",
+    "requirement": "Shipping catalogue 10%",
+    "rpCost": 2500
+  },
+  {
+    "id": "order-expand-farm",
+    "orderName": "Expand Farm",
+    "category": "Development",
+    "requirement": "Shipping catalogue 10%",
+    "rpCost": 5000
+  },
+  {
+    "id": "order-expand-room",
+    "orderName": "Expand Room",
+    "category": "Development",
+    "requirement": "2/3 of Forge, chemistry or crafting table.",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-expand-room",
+    "orderName": "Expand Room",
+    "category": "Development",
+    "requirement": "2/3 of Forge, chemistry or crafting table.",
+    "rpCost": 1500
+  },
+  {
+    "id": "order-expand-room",
+    "orderName": "Expand Room",
+    "category": "Development",
+    "requirement": "2/3 of Forge, chemistry or crafting table.",
+    "rpCost": 2500
+  },
+  {
+    "id": "order-expand-room",
+    "orderName": "Expand Room",
+    "category": "Development",
+    "requirement": "2/3 of Forge, chemistry or crafting table.",
+    "rpCost": 3500
+  },
+  {
+    "id": "order-expand-room",
+    "orderName": "Expand Room",
+    "category": "Development",
+    "requirement": "2/3 of Forge, chemistry or crafting table.",
+    "rpCost": 5000
+  },
+  {
+    "id": "order-forging-license",
+    "orderName": "Forging License",
+    "category": "Licenses",
+    "requirement": "Volkanon break stumps (event)",
+    "rpCost": 200
+  },
+  {
+    "id": "order-crafting-license",
+    "orderName": "Crafting License",
+    "category": "Licenses",
+    "requirement": "Volkanon break stumps (event)",
+    "rpCost": 200
+  },
+  {
+    "id": "order-chemistry-license",
+    "orderName": "Chemistry License",
+    "category": "Licenses",
+    "requirement": "Butterflies Again (event)",
+    "rpCost": 100
+  },
+  {
+    "id": "order-ez-cooking-license",
+    "orderName": "EZ Cooking License",
+    "category": "Licenses",
+    "requirement": "Receive Cooking Table",
+    "rpCost": 100
+  },
+  {
+    "id": "order-pro-cooking-license",
+    "orderName": "Pro Cooking License",
+    "category": "Licenses",
+    "requirement": "EZ cooking License",
+    "rpCost": 500
+  },
+  {
+    "id": "order-unify-cooking-tools",
+    "orderName": "Unify Cooking Tools",
+    "category": "Development",
+    "requirement": "All cooking tools",
+    "rpCost": 5000
+  },
+  {
+    "id": "order-cooking-contest",
+    "orderName": "Cooking Contest",
+    "category": "Festivals",
+    "requirement": "Complete First Task!",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-bean-toss-contest",
+    "orderName": "Bean Toss Contest",
+    "category": "Festivals",
+    "requirement": "Complete First Task!",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-fishing-frenzy-contest",
+    "orderName": "Fishing Frenzy Contest",
+    "category": "Festivals",
+    "requirement": "Complete First Task!",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-de-fluffing-festival",
+    "orderName": "De-Fluffing Festival",
+    "category": "Festivals",
+    "requirement": "Complete First Task!",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-spring-harvest-festival",
+    "orderName": "Spring Harvest Festival",
+    "category": "Festivals",
+    "requirement": "Complete First Task!",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-turnip-festival",
+    "orderName": "Turnip Festival",
+    "category": "Festivals",
+    "requirement": "Complete First Task!",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-big-catch-contest",
+    "orderName": "Big Catch Contest",
+    "category": "Festivals",
+    "requirement": "Summer 1",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-buddy-battle",
+    "orderName": "Buddy Battle",
+    "category": "Festivals",
+    "requirement": "Summer 1",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-eating-contest",
+    "orderName": "Eating Contest",
+    "category": "Festivals",
+    "requirement": "Summer 1",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-fish-variety-contest",
+    "orderName": "Fish Variety Contest",
+    "category": "Festivals",
+    "requirement": "Fall 1",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-handicraft-contest",
+    "orderName": "Handicraft Contest",
+    "category": "Festivals",
+    "requirement": "Fall 1",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-turnip-flurry",
+    "orderName": "Turnip Flurry",
+    "category": "Festivals",
+    "requirement": "Fall 1",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-quiz-contest",
+    "orderName": "Quiz Contest",
+    "category": "Festivals",
+    "requirement": "Winter 1",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-squid-catch-contest",
+    "orderName": "Squid Catch Contest",
+    "category": "Festivals",
+    "requirement": "Winter 1",
+    "rpCost": 1000
+  },
+  {
+    "id": "order-new-back-pack",
+    "orderName": "New Back Pack",
+    "category": "Development",
+    "requirement": "First Task!",
+    "rpCost": 50
+  }
+]

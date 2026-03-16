@@ -1,0 +1,99 @@
+{
+  "stats": [
+    {
+      "id": "stat-hp",
+      "name": "HP",
+      "description": "Health Points."
+    },
+    {
+      "id": "stat-rp",
+      "name": "RP",
+      "description": "Rune Points. Used in all activities."
+    },
+    {
+      "id": "stat-atk",
+      "name": "ATK",
+      "description": "Physical attack damage."
+    },
+    {
+      "id": "stat-def",
+      "name": "DEF",
+      "description": "Physical damage resistance."
+    },
+    {
+      "id": "stat-matk",
+      "name": "M.ATK",
+      "description": "Magical attack damage."
+    },
+    {
+      "id": "stat-mdef",
+      "name": "M.DEF",
+      "description": "Magical damage resistance."
+    },
+    {
+      "id": "stat-str",
+      "name": "STR",
+      "description": "Strength. Each STR increases ATK by 1."
+    },
+    {
+      "id": "stat-vit",
+      "name": "VIT",
+      "description": "Vitality. Each VIT increases DEF and M.DEF by 0.5."
+    },
+    {
+      "id": "stat-int",
+      "name": "INT",
+      "description": "Intelligence. Each INT increases M.ATK by 1."
+    }
+  ],
+  "ailments": [
+    {
+      "id": "ailment-poison",
+      "name": "Poison",
+      "description": "Receives damage every few seconds. Scales with Max HP. Can be removed using food items or Medipoison magic.",
+      "cure": null
+    },
+    {
+      "id": "ailment-seal",
+      "name": "Seal",
+      "description": "Prevents usage of skills and magic. Can be removed using food items or Mediseal magic.",
+      "cure": null
+    },
+    {
+      "id": "ailment-paralysis",
+      "name": "Paralysis",
+      "description": "Prevents character from running. Can be removed using food items or Mediparalyze magic.",
+      "cure": null
+    },
+    {
+      "id": "ailment-sleep",
+      "name": "Sleep",
+      "description": "Temporarily disables character for a short duration. Character under sleep status is more vulnerable to critical attacks. Status is removed after a short duration or after the first attack made to the character.",
+      "cure": null
+    },
+    {
+      "id": "ailment-fatigue",
+      "name": "Fatigue",
+      "description": "Increases RP consumption for all activities. Can be removed using food items or bath.",
+      "cure": null
+    },
+    {
+      "id": "ailment-cold",
+      "name": "Cold",
+      "description": "RP is reduced every few seconds. Scales with Max RP. Can be removed using food items.",
+      "cure": null
+    },
+    {
+      "id": "ailment-knockout",
+      "name": "Knockout",
+      "description": "Death in a single hit. Can be prevented using Faint Res.",
+      "cure": null
+    },
+    {
+      "id": "ailment-dizzy",
+      "name": "Dizzy",
+      "description": "Temporarily disables character for a short duration. Status is removed after a short duration.",
+      "cure": null
+    }
+  ]
+}

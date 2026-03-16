@@ -1,0 +1,440 @@
+{
+  "floor1TrophyRoom": [
+    {
+      "id": "trophy-projector",
+      "name": "Projector",
+      "description": "A machine that plays back vivid memories. Just close your eyes and concentrate...",
+      "requirements": "Initially available."
+    },
+    {
+      "id": "trophy-first-shipped",
+      "name": "First Shipped",
+      "description": "[First Shipped] Delicious crops and beautiful accessories. I want to see everyone's smiling faces!",
+      "requirements": "Sell an item through your Shipping Bin."
+    },
+    {
+      "id": "trophy-first-date",
+      "name": "First Date",
+      "description": "[First Date] Erm, who did I go on a date with, again? I couldn't possibly have forgotten...",
+      "requirements": "Go on a date."
+    },
+    {
+      "id": "trophy-first-catch",
+      "name": "First Catch",
+      "description": "[First Catch] It's a quiet but exciting battle with some wily fishies. Exciting!",
+      "requirements": "Catch a fish."
+    },
+    {
+      "id": "trophy-first-pet",
+      "name": "First Pet",
+      "description": "[First Friendly Monster] There's no border between man and beast. At heart, we're all but monsters!",
+      "requirements": "Befriend a monster."
+    },
+    {
+      "id": "trophy-first-cold-caught",
+      "name": "First Cold Caught",
+      "description": "[First Cold Caught] If you're tired, take a break. You wouldn't want to worry those close to you!",
+      "requirements": "Catch a cold."
+    },
+    {
+      "id": "trophy-first-request",
+      "name": "First Request",
+      "description": "[First Request Solved] It's a beautiful thing to help someone. Hang onto this feeling always!",
+      "requirements": "Complete a request."
+    },
+    {
+      "id": "trophy-first-bath",
+      "name": "First Bath",
+      "description": "[First Bath] No, not literally! Just my first time bathing at an inn. Sheesh! I'm not THAT gross!",
+      "requirements": "Take a bath at the inn."
+    },
+    {
+      "id": "trophy-difficulty-setting",
+      "name": "Difficulty Setting",
+      "description": "[Game Difficulty: ____ ] There are also ____ and ____ difficulties.",
+      "requirements": "Initially available; choose between Easy, Normal, and Difficult."
+    },
+    {
+      "id": "trophy-bean-throw-trophy",
+      "name": "Bean Throw. Trophy",
+      "description": "[Bean Toss Contest Trophy]Ack! So much Failed Dish!",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-de-fluffing-trophy",
+      "name": "De-Fluffing Trophy",
+      "description": "[De-Fluffing Festival Trophy]I want to sink into a big Wooly.",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-fish-frenzy-trophy",
+      "name": "Fish. Frenzy Trophy",
+      "description": "[Fishing Frenzy Contest Trophy]The proof you won Fishing Frenzy Contest. Fish! Fish! Fiiish!",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-big-catch-trophy",
+      "name": "Big Catch Trophy",
+      "description": "[Big Catch Contest Trophy]You are the Big Catch Contest champ! Yours is bigger than anyone's!",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-squid-catch-trophy",
+      "name": "Squid Catch Trophy",
+      "description": "[Squid Catch Contest Trophy]You conquered the Squid Catch Contest. You're an epic fisherman!",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-variety-trophy",
+      "name": "Variety Trophy",
+      "description": "[Fish Variety Contest Trophy]Fish Variety Contest was all yours. Every fish begs your pardon.",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-eating-con-trophy",
+      "name": "Eating Con. Trophy",
+      "description": "[Eating Contest Trophy]Food is not drink. Chew it!",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-target-prac-trophy",
+      "name": "Target Prac. Trophy",
+      "description": "[Turnip Festival Trophy]Hit two turnips with one ball.",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-turnip-con-trophy",
+      "name": "Turnip Con. Trophy",
+      "description": "[Turnip Flurry Trophy]Turnips! Give me some turnips!",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-spr-harvest-trophy",
+      "name": "Spr. Harvest Trophy",
+      "description": "[Spring Harvest Festival Trophy]Yours shone the brightest. Be proud!",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-sum-harvest-trophy",
+      "name": "Sum. Harvest Trophy",
+      "description": "[Summer Harvest Festival Trophy]Yours shone the brightest. Be proud!",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-aut-harvest-trophy",
+      "name": "Aut. Harvest Trophy",
+      "description": "[Autumn Harvest Festival Trophy]Yours shone the brightest. Be proud!",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-win-harvest-trophy",
+      "name": "Win. Harvest Trophy",
+      "description": "[Winter Harvest Festival Trophy]Yours shone the brightest. Be proud!",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-quiz-contest-trophy",
+      "name": "Quiz Contest Trophy",
+      "description": "[Quiz Contest Trophy]What a genius you are! This is a trophy for a real Quiz King!",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-buddy-battle-trophy",
+      "name": "Buddy Battle Trophy",
+      "description": "[Buddy Battle Trophy]Thank you for taking care of me. Master, did I make you proud?",
+      "requirements": "Place in the top 3."
+    }
+  ],
+  "floor2TrophyRoom": [
+    {
+      "id": "trophy-cooking-con-trophy",
+      "name": "Cooking Con. Trophy",
+      "description": "[Cooking Contest Trophy]You've mastered cooking. Next up...is love and marriage!",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-handicraft-trophy",
+      "name": "Handicraft Trophy",
+      "description": "[Handicraft Contest Trophy]You're a forging master! Strike while the iron is hot!",
+      "requirements": "Place in the top 3."
+    },
+    {
+      "id": "trophy-illustration-contest",
+      "name": "Illustration Contest",
+      "description": "View images drawn by fans for the fifth anniversary of the Rune Factory series.",
+      "requirements": "Initially available."
+    },
+    {
+      "id": "trophy-wedding-photo",
+      "name": "Wedding Photo",
+      "description": "[Your Wedding Photo]It's a photo of ____ and ____ . Best wishes!",
+      "requirements": "Get married. Examine this trophy to change nicknames or to replay your wedding day."
+    },
+    {
+      "id": "trophy-fin-rune-factory-4",
+      "name": "Fin. Rune Factory 4",
+      "description": "[Completed Rune Factory 4]Congratulations! You've definitely earned this trophy!",
+      "requirements": "Finish 2nd(?) story arc"
+    },
+    {
+      "id": "trophy-beloved-by-all",
+      "name": "Beloved By All",
+      "description": "[Beloved By All]Everybody loves you. This is your proof of everlasting friendship.",
+      "requirements": "Raise friendship level of everyone to 10."
+    },
+    {
+      "id": "trophy-saved-10-000-000-g",
+      "name": "Saved 10,000,000 G",
+      "description": "[Saved 10,000,000 Gold]Penny pincher, or just got good business sense? Either way, wow!",
+      "requirements": "Save 10,000,000 gold"
+    },
+    {
+      "id": "trophy-five-years-passed",
+      "name": "Five Years Passed",
+      "description": "[Five Years Passed]Hope you've built up lots of wonderful memories!",
+      "requirements": "Spend 5 years in-game. The time skip does not count."
+    },
+    {
+      "id": "trophy-shipped-all-items",
+      "name": "Shipped All Items",
+      "description": "[Shipped All Items]You are a true master of Rune Factory 4. Simply amazing!",
+      "requirements": "Ship all the items at least once."
+    },
+    {
+      "id": "trophy-had-a-baby",
+      "name": "Had a Baby",
+      "description": "[Had a Baby]Your baby is the crystallization of your dreams, hopes and love.",
+      "requirements": "Have a child."
+    },
+    {
+      "id": "trophy-built-the-biggest-monster-barn",
+      "name": "Built the Biggest Monster Barn",
+      "description": "[Built the Biggest Monster Barn]Any new monsters out there? If so, you're totally ready for'em!",
+      "requirements": "Build and expand all Monster Barns."
+    },
+    {
+      "id": "trophy-made-it-to-lv-1-000",
+      "name": "Made it to Lv. 1,000",
+      "description": "[Made it to Level 1,000]Finally, you hit the thousand mark! This road...has no end",
+      "requirements": "Reach level 1,000."
+    },
+    {
+      "id": "trophy-sharance-trophy",
+      "name": "Sharance Trophy",
+      "description": "You completed the \"_________\" in Sharance Maze. ____________________.",
+      "requirements": "Complete a section of the Sharance Maze."
+    },
+    {
+      "id": "trophy-masu-trout-trophy",
+      "name": "Masu Trout Trophy",
+      "description": "Caught Masu Trout!",
+      "requirements": "Catch Masu Trout."
+    },
+    {
+      "id": "trophy-squid-trophy",
+      "name": "Squid Trophy",
+      "description": "Caught Squid!",
+      "requirements": "Catch Squid."
+    },
+    {
+      "id": "trophy-taimen-trophy",
+      "name": "Taimen Trophy",
+      "description": "Caught Taimen!",
+      "requirements": "Catch Taimen."
+    },
+    {
+      "id": "trophy-sardine-trophy",
+      "name": "Sardine Trophy",
+      "description": "Caught Sardine!",
+      "requirements": "Catch Sardine."
+    },
+    {
+      "id": "trophy-char-trophy",
+      "name": "Char Trophy",
+      "description": "Caught Char!",
+      "requirements": "Catch Char."
+    },
+    {
+      "id": "trophy-chub-trophy",
+      "name": "Chub Trophy",
+      "description": "Caught Chub!",
+      "requirements": "Catch Chub."
+    },
+    {
+      "id": "trophy-glitter-snp-trophy",
+      "name": "Glitter Snp. Trophy",
+      "description": "Caught Glitter Snapper!",
+      "requirements": "Catch Glitter Snapper."
+    },
+    {
+      "id": "trophy-skipjack-trophy",
+      "name": "Skipjack Trophy",
+      "description": "Caught Skipjack!",
+      "requirements": "Catch Skipjack."
+    },
+    {
+      "id": "trophy-turbot-trophy",
+      "name": "Turbot Trophy",
+      "description": "Caught Turbot!",
+      "requirements": "Catch Turbot."
+    },
+    {
+      "id": "trophy-gibelio-trophy",
+      "name": "Gibelio Trophy",
+      "description": "Caught Gibelio!",
+      "requirements": "Catch Gibelio."
+    },
+    {
+      "id": "trophy-salmon-trophy",
+      "name": "Salmon Trophy",
+      "description": "Caught Salmon!",
+      "requirements": "Catch Salmon."
+    }
+  ],
+  "floor3TrophyRoom": [
+    {
+      "id": "trophy-mackerel-trophy",
+      "name": "Mackerel Trophy",
+      "description": "Caught Mackerel!",
+      "requirements": "Catch Mackerel."
+    },
+    {
+      "id": "trophy-needle-fish-trophy",
+      "name": "Needle Fish Trophy",
+      "description": "Caught Needlefish!",
+      "requirements": "Catch Needlefish."
+    },
+    {
+      "id": "trophy-pike-trophy",
+      "name": "Pike Trophy",
+      "description": "Caught Pike!",
+      "requirements": "Catch Pike."
+    },
+    {
+      "id": "trophy-sunsquid-trophy",
+      "name": "Sunsquid Trophy",
+      "description": "Caught Sunsquid!",
+      "requirements": "Catch Sunsquid."
+    },
+    {
+      "id": "trophy-shrimp-trophy",
+      "name": "Shrimp Trophy",
+      "description": "Caught Shrimp!",
+      "requirements": "Catch Shrimp."
+    },
+    {
+      "id": "trophy-snapper-trophy",
+      "name": "Snapper Trophy",
+      "description": "Caught Snapper!",
+      "requirements": "Catch Snapper."
+    },
+    {
+      "id": "trophy-throbby-snp-trophy",
+      "name": "Throbby Snp. Trophy",
+      "description": "Caught Throbby Snapper!",
+      "requirements": "Catch Throbby Snapper."
+    },
+    {
+      "id": "trophy-rainbow-trt-trophy",
+      "name": "Rainbow Trt. Trophy",
+      "description": "Caught Rainbow Trout!",
+      "requirements": "Catch Rainbow Trout."
+    },
+    {
+      "id": "trophy-flounder-trophy",
+      "name": "Flounder Trophy",
+      "description": "Caught Flounder!",
+      "requirements": "Catch Flounder."
+    },
+    {
+      "id": "trophy-blowfish-trophy",
+      "name": "Blowfish Trophy",
+      "description": "Caught Blowfish!",
+      "requirements": "Catch Blowfish."
+    },
+    {
+      "id": "trophy-yellowtail-trophy",
+      "name": "Yellowtail Trophy",
+      "description": "Caught Yellowtail!",
+      "requirements": "Catch Yellowtail."
+    },
+    {
+      "id": "trophy-crucian-carp-trophy",
+      "name": "Crucian Carp Trophy",
+      "description": "Caught Crucian Carp!",
+      "requirements": "Catch Crucian Carp."
+    },
+    {
+      "id": "trophy-tuna-trophy",
+      "name": "Tuna Trophy",
+      "description": "Caught Tuna!",
+      "requirements": "Catch Tuna."
+    },
+    {
+      "id": "trophy-girella-trophy",
+      "name": "Girella Trophy",
+      "description": "Caught Girella!",
+      "requirements": "Catch Girella."
+    },
+    {
+      "id": "trophy-fall-flounder-trophy",
+      "name": "Fall Flounder Trophy",
+      "description": "Caught Fall Flounder!",
+      "requirements": "Catch Fall Flounder."
+    },
+    {
+      "id": "trophy-cherry-slmn-trophy",
+      "name": "Cherry Slmn. Trophy",
+      "description": "Caught Cherry Salmon!",
+      "requirements": "Catch Cherry Salmon."
+    },
+    {
+      "id": "trophy-lamp-squid-trophy",
+      "name": "Lamp Squid Trophy",
+      "description": "Caught Lamp Squid!",
+      "requirements": "Catch Lamp Squid."
+    },
+    {
+      "id": "trophy-lobster-trophy",
+      "name": "Lobster Trophy",
+      "description": "Caught Lobster!",
+      "requirements": "Catch Lobster."
+    },
+    {
+      "id": "trophy-pond-smelt-trophy",
+      "name": "Pond Smelt Trophy",
+      "description": "Caught Pond Smelt!",
+      "requirements": "Catch Pond Smelt."
+    },
+    {
+      "id": "trophy-sand-flndr-trophy",
+      "name": "Sand Flndr. Trophy",
+      "description": "Caught Sand Flounder!",
+      "requirements": "Catch Sand Flounder."
+    },
+    {
+      "id": "trophy-rock-fish-trophy",
+      "name": "Rock Fish Trophy",
+      "description": "Caught Rock Fish!",
+      "requirements": "Catch Rock Fish."
+    },
+    {
+      "id": "trophy-can-trophy",
+      "name": "Can Trophy",
+      "description": "Caught Can!",
+      "requirements": "Catch Can."
+    },
+    {
+      "id": "trophy-boot-trophy",
+      "name": "Boot Trophy",
+      "description": "Caught Boot!",
+      "requirements": "Catch Boot."
+    },
+    {
+      "id": "trophy-rare-can-trophy",
+      "name": "Rare Can Trophy",
+      "description": "Caught Rare Can!",
+      "requirements": "Catch Rare Can."
+    }
+  ]
+}

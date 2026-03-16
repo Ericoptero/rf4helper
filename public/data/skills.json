@@ -1,0 +1,62 @@
+[
+  {
+    "id": "skill-short-sword",
+    "name": "Short Sword",
+    "description": "Short Swords are balanced for both attack and defense. Higher skill levels increase damage and cut RP used. Also raises maximum RP and STR.",
+    "unlocks": {
+      "lv5": "Dash Attack",
+      "lv10": "Charge Attack",
+      "lv20": "Ultimate Attack"
+    }
+  },
+  {
+    "id": "skill-long-sword",
+    "name": "Long Sword",
+    "description": "Long Swords are both long-ranged and effective. Higher skill levels increase damage and cut RP used. Also raises maximum RP and STR.",
+    "unlocks": {
+      "lv5": "Dash Attack",
+      "lv10": "Charge Attack",
+      "lv20": "Ultimate Attack"
+    }
+  },
+  {
+    "id": "skill-spear",
+    "name": "Spear",
+    "description": "Spears allow for attacks to be made from afar. Higher skill levels increase damage and cut RP used. Also raises maximum RP and STR.",
+    "unlocks": {
+      "lv5": "Dash Attack",
+      "lv10": "Charge Attack",
+      "lv20": "Ultimate Attack"
+    }
+  },
+  {
+    "id": "skill-axe-hammer",
+    "name": "Axe/Hammer",
+    "description": "Battle axes/hammers are overwhelmingly powerful. Higher skill levels increase damage and cut RP used. Also raises maximum RP and STR.",
+    "unlocks": {
+      "lv5": "Dash Attack",
+      "lv10": "Charge Attack",
+      "lv20": "Ultimate Attack"
+    }
+  },
+  {
+    "id": "skill-dual-blades",
+    "name": "Dual Blades",
+    "description": "Dual Blades concentrate on combat effectiveness. Higher skill levels increase damage and cut RP used. Also raises maximum RP and STR.",
+    "unlocks": {
+      "lv5": "Dash Attack",
+      "lv10": "Charge Attack",
+      "lv20": "Ultimate Attack"
+    }
+  },
+  {
+    "id": "skill-fist",
+    "name": "Fist",
+    "description": "Skill needed to use your own fists when attacking foes. Higher skill levels increase damage and cut RP used. Also raises maximum RP and STR.",
+    "unlocks": {
+      "lv5": "Dash Attack",
+      "lv10": "Charge Attack",
+      "lv20": "Ultimate Attack"
+    }
+  }
+]

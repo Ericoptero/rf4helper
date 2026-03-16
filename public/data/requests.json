@@ -1,0 +1,1555 @@
+{
+  "itemrecipeRewards": [
+    {
+      "id": "first-task",
+      "request": "First Task!",
+      "unlockConditions": "",
+      "howToComplete": "Check the order symbol and follow Arthur's instructions.",
+      "reward": "4 Turnip Seeds, and a festival of your choosing."
+    },
+    {
+      "id": "how-to-place-furniture",
+      "request": "How to place furniture!",
+      "unlockConditions": "Complete First Task!",
+      "howToComplete": "Move the storage box provided into your room.",
+      "reward": "Storage Box and Calendar"
+    },
+    {
+      "id": "make-lumber",
+      "request": "Make Lumber",
+      "unlockConditions": "Complete How to place furniture!",
+      "howToComplete": "Break a piece of wood with your axe.",
+      "reward": "A Cheep Axe and a Lumber/Stone Box"
+    },
+    {
+      "id": "give-an-item",
+      "request": "Give an item!",
+      "unlockConditions": "Complete Make a Shipment!",
+      "howToComplete": "Give a Turnip to Clorica",
+      "reward": "Cheap Sickle"
+    },
+    {
+      "id": "purchase-rice",
+      "request": "Purchase Rice!",
+      "unlockConditions": "Complete Give an item!",
+      "howToComplete": "Buy rice from the General Store.",
+      "reward": "4 Toyherb Seeds"
+    },
+    {
+      "id": "make-material-stone",
+      "request": "Make Material Stone!",
+      "unlockConditions": "Complete Purchase Rice!",
+      "howToComplete": "Break apart a stone with your hammer.",
+      "reward": "Cheap Hammer and 4 stones."
+    },
+    {
+      "id": "try-fishing",
+      "request": "Try Fishing",
+      "unlockConditions": "Complete Make Material Stone!",
+      "howToComplete": "Catch a fish and give it to Vishnal.",
+      "reward": "Cheap Rod and 300G"
+    },
+    {
+      "id": "use-a-fertilizer-bin",
+      "request": "Use a Fertilizer Bin!",
+      "unlockConditions": "Complete Try fishing!",
+      "howToComplete": "Put a grass item into your fertilizer bin.",
+      "reward": "Fertilizer Bin and 3 Withered Grass."
+    },
+    {
+      "id": "mine-iron",
+      "request": "Mine Iron!",
+      "unlockConditions": "Complete Use a Fertilizer Bin!",
+      "howToComplete": "Mine a piece of Iron from a mineral.",
+      "reward": "Amethyst"
+    },
+    {
+      "id": "raise-friendship-levels-1",
+      "request": "Raise friendship levels! (1)",
+      "unlockConditions": "Complete Mine Iron!",
+      "howToComplete": "Raise the FP or LP of everyone in town to 1.",
+      "reward": "Greeting Magic"
+    },
+    {
+      "id": "look-at-illustrations",
+      "request": "Look at illustrations!",
+      "unlockConditions": "Complete Raise friendship levels! (1)",
+      "howToComplete": "Check the illustrations in your trophy room.",
+      "reward": "Leveliser"
+    },
+    {
+      "id": "check-difficulty-level",
+      "request": "Check difficulty level!",
+      "unlockConditions": "Complete Raise friendship levels! (1)",
+      "howToComplete": "Check the trophy for adjusting your difficulty level.",
+      "reward": "4 Recovery Potions"
+    },
+    {
+      "id": "get-an-airship-license",
+      "request": "Get an Airship License!",
+      "unlockConditions": "Complete Raise friendship levels! (1)",
+      "howToComplete": "Check the order symbol and take the test to order your airship license.",
+      "reward": "The exchange coin feature will become available at Arthur's store."
+    },
+    {
+      "id": "get-a-cooking-table",
+      "request": "Get a Cooking Table!",
+      "unlockConditions": "Complete Get an Airship License!",
+      "howToComplete": "Speak to Porcoline about getting a Cooking Table.",
+      "reward": "Cooking Bread"
+    },
+    {
+      "id": "start-cooking",
+      "request": "Start Cooking!",
+      "unlockConditions": "Complete Get a Cooking Table!",
+      "howToComplete": "Prepare a dish.",
+      "reward": "Flour"
+    },
+    {
+      "id": "get-a-forge",
+      "request": "Get a Forge!",
+      "unlockConditions": "Complete Start Cooking!",
+      "howToComplete": "Get a forging license and purchase a forge from Bado.",
+      "reward": "Weapon Bread"
+    },
+    {
+      "id": "forge-a-weapon",
+      "request": "Forge a weapon!",
+      "unlockConditions": "Complete Get a Forge!",
+      "howToComplete": "Forge a weapon.",
+      "reward": "2 Bronze, 2 Iron"
+    },
+    {
+      "id": "make-a-farming-tool",
+      "request": "Make a farming tool!",
+      "unlockConditions": "Complete Forge a weapon!",
+      "howToComplete": "Use the forge to make a farming tool.",
+      "reward": "Farming Bread"
+    },
+    {
+      "id": "get-a-crafting-table",
+      "request": "Get a Crafting Table!",
+      "unlockConditions": "Complete Make a farming tool!",
+      "howToComplete": "Get a crafting license and speak to Bado to purchase a Crafting Table.",
+      "reward": "Crafting Bread"
+    },
+    {
+      "id": "make-some-armor",
+      "request": "Make some armor!",
+      "unlockConditions": "Complete Get a Crafting Table!",
+      "howToComplete": "Use the Crafting Table to make armor.",
+      "reward": "Aquamarine"
+    },
+    {
+      "id": "get-a-chemistry-set",
+      "request": "Get a Chemistry Set!",
+      "unlockConditions": "Complete Make some armor!",
+      "howToComplete": "Get a chemistry license and speak to Jones or Nancy to purchase a Chemistry Set.",
+      "reward": "Medicine Bread"
+    },
+    {
+      "id": "make-some-medicine",
+      "request": "Make some medicine!",
+      "unlockConditions": "Complete Get a Chemistry Set!",
+      "howToComplete": "Use the chemistry set to make medicine.",
+      "reward": "4 Toyherb"
+    },
+    {
+      "id": "raise-a-skill-level",
+      "request": "Raise a skill level!",
+      "unlockConditions": "Complete Make some medicine!",
+      "howToComplete": "Raise at least one skill to level 20.",
+      "reward": "3,000G"
+    },
+    {
+      "id": "raise-a-weapon-skill-level",
+      "request": "Raise a weapon skill level!",
+      "unlockConditions": "Comeplete Raise a skill level!",
+      "howToComplete": "Raise at least one weapon skill to level 15.",
+      "reward": "Rush Attack"
+    },
+    {
+      "id": "upgrade-a-weapon",
+      "request": "Upgrade a weapon!",
+      "unlockConditions": "Complete Raise a weapon skill level!",
+      "howToComplete": "Use the forge to upgrade a weapon.",
+      "reward": "4 Bronze"
+    },
+    {
+      "id": "raise-a-magic-skill-level",
+      "request": "Raise a magic skill level!",
+      "unlockConditions": "Complete Upgrade a weapon!",
+      "howToComplete": "Raise at least one magic skill to level 15.",
+      "reward": "Water Laser"
+    },
+    {
+      "id": "upgrade-your-armor",
+      "request": "Upgrade your armor!",
+      "unlockConditions": "Complete Raise a magic skill level!",
+      "howToComplete": "Use the crafting table to upgrade your armor.",
+      "reward": "4 Silver"
+    },
+    {
+      "id": "use-a-nutrient",
+      "request": "Use a nutrient!",
+      "unlockConditions": "Complete Upgrade your armor!",
+      "howToComplete": "Spread nutrient medicine over your field.",
+      "reward": "Greenifier"
+    },
+    {
+      "id": "raise-shipment-rates",
+      "request": "Raise shipment rates!",
+      "unlockConditions": "Complete Use a nutrient!",
+      "howToComplete": "Ship at least 10% of the different items in the game.",
+      "reward": "A backpack upgrade order will be made available."
+    },
+    {
+      "id": "get-a-shop-license",
+      "request": "Get a Shop License!",
+      "unlockConditions": "Complete Raise shipment rates!",
+      "howToComplete": "Use the order symbol to get a shop license.",
+      "reward": "5,000G"
+    },
+    {
+      "id": "prepare-for-a-typhoon",
+      "request": "Prepare for a typhoon!",
+      "unlockConditions": "Complete Get a Shop License!",
+      "howToComplete": "Spread Wettable Powder over your field.",
+      "reward": "Wettable Powder"
+    },
+    {
+      "id": "befriend-5-monsters",
+      "request": "Befriend 5 monsters!",
+      "unlockConditions": "Complete Prepare for a typhoon!",
+      "howToComplete": "Tame at least 5 monsters.",
+      "reward": "50 Lumber and 50 Material Stone"
+    },
+    {
+      "id": "upgrade-a-staff",
+      "request": "Upgrade a Staff!",
+      "unlockConditions": "Complete Befriend 5 monsters!",
+      "howToComplete": "Use the forge to upgrade a staff.",
+      "reward": "Ambrosia's Thorns"
+    },
+    {
+      "id": "raise-friendship-levels-5",
+      "request": "Raise friendship levels! (5)",
+      "unlockConditions": "Complete Upgrade a staff! and Harvest 6 veggies!",
+      "howToComplete": "Raise everyone's FP/LP to 5.",
+      "reward": "Vital Gummi"
+    },
+    {
+      "id": "ship-a-level-10-flower",
+      "request": "Ship a level 10 flower!",
+      "unlockConditions": "Complete Harvest Autumn Grass!",
+      "howToComplete": "Raise a crop to level 10 and place it in the shipment box.",
+      "reward": "Greenifier"
+    },
+    {
+      "id": "raise-total-shipment-fee",
+      "request": "Raise total shipment fee!",
+      "unlockConditions": "Complete Gift for Margaret!",
+      "howToComplete": "Earn at least one million G.",
+      "reward": "Turnip Heaven recipe"
+    },
+    {
+      "id": "harvest-a-large-gold-crop",
+      "request": "Harvest a large gold crop!",
+      "unlockConditions": "Complete Give a Turnip Heaven!",
+      "howToComplete": "Grow and harvest a large gold crop.",
+      "reward": "Ultimate Curry and Royal Curry recipes."
+    },
+    {
+      "id": "harvest-all-crops",
+      "request": "Harvest all crops!",
+      "unlockConditions": "Complete Give a Turnip Heaven!",
+      "howToComplete": "Harvest at least one of every crop in the game.",
+      "reward": "Union Stew recipe"
+    },
+    {
+      "id": "ship-a-gold-level-10-crop",
+      "request": "Ship a gold level 10 crop!",
+      "unlockConditions": "Complete Harvest a large gold Crop!",
+      "howToComplete": "Grow and harvest a level 10 gold crop.",
+      "reward": "Gold Juice recipe"
+    },
+    {
+      "id": "raise-a-skill-level-to-50",
+      "request": "Raise a skill level to 50!",
+      "unlockConditions": "Complete: Raise friendship levels! (5)Harvest all crops!,Ship a gold level 10 crop!",
+      "howToComplete": "Raise at least one skill level to 50.",
+      "reward": "Small Crystal"
+    },
+    {
+      "id": "befriend-50-monsters",
+      "request": "Befriend 50 monsters!",
+      "unlockConditions": "Complete Raise friendship levels! (5)Harvest all crops!Ship a gold level 10 crop!",
+      "howToComplete": "Tame at least 50 monsters.",
+      "reward": "Fried Udon recipe"
+    },
+    {
+      "id": "raise-friendship-levels-10",
+      "request": "Raise friendship levels! (10)",
+      "unlockConditions": "Complete Raise friendship levels! (5)Harvest all crops!Ship a gold level 10 crop!",
+      "howToComplete": "Get everyone in town to 10 FP or LP.",
+      "reward": "Love Potion recipe"
+    },
+    {
+      "id": "get-a-50-shipment-rate",
+      "request": "Get a 50% shipment rate!",
+      "unlockConditions": "Complete Gift for Margaret!",
+      "howToComplete": "Ship at least half of the different items in the game.",
+      "reward": "Courage Badge recipe"
+    },
+    {
+      "id": "raise-a-skill-level-to-80",
+      "request": "Raise a skill level to 80!",
+      "unlockConditions": "???",
+      "howToComplete": "Raise at least on skill to level 80.",
+      "reward": "Heart Drink recipe, Intelligencer recipe, Protein recipe, and Vital Gummi recipe"
+    },
+    {
+      "id": "complete-the-sharance-maze",
+      "request": "Complete the Sharance Maze!",
+      "unlockConditions": "???",
+      "howToComplete": "Clear the Sharance Maze.",
+      "reward": "Leveliser recipe"
+    },
+    {
+      "id": "give-dolce-a-moondrop",
+      "request": "Give Dolce a Moondrop!",
+      "unlockConditions": "Have Dolce in town and complete Give Amber Toyherb!",
+      "howToComplete": "Give a Moondrop to Dolce.",
+      "reward": "Heart Pendant"
+    },
+    {
+      "id": "build-a-monster-barn",
+      "request": "Build a Monster Barn!",
+      "unlockConditions": "Have the ability to order monster barn construction.",
+      "howToComplete": "Go to the order symbol and have a monster barn built.",
+      "reward": "Brush"
+    },
+    {
+      "id": "befriend-monsters",
+      "request": "Befriend monsters!",
+      "unlockConditions": "Complete Build a Monster Barn!",
+      "howToComplete": "Tame at least one monster.",
+      "reward": "Fodder Box and 6 Fodder"
+    },
+    {
+      "id": "ride-on-a-monster-friend",
+      "request": "Ride on a monster friend!",
+      "unlockConditions": "Have at least five monsters.",
+      "howToComplete": "Take a rideable monster out and get on top of it.",
+      "reward": "Iron Waltz"
+    },
+    {
+      "id": "befriend-an-item-monster",
+      "request": "Befriend an item monster!",
+      "unlockConditions": "Complete Befriend monsters!",
+      "howToComplete": "Tame a monster that will drop produce an item each day.",
+      "reward": "Clippers"
+    },
+    {
+      "id": "give-a-monster-a-task",
+      "request": "Give a monster a task!",
+      "unlockConditions": "Complete Befriend monsters!",
+      "howToComplete": "Tame a monster that does not produce items, and speak to it in your barn to assign field work.",
+      "reward": "Striking March"
+    },
+    {
+      "id": "befriend-a-boss-monster",
+      "request": "Befriend a boss monster!",
+      "unlockConditions": "Complete  Harvest 12 veggies!",
+      "howToComplete": "Tame a boss monster.",
+      "reward": "Rune Crystal"
+    },
+    {
+      "id": "prepare-for-marriage",
+      "request": "Prepare for Marriage!",
+      "unlockConditions": "complete a marriage sub-event.",
+      "howToComplete": "???",
+      "reward": "Engagement Ring recipe"
+    },
+    {
+      "id": "from-eliza",
+      "request": "From Eliza!",
+      "unlockConditions": "Complete every other request.",
+      "howToComplete": "Speak to Eliza.",
+      "reward": "Note = Upon completing this request, any item stored in the storage bin will be inside at the start of a new game.}}"
+    }
+  ],
+  "generalStoreSeedRewards": [
+    {
+      "id": "make-a-shipment",
+      "request": "Make a shipment!",
+      "unlockConditions": "Complete Make Lumber!",
+      "howToComplete": "Ship an item",
+      "reward": "Potato and Spinach Seeds available at the General Store."
+    },
+    {
+      "id": "harvest-potato",
+      "request": "Harvest Potato!",
+      "unlockConditions": "Complete Try fishing!",
+      "howToComplete": "Grow and harvest a Potato.",
+      "reward": "Radish Seeds available at the General Store."
+    },
+    {
+      "id": "harvest-20-turnip",
+      "request": "Harvest 20 Turnip!",
+      "unlockConditions": "Complete Harvest Potato!",
+      "howToComplete": "Harvest 20 or more Turnip.",
+      "reward": "Pink Turnip Seeds available at the General Store."
+    },
+    {
+      "id": "harvest-5-radishes",
+      "request": "Harvest 5 Radishes!",
+      "unlockConditions": "Complete Harvest Potato!",
+      "howToComplete": "Harvest at least 5 Radishes.",
+      "reward": "Yam Seeds available at the General Store."
+    },
+    {
+      "id": "ship-a-level-2-turnip",
+      "request": "Ship a level 2 Turnip!",
+      "unlockConditions": "Complete Harvest Potato!",
+      "howToComplete": "Plant level 2 or higher Turnip Seed or level up a growing Turnip and place it in your shipping bin.",
+      "reward": "The General Store and Carnation Flower Store will start selling higher level seeds as you level up their respective crops."
+    },
+    {
+      "id": "harvest-6-veggies",
+      "request": "Harvest 6 veggies!",
+      "unlockConditions": "Complete Harvest 20 Turnip! Harvest 5 Radishes! and Ship a level 2 Turnip!",
+      "howToComplete": "Grow and harvest at least 6 different types of vegetables.",
+      "reward": "Carrot, Corn, and Strawberry Seeds available at the General Store."
+    },
+    {
+      "id": "ship-a-level-5-veggie",
+      "request": "Ship a level 5 veggie!",
+      "unlockConditions": "Complete Harvest 6 veggies!",
+      "howToComplete": "Plant level 5 or higher seed or level up a growing crop and place it in your shipping bin.",
+      "reward": "Pumpkin and Cucumber Seeds available at the General Store."
+    },
+    {
+      "id": "till-corn",
+      "request": "Till Corn",
+      "unlockConditions": "Complete Harvest 6 veggies!",
+      "howToComplete": "Use your hoe on a piece of corn on your field.",
+      "reward": "Green Pepper Seeds available at the General."
+    },
+    {
+      "id": "give-dylas-a-carrot",
+      "request": "Give Dylas a Carrot!",
+      "unlockConditions": "Have Dylas in town and complete Ship a level 5 veggie!",
+      "howToComplete": "Give a Carrot to Dylas.",
+      "reward": "Leek Seeds available at the General Store."
+    },
+    {
+      "id": "harvest-12-veggies",
+      "request": "Harvest 12 veggies!",
+      "unlockConditions": "Complete ship a level 5 veggie!",
+      "howToComplete": "Grow and harvest at least 12 different types of vegetables.",
+      "reward": "Bok Choy, Cabbage, and Onion Seeds available at the General Store."
+    },
+    {
+      "id": "ship-a-level-10-veggie",
+      "request": "Ship a level 10 veggie!",
+      "unlockConditions": "Complete Harvest 12 veggies!",
+      "howToComplete": "Plant level 10 or seed or level up a growing crop and place it in your shipping bin.",
+      "reward": "Eggplant and Hot-Hot Fruit Seeds available at the General Store"
+    },
+    {
+      "id": "harvest-certain-veggies",
+      "request": "Harvest certain veggies!",
+      "unlockConditions": "Complete Harvest 12 veggies!",
+      "howToComplete": "Harvest 20 Bok Choy, Cabbage, and Onion (each).",
+      "reward": "Tomato and Gold Melon Seeds available at the General Store."
+    },
+    {
+      "id": "cut-down-a-shining-tree",
+      "request": "Cut down a Shining Tree!",
+      "unlockConditions": "Complete Harvest 12 veggies!",
+      "howToComplete": "Grow and chop down a Shining Tree.",
+      "reward": "Shining Seeds available at the General Store."
+    },
+    {
+      "id": "harvest-20-oranges",
+      "request": "Harvest 20 Oranges!",
+      "unlockConditions": "Complete Harvest 12 veggies!",
+      "howToComplete": "Grow and orange tree and harvest at least 20 Oranges.",
+      "reward": "Orange Tree Seeds available at the General Store."
+    },
+    {
+      "id": "harvest-a-large-veggie",
+      "request": "Harvest a large veggie!",
+      "unlockConditions": "Complete Harvest certain veggies!",
+      "howToComplete": "grow and harvest a large vegetable.",
+      "reward": "Pineapple Seeds available in the general store."
+    },
+    {
+      "id": "harvest-50-grapes",
+      "request": "Harvest 50 Grapes!",
+      "unlockConditions": "Complete Cut down a Shining Tree!",
+      "howToComplete": "Grow a grape tree and harvest at least 50 Grapes.",
+      "reward": "Grape Tree Seeds available at the General Store."
+    },
+    {
+      "id": "harvest-50-apples",
+      "request": "Harvest 50 Apples!",
+      "unlockConditions": "Complete Cut down a Shining Tree!",
+      "howToComplete": "Grow a apple tree and harvest at least 50 Apples.",
+      "reward": "Apple Tree Seeds available at the General Store."
+    },
+    {
+      "id": "harvest-non-golden-veggies",
+      "request": "Harvest non-golden veggies!",
+      "unlockConditions": "Complete Harvest a large veggie!",
+      "howToComplete": "Harvest at least one of all vegetables except for gold crops.",
+      "reward": "Gold Potato Seeds available at the General Store."
+    },
+    {
+      "id": "gift-for-margaret",
+      "request": "Gift for Margaret!",
+      "unlockConditions": "Complete Harvest non-golden veggies!",
+      "howToComplete": "Give Margaret a glass of Pineapple Juice.",
+      "reward": "Gold Pumpkin Seeds available at the General Store."
+    },
+    {
+      "id": "get-a-25-shipment-rate",
+      "request": "Get a 25% shipment rate!",
+      "unlockConditions": "Complete Gift for Margaret!",
+      "howToComplete": "Ship at least 1/4 of all the different types of items in the game.",
+      "reward": "Gold Cabbage Seeds available at the General Store."
+    },
+    {
+      "id": "give-a-turnip-heaven",
+      "request": "Give a Turnip Heaven!",
+      "unlockConditions": "Complete Raise total shipment fee!",
+      "howToComplete": "Give a Turnip Heaven to Arthur.",
+      "reward": "Gold Turnip Seeds available at the General Store."
+    },
+    {
+      "id": "harvest-a-sword-flower",
+      "request": "Harvest a Sword Flower!",
+      "unlockConditions": "Have Dolce in town and complete Harvest 6 veggies!",
+      "howToComplete": "Grow and harvest a Sword Flower.",
+      "reward": "Sword Seeds available at the General Store."
+    },
+    {
+      "id": "harvest-a-shield-flower",
+      "request": "Harvest a Shield Flower!",
+      "unlockConditions": "Have Dolce in town and complete Harvest 6 veggies!",
+      "howToComplete": "Grow and harvest a Shield Flower.",
+      "reward": "Shield Seeds available at the General Store."
+    },
+    {
+      "id": "complete-a-field-dungeon",
+      "request": "Complete a field dungeon!",
+      "unlockConditions": "Have Leon in town, complete Harvest 6 veggies! and raise level at least to 70.",
+      "howToComplete": "Grow and dungeon flower and defeat the boss within.",
+      "reward": "Dungeon Seeds available at the General Store."
+    }
+  ],
+  "carnationStoreSeedRewards": [
+    {
+      "id": "harvest-toyherb",
+      "request": "Harvest Toyherb!",
+      "condition": "Complete Make Material Stone!",
+      "howToComplete": "Grow and harvest a Toyherb.",
+      "reward": "Pink Cat and Moondrop seeds available at the Carnation Flower Store."
+    },
+    {
+      "id": "harvest-3-flowers",
+      "request": "Harvest 3 flowers!",
+      "condition": "Complete Harvest Toyherb!",
+      "howToComplete": "Grow and harvest 3 different types of flowers.",
+      "reward": "Charm Blue seeds available at the Carnation Flower Store."
+    },
+    {
+      "id": "give-amber-a-toyherb",
+      "request": "Give Amber a Toyherb!",
+      "condition": "Have Amber in town and complete Harvest 3 flowers!",
+      "howToComplete": "Give a Toyherb to Amber.",
+      "reward": "Pom-Pom Grass Seeds available at the Carnation Flower Store."
+    },
+    {
+      "id": "harvest-9-charm-blues",
+      "request": "Harvest 9 Charm Blues!",
+      "condition": "Complete Harvest 3 flowers!",
+      "howToComplete": "Grow and Harvest at least 9 Charm Blues.",
+      "reward": "Cherry Grass Seeds available at the Carnation Flower Store."
+    },
+    {
+      "id": "harvest-cherry-grass",
+      "request": "Harvest Cherry Grass!",
+      "condition": "Complete Harvest 9 Charm Blues!",
+      "howToComplete": "Grow and harvest Cherry Grass.",
+      "reward": "Lamp Grass Seeds available at the Carnation Flower Store."
+    },
+    {
+      "id": "harvest-5-flowers",
+      "request": "Harvest 5 flowers!",
+      "condition": "Complete Harvest 9 Charm Blues!",
+      "howToComplete": "Harvest at least 5 different types of flowers.",
+      "reward": "Clover Seeds available at the Carnation Flower Store."
+    },
+    {
+      "id": "till-a-4-leaf-clover",
+      "request": "Till a 4-Leaf Clover",
+      "condition": "Complete Harvest 5 flowers!",
+      "howToComplete": "Use the hoe on a 4-Leaf Clover.",
+      "reward": "Ironleaf Seeds for sale at the Carnation Flower Store."
+    },
+    {
+      "id": "fight-using-an-ironleaf",
+      "request": "Fight using an Ironleaf!",
+      "condition": "Complete Till a 4-Leaf Clover!",
+      "howToComplete": "Throw an Ironleaf at a monster.",
+      "reward": "Autumn Grass Seeds available at the Carnation Flower Store."
+    },
+    {
+      "id": "harvest-a-large-flower",
+      "request": "Harvest a large flower!",
+      "condition": "Complete Fight using an Ironleaf!",
+      "howToComplete": "Grow and harvest a large flower.",
+      "reward": "Fireflower Seeds available at the Carnation Flower Store."
+    },
+    {
+      "id": "harvest-autumn-grass",
+      "request": "Harvest Autumn Grass!",
+      "condition": "Complete Fight using an Ironleaf!",
+      "howToComplete": "Grow and harvest Autumn Grass.",
+      "reward": "Noel Grass Seeds available at the Carnation Flower Store."
+    },
+    {
+      "id": "harvest-blue-crystal",
+      "request": "Harvest Blue Crystal!",
+      "condition": "Complete Harvest a large flower!",
+      "howToComplete": "Grow and harvest a Blue Crystal.",
+      "reward": "Blue Crystal Seeds available at the Carnation Flower Store."
+    },
+    {
+      "id": "harvest-green-crystal",
+      "request": "Harvest Green Crystal!",
+      "condition": "Complete Harvest Blue Crystal!",
+      "howToComplete": "Grow and harvest a Green Crystal.",
+      "reward": "Green Crystal Seeds available at the Carnation Flower Store."
+    },
+    {
+      "id": "harvest-red-crystal",
+      "request": "Harvest Red Crystal!",
+      "condition": "Complete Harvest Green Crystal!",
+      "howToComplete": "Grow and harvest a Red Crystal.",
+      "reward": "Red Crystal Seeds available at the Carnation Flower Store."
+    },
+    {
+      "id": "harvest-white-crystal",
+      "request": "Harvest White Crystal!",
+      "condition": "Complete Harvest Red Crystal!",
+      "howToComplete": "Grow and harvest a White Crystal.",
+      "reward": "White Crystal Seeds available at the Carnation Flower Store."
+    },
+    {
+      "id": "harvest-almost-all-crops",
+      "request": "Harvest almost all crops!",
+      "condition": "Complete Harvest White Crystal!",
+      "howToComplete": "Grow and harvest at least one of everything except for Emery Flowers.",
+      "reward": "Emery Flower Seeds available at the Carnation Flower Store."
+    }
+  ],
+  "repeatableRequests": [
+    {
+      "id": "ship-crops",
+      "request": "Ship crops!",
+      "howToComplete": "Ship at least one of the requested crop",
+      "reward": "Random"
+    },
+    {
+      "id": "ship-fish",
+      "request": "Ship fish!",
+      "howToComplete": "Ship at least one of the requested fish.",
+      "reward": "Random"
+    },
+    {
+      "id": "make-a-delivery",
+      "request": "Make a delivery!",
+      "howToComplete": "Give the requester a specific number of items they ask for.",
+      "reward": "Random"
+    },
+    {
+      "id": "get-rid-of-monsters",
+      "request": "Get rid of monsters!",
+      "howToComplete": "Defeat the type and number of monsters listed in the request.",
+      "reward": "Random"
+    }
+  ],
+  "requests": [
+    {
+      "id": "10",
+      "col0": "10",
+      "": "Iron Mining!",
+      "name": "Kiel",
+      "col3": "Mine Iron from Mining Stone",
+      "requirements": "Amethyst, Eliza allows 3 requests per day"
+    },
+    {
+      "id": "11",
+      "col0": "11",
+      "": "Making Friends!",
+      "name": "Eliza",
+      "col3": "",
+      "requirements": "Greeting Magic"
+    },
+    {
+      "id": "12",
+      "col0": "12",
+      "": "Airship License!",
+      "name": "Arthur",
+      "col3": "",
+      "requirements": "Exchange Play Coins"
+    },
+    {
+      "id": "13",
+      "col0": "13",
+      "": "Get a Kitchen!",
+      "name": "Margaret",
+      "col3": "",
+      "requirements": "Cooking Bread x2"
+    },
+    {
+      "id": "14",
+      "col0": "14",
+      "": "Try Cooking!",
+      "name": "Clorica",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "15",
+      "col0": "15",
+      "": "Get a Forge!",
+      "name": "Vishnal",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "16",
+      "col0": "16",
+      "": "Forge a Weapon!",
+      "name": "Forte",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "17",
+      "col0": "17",
+      "": "Forge a Farm Tool!",
+      "name": "Vishnal",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "18",
+      "col0": "18",
+      "": "Get a Crafting Table!",
+      "name": "Xiao Pai",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "19",
+      "col0": "19",
+      "": "Craft Some Armor!",
+      "name": "Forte",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "20",
+      "col0": "20",
+      "": "Get a Chemistry Set!",
+      "name": "Arthur",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "21",
+      "col0": "21",
+      "": "Make Some Medicine!",
+      "name": "Kiel",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "22",
+      "col0": "22",
+      "": "Raise Skill Levels!",
+      "name": "Doug",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "23",
+      "col0": "23",
+      "": "Raise Weapon Skills!",
+      "name": "Forte",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "24",
+      "col0": "24",
+      "": "Upgrade Weapons!",
+      "name": "Doug",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "25",
+      "col0": "25",
+      "": "Raise Magic Skills!",
+      "name": "Clorica",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "26",
+      "col0": "26",
+      "": "Upgrade Armor!",
+      "name": "Xiao Pai",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "27",
+      "col0": "27",
+      "": "Use Nutrients!",
+      "name": "Margaret",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "28",
+      "col0": "28",
+      "": "Make More Shipments!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "29",
+      "col0": "29",
+      "": "Get a Store License!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "30",
+      "col0": "30",
+      "": "Typhoon Preparation!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "31",
+      "col0": "31",
+      "": "Befriend Monsters!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "32",
+      "col0": "32",
+      "": "Request: Upgrade Staff!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "34",
+      "col0": "34",
+      "": "Ship Fish!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "35",
+      "col0": "35",
+      "": "Delivery!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "36",
+      "col0": "36",
+      "": "Hunting Monsters!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "38",
+      "col0": "38",
+      "": "Befriend an item monster!",
+      "name": "Arthur",
+      "col3": "Befriend a monster that drops or produces goods.",
+      "requirements": "Clippers"
+    },
+    {
+      "id": "39",
+      "col0": "39",
+      "": "Ride on Monsters!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "40",
+      "col0": "40",
+      "": "Monsters with Items!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "41",
+      "col0": "41",
+      "": "Tasks for Monsters!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "42",
+      "col0": "42",
+      "": "Harvest Toyherb!",
+      "name": "Vishnal",
+      "col3": "Harvest a Toyherb",
+      "requirements": "New Seeds in Store (Pink Cat and Moondrop Seeds)"
+    },
+    {
+      "id": "43",
+      "col0": "43",
+      "": "Harvest 3 Flowers!",
+      "name": "Clorica",
+      "col3": "",
+      "requirements": "New Seeds in Store"
+    },
+    {
+      "id": "44",
+      "col0": "44",
+      "": "Give Amber Toyherb!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "45",
+      "col0": "45",
+      "": "Harvest 9 Charm Blues",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "46",
+      "col0": "46",
+      "": "Harvest Cherry Grass",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "47",
+      "col0": "47",
+      "": "Harvest 5 flowers!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "48",
+      "col0": "48",
+      "": "Give Dolce Moondrop!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "49",
+      "col0": "49",
+      "": "Till a 4-Leaf Clover",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "50",
+      "col0": "50",
+      "": "Fight with Iron Leaf",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "51",
+      "col0": "51",
+      "": "Harvest Large Flower",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "52",
+      "col0": "52",
+      "": "Harvest Autumn Grass",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "53",
+      "col0": "53",
+      "": "Harvest Blue Crystal",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "54",
+      "col0": "54",
+      "": "Harvest Green Crystal",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "55",
+      "col0": "55",
+      "": "Harvest Red Crystal",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "56",
+      "col0": "56",
+      "": "Harvest White Crystal",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "57",
+      "col0": "57",
+      "": "Harvest Most Crops!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "58",
+      "col0": "58",
+      "": "Harvest Potato!",
+      "name": "Doug",
+      "col3": "Harvest a Potato",
+      "requirements": "New Seeds in Store (Radish Seeds)"
+    },
+    {
+      "id": "59",
+      "col0": "59",
+      "": "Harvest 20 Turnips!",
+      "name": "Clorica",
+      "col3": "Harvest over 20 Turnips",
+      "requirements": "New Seeds in Store (Pink Turnip Seeds)"
+    },
+    {
+      "id": "60",
+      "col0": "60",
+      "": "Harvest 5 Radishes!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "61",
+      "col0": "61",
+      "": "Ship a Lv 2 Turnip",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "62",
+      "col0": "62",
+      "": "Harvest 6 Vegetables",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "63",
+      "col0": "63",
+      "": "Ship a Lv 5 Veggie",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "64",
+      "col0": "64",
+      "": "Till Corn with a Hoe",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "65",
+      "col0": "65",
+      "": "Give Dylas a Carrot",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "66",
+      "col0": "66",
+      "": "Harvest 12 Veggies!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "67",
+      "col0": "67",
+      "": "Ship a Lv 10 Veggie",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "68",
+      "col0": "68",
+      "": "Harvest 20 Each!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "69",
+      "col0": "69",
+      "": "Harvest a Large Veggie",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "70",
+      "col0": "70",
+      "": "Harvest 20 Oranges!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "71",
+      "col0": "71",
+      "": "Cut a Shining Tree!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "72",
+      "col0": "72",
+      "": "Harvest All Veggies!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "73",
+      "col0": "73",
+      "": "Harvest 50 Grapes!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "74",
+      "col0": "74",
+      "": "Harvest 50 Apples!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "75",
+      "col0": "75",
+      "": "Gift for Margaret!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "76",
+      "col0": "76",
+      "": "Raise Shipment Rate!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "77",
+      "col0": "77",
+      "": "Over a Million G!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "78",
+      "col0": "78",
+      "": "Gift for Arthur!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "79",
+      "col0": "79",
+      "": "Harvest Sword Flower",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "80",
+      "col0": "80",
+      "": "Harvest Shield Flower",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "81",
+      "col0": "81",
+      "": "Field Dungeons!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "82",
+      "col0": "82",
+      "": "Raise Friendship Lv!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "83",
+      "col0": "83",
+      "": "Ship a Lv 10 Veggie!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "84",
+      "col0": "84",
+      "": "Ship a Lv 10 Flower!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "85",
+      "col0": "85",
+      "": "Boss Monster Friend!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "86",
+      "col0": "86",
+      "": "Large Golden Crop!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "87",
+      "col0": "87",
+      "": "Harvest All Crops!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "88",
+      "col0": "88",
+      "": "Gold Lv 10 crop!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "89",
+      "col0": "89",
+      "": "Raise Skill Lv to 50",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "90",
+      "col0": "90",
+      "": "50 Monster Friends!",
+      "name": "",
+      "col3": "",
+      "requirements": "Fried Udon Recipe"
+    },
+    {
+      "id": "91",
+      "col0": "91",
+      "": "Raise Friendship Lv!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "92",
+      "col0": "92",
+      "": "Raise Shipment Rate!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "93",
+      "col0": "93",
+      "": "Raise Skill Lv to 80",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "94",
+      "col0": "94",
+      "": "Clear Sharance Maze!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "95",
+      "col0": "95",
+      "": "Check Illustrations!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "96",
+      "col0": "96",
+      "": "Check Difficulty Lv!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "97",
+      "col0": "97",
+      "": "Prepare for Marriage",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    },
+    {
+      "id": "98",
+      "col0": "98",
+      "": "Praise from Eliza!",
+      "name": "",
+      "col3": "",
+      "requirements": ""
+    }
+  ],
+  "specialRequests": [
+    {
+      "1": "Collectibles​",
+      "2": "Collectibles​",
+      "3": "Rune Ability",
+      "id": "clorica",
+      "col0": "Clorica",
+      "item": "２",
+      "monster": "Monster"
+    },
+    {
+      "1": "Be Safe",
+      "2": "Collectable",
+      "id": "forte",
+      "col0": "Forte",
+      "item": "Necessary",
+      "monster": "Fish for Practice"
+    },
+    {
+      "1": "Troublemaker!",
+      "id": "margaret",
+      "col0": "Margaret",
+      "item": "Short on Seasonings",
+      "monster": "I Need a Mop"
+    },
+    {
+      "1": "The Monster",
+      "id": "xiao-pai",
+      "col0": "Xiao Pai",
+      "item": "Not Enough String",
+      "monster": "She Wants Skills"
+    },
+    {
+      "1": "More Monsters",
+      "2": "Seed x 3",
+      "id": "amber",
+      "col0": "Amber",
+      "item": "Not Enough Medicine",
+      "monster": "H O N E Y ?"
+    },
+    {
+      "1": "A True Annoyance",
+      "2": "Collectable",
+      "id": "dolce",
+      "col0": "Dolce",
+      "item": "Not Enough Cloth",
+      "monster": "Pico: Something Dolce Likes"
+    },
+    {
+      "1": "Help Wanted",
+      "id": "vishnal",
+      "col0": "Vishnal",
+      "item": "Flower Seed",
+      "monster": "A Gift"
+    },
+    {
+      "1": "Ever More Monsters",
+      "id": "arthur",
+      "col0": "Arthur",
+      "item": "Any Dairy Left?",
+      "monster": "What Glasses...?"
+    },
+    {
+      "1": "Want to Return Them",
+      "id": "kiel",
+      "col0": "Kiel",
+      "item": "Secret Collection ?",
+      "monster": "To Protect"
+    },
+    {
+      "1": "Monster Hunt",
+      "id": "doug",
+      "col0": "Doug",
+      "item": "Sorry, But...",
+      "monster": "I've Been Looking"
+    },
+    {
+      "1": "Annoying Monster",
+      "2": "Food, Colllectable",
+      "id": "dylas",
+      "col0": "Dylas",
+      "item": "Preparing a Pole",
+      "monster": "What Do You Think?"
+    },
+    {
+      "1": "Punishment Time",
+      "2": "Collectable",
+      "id": "leon",
+      "col0": "Leon",
+      "item": "I'm In the Mood",
+      "monster": "Killing Time"
+    },
+    {
+      "1": "Monster!",
+      "2": "Medicine",
+      "id": "noel-and-luna",
+      "col0": "Noel and Luna",
+      "item": "I Want It!",
+      "monster": "Flower ?"
+    },
+    {
+      "1": "Taking Care of Business",
+      "2": "Gemstone",
+      "id": "bado",
+      "col0": "Bado",
+      "item": "New Business Plan",
+      "monster": "Let's Trade!"
+    },
+    {
+      "1": "M-M-Monster!",
+      "2": "Food x 3",
+      "id": "porcoline",
+      "col0": "Porcoline",
+      "item": "Ate Them Again",
+      "monster": "Love Confession"
+    },
+    {
+      "1": "Worried",
+      "2": "Collectable",
+      "id": "lin-fa",
+      "col0": "Lin Fa",
+      "item": "Seafood Will Do",
+      "monster": "Seasonings..."
+    },
+    {
+      "1": "Flower",
+      "2": "Jam Mystery!",
+      "id": "illuminata",
+      "col0": "Illuminata",
+      "item": "Nutrient",
+      "monster": "Garden Mystery!"
+    },
+    {
+      "1": "Collectibles​",
+      "2": "Medicinal Material",
+      "id": "jones",
+      "col0": "Jones",
+      "item": "Collectable",
+      "monster": "Before It Gets Worse"
+    },
+    {
+      "1": "Injuries Everywhere",
+      "id": "nancy",
+      "col0": "Nancy",
+      "item": "Fish Is Good For You!",
+      "monster": "Flower for the Clinic"
+    },
+    {
+      "1": "Monsters...",
+      "2": "Steamed Dish",
+      "id": "volkanon",
+      "col0": "Volkanon",
+      "item": "My Jenny!",
+      "monster": "Need to Talk"
+    },
+    {
+      "1": "We Must Do Something",
+      "2": "Collectable",
+      "id": "ventuswill",
+      "col0": "Ventuswill",
+      "item": "Curious",
+      "monster": "Stone Needed"
+    },
+    {
+      "1": "Monsters...",
+      "2": "Flower x 3",
+      "id": "blossom",
+      "col0": "Blossom",
+      "item": "Something Nutritious",
+      "monster": "Random Quest 2"
+    }
+  ]
+}

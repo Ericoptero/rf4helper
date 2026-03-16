@@ -1,0 +1,749 @@
+{
+  "fishingRods": [
+    {
+      "id": "fish-cheap-pole",
+      "name": "Cheap Pole",
+      "chanceOfCatching": "0"
+    },
+    {
+      "id": "fish-beginners-pole",
+      "name": "Beginner's Pole",
+      "chanceOfCatching": "1"
+    },
+    {
+      "id": "fish-skilled-pole",
+      "name": "Skilled Pole",
+      "chanceOfCatching": "2"
+    },
+    {
+      "id": "fish-famous-pole",
+      "name": "Famous Pole",
+      "chanceOfCatching": "3"
+    },
+    {
+      "id": "fish-sacred-pole",
+      "name": "Sacred Pole",
+      "chanceOfCatching": "4"
+    }
+  ],
+  "fishingLocations": [
+    {
+      "id": "fish-a-b-c-d",
+      "name": "A/B/C/D",
+      "summerArea": "All B",
+      "fallwinterArea": "B/C/D"
+    },
+    {
+      "id": "fish-all-i",
+      "name": "All I",
+      "summerArea": "All J",
+      "fallwinterArea": "All K"
+    },
+    {
+      "id": "fish-all-l",
+      "name": "All L",
+      "summerArea": "All M"
+    }
+  ],
+  "fishByName": [
+    {
+      "id": "fish-masu-trout",
+      "name": "Masu Trout",
+      "itemId": "item-masu-trout",
+      "sell": 15,
+      "buy": 300,
+      "shadow": "normal",
+      "locations": [
+        "Selphia Dragon Lake (Spring)",
+        "Spring Pond",
+        "Water Ruins (All Areas except left)",
+        "Maya Rd"
+      ]
+    },
+    {
+      "id": "fish-squid",
+      "name": "Squid",
+      "itemId": "item-squid",
+      "sell": 24,
+      "buy": 400,
+      "shadow": "normal",
+      "locations": [
+        "Selphia Gate (Summer/Fall)",
+        "Selphia Dragon Lake (Spring/Summer/Winter)",
+        "Autumn River",
+        "Winter Pond",
+        "Silver Lake",
+        "Spring Pond",
+        "Water Ruins (All Areas)",
+        "Idra Cave: 1st floor",
+        "Idra Cave: Basement 2",
+        "Maya Rd",
+        "Sechs Territory"
+      ]
+    },
+    {
+      "id": "fish-taimen",
+      "name": "Taimen",
+      "itemId": "item-taimen",
+      "sell": 6500,
+      "buy": 78000,
+      "shadow": "faint",
+      "locations": [
+        "Keeno Lake",
+        "All Seasonal Ponds",
+        "Yokmir Forest: Waterfall",
+        "Idra Cave: 1st Floor",
+        "Idra Cave Basement 2",
+        "Maya Rd",
+        "Sechs Territory"
+      ]
+    },
+    {
+      "id": "fish-sardine",
+      "name": "Sardine",
+      "itemId": "item-sardine",
+      "sell": 70,
+      "buy": 1200,
+      "shadow": "normal",
+      "locations": [
+        "Selphia Gate (Summer/Fall)",
+        "Selphia Dragon Lake (Spring/Summer/Winter)",
+        "Autumn River",
+        "All Seasonal Ponds",
+        "Silver Lake",
+        "Water Ruins (All Areas)",
+        "Idra Cave (All areas except Basement 2)",
+        "Maya Rd",
+        "Sechs Territory"
+      ]
+    },
+    {
+      "id": "fish-char",
+      "name": "Char",
+      "itemId": "item-char",
+      "sell": 92,
+      "buy": 1800,
+      "shadow": "normal",
+      "locations": [
+        "Selphia Gate (Summer) Selphia Dragon Lake (Spring/Summer)",
+        "Keeno Lake",
+        "Summer Pond",
+        "Yokmir Forest: Waterfall",
+        "Yokmir Forest: Lillypad Area",
+        "Water Ruins (All Areas except boss)",
+        "Idra Cave: 1st Floor",
+        "Idra Cave: Basement 2",
+        "Maya Rd",
+        "Sechs Territory"
+      ]
+    },
+    {
+      "id": "fish-chub",
+      "name": "Chub",
+      "itemId": "item-chub",
+      "sell": 130,
+      "buy": 2600,
+      "shadow": "normal",
+      "locations": []
+    },
+    {
+      "id": "fish-glitter-snapper",
+      "name": "Glitter Snapper",
+      "itemId": "item-glitter-snapper",
+      "sell": 8800,
+      "buy": 120000,
+      "shadow": "faint",
+      "locations": [
+        "Selphia Castle Gate",
+        "Summer Spring",
+        "Autumn Spring",
+        "Winter Pond"
+      ]
+    },
+    {
+      "id": "fish-skipjack",
+      "name": "Skipjack",
+      "itemId": "item-skipjack",
+      "sell": 220,
+      "buy": 4500,
+      "shadow": "",
+      "locations": []
+    },
+    {
+      "id": "fish-turbot",
+      "name": "Turbot",
+      "itemId": "item-turbot",
+      "sell": 120,
+      "buy": 2500,
+      "shadow": "normal",
+      "locations": []
+    },
+    {
+      "id": "fish-gibelio",
+      "name": "Gibelio",
+      "itemId": "item-gibelio",
+      "sell": 100,
+      "buy": 2000,
+      "shadow": "normal",
+      "locations": [
+        "Fall : Selphia Housing Area"
+      ]
+    },
+    {
+      "id": "fish-salmon",
+      "name": "Salmon",
+      "itemId": "item-salmon",
+      "sell": 80,
+      "buy": 1350,
+      "shadow": "normal",
+      "locations": [
+        "Fall: Autumn Spring"
+      ]
+    },
+    {
+      "id": "fish-mackerel",
+      "name": "Mackerel",
+      "itemId": "item-mackerel",
+      "sell": 60,
+      "buy": 1000,
+      "shadow": "normal",
+      "locations": [
+        "Fall : Selphia Housing Area",
+        "Summer Spring"
+      ]
+    },
+    {
+      "id": "fish-needlefish",
+      "name": "Needlefish",
+      "itemId": "item-needlefish",
+      "sell": 30,
+      "buy": 500,
+      "shadow": "normal",
+      "locations": []
+    },
+    {
+      "id": "fish-pike",
+      "name": "Pike",
+      "itemId": "item-pike",
+      "sell": 12,
+      "buy": 240,
+      "shadow": "normal",
+      "locations": [
+        "Fall : Selphia Housing Area",
+        "Summer Spring"
+      ]
+    },
+    {
+      "id": "fish-sunsquid",
+      "name": "Sunsquid",
+      "itemId": "item-sunsquid",
+      "sell": 6800,
+      "buy": 74000,
+      "shadow": "faint",
+      "locations": [
+        "Everywhere",
+        "but Selphia Town"
+      ]
+    },
+    {
+      "id": "fish-shrimp",
+      "name": "Shrimp",
+      "itemId": "item-shrimp",
+      "sell": 85,
+      "buy": 1500,
+      "shadow": "normal",
+      "locations": [
+        "Summer Spring",
+        "Idra Cave Basement 1"
+      ]
+    },
+    {
+      "id": "fish-snapper",
+      "name": "Snapper",
+      "itemId": "item-snapper",
+      "sell": 1280,
+      "buy": 14800,
+      "shadow": "",
+      "locations": [
+        "Selphia Gate (Summer)",
+        "Selphia Dragon Lake (Spring/Winter)",
+        "Autumn River",
+        "Autumn Pond",
+        "Idra Cave: 1st Floor",
+        "Idra Cave: Basement 1&2",
+        "Maya Rd"
+      ]
+    },
+    {
+      "id": "fish-throbby-snapper",
+      "name": "Throbby Snapper",
+      "itemId": "item-throbby-snapper",
+      "sell": 3500,
+      "buy": 38000,
+      "shadow": "faint",
+      "locations": [
+        "Selphia Dragon Lake (Spring)",
+        "Keeno Lake",
+        "Seasonal Ponds (All Seasons)",
+        "Autumn River",
+        "increased chance on bad weather)",
+        "Water Temple and Idra Cave (All Area)"
+      ]
+    },
+    {
+      "id": "fish-rainbow-trout",
+      "name": "Rainbow Trout",
+      "itemId": "item-rainbow-trout",
+      "sell": 150,
+      "buy": 3000,
+      "shadow": "normal",
+      "locations": [
+        "Spring : Selphia Castle Gate",
+        "Summer Spring"
+      ]
+    },
+    {
+      "id": "fish-flounder",
+      "name": "Flounder",
+      "itemId": "item-flounder",
+      "sell": 190,
+      "buy": 4000,
+      "shadow": "",
+      "locations": [
+        "Winter : Selphia (Dragon Lake)",
+        "Fishing (RF4)#Autumn Road and Silver Arch"
+      ]
+    },
+    {
+      "id": "fish-blowfish",
+      "name": "Blowfish",
+      "itemId": "item-blowfish",
+      "sell": 4200,
+      "buy": 57000,
+      "shadow": "faint",
+      "locations": [
+        "Selphia (Town: Winter)",
+        "Winter Pond",
+        "Silver Lake",
+        "Yokmir Forest (waterfall)",
+        "Maya Rd",
+        "Sechs Territory",
+        "Fishing (RF4)#Autumn Road and Silver Arch"
+      ]
+    },
+    {
+      "id": "fish-yellowtail",
+      "name": "Yellowtail",
+      "itemId": "item-yellowtail",
+      "sell": 3800,
+      "buy": 45000,
+      "shadow": "faint",
+      "locations": []
+    },
+    {
+      "id": "fish-crucian-carp",
+      "name": "Crucian Carp",
+      "itemId": "item-crucian-carp",
+      "sell": 35,
+      "buy": 620,
+      "shadow": "normal",
+      "locations": [
+        "Summer Spring"
+      ]
+    },
+    {
+      "id": "fish-tuna",
+      "name": "Tuna",
+      "itemId": "item-tuna",
+      "sell": 5600,
+      "buy": 61000,
+      "shadow": "faint",
+      "locations": [
+        "Summer Pond",
+        "Autumn Pond",
+        "Winter Pond",
+        "Maya Rd",
+        "Sechs Territory"
+      ]
+    },
+    {
+      "id": "fish-girella",
+      "name": "Girella",
+      "itemId": "item-girella",
+      "sell": 45,
+      "buy": 850,
+      "shadow": "normal",
+      "locations": [
+        "Fall : Selphia Housing Area",
+        "Summer Spring"
+      ]
+    },
+    {
+      "id": "fish-fall-flounder",
+      "name": "Fall Flounder",
+      "itemId": "item-fall-flounder",
+      "sell": 2000,
+      "buy": 27000,
+      "shadow": "",
+      "locations": [
+        "Fishing (RF4)#Sercerezo Hill (Spring spring)",
+        "Fishing (RF4)#Autumn Road and Silver Arch"
+      ]
+    },
+    {
+      "id": "fish-cherry-salmon",
+      "name": "Cherry Salmon",
+      "itemId": "item-cherry-salmon",
+      "sell": 18,
+      "buy": 350,
+      "shadow": "normal",
+      "locations": []
+    },
+    {
+      "id": "fish-lamp-squid",
+      "name": "Lamp Squid",
+      "itemId": "item-lamp-squid",
+      "sell": 1800,
+      "buy": 21000,
+      "shadow": "faint",
+      "locations": [
+        "Selphia Dragon Lake (All Seasons) and Autumn pond",
+        "Autumn River",
+        "Symmer pond",
+        "Keeno Lake",
+        "Idra Cave",
+        "Water Ruins and Mt. Maya Trail.(increased chance on bad weather)"
+      ]
+    },
+    {
+      "id": "fish-lobster",
+      "name": "Lobster",
+      "itemId": "item-lobster",
+      "sell": 960,
+      "buy": 9600,
+      "shadow": "faint",
+      "locations": [
+        "Kenno Lake",
+        "Summer Pond",
+        "Winter Pond",
+        "Silver Lake",
+        "Spring Pond",
+        "Idra Cave: 1st Floor",
+        "Idra Cave: Basement 1",
+        "Maya Rd"
+      ]
+    },
+    {
+      "id": "fish-pond-smelt",
+      "name": "Pond Smelt",
+      "itemId": "item-pond-smelt",
+      "sell": 10,
+      "buy": 200,
+      "shadow": "normal",
+      "locations": [
+        "Water Ruins (Chimera Spot)",
+        "Fishing (RF4)#Autumn Road and Silver Arch"
+      ]
+    },
+    {
+      "id": "fish-sand-flounder",
+      "name": "Sand Flounder",
+      "itemId": "item-sand-flounder",
+      "sell": 38,
+      "buy": 700,
+      "shadow": "normal",
+      "locations": [
+        "Sercerezo Hill (sand pond)"
+      ]
+    },
+    {
+      "id": "fish-rockfish",
+      "name": "Rockfish",
+      "itemId": "item-rockfish",
+      "sell": 1040,
+      "buy": 10400,
+      "shadow": "normal",
+      "locations": [
+        "Sercerezo Hill (sand pond)"
+      ]
+    }
+  ],
+  "otherFishableItems": [
+    {
+      "id": "fish-dragon-fin",
+      "name": "Dragon Fin",
+      "itemId": "item-dragon-fin",
+      "sell": 10000,
+      "buy": 300000,
+      "shadow": "faint",
+      "locations": []
+    },
+    {
+      "id": "fish-round-stone",
+      "name": "Round Stone",
+      "itemId": "item-round-stone",
+      "sell": 50,
+      "buy": null,
+      "shadow": "faint",
+      "locations": []
+    },
+    {
+      "id": "fish-legendary-scale",
+      "name": "Legendary Scale",
+      "itemId": "item-legendary-scale",
+      "sell": 3000,
+      "buy": 50000,
+      "shadow": "faint",
+      "locations": []
+    },
+    {
+      "id": "fish-boot",
+      "name": "Boot",
+      "itemId": "item-boot",
+      "sell": 2,
+      "buy": 8,
+      "shadow": "normal",
+      "locations": []
+    },
+    {
+      "id": "fish-can",
+      "name": "Can",
+      "itemId": "item-can",
+      "sell": 1,
+      "buy": 5,
+      "shadow": "normal",
+      "locations": []
+    },
+    {
+      "id": "fish-rare-can",
+      "name": "Rare Can",
+      "itemId": "item-rare-can",
+      "sell": 300,
+      "buy": null,
+      "shadow": "faint",
+      "locations": []
+    }
+  ],
+  "selphiaTown": [
+    {
+      "id": "fish-selphia-castle-gate",
+      "name": "Selphia Castle Gate",
+      "spring": "Char, Cherry Salmon, Crucian Carp, Gibelio, Girella, Mackerel, Needlefish, Masu Trout, Rainbow Trout, Sardine, Squid,",
+      "summer": "Char, Chub, Crucian Carp, Girella, Mackerel, Pike, Rainbow Trout, Sardine, Shrimp, Snapper, Squid, Turbot, Glitter Snapper, Lamp Squid, Lobster, Tuna, Yellowtail, Dragon Fin",
+      "fall": "Squid, Mackerel, Pike, Sardine, Turbot, Salmon, Girella, Chub",
+      "winter": "Cherry Salmon, Gibelio, Girella, Lobster, Mackerel, Needlefish, Pond Smelt, Sardine, Snapper, Squid, Legendary Scale"
+    },
+    {
+      "id": "fish-selphia-dragon-lake",
+      "name": "Selphia: Dragon Lake",
+      "spring": "Char, Cherry Salmon, Crucian Carp, Gibelio, Girella, Lamp Squid, Lobster, Mackerel, Masu Trout, Needlefish, Rainbow Trout Sardine, Skipjack, Snapper, Squid, Throbby Snapper, Turbot, Legendary Scale",
+      "summer": "Char, Cherry Salmon, Crucian Carp, Girella, Lamp Squid, Masu Trout, Needlefish, Rainbow Trout, Sardine, Skipjack, Snapper, Squid, Taimen, Throbby Snapper, Turbot, Pike, Shrimp",
+      "fall": "Char, Crucian Carp, Glitter Snapper, Girella, Lamp Squid, Pike, Rainbow Trout, Sardine, Salmon, Shrimp, Squid",
+      "winter": "Cherry Salmon, Chub, Flounder, Gibelio, Girella, Glitter Snapper, Lamp Squid, Lobster, Mackerel, Needlefish, Pond Smelt, Sardine, Snapper, Squid, Throbby Snapper, Tuna, Yellowtail"
+    },
+    {
+      "id": "fish-selphia-housing-area",
+      "name": "Selphia: Housing Area",
+      "spring": "Char, Cherry Salmon, Crucian Carp, Girella, Glitter Snapper, Mackerel, Masu Trout, Needlefish, Rainbow Trout, Sardine, Snapper, Squid, Throbby Snapper",
+      "summer": "Char, Chub, Crucian Carp, Girella, Lobster, Mackerel, Pike, Rainbow Trout, Sardine, Shrimp, Squid, Throbby Snapper, Turbot",
+      "fall": "Gibelio, Girella, Pike, Mackerel",
+      "winter": "Blowfish, Girella, Lobster, Mackerel, Needlefish, Pike, Salmon, Sardine, Squid, Yellowtail"
+    },
+    {
+      "id": "fish-selphia-melody-street",
+      "name": "Selphia: Melody Street",
+      "spring": "Char, Chub, Cherry Salmon, Crucian Carp, Gibelio, Girella, Mackerel, Masu Trout, Rainbow Trout, Sardine, Skipjack, Squid, Taimen",
+      "summer": "Char, Chub, Crucian Carp, Girella, Lobster, Pike, Sardine, Shrimp, Taimen, Tuna, Turbot, Yellowtail",
+      "fall": "Chub, Mackerel, Pike, Salmon, Sardine, Skipjack",
+      "winter": "Cherry Salmon, Chub, Girella, Mackerel, Needlefish, Pond Smelt, Squid, Tuna"
+    }
+  ],
+  "selphiaPlains": [
+    {
+      "id": "fish-summer-spring",
+      "name": "Summer Spring",
+      "fish": "Char, Chub, Crucian Carp, Gibelio, Girella, Glitter Snapper, Lamp Squid, Lobster, Mackerel, Pike, Rainbow Trout, Sardine, Shrimp, Taimen, Throbby Snapper, Tuna, Turbot, Yellowtail",
+      "other": "",
+      "map": "F3"
+    },
+    {
+      "id": "fish-keeno-lake",
+      "name": "Keeno Lake",
+      "fish": "Char, Chub, Crucian Carp, Girella, Lamp Squid, Lobster, Mackerel, Pike, Rainbow Trout, Salmon, Sardine, Shrimp, Sunsquid, Taimen, Throbby Snapper, Tuna, Turbot, Yellowtail",
+      "other": "Dragon Fin",
+      "map": "E1"
+    },
+    {
+      "id": "fish-selphia-plains-westlily-pad-area",
+      "name": "Selphia Plains West(lily pad area)",
+      "fish": "Crucian Carp, Gibelio, Girella, Mackerel, Pike, Rainbow Trout, Shrimp, Tuna, Turbot",
+      "other": "",
+      "map": "F8"
+    },
+    {
+      "id": "fish-selphia-plains-westlily-pad-area-2",
+      "name": "Selphia Plains West(lily pad area 2)",
+      "fish": "Crucian Carp, Girella, Mackerel, Pike, Rainbow Trout, Sardine, Shrimp, Turbot, Yellowtail",
+      "other": "",
+      "map": "G12"
+    },
+    {
+      "id": "fish-yokmir-forestwaterfall",
+      "name": "Yokmir Forest(waterfall)",
+      "fish": "Blowfish, Char, Cherry Salmon, Chub, Crucian Carp, Gibelio, Mackerel, Rainbow Trout, Taimen",
+      "other": "Round Stone",
+      "map": "3"
+    },
+    {
+      "id": "fish-yokmir-forestlily-pad-area",
+      "name": "Yokmir Forest(lily pad area)",
+      "fish": "Char, Chub, Crucian Carp, Flounder, Gibelio, Girella, Mackerel, Rainbow Trout, Sardine, Turbot",
+      "other": "",
+      "map": "5"
+    },
+    {
+      "id": "fish-water-ruinsright-wing",
+      "name": "Water Ruins(Right Wing)",
+      "fish": "Needlefish, Shrimp, Squid, Masu Trout, Rainbow Trout, Cherry Salmon, Char, Pike",
+      "other": "",
+      "map": "C7"
+    },
+    {
+      "id": "fish-water-ruinsleft-wing-chimera-spot",
+      "name": "Water Ruins(Left Wing / Chimera Spot)",
+      "fish": "Snapper, Throbby Snapper, Girella, Pike, Mackerel, Cherry Salmon, Masu Trout, Crucian Carp, Pond Smelt",
+      "other": "",
+      "map": "C1"
+    }
+  ],
+  "sercerezoHill": [
+    {
+      "id": "fish-spring-spring",
+      "name": "Spring Spring",
+      "fish": "Cherry Salmon, Crucian Carp, Fall Flounder, Gibelio, Girella, Lobster, Masu Trout, Needlefish, Rainbow Trout, Sardine, Snapper, Squid, Sunsquid, Taimen",
+      "other": "Dragon Fin, Legendary Scale",
+      "map": "A1"
+    },
+    {
+      "id": "fish-sercerezo-lake",
+      "name": "Sercerezo Lake",
+      "fish": "Char, Cherry Salmon, Crucian Carp, Girella, Mackerel, Masu Trout, Sardine, Squid",
+      "other": "Legendary Scale",
+      "map": "D1"
+    },
+    {
+      "id": "fish-sercerezo-hilllily-pad-area",
+      "name": "Sercerezo Hill(lily pad area)",
+      "fish": "Cherry Salmon, Crucian Carp, Lamp Squid, Lobster, Mackerel, Masu Trout, Needlefish, Skipjack, Squid",
+      "other": "Dragon Fin",
+      "map": "D4"
+    },
+    {
+      "id": "fish-sercerezo-hilllily-pad-area-2",
+      "name": "Sercerezo Hill(lily pad area 2)",
+      "fish": "Cherry Salmon, Crucian Carp, Gibelio, Girella, Mackerel, Masu Trout, Rainbow Trout, Squid",
+      "other": "",
+      "map": "D5"
+    },
+    {
+      "id": "fish-sercerezo-hillsand-pond",
+      "name": "Sercerezo Hill(sand pond)",
+      "fish": "Sand Flounder, Rockfish",
+      "other": "",
+      "map": "B5"
+    },
+    {
+      "id": "fish-idra-cave1st-floor",
+      "name": "Idra Cave(1st floor)",
+      "fish": "Char, Cherry Salmon, Chub, Crucian Carp, Gibelio, Girella, Lamp Squid, Lobster, Mackerel, Masu Trout, Needlefish, Rainbow Trout, Sardine, Snapper, Throbby Snapper, Squid, Sunsquid, Taimen, Turbot",
+      "other": "Legendary Scale",
+      "map": "D1"
+    },
+    {
+      "id": "fish-idra-cave-b1",
+      "name": "Idra Cave B1",
+      "fish": "Chub, Crucian Carp, Lamp Squid, Lobster, Mackerel, Sardine, Shrimp, Snapper",
+      "other": "",
+      "map": "A6"
+    },
+    {
+      "id": "fish-idra-cave-b2",
+      "name": "Idra Cave B2",
+      "fish": "Char, Crucian Carp, Lamp Squid, Shrimp, Snapper, Squid, Sunsquid, Taimen",
+      "other": "",
+      "map": "E3"
+    }
+  ],
+  "autumnRoadAndSilverArch": [
+    {
+      "id": "fish-autumn-spring",
+      "name": "Autumn Spring",
+      "fish": "Chub, Crucian Carp, Fall Flounder, Gibelio, Girella, Glitter Snapper, Lamp Squid, Mackerel, Pike, Salmon, Sardine, Skipjack, Snapper, Squid, Sunsquid, Taimen, Throbby Snapper, Tuna, Turbot",
+      "other": "Dragon Fin",
+      "map": "E4"
+    },
+    {
+      "id": "fish-autumn-river",
+      "name": "Autumn River",
+      "fish": "Chub, Fall Flounder, Gibelio, Girella, Lamp Squid, Mackerel, Pike, Salmon, Sardine, Skipjack, Snapper, Squid, Throbby Snapper, Turbot",
+      "other": "",
+      "map": "H2"
+    },
+    {
+      "id": "fish-autumn-roadlily-pad-area",
+      "name": "Autumn Road(lily pad area)",
+      "fish": "Chub, Crucian Carp, Mackerel, Pike, Skipjack, Taimen, Turbot",
+      "other": "",
+      "map": "I4"
+    },
+    {
+      "id": "fish-autumn-roadlily-pad-area-2",
+      "name": "Autumn Road(lily pad area 2)",
+      "fish": "Gibelio, Girella, Mackerel, Pike, Salmon, Sardine, Skipjack, Tuna, Turbot",
+      "other": "",
+      "map": "J2"
+    },
+    {
+      "id": "fish-winter-spring",
+      "name": "Winter Spring",
+      "fish": "Blowfish, Cherry Salmon, Chub, Fall Flounder, Flounder, Gibelio, Girella, Lobster, Mackerel, Needlefish, Pond Smelt, Sardine, Squid, Sunsquid, Yellowtail",
+      "other": "",
+      "map": "F2"
+    },
+    {
+      "id": "fish-silver-lake",
+      "name": "Silver Lake",
+      "fish": "Blowfish, Cherry Salmon, Chub, Fall Flounder, Gibelio, Girella, Lobster, Mackerel, Needlefish, Pond Smelt, Sardine, Squid, Sunsquid, Yellowtail",
+      "other": "",
+      "map": "H1"
+    },
+    {
+      "id": "fish-silver-lakelily-pad-area",
+      "name": "Silver Lake(lily pad area)",
+      "fish": "Cherry Salmon, Chub, Fall Flounder, Flounder, Girella, Mackerel, Pond Smelt, Sardine, Squid, Yellowtail",
+      "other": "",
+      "map": "F1"
+    },
+    {
+      "id": "fish-silver-lakelily-pad-area-2",
+      "name": "Silver Lake(lily pad area 2)",
+      "fish": "Cherry Salmon, Girella, Lobster, Mackerel, Needlefish, Pond Smelt, Sardine, Snapper, Squid, Throbby Snapper",
+      "other": "",
+      "map": "G1"
+    },
+    {
+      "id": "fish-maya-road",
+      "name": "Maya Road",
+      "fish": "Blowfish, Char, Cherry Salmon, Chub, Crucian Carp, Fall Flounder, Flounder, Girella, Lamp Squid, Lobster, Mackerel, Masu Trout, Needlefish, Pike, Pond Smelt, Rainbow Trout, Salmon, Sardine, Shrimp, Skipjack, Snapper, Squid, Sunsquid, Taimen, Tuna, Turbot, Yellowtail, Throbby Snapper",
+      "other": "Legendary Scale",
+      "map": "B7"
+    },
+    {
+      "id": "fish-sechs-territory",
+      "name": "Sechs Territory",
+      "fish": "Blowfish, Char, Cherry Salmon, Chub, Flounder, Gibelio, Girella, Mackerel, Needlefish, Pond Smelt, Rainbow Trout, Sardine, Skipjack, Squid, Sunsquid, Taimen, Tuna, Turbot",
+      "other": "",
+      "map": "C3"
+    }
+  ]
+}
