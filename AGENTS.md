@@ -10,7 +10,16 @@ The app is constructed with the latest modern bleeding-edge tooling and heavily 
 - **Routing:** `@tanstack/react-router` configures powerful file-system-based routing with loaders logic mapped across `src/routes/*`.
 - **Styling:** Tailwind CSS (v4 structure built upon `index.css`) & `shadcn/ui` components for rapid design system integrations (`src/components/ui/`).
 - **Data Access:** Fetched strictly over `fetch` from local JSON static files (`/public/data/*`) parsed securely using `zod` schema files located at `src/lib/schemas.ts`. Data logic handles states via `@tanstack/react-query` under the `src/hooks/queries.ts` configuration.
-- **Testing:** Unit Testing integration handles all components and queries utilizing `Vitest`, `React Testing Library`, and `Mock Service Worker (MSW)`. TDD practices mandate that no component or hook goes live before a valid MSW server renders the appropriate JSON mock test scenarios inside the jsdom environment.
+### Strict TDD Protocol
+**Tests MUST be written BEFORE any implementation.** This project follows a strict Test-Driven Development workflow:
+1. **Define Test Cases**: Create `*.test.tsx` file for the new component/feature.
+2. **Mock Data & Services**: Set up MSW handlers for any API dependencies.
+3. **Verify Failure**: Run tests to confirm they fail as expected.
+4. **Implement**: Write only the code necessary to make the tests pass.
+5. **Refactor**: Clean up the code while keeping tests green.
+
+- **Testing Tools**: Unit Testing integration handles all components and queries utilizing `Vitest`, `React Testing Library`, and `Mock Service Worker (MSW)`.
+- **Constraint**: No component, hook, or utility goes live before its corresponding test suite is passing in the `jsdom` environment.
 
 ## Folder Directory Mapping
 1. `src/hooks/queries.test.tsx` -> Primary file validating data fetching intercepting. Uses a local `setupServer()` mocked network response payload resolving API paths.

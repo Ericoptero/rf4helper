@@ -43,6 +43,6 @@ describe('ItemsList Component', () => {
     expect(screen.getByText('Iron')).toBeInTheDocument();
     expect(screen.getByText('Gold')).toBeInTheDocument();
     expect(screen.getAllByText('Mineral')).toHaveLength(2);
-    expect(screen.getByText('200')).toBeInTheDocument();
+    expect(screen.getByText(/Buy:\s*200/)).toBeInTheDocument();
   });
 });

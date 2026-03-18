@@ -94,3 +94,104 @@ export const MonsterSchema = z.object({
 });
 
 export type Monster = z.infer<typeof MonsterSchema>;
+
+export const ChestSchema = z.object({
+  id: z.string(),
+  itemId: z.string().nullable().optional(),
+  itemName: z.string().nullable().optional(),
+  region: z.string(),
+  roomCode: z.string(),
+  locationName: z.string().nullable().optional(),
+  tier: z.number().optional(),
+  notes: z.string().nullable().optional(),
+  recipe: z.string().nullable().optional()
+});
+
+export type Chest = z.infer<typeof ChestSchema>;
+
+export const FestivalSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  season: z.string().nullable().optional(),
+  day: z.number().nullable().optional(),
+  orderable: z.boolean().optional(),
+  description: z.string().nullable().optional(),
+});
+
+export type Festival = z.infer<typeof FestivalSchema>;
+
+export const CropSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  itemId: z.string().optional(),
+  goodSeasons: z.array(z.string()).optional(),
+  badSeasons: z.array(z.string()).optional(),
+  growTime: z.number().optional(),
+  seedBuy: z.number().nullable().optional(),
+  harvested: z.number().optional(),
+  regrows: z.boolean().optional(),
+  cropSell: z.number().nullable().optional(),
+});
+
+export type Crop = z.infer<typeof CropSchema>;
+
+export const CropsDataSchema = z.record(z.string(), z.array(CropSchema));
+export type CropsData = z.infer<typeof CropsDataSchema>;
+
+export const FishSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  itemId: z.string().optional(),
+  sell: z.number().nullable().optional(),
+  buy: z.number().nullable().optional(),
+  shadow: z.string().nullable().optional(),
+  locations: z.array(z.string()).optional(),
+});
+
+export type Fish = z.infer<typeof FishSchema>;
+
+export const OrderSchema = z.object({
+  id: z.string(),
+  orderName: z.string(),
+  category: z.string(),
+  requirement: z.string().nullable().optional(),
+  rpCost: z.number().nullable().optional(),
+});
+export type Order = z.infer<typeof OrderSchema>;
+
+export const RequestSchema = z.object({
+  id: z.string(),
+  request: z.string(),
+  unlockConditions: z.string().nullable().optional(),
+  condition: z.string().nullable().optional(),
+  howToComplete: z.string().nullable().optional(),
+  reward: z.string().nullable().optional(),
+});
+export type RequestItem = z.infer<typeof RequestSchema>;
+
+export const RuneAbilitySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  weaponType: z.string(),
+  sell: z.number().nullable().optional(),
+  buy: z.number().nullable().optional(),
+  description: z.string().nullable().optional(),
+});
+export type RuneAbility = z.infer<typeof RuneAbilitySchema>;
+
+export const SkillSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullable().optional(),
+  unlocks: z.record(z.string(), z.string()).optional(),
+});
+export type Skill = z.infer<typeof SkillSchema>;
+
+export const TrophySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullable().optional(),
+  requirements: z.string().nullable().optional(),
+});
+export type Trophy = z.infer<typeof TrophySchema>;
+

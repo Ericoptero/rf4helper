@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
-import { afterEach, beforeAll, afterAll } from 'vitest';
+import { afterEach, beforeAll, afterAll, vi } from 'vitest';
 import { setupServer } from 'msw/node';
 
 // Setup MSW (handlers will be added per-test or globally later)
@@ -14,3 +14,22 @@ afterEach(() => {
 });
 
 afterAll(() => server.close());
+
+// Polyfills for missing jsdom features required by Radix UI
+if (typeof window !== 'undefined') {
+  window.PointerEvent = window.PointerEvent || class PointerEvent extends Event {
+    constructor(type: string, params: PointerEventInit = {}) {
+      super(type, params);
+    }
+  } as any;
+  window.HTMLElement.prototype.hasPointerCapture = vi.fn();
+  window.HTMLElement.prototype.setPointerCapture = vi.fn();
+  window.HTMLElement.prototype.releasePointerCapture = vi.fn();
+  window.HTMLElement.prototype.scrollIntoView = vi.fn();
+  
+  window.ResizeObserver = class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+}

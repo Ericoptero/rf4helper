@@ -9,14 +9,28 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PlayerRouteImport } from './routes/player'
 import { Route as MonstersRouteImport } from './routes/monsters'
+import { Route as MapsRouteImport } from './routes/maps'
 import { Route as ItemsRouteImport } from './routes/items'
+import { Route as FishingRouteImport } from './routes/fishing'
 import { Route as CharactersRouteImport } from './routes/characters'
+import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as IndexRouteImport } from './routes/index'
 
+const PlayerRoute = PlayerRouteImport.update({
+  id: '/player',
+  path: '/player',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MonstersRoute = MonstersRouteImport.update({
   id: '/monsters',
   path: '/monsters',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapsRoute = MapsRouteImport.update({
+  id: '/maps',
+  path: '/maps',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ItemsRoute = ItemsRouteImport.update({
@@ -24,9 +38,19 @@ const ItemsRoute = ItemsRouteImport.update({
   path: '/items',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FishingRoute = FishingRouteImport.update({
+  id: '/fishing',
+  path: '/fishing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CharactersRoute = CharactersRouteImport.update({
   id: '/characters',
   path: '/characters',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,45 +61,100 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/calendar': typeof CalendarRoute
   '/characters': typeof CharactersRoute
+  '/fishing': typeof FishingRoute
   '/items': typeof ItemsRoute
+  '/maps': typeof MapsRoute
   '/monsters': typeof MonstersRoute
+  '/player': typeof PlayerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/calendar': typeof CalendarRoute
   '/characters': typeof CharactersRoute
+  '/fishing': typeof FishingRoute
   '/items': typeof ItemsRoute
+  '/maps': typeof MapsRoute
   '/monsters': typeof MonstersRoute
+  '/player': typeof PlayerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/calendar': typeof CalendarRoute
   '/characters': typeof CharactersRoute
+  '/fishing': typeof FishingRoute
   '/items': typeof ItemsRoute
+  '/maps': typeof MapsRoute
   '/monsters': typeof MonstersRoute
+  '/player': typeof PlayerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/characters' | '/items' | '/monsters'
+  fullPaths:
+    | '/'
+    | '/calendar'
+    | '/characters'
+    | '/fishing'
+    | '/items'
+    | '/maps'
+    | '/monsters'
+    | '/player'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/characters' | '/items' | '/monsters'
-  id: '__root__' | '/' | '/characters' | '/items' | '/monsters'
+  to:
+    | '/'
+    | '/calendar'
+    | '/characters'
+    | '/fishing'
+    | '/items'
+    | '/maps'
+    | '/monsters'
+    | '/player'
+  id:
+    | '__root__'
+    | '/'
+    | '/calendar'
+    | '/characters'
+    | '/fishing'
+    | '/items'
+    | '/maps'
+    | '/monsters'
+    | '/player'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CalendarRoute: typeof CalendarRoute
   CharactersRoute: typeof CharactersRoute
+  FishingRoute: typeof FishingRoute
   ItemsRoute: typeof ItemsRoute
+  MapsRoute: typeof MapsRoute
   MonstersRoute: typeof MonstersRoute
+  PlayerRoute: typeof PlayerRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/player': {
+      id: '/player'
+      path: '/player'
+      fullPath: '/player'
+      preLoaderRoute: typeof PlayerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/monsters': {
       id: '/monsters'
       path: '/monsters'
       fullPath: '/monsters'
       preLoaderRoute: typeof MonstersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/maps': {
+      id: '/maps'
+      path: '/maps'
+      fullPath: '/maps'
+      preLoaderRoute: typeof MapsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/items': {
@@ -85,11 +164,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ItemsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fishing': {
+      id: '/fishing'
+      path: '/fishing'
+      fullPath: '/fishing'
+      preLoaderRoute: typeof FishingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/characters': {
       id: '/characters'
       path: '/characters'
       fullPath: '/characters'
       preLoaderRoute: typeof CharactersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,9 +197,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CalendarRoute: CalendarRoute,
   CharactersRoute: CharactersRoute,
+  FishingRoute: FishingRoute,
   ItemsRoute: ItemsRoute,
+  MapsRoute: MapsRoute,
   MonstersRoute: MonstersRoute,
+  PlayerRoute: PlayerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

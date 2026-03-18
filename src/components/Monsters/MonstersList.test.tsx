@@ -45,6 +45,6 @@ describe('MonstersList Component', () => {
     });
 
     expect(screen.getByText('Orc')).toBeInTheDocument();
-    expect(screen.getByText('HP: 100')).toBeInTheDocument();
+    expect(screen.getByText('100')).toBeInTheDocument();
   });
 });
