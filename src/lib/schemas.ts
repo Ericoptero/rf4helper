@@ -176,6 +176,7 @@ export const RuneAbilitySchema = z.object({
   sell: z.number().nullable().optional(),
   buy: z.number().nullable().optional(),
   description: z.string().nullable().optional(),
+  image: z.string().optional(),
 });
 export type RuneAbility = z.infer<typeof RuneAbilitySchema>;
 
@@ -194,4 +195,3 @@ export const TrophySchema = z.object({
   requirements: z.string().nullable().optional(),
 });
 export type Trophy = z.infer<typeof TrophySchema>;
-

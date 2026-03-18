@@ -24,7 +24,7 @@ const mockRequests = {
 
 const mockRuneAbilities = {
   'short swords': [
-    { id: 'rune-1', name: 'Power Wave', weaponType: 'Short Sword', description: 'Fire a shockwave', sell: 10, buy: 100 }
+    { id: 'rune-1', name: 'Power Wave', weaponType: 'Short Sword', description: 'Fire a shockwave', sell: 10, buy: 100, image: 'rune-abilities/rune-power-wave.png' }
   ]
 };
 
@@ -92,6 +92,7 @@ describe('PlayerView Component', () => {
     // Test Rune Abilities Tab
     await user.click(screen.getByRole('tab', { name: /rune abilities/i }));
     expect(screen.getByText('Power Wave')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Power Wave' })).toBeInTheDocument();
 
     // Test Skills Tab
     await user.click(screen.getByRole('tab', { name: /skills/i }));

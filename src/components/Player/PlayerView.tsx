@@ -19,6 +19,19 @@ import {
   BookOpen,
 } from "lucide-react";
 
+const runeAbilityImages = import.meta.glob(
+  "@/assets/images/rune-abilities/*.png",
+  {
+    eager: true,
+    import: "default",
+  },
+) as Record<string, string>;
+
+const resolveRuneAbilityImage = (image?: string) => {
+  if (!image) return undefined;
+  return runeAbilityImages[`/src/assets/images/${image}`];
+};
+
 export function PlayerView() {
   const { data: orders, isLoading: isLoadingOrders } = useOrders();
   const { data: requestsData, isLoading: isLoadingReqs } = useRequests();
@@ -247,10 +260,20 @@ export function PlayerView() {
                                 key={i}
                                 className="py-0 h-full flex flex-col"
                               >
-                                <CardHeader className="p-4 pb-2 space-y-0">
-                                  <CardTitle className="text-base leading-tight">
-                                    {ability.name}
-                                  </CardTitle>
+                                <CardHeader className="p-4 pb-2">
+                                  <div className="flex min-h-6 items-center gap-3">
+                                    {resolveRuneAbilityImage(ability.image) && (
+                                      <img
+                                        src={resolveRuneAbilityImage(ability.image)}
+                                        alt={ability.name}
+                                        className="block h-6 w-6 shrink-0 object-contain"
+                                        loading="lazy"
+                                      />
+                                    )}
+                                    <CardTitle className="text-base leading-none">
+                                      {ability.name}
+                                    </CardTitle>
+                                  </div>
                                 </CardHeader>
                                 <CardContent className="p-4 pt-2 gap-2 text-sm flex flex-col flex-1">
                                   <p className="text-muted-foreground flex-1">
