@@ -2,11 +2,21 @@ import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { fetchItems, fetchCharacters, fetchMonsters, fetchChests, fetchFestivals, fetchCrops, fetchFish, fetchOrders, fetchRequests, fetchRuneAbilities, fetchSkills, fetchTrophies } from '../lib/api';
 import type { Item, Character, Monster, Chest, Festival, CropsData, Fish, Order, RequestItem, RuneAbility, Skill, Trophy } from '../lib/schemas';
 
+/**
+ * All game data is static — it never changes at runtime.
+ * Using Infinity for staleTime and gcTime ensures we fetch only
+ * once per session and never garbage-collect the cached data.
+ */
+const STATIC_QUERY_OPTIONS = {
+  staleTime: Infinity,
+  gcTime: Infinity,
+} as const;
+
 export const useItems = (): UseQueryResult<Record<string, Item>, Error> => {
   return useQuery({
     queryKey: ['items'],
     queryFn: fetchItems,
-    staleTime: 1000 * 60 * 60, // 1 hour (static data)
+    ...STATIC_QUERY_OPTIONS,
   });
 };
 
@@ -14,7 +24,7 @@ export const useCharacters = (): UseQueryResult<Record<string, Character>, Error
   return useQuery({
     queryKey: ['characters'],
     queryFn: fetchCharacters,
-    staleTime: 1000 * 60 * 60,
+    ...STATIC_QUERY_OPTIONS,
   });
 };
 
@@ -22,7 +32,7 @@ export const useMonsters = (): UseQueryResult<Record<string, Monster>, Error> =>
   return useQuery({
     queryKey: ['monsters'],
     queryFn: fetchMonsters,
-    staleTime: 1000 * 60 * 60,
+    ...STATIC_QUERY_OPTIONS,
   });
 };
 
@@ -30,7 +40,7 @@ export const useChests = (): UseQueryResult<Chest[], Error> => {
   return useQuery({
     queryKey: ['chests'],
     queryFn: fetchChests,
-    staleTime: 1000 * 60 * 60,
+    ...STATIC_QUERY_OPTIONS,
   });
 };
 
@@ -38,7 +48,7 @@ export const useFestivals = (): UseQueryResult<Festival[], Error> => {
   return useQuery({
     queryKey: ['festivals'],
     queryFn: fetchFestivals,
-    staleTime: 1000 * 60 * 60,
+    ...STATIC_QUERY_OPTIONS,
   });
 };
 
@@ -46,7 +56,7 @@ export const useCrops = (): UseQueryResult<CropsData, Error> => {
   return useQuery({
     queryKey: ['crops'],
     queryFn: fetchCrops,
-    staleTime: 1000 * 60 * 60,
+    ...STATIC_QUERY_OPTIONS,
   });
 };
 
@@ -54,7 +64,7 @@ export const useFish = (): UseQueryResult<Fish[], Error> => {
   return useQuery({
     queryKey: ['fish'],
     queryFn: fetchFish,
-    staleTime: 1000 * 60 * 60,
+    ...STATIC_QUERY_OPTIONS,
   });
 };
 
@@ -62,7 +72,7 @@ export const useOrders = (): UseQueryResult<Order[], Error> => {
   return useQuery({
     queryKey: ['orders'],
     queryFn: fetchOrders,
-    staleTime: 1000 * 60 * 60,
+    ...STATIC_QUERY_OPTIONS,
   });
 };
 
@@ -70,7 +80,7 @@ export const useRequests = (): UseQueryResult<Record<string, RequestItem[]>, Err
   return useQuery({
     queryKey: ['requests'],
     queryFn: fetchRequests,
-    staleTime: 1000 * 60 * 60,
+    ...STATIC_QUERY_OPTIONS,
   });
 };
 
@@ -78,7 +88,7 @@ export const useRuneAbilities = (): UseQueryResult<Record<string, RuneAbility[]>
   return useQuery({
     queryKey: ['runeAbilities'],
     queryFn: fetchRuneAbilities,
-    staleTime: 1000 * 60 * 60,
+    ...STATIC_QUERY_OPTIONS,
   });
 };
 
@@ -86,7 +96,7 @@ export const useSkills = (): UseQueryResult<Skill[], Error> => {
   return useQuery({
     queryKey: ['skills'],
     queryFn: fetchSkills,
-    staleTime: 1000 * 60 * 60,
+    ...STATIC_QUERY_OPTIONS,
   });
 };
 
@@ -94,6 +104,6 @@ export const useTrophies = (): UseQueryResult<Record<string, Trophy[]>, Error> =
   return useQuery({
     queryKey: ['trophies'],
     queryFn: fetchTrophies,
-    staleTime: 1000 * 60 * 60,
+    ...STATIC_QUERY_OPTIONS,
   });
 };

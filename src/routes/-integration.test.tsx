@@ -21,7 +21,15 @@ const server = setupServer(
   })),
   http.get('http://localhost:3000/data/monsters.json', () => HttpResponse.json({
     'monster-orc': {
-      id: 'monster-orc', name: 'Orc', drops: [], stats: { hp: 100, atk: 10, def: 5, matk: 0, mdef: 0, str: 10, int: 0, vit: 5, spd: 5, exp: 10, gold: 5 }
+      id: 'monster-orc',
+      name: 'Orc',
+      image: '/images/monsters/orc',
+      description: 'A brutish monster.',
+      location: 'Selphia Plain',
+      drops: [],
+      nickname: [],
+      stats: { baseLevel: 3, hp: 100, atk: 10, def: 5, matk: 0, mdef: 0, str: 10, int: 0, vit: 5, exp: 10, bonus: null },
+      taming: { tameable: false, isRideable: null, befriend: null, favorite: [], produce: [], cycle: null },
     }
   }))
 );
@@ -74,7 +82,7 @@ describe('Routing Integration', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Characters Directory')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Characters' })).toBeInTheDocument();
       expect(screen.getByText('Forte')).toBeInTheDocument();
       expect(screen.getByText('Bachelorettes')).toBeInTheDocument();
     });
@@ -90,9 +98,9 @@ describe('Routing Integration', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Bestiary')).toBeInTheDocument();
+      expect(screen.getByText('Monsters Compendium')).toBeInTheDocument();
       expect(screen.getByText('Orc')).toBeInTheDocument();
-      expect(screen.getByText('HP: 100')).toBeInTheDocument();
+      expect(screen.getByText('100')).toBeInTheDocument();
     });
   });
 });

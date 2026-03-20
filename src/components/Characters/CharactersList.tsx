@@ -4,11 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { PageLayout } from '@/components/PageLayout';
 import { Smile } from 'lucide-react';
 import type { Character } from '@/lib/schemas';
-
-// Helper to format item ids nicely since we don't have the actual item details joined
-function formatItemName(id: string) {
-  return id.replace(/^item-/, '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-}
+import { formatName } from '@/lib/formatters';
 
 function CharacterCard({ character, onClick }: { character: Character, onClick: () => void }) {
   // Mock friendship value for now
@@ -51,7 +47,7 @@ function CharacterDetails({ character }: { character: Character }) {
              <Badge key={c} variant="outline" className="bg-muted/50 border-primary/20">{c}</Badge>
           ))}
           {data.items.map(i => (
-            <Badge key={i} variant="secondary">{formatItemName(i)}</Badge>
+            <Badge key={i} variant="secondary">{formatName(i)}</Badge>
           ))}
         </div>
       </div>

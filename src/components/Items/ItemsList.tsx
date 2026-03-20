@@ -4,11 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { PageLayout } from '@/components/PageLayout';
 import { Box, Coins, Star, Hammer, MapPin } from 'lucide-react';
 import type { Item } from '@/lib/schemas';
-
-// Helper to format ids nicely
-function formatName(id: string) {
-  return id.replace(/^item-|recipe-/, '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-}
+import { formatName } from '@/lib/formatters';
 
 function ItemCard({ item, onClick }: { item: Item, onClick: () => void }) {
   const isCrafted = !!(item.craftedFrom && item.craftedFrom.length > 0);

@@ -1,50 +1,4 @@
 {
-  "fishingRods": [
-    {
-      "id": "fish-cheap-pole",
-      "name": "Cheap Pole",
-      "chanceOfCatching": "0"
-    },
-    {
-      "id": "fish-beginners-pole",
-      "name": "Beginner's Pole",
-      "chanceOfCatching": "1"
-    },
-    {
-      "id": "fish-skilled-pole",
-      "name": "Skilled Pole",
-      "chanceOfCatching": "2"
-    },
-    {
-      "id": "fish-famous-pole",
-      "name": "Famous Pole",
-      "chanceOfCatching": "3"
-    },
-    {
-      "id": "fish-sacred-pole",
-      "name": "Sacred Pole",
-      "chanceOfCatching": "4"
-    }
-  ],
-  "fishingLocations": [
-    {
-      "id": "fish-a-b-c-d",
-      "name": "A/B/C/D",
-      "summerArea": "All B",
-      "fallwinterArea": "B/C/D"
-    },
-    {
-      "id": "fish-all-i",
-      "name": "All I",
-      "summerArea": "All J",
-      "fallwinterArea": "All K"
-    },
-    {
-      "id": "fish-all-l",
-      "name": "All L",
-      "summerArea": "All M"
-    }
-  ],
   "fishByName": [
     {
       "id": "fish-masu-trout",
@@ -185,9 +139,7 @@
       "sell": 100,
       "buy": 2000,
       "shadow": "normal",
-      "locations": [
-        "Fall : Selphia Housing Area"
-      ]
+      "locations": ["Fall : Selphia Housing Area"]
     },
     {
       "id": "fish-salmon",
@@ -196,9 +148,7 @@
       "sell": 80,
       "buy": 1350,
       "shadow": "normal",
-      "locations": [
-        "Fall: Autumn Spring"
-      ]
+      "locations": ["Fall: Autumn Spring"]
     },
     {
       "id": "fish-mackerel",
@@ -207,10 +157,7 @@
       "sell": 60,
       "buy": 1000,
       "shadow": "normal",
-      "locations": [
-        "Fall : Selphia Housing Area",
-        "Summer Spring"
-      ]
+      "locations": ["Fall : Selphia Housing Area", "Summer Spring"]
     },
     {
       "id": "fish-needlefish",
@@ -228,10 +175,7 @@
       "sell": 12,
       "buy": 240,
       "shadow": "normal",
-      "locations": [
-        "Fall : Selphia Housing Area",
-        "Summer Spring"
-      ]
+      "locations": ["Fall : Selphia Housing Area", "Summer Spring"]
     },
     {
       "id": "fish-sunsquid",
@@ -240,10 +184,7 @@
       "sell": 6800,
       "buy": 74000,
       "shadow": "faint",
-      "locations": [
-        "Everywhere",
-        "but Selphia Town"
-      ]
+      "locations": ["Everywhere", "but Selphia Town"]
     },
     {
       "id": "fish-shrimp",
@@ -252,10 +193,7 @@
       "sell": 85,
       "buy": 1500,
       "shadow": "normal",
-      "locations": [
-        "Summer Spring",
-        "Idra Cave Basement 1"
-      ]
+      "locations": ["Summer Spring", "Idra Cave Basement 1"]
     },
     {
       "id": "fish-snapper",
@@ -297,10 +235,7 @@
       "sell": 150,
       "buy": 3000,
       "shadow": "normal",
-      "locations": [
-        "Spring : Selphia Castle Gate",
-        "Summer Spring"
-      ]
+      "locations": ["Spring : Selphia Castle Gate", "Summer Spring"]
     },
     {
       "id": "fish-flounder",
@@ -347,9 +282,7 @@
       "sell": 35,
       "buy": 620,
       "shadow": "normal",
-      "locations": [
-        "Summer Spring"
-      ]
+      "locations": ["Summer Spring"]
     },
     {
       "id": "fish-tuna",
@@ -373,10 +306,7 @@
       "sell": 45,
       "buy": 850,
       "shadow": "normal",
-      "locations": [
-        "Fall : Selphia Housing Area",
-        "Summer Spring"
-      ]
+      "locations": ["Fall : Selphia Housing Area", "Summer Spring"]
     },
     {
       "id": "fish-fall-flounder",
@@ -452,9 +382,7 @@
       "sell": 38,
       "buy": 700,
       "shadow": "normal",
-      "locations": [
-        "Sercerezo Hill (sand pond)"
-      ]
+      "locations": ["Sercerezo Hill (sand pond)"]
     },
     {
       "id": "fish-rockfish",
@@ -463,9 +391,7 @@
       "sell": 1040,
       "buy": 10400,
       "shadow": "normal",
-      "locations": [
-        "Sercerezo Hill (sand pond)"
-      ]
+      "locations": ["Sercerezo Hill (sand pond)"]
     }
   ],
   "otherFishableItems": [

@@ -6,72 +6,74 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.508 0.118 165.612);
-    --primary-foreground: oklch(0.979 0.021 166.113);
-    --secondary: oklch(0.967 0.001 286.375);
-    --secondary-foreground: oklch(0.21 0.006 285.885);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.845 0.143 164.978);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.596 0.145 163.225);
-    --chart-4: oklch(0.508 0.118 165.612);
-    --chart-5: oklch(0.432 0.095 166.913);
+    /* Enchanted Codex — Light Mode (Warm Parchment) */
+    --background: oklch(0.97 0.01 80);
+    --foreground: oklch(0.18 0.02 260);
+    --card: oklch(0.98 0.008 75);
+    --card-foreground: oklch(0.18 0.02 260);
+    --popover: oklch(0.98 0.008 75);
+    --popover-foreground: oklch(0.18 0.02 260);
+    --primary: oklch(0.72 0.15 75);
+    --primary-foreground: oklch(0.15 0.01 75);
+    --secondary: oklch(0.93 0.015 80);
+    --secondary-foreground: oklch(0.25 0.02 260);
+    --muted: oklch(0.94 0.01 80);
+    --muted-foreground: oklch(0.50 0.02 260);
+    --accent: oklch(0.55 0.14 155);
+    --accent-foreground: oklch(0.98 0.01 155);
+    --destructive: oklch(0.55 0.22 25);
+    --border: oklch(0.88 0.02 80);
+    --input: oklch(0.90 0.015 80);
+    --ring: oklch(0.72 0.15 75);
+    --chart-1: oklch(0.72 0.15 75);
+    --chart-2: oklch(0.55 0.14 155);
+    --chart-3: oklch(0.65 0.18 45);
+    --chart-4: oklch(0.55 0.22 25);
+    --chart-5: oklch(0.60 0.16 290);
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.596 0.145 163.225);
-    --sidebar-primary-foreground: oklch(0.979 0.021 166.113);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --sidebar: oklch(0.95 0.01 80);
+    --sidebar-foreground: oklch(0.18 0.02 260);
+    --sidebar-primary: oklch(0.72 0.15 75);
+    --sidebar-primary-foreground: oklch(0.15 0.01 75);
+    --sidebar-accent: oklch(0.92 0.02 80);
+    --sidebar-accent-foreground: oklch(0.25 0.02 260);
+    --sidebar-border: oklch(0.88 0.02 80);
+    --sidebar-ring: oklch(0.72 0.15 75);
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.432 0.095 166.913);
-    --primary-foreground: oklch(0.979 0.021 166.113);
-    --secondary: oklch(0.274 0.006 286.033);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
+    /* Enchanted Codex — Dark Mode (Midnight Blue with Gold) */
+    --background: oklch(0.15 0.02 260);
+    --foreground: oklch(0.93 0.01 80);
+    --card: oklch(0.20 0.025 260);
+    --card-foreground: oklch(0.93 0.01 80);
+    --popover: oklch(0.20 0.025 260);
+    --popover-foreground: oklch(0.93 0.01 80);
+    --primary: oklch(0.80 0.16 80);
+    --primary-foreground: oklch(0.15 0.02 260);
+    --secondary: oklch(0.25 0.025 260);
+    --secondary-foreground: oklch(0.90 0.01 80);
+    --muted: oklch(0.22 0.02 260);
+    --muted-foreground: oklch(0.65 0.02 260);
+    --accent: oklch(0.65 0.15 155);
+    --accent-foreground: oklch(0.13 0.02 155);
+    --destructive: oklch(0.65 0.20 25);
     --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.845 0.143 164.978);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.596 0.145 163.225);
-    --chart-4: oklch(0.508 0.118 165.612);
-    --chart-5: oklch(0.432 0.095 166.913);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.696 0.17 162.48);
-    --sidebar-primary-foreground: oklch(0.262 0.051 172.552);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --input: oklch(1 0 0 / 12%);
+    --ring: oklch(0.80 0.16 80);
+    --chart-1: oklch(0.80 0.16 80);
+    --chart-2: oklch(0.65 0.15 155);
+    --chart-3: oklch(0.70 0.18 45);
+    --chart-4: oklch(0.65 0.20 25);
+    --chart-5: oklch(0.68 0.16 290);
+    --sidebar: oklch(0.18 0.025 260);
+    --sidebar-foreground: oklch(0.93 0.01 80);
+    --sidebar-primary: oklch(0.80 0.16 80);
+    --sidebar-primary-foreground: oklch(0.15 0.02 260);
+    --sidebar-accent: oklch(0.24 0.025 260);
+    --sidebar-accent-foreground: oklch(0.93 0.01 80);
     --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --sidebar-ring: oklch(0.80 0.16 80);
 }
 
 @theme inline {
@@ -116,14 +118,57 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* === Card slide-up stagger animation === */
+@keyframes card-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-card-in {
+  animation: card-fade-in 0.35s ease-out both;
+}
+
+/* === Skeleton shimmer === */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, var(--muted) 25%, var(--border) 50%, var(--muted) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* === Nav pill slide animation === */
+@keyframes nav-pill-slide {
+  0% { transform: scaleX(0.8); opacity: 0.5; }
+  100% { transform: scaleX(1); opacity: 1; }
+}
+
+.animate-nav-pill {
+  animation: nav-pill-slide 0.2s ease-out;
+}
+
+/* === Smooth theme transition === */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
     @apply bg-background text-foreground;
-    }
+  }
   html {
     @apply font-sans;
-    }
+  }
 }

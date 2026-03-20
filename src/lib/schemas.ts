@@ -61,34 +61,53 @@ export type Character = z.infer<typeof CharacterSchema>;
 export const MonsterSchema = z.object({
   id: z.string(),
   name: z.string(),
+  variantGroup: z.string().nullable().optional(),
+  variantSuffix: z.string().nullable().optional(),
+  image: z.string().optional(),
+  description: z.string().nullable().optional(),
+  location: z.string().nullable().optional(),
   drops: z.array(
     z.object({
-      id: z.string(),
+      id: z.string().nullable(),
       name: z.string(),
-      dropRate: z.number(),
+      dropRates: z.array(z.number()),
     })
   ),
   stats: z.object({
-    hp: z.number(),
-    atk: z.number(),
-    def: z.number(),
-    matk: z.number(),
-    mdef: z.number(),
-    str: z.number(),
-    int: z.number(),
-    vit: z.number(),
-    spd: z.number(),
-    exp: z.number(),
-    gold: z.number(),
+    baseLevel: z.number().nullable().optional(),
+    hp: z.number().nullable(),
+    atk: z.number().nullable(),
+    def: z.number().nullable(),
+    matk: z.number().nullable(),
+    mdef: z.number().nullable(),
+    str: z.number().nullable(),
+    int: z.number().nullable(),
+    vit: z.number().nullable(),
+    exp: z.number().nullable(),
+    bonus: z.string().nullable().optional(),
   }),
-  resistances: z.record(z.string(), z.number()).optional(),
+  nickname: z.array(z.string()).optional(),
+  resistances: z.record(z.string(), z.number().nullable()).optional(),
   taming: z
     .object({
       tameable: z.boolean(),
-      region: z.string().nullable().optional(),
-      produceId: z.string().nullable().optional(),
-      produceName: z.string().nullable().optional(),
-      friendItem: z.string().nullable().optional(),
+      isRideable: z.boolean().nullable().optional(),
+      befriend: z.number().nullable().optional(),
+      favorite: z.array(
+        z.object({
+          id: z.string().nullable(),
+          name: z.string(),
+          favorite: z.number().nullable(),
+        })
+      ).optional(),
+      produce: z.array(
+        z.object({
+          id: z.string().nullable(),
+          name: z.string(),
+          level: z.number().nullable(),
+        })
+      ).optional(),
+      cycle: z.string().nullable().optional(),
     })
     .optional(),
 });

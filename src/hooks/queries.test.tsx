@@ -30,8 +30,13 @@ const mockMonsters: Record<string, Monster> = {
   'monster-orc': {
     id: 'monster-orc',
     name: 'Orc',
+    image: '/images/monsters/orc',
+    description: 'A brutish monster.',
+    location: 'Selphia Plain',
     drops: [],
-    stats: { hp: 100, atk: 10, def: 5, matk: 0, mdef: 0, str: 10, int: 0, vit: 5, spd: 5, exp: 10, gold: 5 }
+    nickname: [],
+    stats: { baseLevel: 3, hp: 100, atk: 10, def: 5, matk: 0, mdef: 0, str: 10, int: 0, vit: 5, exp: 10, bonus: null },
+    taming: { tameable: false, isRideable: null, befriend: null, favorite: [], produce: [], cycle: null },
   }
 };
 

@@ -97,14 +97,18 @@ gifts.like.categories → string[]
 
 **Formato:** `Object<slug, Monster>` (207 monstros)
 
-| Campo         | Tipo    | Descrição                                                   |
-| ------------- | ------- | ----------------------------------------------------------- |
-| `id`          | string  | `monster-*` slug                                            |
-| `name`        | string  | Nome                                                        |
-| `drops`       | array   | `[{id, name, dropRate}]`                                    |
-| `stats`       | object  | `{hp, atk, def, matk, mdef, str, int, vit, spd, exp, gold}` |
-| `resistances` | object  | `{fire, water, earth, wind, light, dark, paralyze, ...}`    |
-| `taming`      | object? | `{tameable, region, produceId, produceName, friendItem}`    |
+| Campo         | Tipo    | Descrição                                                             |
+| ------------- | ------- | --------------------------------------------------------------------- |
+| `id`          | string  | `monster-*` slug                                                      |
+| `name`        | string  | Nome                                                                  |
+| `description` | string? | Descrição do monstro (nullable)                                       |
+| `location`    | string? | Localização onde o monstro aparece (nullable)                         |
+| `image`       | string? | Path relativo para imagem do monstro                                  |
+| `drops`       | array   | `[{id, name, dropRate}]`                                              |
+| `stats`       | object  | `{baseLevel?, exp, hp, atk, def, matk, mdef, str, vit, int, bonus?}` |
+| `nickname`    | array?  | Array de nicknames possíveis                                          |
+| `resistances` | object? | `{fire, water, earth, wind, light, dark, paralyze, ...}` (optional)   |
+| `taming`      | object? | `{tameable, isRideable?, befriend?, favorite?, produce?, cycle?}`     |
 
 ---
 

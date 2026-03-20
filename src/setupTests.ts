@@ -32,4 +32,18 @@ if (typeof window !== 'undefined') {
     unobserve() {}
     disconnect() {}
   };
+
+  // Mock matchMedia for useTheme hook
+  window.matchMedia = window.matchMedia || function(query: string) {
+    return {
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    } as unknown as MediaQueryList;
+  };
 }
