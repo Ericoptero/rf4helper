@@ -14,7 +14,14 @@ const server = setupServer(
   })),
   http.get('http://localhost:3000/data/characters.json', () => HttpResponse.json({
     'char-forte': {
-      id: 'char-forte', name: 'Forte', category: 'Bachelorettes', gifts: {
+      id: 'char-forte', name: 'Forte', category: 'Bachelorettes',
+      icon: { sm: '/characters/icons/sm/Forte.png', md: '/characters/icons/md/Forte.png' },
+      portrait: '/characters/portrait/Forte.png',
+      gender: 'Female',
+      description: 'A steadfast knight of Selphia.',
+      birthday: { season: 'Summer', day: 22 },
+      battle: null,
+      gifts: {
         love: { items: [], categories: [] }, like: { items: [], categories: [] }, neutral: { items: [], categories: [] }, dislike: { items: [], categories: [] }, hate: { items: [], categories: [] }
       }
     }

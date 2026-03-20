@@ -3,6 +3,15 @@
     "id": "char-frey",
     "name": "Frey",
     "category": "Protagonist",
+    "icon": {
+      "sm": "/characters/icons/sm/frey.png",
+      "md": "/characters/icons/md/frey.png"
+    },
+    "portrait": "/characters/portrait/frey.png",
+    "gender": null,
+    "description": null,
+    "birthday": null,
+    "battle": null,
     "gifts": {
       "love": {
         "items": [],
@@ -30,6 +39,15 @@
     "id": "char-lest",
     "name": "Lest",
     "category": "Protagonist",
+    "icon": {
+      "sm": "/characters/icons/sm/lest.png",
+      "md": "/characters/icons/md/lest.png"
+    },
+    "portrait": "/characters/portrait/lest.png",
+    "gender": "Male",
+    "description": null,
+    "birthday": null,
+    "battle": null,
     "gifts": {
       "love": {
         "items": [],
@@ -57,6 +75,40 @@
     "id": "char-luna",
     "name": "Luna",
     "category": "Children",
+    "icon": {
+      "sm": "/characters/icons/sm/luna.png",
+      "md": "/characters/icons/md/luna.png"
+    },
+    "portrait": "/characters/portrait/luna.png",
+    "gender": "Female",
+    "description": "Your lovable child. Full of curiosity and endlessly playful, but also sweet, just like her parents.",
+    "birthday": null,
+    "battle": {
+      "description": "She has a 6.98% chance to Crit. She has a slightly higher INT growth and slightly lower VIT growth than Noel. Skills available by weapon type (needs to be tested):",
+      "stats": {
+        "level": 1,
+        "hp": 60,
+        "atk": 74,
+        "def": 2,
+        "matk": 25,
+        "mdef": 2,
+        "str": 5,
+        "vit": 4,
+        "int": 5
+      },
+      "elementalResistances": null,
+      "skills": [
+        "Gust",
+        "Cyclone Neko Damashi Fist Ultimate Attack",
+        "Grand Impact Tornado Swing",
+        "Naive Blade Wind Slash ?",
+        "Power Wave Dash Slash Short Sword Ultimate Attack",
+        "Reaper Slash Spear Ultimate Attack",
+        "Fireball"
+      ],
+      "weapon": "Back Scratcher",
+      "weaponType": "Short Sword"
+    },
     "gifts": {
       "love": {
         "items": [],
@@ -84,6 +136,49 @@
     "id": "char-noel",
     "name": "Noel",
     "category": "Children",
+    "icon": {
+      "sm": "/characters/icons/sm/noel.png",
+      "md": "/characters/icons/md/noel.png"
+    },
+    "portrait": "/characters/portrait/noel.png",
+    "gender": "Male",
+    "description": "Your lovable child. Full of curiosity and endlessly playful, but also sweet, just like his parents.",
+    "birthday": null,
+    "battle": {
+      "description": "He has a 6.98% chance to Crit. He has a slightly lower INT growth and slightly higher VIT growth than Luna. Inherited skills dependent on parent:",
+      "stats": {
+        "level": 1,
+        "hp": 60,
+        "atk": 74,
+        "def": 2,
+        "matk": 24,
+        "mdef": 2,
+        "str": 5,
+        "vit": 5,
+        "int": 4
+      },
+      "elementalResistances": {
+        "physical": null,
+        "fire": null,
+        "water": null,
+        "earth": null,
+        "wind": null,
+        "light": null,
+        "dark": null,
+        "love": null,
+        "poison": null,
+        "seal": null,
+        "paralysis": null,
+        "sleep": null,
+        "fatigue": null,
+        "illness": null,
+        "faint": null,
+        "drain": null
+      },
+      "skills": [],
+      "weapon": "Back Scratcher",
+      "weaponType": "Short Sword"
+    },
     "gifts": {
       "love": {
         "items": [],
@@ -111,6 +206,56 @@
     "id": "char-amber",
     "name": "Amber",
     "category": "Bachelorettes",
+    "icon": {
+      "sm": "/characters/icons/sm/amber.png",
+      "md": "/characters/icons/md/amber.png"
+    },
+    "portrait": "/characters/portrait/amber.png",
+    "gender": "Female",
+    "description": "Transformed from a butterfly-shaped monster and now works at Illuminata's flower shop. Loves the warm sun and hates being cold. Her smiles seem to be contagious. Clorica's sleeping buddy.",
+    "birthday": {
+      "season": "Spring",
+      "day": 26
+    },
+    "battle": {
+      "description": "Her attacks have a base Diz of 2, stun for 25% longer and have 2.98% chance to Crit. Her resistances are 14.99% Diz and 9.99% Crit.",
+      "stats": {
+        "level": 12,
+        "hp": 774,
+        "atk": 14,
+        "def": 13,
+        "matk": 66,
+        "mdef": 13,
+        "str": 14,
+        "vit": 26,
+        "int": 48
+      },
+      "elementalResistances": {
+        "physical": 0,
+        "fire": 0,
+        "water": 0,
+        "earth": 50,
+        "wind": 0,
+        "light": 0,
+        "dark": 0,
+        "love": 0,
+        "poison": 50,
+        "seal": 50,
+        "paralysis": 50,
+        "sleep": 70,
+        "fatigue": 50,
+        "illness": 50,
+        "faint": 50,
+        "drain": 50
+      },
+      "skills": [
+        "Sleeping Scales (Sleeps enemies)",
+        "Tornado Swing (LV 50)",
+        "Ultrasonic Waves (HP Absorb, LV 51)"
+      ],
+      "weapon": "Tin Waterpot",
+      "weaponType": "Hammer, Waterpot"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -174,6 +319,43 @@
     "id": "char-clorica",
     "name": "Clorica",
     "category": "Bachelorettes",
+    "icon": {
+      "sm": "/characters/icons/sm/clorica.png",
+      "md": "/characters/icons/md/clorica.png"
+    },
+    "portrait": "/characters/portrait/clorica.png",
+    "gender": "Female",
+    "description": "A butler working in the castle. Falls asleep a lot. Finishes her work quickly by somehow working in her sleep, and can even cook a gourmet meal while sleeping with ease. Just how on earth can she do all that?",
+    "birthday": {
+      "season": "Spring",
+      "day": 12
+    },
+    "battle": {
+      "description": "She has a 4.98% chance to Crit.",
+      "stats": {
+        "level": 1,
+        "hp": 42,
+        "atk": 45,
+        "def": 5,
+        "matk": 16,
+        "mdef": 1,
+        "str": 2,
+        "vit": 3,
+        "int": 16
+      },
+      "elementalResistances": null,
+      "skills": [
+        "Sleep (Fully recovers HP/Status)",
+        "Throw Food (when the protagonist isn't \"Full\"). If the attack misses, the food can be picked up as a normal item.",
+        "Cure All (LV 5)",
+        "Reaper Slash (LV 50)",
+        "Medipoison (LV 60)",
+        "Mediparalyze (LV 65)",
+        "Mediseal (LV 70)"
+      ],
+      "weapon": "Lance",
+      "weaponType": "Spear"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -221,6 +403,60 @@
     "id": "char-dolce",
     "name": "Dolce",
     "category": "Bachelorettes",
+    "icon": {
+      "sm": "/characters/icons/sm/dolce.png",
+      "md": "/characters/icons/md/dolce.png"
+    },
+    "portrait": "/characters/portrait/dolce.png",
+    "gender": "Female",
+    "description": "A girl with a sharp tongue. Good at sewing and can contact ghosts, much to her annoyance. Often makes sarcastic remarks, mostly in the general direction of a certain obsessive ghost, but is actually sweet and warm-hearted.",
+    "birthday": {
+      "season": "Winter",
+      "day": 18
+    },
+    "battle": {
+      "description": "Her attacks have a 2.98% chance to crit. Her resistances are Diz 14.99% and Crit 4.98%",
+      "stats": {
+        "level": 25,
+        "hp": 1500,
+        "atk": 56,
+        "def": 22,
+        "matk": 96,
+        "mdef": 20,
+        "str": 56,
+        "vit": 35,
+        "int": 83
+      },
+      "elementalResistances": {
+        "physical": 0,
+        "fire": 0,
+        "water": 0,
+        "earth": 0,
+        "wind": 0,
+        "light": 0,
+        "dark": 50,
+        "love": 0,
+        "poison": 25,
+        "seal": 25,
+        "paralysis": 25,
+        "sleep": 25,
+        "fatigue": 25,
+        "illness": 25,
+        "faint": 79.98,
+        "drain": 0
+      },
+      "skills": [
+        "Pico Attack: I'll help! (LV 25)",
+        "Talisman LV 1 (LV 25)",
+        "Pico Attack: Launch (LV 40)",
+        "Shadow Ball LV 1-3 (LV 40)",
+        "Cure All (LV 50)",
+        "Pico Attack: K-O Hit Arcana (LV 51)",
+        "Talisman LV 2 (LV 100)"
+      ],
+      "weapon": "Friendly Rod, Silk Hat",
+      "weaponType": "Staff"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -299,6 +535,41 @@
     "id": "char-forte",
     "name": "Forte",
     "category": "Bachelorettes",
+    "icon": {
+      "sm": "/characters/icons/sm/forte.png",
+      "md": "/characters/icons/md/forte.png"
+    },
+    "portrait": "/characters/portrait/forte.png",
+    "gender": "Female",
+    "description": "A female knight guarding the town. Inherited her father's title after his death. Stubborn, easily flustered when the subject of sweets comes up, but dependable, and often spoils her younger brother, Kiel.",
+    "birthday": {
+      "season": "Summer",
+      "day": 22
+    },
+    "battle": {
+      "description": "Her attacks stun for 25% longer and have a 4.98% chance to Crit. Her resistances are 9.99% to Diz and 25% to Crit.",
+      "stats": {
+        "level": 12,
+        "hp": 692,
+        "atk": 72,
+        "def": 27,
+        "matk": 12,
+        "mdef": 23,
+        "str": 30,
+        "vit": 46,
+        "int": 12
+      },
+      "elementalResistances": null,
+      "skills": [
+        "Cure All",
+        "Throw Failed Dish (LV ?)",
+        "Delta Strike (LV 45)",
+        "Two-Hand Sword Arcana (LV 50)",
+        "Steel Heart (LV 55)"
+      ],
+      "weapon": "Zweihaender",
+      "weaponType": "Long Sword"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -338,6 +609,15 @@
     "id": "char-margaret",
     "name": "Margaret",
     "category": "Bachelorettes",
+    "icon": {
+      "sm": "/characters/icons/sm/margaret.png",
+      "md": "/characters/icons/md/margaret.png"
+    },
+    "portrait": "/characters/portrait/margaret.png",
+    "gender": null,
+    "description": null,
+    "birthday": null,
+    "battle": null,
     "gifts": {
       "love": {
         "items": [
@@ -390,6 +670,41 @@
     "id": "char-xiao-pai",
     "name": "Xiao Pai",
     "category": "Bachelorettes",
+    "icon": {
+      "sm": "/characters/icons/sm/xiao-pai.png",
+      "md": "/characters/icons/md/xiao-pai.png"
+    },
+    "portrait": "/characters/portrait/xiao-pai.png",
+    "gender": "Female",
+    "description": "Works at the inn with her mother, Lin Fa. Mature, but has difficulty showing it due to her tendency to make clumsy mistakes. Feels lonely quite easily.",
+    "birthday": {
+      "season": "Summer",
+      "day": 26
+    },
+    "battle": {
+      "description": "Her attacks have a 2.98% chance to Crit.",
+      "stats": {
+        "level": 1,
+        "hp": 62,
+        "atk": 46,
+        "def": 2,
+        "matk": 8,
+        "mdef": 2,
+        "str": 8,
+        "vit": 5,
+        "int": 8
+      },
+      "elementalResistances": null,
+      "skills": [
+        "Trip!",
+        "Axe/Hammer Charge Attack (LV 30)",
+        "Giga Swing (LV 40)",
+        "Grand Impact (LV 80)",
+        "Tripping Explosion (LV 100)"
+      ],
+      "weapon": "Battle Axe",
+      "weaponType": "Axe/Hammer"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -445,6 +760,41 @@
     "id": "char-arthur",
     "name": "Arthur",
     "category": "Bachelors",
+    "icon": {
+      "sm": "/characters/icons/sm/arthur.png",
+      "md": "/characters/icons/md/arthur.png"
+    },
+    "portrait": "/characters/portrait/arthur.png",
+    "gender": "Male",
+    "description": "A prince of Norad. Kind and calm, but sometimes a little overly-predictable. Has unique tastes, and his reports are often so thoroughly accurate that he has been mistaken for a fortune-teller.",
+    "birthday": {
+      "season": "Summer",
+      "day": 4
+    },
+    "battle": {
+      "description": "His attacks have a 2.98% chance to Crit.",
+      "stats": {
+        "level": 10,
+        "hp": 580,
+        "atk": 25,
+        "def": 7,
+        "matk": 87,
+        "mdef": 7,
+        "str": 25,
+        "vit": 15,
+        "int": 40
+      },
+      "elementalResistances": null,
+      "skills": [
+        "Cure All",
+        "Shine",
+        "Dark Ball",
+        "Dark Snake (Lv50)",
+        "Prism (Lv50)"
+      ],
+      "weapon": "Silver Staff",
+      "weaponType": "Staff"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -513,6 +863,15 @@
     "id": "char-doug",
     "name": "Doug",
     "category": "Bachelors",
+    "icon": {
+      "sm": "/characters/icons/sm/doug.png",
+      "md": "/characters/icons/md/doug.png"
+    },
+    "portrait": "/characters/portrait/doug.png",
+    "gender": null,
+    "description": null,
+    "birthday": null,
+    "battle": null,
     "gifts": {
       "love": {
         "items": [
@@ -559,6 +918,62 @@
     "id": "char-dylas",
     "name": "Dylas",
     "category": "Bachelors",
+    "icon": {
+      "sm": "/characters/icons/sm/dylas.png",
+      "md": "/characters/icons/md/dylas.png"
+    },
+    "portrait": "/characters/portrait/dylas.png",
+    "gender": "Male",
+    "description": "Transformed from a horse monster and now works as a server at Porcoline's restaurant. Quiet and often misunderstood. Doesn't seem to get along well with Doug.",
+    "birthday": {
+      "season": "Fall",
+      "day": 9
+    },
+    "battle": {
+      "description": "His attacks have a 4.98% chance to Crit. His resistances are 14.99% Diz, 4.98% Crit.",
+      "stats": {
+        "level": 18,
+        "hp": 1120,
+        "atk": 126,
+        "def": 28,
+        "matk": 7,
+        "mdef": 25,
+        "str": 67,
+        "vit": 51,
+        "int": 7
+      },
+      "elementalResistances": {
+        "physical": 0,
+        "fire": 0,
+        "water": 0,
+        "earth": 0,
+        "wind": 50,
+        "light": 0,
+        "dark": 0,
+        "love": 0,
+        "poison": 25,
+        "seal": 25,
+        "paralysis": 25,
+        "sleep": 25,
+        "fatigue": 25,
+        "illness": 25,
+        "faint": 20,
+        "drain": 0
+      },
+      "skills": [
+        "Cure All",
+        "Electric Attack LV 1",
+        "Wind Missile (LV 31)",
+        "Electric Attack LV 3 (LV 51)",
+        "Dark Ball (?)",
+        "Reaper Slash (LV 81 Spear)",
+        "Millionstrike (LV 81 Spear)",
+        "Straight Punch (LV81 Fists)",
+        "Double Kick (LV81 Fists)"
+      ],
+      "weapon": "Brass Knuckles",
+      "weaponType": "Fists"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -644,6 +1059,45 @@
     "id": "char-kiel",
     "name": "Kiel",
     "category": "Bachelors",
+    "icon": {
+      "sm": "/characters/icons/sm/kiel.png",
+      "md": "/characters/icons/md/kiel.png"
+    },
+    "portrait": "/characters/portrait/kiel.png",
+    "gender": null,
+    "description": "Always has his nose in a book. Very gullible and prone to gossip, but even when he's been tricked he's all smiles. Loves his sister, Forte, and often entrusts her with secrets. Well, at least he tries. Everyone else knows the same secret by the end of the day.",
+    "birthday": {
+      "season": "Winter",
+      "day": 2
+    },
+    "battle": {
+      "description": "His attacks have a 2.98% chance to Crit.",
+      "stats": {
+        "level": 1,
+        "hp": 57,
+        "atk": 34,
+        "def": 1,
+        "matk": 15,
+        "mdef": 1,
+        "str": 5,
+        "vit": 3,
+        "int": 15
+      },
+      "elementalResistances": null,
+      "skills": [
+        "Throw Food (when the protagonist isn't \"Full\")",
+        "Fireball",
+        "Water Laser",
+        "Cure All (LV 15)",
+        "Earth Spike (LV 21)",
+        "Double Sonic (LV 21)",
+        "Medipoison (LV 30)",
+        "Mediparalyze (LV 30)",
+        "Mediseal (LV 30)"
+      ],
+      "weapon": "Steel Sword",
+      "weaponType": "Short Sword"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -706,6 +1160,59 @@
     "id": "char-leon",
     "name": "Leon",
     "category": "Bachelors",
+    "icon": {
+      "sm": "/characters/icons/sm/leon.png",
+      "md": "/characters/icons/md/leon.png"
+    },
+    "portrait": "/characters/portrait/leon.png",
+    "gender": "Male",
+    "description": "A man once sealed in Leon Karnak. Easygoing and loves messing with people, but works hard and secretly helps them out however he can. Has a charismatic aura that causes others to naturally look up to him.",
+    "birthday": {
+      "season": "Summer",
+      "day": 9
+    },
+    "battle": {
+      "description": "His attacks have a 2.98% chance to Crit. His resistances are 20% Diz, 4.98% Crit.",
+      "stats": {
+        "level": 22,
+        "hp": 2950,
+        "atk": 358,
+        "def": 32,
+        "matk": 150,
+        "mdef": 24,
+        "str": 112,
+        "vit": 48,
+        "int": 150
+      },
+      "elementalResistances": {
+        "physical": 0,
+        "fire": 0,
+        "water": 0,
+        "earth": 0,
+        "wind": 0,
+        "light": 50,
+        "dark": 0,
+        "love": 0,
+        "poison": 25,
+        "seal": 25,
+        "paralysis": 25,
+        "sleep": 25,
+        "fatigue": 25,
+        "illness": 25,
+        "faint": 20,
+        "drain": 0
+      },
+      "skills": [
+        "Earth Column Wheel",
+        "Flame Wheel",
+        "Water Column Wheel",
+        "Whirlwind Wheel",
+        "Axel Disaster (LV 30)",
+        "Millionstrike (LV 30)"
+      ],
+      "weapon": "Halberd",
+      "weaponType": "Spear"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -802,6 +1309,44 @@
     "id": "char-vishnal",
     "name": "Vishnal",
     "category": "Bachelors",
+    "icon": {
+      "sm": "/characters/icons/sm/vishnal.png",
+      "md": "/characters/icons/md/vishnal.png"
+    },
+    "portrait": "/characters/portrait/vishnal.png",
+    "gender": "Male",
+    "description": "A butler in the castle who has amassed quite an array of knowledge on farming. Trains hard every day to be a full-fledged butler, but his gullible and emotional nature sometimes gets in the way. The oldest son, with many brothers and sisters.",
+    "birthday": {
+      "season": "Fall",
+      "day": 17
+    },
+    "battle": {
+      "description": "His attacks have a 2.98% chance to Crit.",
+      "stats": {
+        "level": 2,
+        "hp": 98,
+        "atk": 68,
+        "def": 4,
+        "matk": 8,
+        "mdef": 4,
+        "str": 10,
+        "vit": 9,
+        "int": 8
+      },
+      "elementalResistances": null,
+      "skills": [
+        "Cure All (LV 5)",
+        "Dual Blade Arcana (LV 60?)",
+        "Medipoison (LV 60)",
+        "Mediparalyze (LV 65)",
+        "Mediseal (LV 70)",
+        "Blitz (LV 80)",
+        "Rail Strike (LV 151)",
+        "Twin Attack (LV 151)"
+      ],
+      "weapon": "Steel Edge",
+      "weaponType": "Dual Blades"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -901,6 +1446,57 @@
     "id": "char-bado",
     "name": "Bado",
     "category": "Villagers",
+    "icon": {
+      "sm": "/characters/icons/sm/bado.png",
+      "md": "/characters/icons/md/bado.png"
+    },
+    "portrait": "/characters/portrait/bado.png",
+    "gender": "Male",
+    "description": "A lazy, lazy blacksmith. Always tries to get rich quick, but always fails hard. He claims to enjoy the attempt, however. Despite all this his skills are second to none.",
+    "birthday": {
+      "season": "Winter",
+      "day": 10
+    },
+    "battle": {
+      "description": "His attacks have a 4.98% chance to Crit. His resistances are 4.98% Diz, 9.99% Crit.",
+      "stats": {
+        "level": 35,
+        "hp": 2400,
+        "atk": 181,
+        "def": 49,
+        "matk": 8,
+        "mdef": 49,
+        "str": 120,
+        "vit": 98,
+        "int": 8
+      },
+      "elementalResistances": {
+        "physical": 0,
+        "fire": 0,
+        "water": 0,
+        "earth": 50,
+        "wind": 0,
+        "light": 0,
+        "dark": 0,
+        "love": 0,
+        "poison": 9.99,
+        "seal": 9.99,
+        "paralysis": 9.99,
+        "sleep": 9.99,
+        "fatigue": 9.99,
+        "illness": 9.99,
+        "faint": 9.99,
+        "drain": 0
+      },
+      "skills": [
+        "Lazing Around",
+        "Two-Hand Sword Arcana",
+        "Flash Strike",
+        "Delta Strike"
+      ],
+      "weapon": "Zweihaender+",
+      "weaponType": "Long Sword"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -944,6 +1540,18 @@
     "id": "char-blossom",
     "name": "Blossom",
     "category": "Villagers",
+    "icon": {
+      "sm": "/characters/icons/sm/blossom.png",
+      "md": "/characters/icons/md/blossom.png"
+    },
+    "portrait": "/characters/portrait/blossom.png",
+    "gender": "Female",
+    "description": "A sickly old lady who runs the local general store. Mostly stays home except when going to the doctor. Sees Doug as a son, and her health has improved drastically since living with him.",
+    "birthday": {
+      "season": "Winter",
+      "day": 21
+    },
+    "battle": null,
     "gifts": {
       "love": {
         "items": [
@@ -980,6 +1588,56 @@
     "id": "char-illuminata",
     "name": "Illuminata",
     "category": "Villagers",
+    "icon": {
+      "sm": "/characters/icons/sm/illuminata.png",
+      "md": "/characters/icons/md/illuminata.png"
+    },
+    "portrait": "/characters/portrait/illuminata.png",
+    "gender": "Female",
+    "description": "A detective who's always looking for new cases. It's unknown whether she manages to solve any, though. Enjoys afternoon tea -- it looks very detective-y and dignified to sip afternoon tea, right?",
+    "birthday": {
+      "season": "Spring",
+      "day": 23
+    },
+    "battle": {
+      "description": "Her attacks have a 2.98% chance to Crit. Her resistances are 4.98% Diz.",
+      "stats": {
+        "level": 7,
+        "hp": 392,
+        "atk": 24,
+        "def": 5,
+        "matk": 41,
+        "mdef": 5,
+        "str": 24,
+        "vit": 10,
+        "int": 23
+      },
+      "elementalResistances": {
+        "physical": 0,
+        "fire": 0,
+        "water": 0,
+        "earth": 0,
+        "wind": 50,
+        "light": 0,
+        "dark": 0,
+        "love": 0,
+        "poison": 20,
+        "seal": 20,
+        "paralysis": 20,
+        "sleep": 20,
+        "fatigue": 20,
+        "illness": 20,
+        "faint": 20,
+        "drain": 0
+      },
+      "skills": [
+        "Mediseal (LV 60)",
+        "Medipoison (LV 60)",
+        "Mediparalyze (LV 60)"
+      ],
+      "weapon": "Tin Waterpot",
+      "weaponType": "Waterpot"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -1043,6 +1701,39 @@
     "id": "char-jones",
     "name": "Jones",
     "category": "Villagers",
+    "icon": {
+      "sm": "/characters/icons/sm/jones.png",
+      "md": "/characters/icons/md/jones.png"
+    },
+    "portrait": "/characters/portrait/jones.png",
+    "gender": "Male",
+    "description": "The only doctor in town. Tries to save as many people as possible, but hates blood and goes crazy when he sees it. Tries to drink tomato juice every day to overcome his crippling phobia. Married to Nancy.",
+    "birthday": {
+      "season": "Winter",
+      "day": 7
+    },
+    "battle": {
+      "description": "His attacks have a 2.98% chance to Crit.",
+      "stats": {
+        "level": 15,
+        "hp": 820,
+        "atk": 40,
+        "def": 1,
+        "matk": 100,
+        "mdef": 1,
+        "str": 12,
+        "vit": 2,
+        "int": 100
+      },
+      "elementalResistances": null,
+      "skills": [
+        "Throw Medicines",
+        "Anesthetic (?)",
+        "Storm (LV 101)"
+      ],
+      "weapon": "Short Dagger",
+      "weaponType": "Dual Blade"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -1100,6 +1791,43 @@
     "id": "char-lin-fa",
     "name": "Lin Fa",
     "category": "Villagers",
+    "icon": {
+      "sm": "/characters/icons/sm/lin-fa.png",
+      "md": "/characters/icons/md/lin-fa.png"
+    },
+    "portrait": "/characters/portrait/lin-fa.png",
+    "gender": "Female",
+    "description": "Xiao Pai's mother. Tender and easygoing. Often makes terrible mistakes, but it always works out in the end as fortune smiles upon her.",
+    "birthday": {
+      "season": "Spring",
+      "day": 8
+    },
+    "battle": {
+      "description": "Her attacks have a 14.99% chance to Crit. Her resistances are 14.99% to Crit.",
+      "stats": {
+        "level": 4,
+        "hp": 210,
+        "atk": 90,
+        "def": 14,
+        "matk": 6,
+        "mdef": 30,
+        "str": 23,
+        "vit": 10,
+        "int": 6
+      },
+      "elementalResistances": null,
+      "skills": [
+        "Surprise Bucket!",
+        "Shuriken",
+        "Spear Arcana (LV 81)",
+        "Axel Disaster (LV 81)",
+        "Reaper Slash (LV 81)",
+        "Millionstrike (LV 81)",
+        "Multi Surprise Bucket (LV100+) - four buckets in a row."
+      ],
+      "weapon": "Safety Lance",
+      "weaponType": "Spear"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -1155,6 +1883,41 @@
     "id": "char-nancy",
     "name": "Nancy",
     "category": "Villagers",
+    "icon": {
+      "sm": "/characters/icons/sm/nancy.png",
+      "md": "/characters/icons/md/nancy.png"
+    },
+    "portrait": "/characters/portrait/nancy.png",
+    "gender": "Female",
+    "description": "Wife of Dr. Jones and nurse at the local clinic. Loves her husband immensely and always strives to be the best wife she can be for him. Sweet, kind and always considerate of patients' feelings.",
+    "birthday": {
+      "season": "Fall",
+      "day": 23
+    },
+    "battle": {
+      "description": "Her attacks have Diz 2 and 7.98% chance to Crit. Her resistances are 4.98% Diz, 20% Crit.",
+      "stats": {
+        "level": 12,
+        "hp": 700,
+        "atk": 45,
+        "def": 10,
+        "matk": 48,
+        "mdef": 9,
+        "str": 21,
+        "vit": 19,
+        "int": 48
+      },
+      "elementalResistances": null,
+      "skills": [
+        "Medicine Throwing",
+        "Cat Slaps / Neko Damashi (?)",
+        "Upper Cut (LV 31)",
+        "Straight Punch (LV 80)",
+        "Hundred Crack Fist / Rush Punch (?)"
+      ],
+      "weapon": "Leather Gloves",
+      "weaponType": "Fists"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -1245,6 +2008,15 @@
     "id": "char-pico",
     "name": "Pico",
     "category": "Villagers",
+    "icon": {
+      "sm": "/characters/icons/sm/pico.png",
+      "md": "/characters/icons/md/pico.png"
+    },
+    "portrait": "/characters/portrait/pico.png",
+    "gender": null,
+    "description": null,
+    "birthday": null,
+    "battle": null,
     "gifts": {
       "love": {
         "items": [],
@@ -1272,6 +2044,35 @@
     "id": "char-porcoline",
     "name": "Porcoline",
     "category": "Villagers",
+    "icon": {
+      "sm": "/characters/icons/sm/porcoline.png",
+      "md": "/characters/icons/md/porcoline.png"
+    },
+    "portrait": "/characters/portrait/porcoline.png",
+    "gender": "Male",
+    "description": "A chef who owns the local eatery. A merciful weirdo helping anyone in need, who thinks of Margaret as if she were his own daughter. If he offers to cook you a meal, watch him, or else he might scarf it down himself before you can even get a bite.",
+    "birthday": {
+      "season": "Fall",
+      "day": 21
+    },
+    "battle": {
+      "description": "His attacks have a 1.98% chance to Crit. Skills : *Eat Food *Rail Strike *Twin Attack",
+      "stats": {
+        "level": 5,
+        "hp": 60,
+        "atk": 81,
+        "def": 11,
+        "matk": 31,
+        "mdef": 11,
+        "str": 12,
+        "vit": 22,
+        "int": 11
+      },
+      "elementalResistances": null,
+      "skills": [],
+      "weapon": "link=Equipment_(RF4)#Dual_Blades|Double Scratch|24x24px Double Scratch",
+      "weaponType": "Dual Blades"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -1305,6 +2106,52 @@
     "id": "char-ventuswill",
     "name": "Ventuswill",
     "category": "Villagers",
+    "icon": {
+      "sm": "/characters/icons/sm/ventuswill.png",
+      "md": "/characters/icons/md/ventuswill.png"
+    },
+    "portrait": "/characters/portrait/ventuswill.png",
+    "gender": "Female",
+    "description": "A legendary wind dragon who happens to be one of the four Native Dragons. Being the protector of Selphia has created a natural distance between her and her citizens, so she often experiences feelings of loneliness.",
+    "birthday": {
+      "season": "Spring",
+      "day": 4
+    },
+    "battle": {
+      "description": "===Ally=== Her attacks Stun for 25% longer and have a 4.98% chance to Crit. She has 100% Dizzy and Knock resistance, 99% to Crits, and doesn't flinch when hit. She also the following elemental resistances:",
+      "stats": {
+        "level": 75,
+        "hp": 98000,
+        "atk": 3300,
+        "def": 1400,
+        "matk": 3000,
+        "mdef": 1400,
+        "str": 3300,
+        "vit": 2800,
+        "int": 3000
+      },
+      "elementalResistances": {
+        "physical": 9.99,
+        "fire": 9.99,
+        "water": 9.99,
+        "earth": 0,
+        "wind": 150,
+        "light": 9.99,
+        "dark": 9.99,
+        "love": 9.99,
+        "poison": 99,
+        "seal": 99,
+        "paralysis": 99,
+        "sleep": 99,
+        "fatigue": 99,
+        "illness": 99,
+        "faint": 100,
+        "drain": 79.98
+      },
+      "skills": [],
+      "weapon": "Nothing",
+      "weaponType": null
+    },
     "gifts": {
       "love": {
         "items": [
@@ -1340,6 +2187,60 @@
     "id": "char-volkanon",
     "name": "Volkanon",
     "category": "Villagers",
+    "icon": {
+      "sm": "/characters/icons/sm/volkanon.png",
+      "md": "/characters/icons/md/volkanon.png"
+    },
+    "portrait": "/characters/portrait/volkanon.png",
+    "gender": "Male",
+    "description": "Familiar with farming and battles, but a bit wordy. Charismatic, imaginative and emotional, so he's often seen in tears. Manly tears.",
+    "birthday": {
+      "season": "Summer",
+      "day": 6
+    },
+    "battle": {
+      "description": "His attacks have 2 Diz, Stun for 25% longer, and have a 9.99% chance to Crit. He has 9.99% resistance to Diz and Crits, and he doesn't flinch when hit.",
+      "stats": {
+        "level": 50,
+        "hp": 3000,
+        "atk": 162,
+        "def": 75,
+        "matk": 2,
+        "mdef": 81,
+        "str": 162,
+        "vit": 151,
+        "int": 2
+      },
+      "elementalResistances": {
+        "physical": 0,
+        "fire": 0,
+        "water": 0,
+        "earth": 0,
+        "wind": 0,
+        "light": 0,
+        "dark": 0,
+        "love": -25,
+        "poison": 0,
+        "seal": 0,
+        "paralysis": 0,
+        "sleep": 0,
+        "fatigue": 0,
+        "illness": 0,
+        "faint": 0,
+        "drain": 0
+      },
+      "skills": [
+        "Cyclone",
+        "Upper Cut",
+        "Rush Punch",
+        "Cure All",
+        "Medipoison",
+        "Mediparalyze",
+        "Mediseal"
+      ],
+      "weapon": "Bear Claws",
+      "weaponType": "Fists"
+    },
     "gifts": {
       "love": {
         "items": [
@@ -1373,6 +2274,15 @@
     "id": "char-barrett",
     "name": "Barrett",
     "category": "Guest Characters",
+    "icon": {
+      "sm": "/characters/icons/sm/barrett.png",
+      "md": "/characters/icons/md/barrett.png"
+    },
+    "portrait": "/characters/portrait/barrett.png",
+    "gender": null,
+    "description": null,
+    "birthday": null,
+    "battle": null,
     "gifts": {
       "love": {
         "items": [
@@ -1410,6 +2320,22 @@
     "id": "char-ethelberd",
     "name": "Ethelberd",
     "category": "Guest Characters",
+    "icon": {
+      "sm": "/characters/icons/sm/ethelberd.png",
+      "md": "/characters/icons/md/ethelberd.png"
+    },
+    "portrait": "/characters/portrait/ethelberd.jpg",
+    "gender": "Male",
+    "description": null,
+    "birthday": null,
+    "battle": {
+      "description": "favorite =✖️",
+      "stats": null,
+      "elementalResistances": null,
+      "skills": [],
+      "weapon": null,
+      "weaponType": null
+    },
     "gifts": {
       "love": {
         "items": [],
@@ -1437,6 +2363,15 @@
     "id": "char-raven",
     "name": "Raven",
     "category": "Guest Characters",
+    "icon": {
+      "sm": "/characters/icons/sm/raven.png",
+      "md": "/characters/icons/md/raven.png"
+    },
+    "portrait": "/characters/portrait/raven.png",
+    "gender": null,
+    "description": null,
+    "birthday": null,
+    "battle": null,
     "gifts": {
       "love": {
         "items": [],
@@ -1475,6 +2410,15 @@
     "id": "char-eliza",
     "name": "Eliza",
     "category": "Other Characters",
+    "icon": {
+      "sm": "/characters/icons/sm/eliza.png",
+      "md": "/characters/icons/md/eliza.png"
+    },
+    "portrait": "/characters/portrait/eliza.png",
+    "gender": null,
+    "description": null,
+    "birthday": null,
+    "battle": null,
     "gifts": {
       "love": {
         "items": [],

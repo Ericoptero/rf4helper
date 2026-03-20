@@ -40,11 +40,44 @@ describe('Zod Schemas', () => {
   });
 
   describe('CharacterSchema', () => {
-    it('parses a valid character with gifts', () => {
+    it('parses a valid character with full profile and battle data', () => {
       const validChar = {
         id: 'char-forte',
         name: 'Forte',
         category: 'Bachelorettes',
+        icon: {
+          sm: '/characters/icons/sm/Forte.png',
+          md: '/characters/icons/md/Forte.png',
+        },
+        portrait: '/characters/portrait/Forte.png',
+        gender: 'Female',
+        description: 'A steadfast knight of Selphia.',
+        birthday: {
+          season: 'Summer',
+          day: 22,
+        },
+        battle: {
+          description: 'A defensive frontline fighter with strong melee attacks.',
+          stats: {
+            level: 50,
+            hp: 1200,
+            atk: 300,
+            def: 450,
+            matk: 120,
+            mdef: 280,
+            str: 260,
+            vit: 400,
+            int: 100,
+          },
+          elementalResistances: {
+            fire: 0,
+            water: 10,
+            earth: 20,
+          },
+          skills: ['Rush Attack', 'Shield Strike'],
+          weapon: 'Steel Sword',
+          weaponType: 'Long Sword',
+        },
         gifts: {
           love: { items: ['item-cake'], categories: [] },
           like: { items: [], categories: ['Flowers'] },
@@ -53,6 +86,33 @@ describe('Zod Schemas', () => {
           hate: { items: [], categories: [] },
         },
       };
+      const result = CharacterSchema.safeParse(validChar);
+      expect(result.success).toBe(true);
+    });
+
+    it('parses a character with null birthday and battle data', () => {
+      const validChar = {
+        id: 'char-eliza',
+        name: 'Eliza',
+        category: 'Other Characters',
+        icon: {
+          sm: null,
+          md: null,
+        },
+        portrait: null,
+        gender: null,
+        description: null,
+        birthday: null,
+        battle: null,
+        gifts: {
+          love: { items: [], categories: [] },
+          like: { items: [], categories: [] },
+          neutral: { items: [], categories: [] },
+          dislike: { items: [], categories: [] },
+          hate: { items: [], categories: [] },
+        },
+      };
+
       const result = CharacterSchema.safeParse(validChar);
       expect(result.success).toBe(true);
     });

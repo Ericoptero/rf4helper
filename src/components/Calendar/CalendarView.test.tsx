@@ -18,6 +18,15 @@ const mockCharacters: Record<string, Character> = {
     id: 'char-amber',
     name: 'Amber',
     category: 'Bachelorettes',
+    icon: {
+      sm: '/characters/icons/sm/amber.png',
+      md: '/characters/icons/md/amber.png',
+    },
+    portrait: '/characters/portrait/amber.png',
+    gender: 'Female',
+    description: 'A fairy-like girl who loves flowers.',
+    birthday: { season: 'Spring', day: 26 },
+    battle: null,
     gifts: {
       love: { items: [], categories: [] },
       like: { items: [], categories: [] },
@@ -65,8 +74,11 @@ describe('CalendarView Component', () => {
     // Verify Spring Festival
     expect(screen.getAllByText('Spring Harvest Festival').length).toBeGreaterThan(0);
     
-    // Verify Hardcoded Birthday (Amber is Spring 26)
+    // Verify birthday is taken from characters.json
     expect(screen.getAllByText('Amber').length).toBeGreaterThan(0);
+    const icon = screen.getByAltText('Amber icon');
+    expect(icon.getAttribute('src')).toContain('/src/assets/images/characters/icons/sm/');
+    expect(icon.getAttribute('src')).toContain('amber');
 
     // Verify Best Crops for Spring
     expect(screen.getAllByText('Turnip').length).toBeGreaterThan(0);
@@ -87,5 +99,20 @@ describe('CalendarView Component', () => {
 
     // Should open the drawer and display description
     expect(await screen.findByText('Spring crop judging.')).toBeInTheDocument();
+  });
+
+  it('shows birthday drawer details with the small icon', async () => {
+    const user = userEvent.setup();
+
+    render(<CalendarView />, { wrapper });
+
+    await waitFor(() => {
+      expect(screen.queryByText(/loading calendar data.../i)).not.toBeInTheDocument();
+    });
+
+    await user.click(screen.getAllByText('Amber')[0]);
+
+    expect(await screen.findByText("Amber's Birthday")).toBeInTheDocument();
+    expect(screen.getAllByAltText('Amber icon')[0].getAttribute('src')).toContain('amber');
   });
 });

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Calendar as CalendarIcon, Wheat, Gift } from 'lucide-react';
 import type { Festival, Crop, Character } from '@/lib/schemas';
+import { resolveCharacterImage } from '@/lib/characterImages';
 
 const SEASONS = ['Spring', 'Summer', 'Fall', 'Winter'];
 
@@ -16,28 +17,27 @@ function formatName(id: string) {
   return id.replace(/^item-|recipe-/, '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
-// Mocked RF4 Birthdays since it's missing from characters.json
-const BIRTHDAYS: Record<string, { season: string, day: number }> = {
-  "Amber": { season: "Spring", day: 26 },
-  "Arthur": { season: "Summer", day: 4 },
-  "Bado": { season: "Winter", day: 10 },
-  "Clorica": { season: "Spring", day: 12 },
-  "Dolce": { season: "Winter", day: 18 },
-  "Doug": { season: "Fall", day: 6 },
-  "Dylas": { season: "Fall", day: 9 },
-  "Forte": { season: "Summer", day: 22 },
-  "Illuminata": { season: "Spring", day: 23 },
-  "Jones": { season: "Winter", day: 7 },
-  "Kiel": { season: "Winter", day: 2 },
-  "Leon": { season: "Summer", day: 9 },
-  "Lin Fa": { season: "Spring", day: 8 },
-  "Margaret": { season: "Spring", day: 21 },
-  "Nancy": { season: "Fall", day: 23 },
-  "Porcoline": { season: "Fall", day: 21 },
-  "Vishnal": { season: "Fall", day: 17 },
-  "Volkanon": { season: "Summer", day: 6 },
-  "Xiao Pai": { season: "Summer", day: 26 },
-};
+function formatBirthday(character: Character) {
+  if (!character.birthday?.season || character.birthday.day == null) {
+    return 'Unknown';
+  }
+
+  return `${character.birthday.season} ${character.birthday.day}`;
+}
+
+function CharacterIcon({ character }: { character: Character }) {
+  const iconSrc = resolveCharacterImage(character.icon.sm);
+
+  if (iconSrc) {
+    return <img src={iconSrc} alt={`${character.name} icon`} className="h-6 w-6 rounded-full object-contain shrink-0" />;
+  }
+
+  return (
+    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-200 text-[10px] font-semibold text-pink-800">
+      {character.name.charAt(0)}
+    </div>
+  );
+}
 
 type EventItem = 
   | { type: 'festival', data: Festival }
@@ -70,18 +70,17 @@ function EventDetailsNode({ event }: { event: EventItem | null }) {
   }
 
   if (event.type === 'birthday') {
-    const bday = BIRTHDAYS[event.data.name];
     return (
       <div className="space-y-4 pt-4">
         <div className="flex items-center gap-3">
-          <div className="w-16 h-16 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-600 text-2xl font-bold">
-             {event.data.name.charAt(0)}
+          <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-pink-500/10">
+            <CharacterIcon character={event.data} />
           </div>
           <div>
             <h2 className="text-2xl font-bold">{event.data.name}'s Birthday</h2>
             <div className="flex gap-2 mt-1">
               <Badge variant="outline" className="border-pink-200 text-pink-700 bg-pink-50">
-                 <Gift className="w-3 h-3 mr-1" /> {bday ? `${bday.season} ${bday.day}` : 'Unknown'}
+                 <Gift className="w-3 h-3 mr-1" /> {formatBirthday(event.data)}
               </Badge>
               <Badge>{event.data.category}</Badge>
             </div>
@@ -205,7 +204,7 @@ export function CalendarView() {
   }, [festivals, activeSeason]);
 
   const seasonBirthdays = useMemo(() => {
-    return characters.filter(c => BIRTHDAYS[c.name] && BIRTHDAYS[c.name].season === activeSeason);
+    return characters.filter(c => c.birthday?.season === activeSeason);
   }, [characters, activeSeason]);
   
   const seasonGoodCrops = useMemo(() => {
@@ -243,7 +242,7 @@ export function CalendarView() {
                {Array.from({ length: 30 }).map((_, i) => {
                  const day = i + 1;
                  const dayFestivals = seasonFestivals.filter(f => f.day === day);
-                 const dayBirthdays = seasonBirthdays.filter(c => BIRTHDAYS[c.name].day === day);
+                 const dayBirthdays = seasonBirthdays.filter(c => c.birthday?.day === day);
                  
                  return (
                    <div key={day} className="bg-background p-2 flex flex-col relative min-h-[100px] hover:bg-muted/30 transition-colors">
@@ -266,7 +265,8 @@ export function CalendarView() {
                            onClick={() => setSelectedEvent({ type: 'birthday', data: char })}
                            className="text-[10px] md:text-xs bg-pink-100 text-pink-800 border-pink-200 hover:bg-pink-200 border px-1.5 py-0.5 rounded truncate text-left transition-colors font-medium flex items-center gap-1"
                          >
-                           <Gift className="w-3 h-3 shrink-0" /> <span className="truncate">{char.name}</span>
+                           <CharacterIcon character={char} />
+                           <span className="truncate">{char.name}</span>
                          </button>
                        ))}
                      </div>

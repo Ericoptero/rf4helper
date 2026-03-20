@@ -16,6 +16,32 @@ const mockCharacters: Record<string, Character> = {
     id: 'char-forte',
     name: 'Forte',
     category: 'Bachelorettes',
+    icon: {
+      sm: '/characters/icons/sm/Forte.png',
+      md: '/characters/icons/md/Forte.png',
+    },
+    portrait: '/characters/portrait/Forte.png',
+    gender: 'Female',
+    description: 'A steadfast knight of Selphia.',
+    birthday: { season: 'Summer', day: 22 },
+    battle: {
+      description: 'A defensive frontline fighter.',
+      stats: {
+        level: 50,
+        hp: 1200,
+        atk: 300,
+        def: 450,
+        matk: 120,
+        mdef: 280,
+        str: 260,
+        vit: 400,
+        int: 100,
+      },
+      elementalResistances: { fire: 0, water: 10 },
+      skills: ['Rush Attack'],
+      weapon: 'Steel Sword',
+      weaponType: 'Long Sword',
+    },
     gifts: {
       love: { items: [], categories: [] },
       like: { items: [], categories: [] },
@@ -89,6 +115,8 @@ describe('Data Fetching Hooks', () => {
     });
     
     expect(result.current.data?.['char-forte'].name).toBe('Forte');
+    expect(result.current.data?.['char-forte'].icon.md).toBe('/characters/icons/md/Forte.png');
+    expect(result.current.data?.['char-forte'].birthday?.day).toBe(22);
   });
 
   it('useMonsters returns validated data', async () => {
