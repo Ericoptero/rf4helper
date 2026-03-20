@@ -28,9 +28,71 @@ const mockRuneAbilities = {
   ]
 };
 
-const mockSkills = [
-  { id: 'skill-1', name: 'Swordsmanship', description: 'Skill with a sword', unlocks: { 'Level 10': 'New Recipe' } }
-];
+const mockSkills = {
+  weapons: [
+    {
+      id: 'skill-short-sword',
+      name: 'Short Sword',
+      category: 'weapons',
+      description: 'Short Swords are balanced for both attack and defense.',
+      bonuses: [
+        {
+          kind: 'combat',
+          description: 'Higher skill levels increase damage and cut RP used.',
+          stats: []
+        },
+        {
+          kind: 'stat',
+          description: 'Also raises maximum RP and STR.',
+          stats: ['maxRp', 'str']
+        }
+      ],
+      unlocks: [
+        { level: 5, effect: 'Dash Attack' },
+        { level: 10, effect: 'Charge Attack' }
+      ],
+      sourceOrder: 1
+    }
+  ],
+  magic: [
+    {
+      id: 'skill-fire',
+      name: 'Fire',
+      category: 'magic',
+      description: 'Skill needed to use fire.',
+      bonuses: [
+        {
+          kind: 'stat',
+          description: 'Also raises INT, FIRE M.ATK and M.DEF.',
+          stats: ['int', 'matk', 'mdef']
+        }
+      ],
+      unlocks: [],
+      sourceOrder: 1
+    }
+  ],
+  farming: [],
+  recipe: [],
+  life: [],
+  defense: [],
+  other: [
+    {
+      id: 'skill-bartering',
+      name: 'Bartering',
+      category: 'other',
+      description: 'Skill that increases as you sell items.',
+      bonuses: [
+        {
+          kind: 'economy',
+          description: 'Higher skill levels raise INT and may teach you sales techniques to use in your store.',
+          stats: ['int']
+        }
+      ],
+      unlocks: [],
+      sourceOrder: 1
+    }
+  ]
+};
 
 const mockTrophies = {
   general: [
@@ -96,7 +158,14 @@ describe('PlayerView Component', () => {
 
     // Test Skills Tab
     await user.click(screen.getByRole('tab', { name: /skills/i }));
-    expect(screen.getByText('Swordsmanship')).toBeInTheDocument();
+    expect(screen.getByText('Weapon Skills')).toBeInTheDocument();
+    expect(screen.getByText('Magic Skills')).toBeInTheDocument();
+    expect(screen.getByText('Other Skills')).toBeInTheDocument();
+    expect(screen.getByText('Short Sword')).toBeInTheDocument();
+    expect(screen.getByText('Fire')).toBeInTheDocument();
+    expect(screen.getByText('Bartering')).toBeInTheDocument();
+    expect(screen.getByText('Dash Attack')).toBeInTheDocument();
+    expect(screen.getByText('Also raises maximum RP and STR.')).toBeInTheDocument();
 
     // Test Trophies Tab
     await user.click(screen.getByRole('tab', { name: /trophies/i }));

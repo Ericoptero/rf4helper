@@ -1,62 +1,675 @@
-[
-  {
-    "id": "skill-short-sword",
-    "name": "Short Sword",
-    "description": "Short Swords are balanced for both attack and defense. Higher skill levels increase damage and cut RP used. Also raises maximum RP and STR.",
-    "unlocks": {
-      "lv5": "Dash Attack",
-      "lv10": "Charge Attack",
-      "lv20": "Ultimate Attack"
+{
+  "weapons": [
+    {
+      "id": "skill-short-sword",
+      "name": "Short Sword",
+      "category": "weapons",
+      "description": "Short Swords are balanced for both attack and defense.",
+      "bonuses": [
+        {
+          "kind": "combat",
+          "description": "Higher skill levels increase damage and cut RP used.",
+          "stats": []
+        },
+        {
+          "kind": "stat",
+          "description": "Also raises maximum RP and STR.",
+          "stats": ["maxRp", "str"]
+        }
+      ],
+      "unlocks": [
+        { "level": 5, "effect": "Dash Attack" },
+        { "level": 10, "effect": "Charge Attack" },
+        { "level": 20, "effect": "Ultimate Attack" }
+      ],
+      "sourceOrder": 1
+    },
+    {
+      "id": "skill-long-sword",
+      "name": "Long Sword",
+      "category": "weapons",
+      "description": "Long Swords are both long-ranged and effective.",
+      "bonuses": [
+        {
+          "kind": "combat",
+          "description": "Higher skill levels increase damage and cut RP used.",
+          "stats": []
+        },
+        {
+          "kind": "stat",
+          "description": "Also raises maximum RP and STR.",
+          "stats": ["maxRp", "str"]
+        }
+      ],
+      "unlocks": [
+        { "level": 5, "effect": "Dash Attack" },
+        { "level": 10, "effect": "Charge Attack" },
+        { "level": 20, "effect": "Ultimate Attack" }
+      ],
+      "sourceOrder": 2
+    },
+    {
+      "id": "skill-spear",
+      "name": "Spear",
+      "category": "weapons",
+      "description": "Spears allow for attacks to be made from afar.",
+      "bonuses": [
+        {
+          "kind": "combat",
+          "description": "Higher skill levels increase damage and cut RP used.",
+          "stats": []
+        },
+        {
+          "kind": "stat",
+          "description": "Also raises maximum RP and STR.",
+          "stats": ["maxRp", "str"]
+        }
+      ],
+      "unlocks": [
+        { "level": 5, "effect": "Dash Attack" },
+        { "level": 10, "effect": "Charge Attack" },
+        { "level": 20, "effect": "Ultimate Attack" }
+      ],
+      "sourceOrder": 3
+    },
+    {
+      "id": "skill-axe-hammer",
+      "name": "Axe/Hammer",
+      "category": "weapons",
+      "description": "Battle axes/hammers are overwhelmingly powerful.",
+      "bonuses": [
+        {
+          "kind": "combat",
+          "description": "Higher skill levels increase damage and cut RP used.",
+          "stats": []
+        },
+        {
+          "kind": "stat",
+          "description": "Also raises maximum RP and STR.",
+          "stats": ["maxRp", "str"]
+        }
+      ],
+      "unlocks": [
+        { "level": 5, "effect": "Dash Attack" },
+        { "level": 10, "effect": "Charge Attack" },
+        { "level": 20, "effect": "Ultimate Attack" }
+      ],
+      "sourceOrder": 4
+    },
+    {
+      "id": "skill-dual-blades",
+      "name": "Dual Blades",
+      "category": "weapons",
+      "description": "Dual Blades concentrate on combat effectiveness.",
+      "bonuses": [
+        {
+          "kind": "combat",
+          "description": "Higher skill levels increase damage and cut RP used.",
+          "stats": []
+        },
+        {
+          "kind": "stat",
+          "description": "Also raises maximum RP and STR.",
+          "stats": ["maxRp", "str"]
+        }
+      ],
+      "unlocks": [
+        { "level": 5, "effect": "Dash Attack" },
+        { "level": 10, "effect": "Charge Attack" },
+        { "level": 20, "effect": "Ultimate Attack" }
+      ],
+      "sourceOrder": 5
+    },
+    {
+      "id": "skill-fist",
+      "name": "Fist",
+      "category": "weapons",
+      "description": "Skill needed to use your own fists when attacking foes.",
+      "bonuses": [
+        {
+          "kind": "combat",
+          "description": "Higher skill levels increase damage and cut RP used.",
+          "stats": []
+        },
+        {
+          "kind": "stat",
+          "description": "Also raises maximum RP and STR.",
+          "stats": ["maxRp", "str"]
+        }
+      ],
+      "unlocks": [
+        { "level": 5, "effect": "Dash Attack" },
+        { "level": 10, "effect": "Charge Attack" },
+        { "level": 20, "effect": "Ultimate Attack" }
+      ],
+      "sourceOrder": 6
     }
-  },
-  {
-    "id": "skill-long-sword",
-    "name": "Long Sword",
-    "description": "Long Swords are both long-ranged and effective. Higher skill levels increase damage and cut RP used. Also raises maximum RP and STR.",
-    "unlocks": {
-      "lv5": "Dash Attack",
-      "lv10": "Charge Attack",
-      "lv20": "Ultimate Attack"
+  ],
+  "magic": [
+    {
+      "id": "skill-fire",
+      "name": "Fire",
+      "category": "magic",
+      "description": "Skill needed to use fire.",
+      "bonuses": [
+        {
+          "kind": "combat",
+          "description": "Higher skill levels increase max RP while keeping its consumption low.",
+          "stats": ["maxRp"]
+        },
+        {
+          "kind": "stat",
+          "description": "Also raises INT, FIRE M.ATK and M.DEF.",
+          "stats": ["int", "matk", "mdef"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 1
+    },
+    {
+      "id": "skill-water",
+      "name": "Water",
+      "category": "magic",
+      "description": "Skill needed to use water.",
+      "bonuses": [
+        {
+          "kind": "combat",
+          "description": "Higher skill levels increase max RP while keeping its consumption low.",
+          "stats": ["maxRp"]
+        },
+        {
+          "kind": "stat",
+          "description": "Also raises INT, WATER M.ATK and M.DEF.",
+          "stats": ["int", "matk", "mdef"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 2
+    },
+    {
+      "id": "skill-earth",
+      "name": "Earth",
+      "category": "magic",
+      "description": "Skill needed to use earth.",
+      "bonuses": [
+        {
+          "kind": "combat",
+          "description": "Higher skill levels increase max RP while keeping its consumption low.",
+          "stats": ["maxRp"]
+        },
+        {
+          "kind": "stat",
+          "description": "Also raises INT, EARTH M.ATK and M.DEF.",
+          "stats": ["int", "matk", "mdef"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 3
+    },
+    {
+      "id": "skill-wind",
+      "name": "Wind",
+      "category": "magic",
+      "description": "Skill needed to use wind.",
+      "bonuses": [
+        {
+          "kind": "combat",
+          "description": "Higher skill levels increase max RP while keeping its consumption low.",
+          "stats": ["maxRp"]
+        },
+        {
+          "kind": "stat",
+          "description": "Also raises INT, WIND M.ATK and M.DEF.",
+          "stats": ["int", "matk", "mdef"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 4
+    },
+    {
+      "id": "skill-light",
+      "name": "Light",
+      "category": "magic",
+      "description": "Skill needed to use light.",
+      "bonuses": [
+        {
+          "kind": "combat",
+          "description": "Higher skill levels increase max RP while keeping its consumption low.",
+          "stats": ["maxRp"]
+        },
+        {
+          "kind": "stat",
+          "description": "Also raises INT, LIGHT M.ATK and M.DEF.",
+          "stats": ["int", "matk", "mdef"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 5
+    },
+    {
+      "id": "skill-dark",
+      "name": "Dark",
+      "category": "magic",
+      "description": "Skill needed to use dark.",
+      "bonuses": [
+        {
+          "kind": "combat",
+          "description": "Higher skill levels increase max RP while keeping its consumption low.",
+          "stats": ["maxRp"]
+        },
+        {
+          "kind": "stat",
+          "description": "Also raises INT, DARK M.ATK and M.DEF.",
+          "stats": ["int", "matk", "mdef"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 6
+    },
+    {
+      "id": "skill-love",
+      "name": "Love",
+      "category": "magic",
+      "description": "Higher skill levels increase max RP.",
+      "bonuses": [
+        {
+          "kind": "stat",
+          "description": "Also raises intelligence and magic defenses, and slowly cures love magic.",
+          "stats": ["maxRp", "int", "mdef"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 7
     }
-  },
-  {
-    "id": "skill-spear",
-    "name": "Spear",
-    "description": "Spears allow for attacks to be made from afar. Higher skill levels increase damage and cut RP used. Also raises maximum RP and STR.",
-    "unlocks": {
-      "lv5": "Dash Attack",
-      "lv10": "Charge Attack",
-      "lv20": "Ultimate Attack"
+  ],
+  "farming": [
+    {
+      "id": "skill-farming",
+      "name": "Farming",
+      "category": "farming",
+      "description": "Skill needed to effectively use farm tools.",
+      "bonuses": [
+        {
+          "kind": "farming",
+          "description": "Higher skill levels decrease RP consumption while raising maximum HP/RP and vitality.",
+          "stats": ["maxHp", "maxRp", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 1
+    },
+    {
+      "id": "skill-logging",
+      "name": "Logging",
+      "category": "farming",
+      "description": "Skill needed to cut down lumber.",
+      "bonuses": [
+        {
+          "kind": "farming",
+          "description": "Higher skill levels decrease RP consumption while raising maximum HP/RP and vitality.",
+          "stats": ["maxHp", "maxRp", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 2
+    },
+    {
+      "id": "skill-mining",
+      "name": "Mining",
+      "category": "farming",
+      "description": "Skill needed to use hammers.",
+      "bonuses": [
+        {
+          "kind": "farming",
+          "description": "Higher skill levels decrease RP consumption and make it easier to mine.",
+          "stats": []
+        },
+        {
+          "kind": "stat",
+          "description": "Also raises maximum HP/RP and vitality.",
+          "stats": ["maxHp", "maxRp", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 3
+    },
+    {
+      "id": "skill-fishing",
+      "name": "Fishing",
+      "category": "farming",
+      "description": "Higher skill levels decrease RP consumption and make it easier to catch fish.",
+      "bonuses": [
+        {
+          "kind": "farming",
+          "description": "Also raises maximum RP and intelligence.",
+          "stats": ["maxRp", "int"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 4
     }
-  },
-  {
-    "id": "skill-axe-hammer",
-    "name": "Axe/Hammer",
-    "description": "Battle axes/hammers are overwhelmingly powerful. Higher skill levels increase damage and cut RP used. Also raises maximum RP and STR.",
-    "unlocks": {
-      "lv5": "Dash Attack",
-      "lv10": "Charge Attack",
-      "lv20": "Ultimate Attack"
+  ],
+  "recipe": [
+    {
+      "id": "skill-cooking",
+      "name": "Cooking",
+      "category": "recipe",
+      "description": "Higher skill levels increase the number of recipes you can use, and makes it easier to learn new ones.",
+      "bonuses": [
+        {
+          "kind": "crafting",
+          "description": "Also raises maximum RP and vitality.",
+          "stats": ["maxRp", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 1
+    },
+    {
+      "id": "skill-forging",
+      "name": "Forging",
+      "category": "recipe",
+      "description": "Higher skill levels increase the number of recipes you can use, and makes it easier to learn new ones.",
+      "bonuses": [
+        {
+          "kind": "crafting",
+          "description": "Also raises max RP, INT, and VIT.",
+          "stats": ["maxRp", "int", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 2
+    },
+    {
+      "id": "skill-chemistry",
+      "name": "Chemistry",
+      "category": "recipe",
+      "description": "Higher skill levels increase the number of recipes you can use, and makes it easier to learn new ones.",
+      "bonuses": [
+        {
+          "kind": "crafting",
+          "description": "Also raises max RP, INT, and VIT.",
+          "stats": ["maxRp", "int", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 3
+    },
+    {
+      "id": "skill-crafting",
+      "name": "Crafting",
+      "category": "recipe",
+      "description": "Higher skill levels increase the number of recipes you can use, and make it easier to learn new ones.",
+      "bonuses": [
+        {
+          "kind": "crafting",
+          "description": "Also raises max RP and INT.",
+          "stats": ["maxRp", "int"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 4
     }
-  },
-  {
-    "id": "skill-dual-blades",
-    "name": "Dual Blades",
-    "description": "Dual Blades concentrate on combat effectiveness. Higher skill levels increase damage and cut RP used. Also raises maximum RP and STR.",
-    "unlocks": {
-      "lv5": "Dash Attack",
-      "lv10": "Charge Attack",
-      "lv20": "Ultimate Attack"
+  ],
+  "life": [
+    {
+      "id": "skill-searching",
+      "name": "Searching",
+      "category": "life",
+      "description": "Skill that increases when you open treasure chests or find hidden items.",
+      "bonuses": [
+        {
+          "kind": "utility",
+          "description": "Higher skill level raise max RP and INT, and may yield better items.",
+          "stats": ["maxRp", "int"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 1
+    },
+    {
+      "id": "skill-walking",
+      "name": "Walking",
+      "category": "life",
+      "description": "Skill that increases as you walk.",
+      "bonuses": [
+        {
+          "kind": "stat",
+          "description": "Higher skill levels raise maximum HP/RP and vitality.",
+          "stats": ["maxHp", "maxRp", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 2
+    },
+    {
+      "id": "skill-sleeping",
+      "name": "Sleeping",
+      "category": "life",
+      "description": "Skill that increases with restful sleep in bed.",
+      "bonuses": [
+        {
+          "kind": "stat",
+          "description": "Higher skill levels raise maximum HP/RP, strength, intelligence and vitality.",
+          "stats": ["maxHp", "maxRp", "str", "int", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 3
+    },
+    {
+      "id": "skill-eating",
+      "name": "Eating",
+      "category": "life",
+      "description": "Skill that increases as you eat food.",
+      "bonuses": [
+        {
+          "kind": "stat",
+          "description": "Slowly raises maximum HP/RP, strength, intelligence and vitality.",
+          "stats": ["maxHp", "maxRp", "str", "int", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 4
     }
-  },
-  {
-    "id": "skill-fist",
-    "name": "Fist",
-    "description": "Skill needed to use your own fists when attacking foes. Higher skill levels increase damage and cut RP used. Also raises maximum RP and STR.",
-    "unlocks": {
-      "lv5": "Dash Attack",
-      "lv10": "Charge Attack",
-      "lv20": "Ultimate Attack"
+  ],
+  "defense": [
+    {
+      "id": "skill-defense",
+      "name": "Defense",
+      "category": "defense",
+      "description": "Skill that increases as you get attacked.",
+      "bonuses": [
+        {
+          "kind": "stat",
+          "description": "Higher skill levels raise HP and vitality.",
+          "stats": ["maxHp", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 1
+    },
+    {
+      "id": "skill-resist-poison",
+      "name": "Resist Poison",
+      "category": "defense",
+      "description": "Skill that increases by poisoning foes or being poisoned.",
+      "bonuses": [
+        {
+          "kind": "resistance",
+          "description": "Higher skill levels raise INT and VIT.",
+          "stats": ["int", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 2
+    },
+    {
+      "id": "skill-resist-seals",
+      "name": "Resist Seals",
+      "category": "defense",
+      "description": "Skill that increases by sealing foes or veing sealed.",
+      "bonuses": [
+        {
+          "kind": "resistance",
+          "description": "Higher skill levels make you more resistant and raise INT and VIT.",
+          "stats": ["int", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 3
+    },
+    {
+      "id": "skill-resist-paralysis",
+      "name": "Resist Paralysis",
+      "category": "defense",
+      "description": "Skill that increases by paralyzing foes or being paralyzed.",
+      "bonuses": [
+        {
+          "kind": "resistance",
+          "description": "Higher skill levels make you more resistant and raise INT and VIT.",
+          "stats": ["int", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 4
+    },
+    {
+      "id": "skill-resist-sleep",
+      "name": "Resist Sleep",
+      "category": "defense",
+      "description": "Skill that increases when put to sleep or by making foes sleep.",
+      "bonuses": [
+        {
+          "kind": "resistance",
+          "description": "Higher skill levels make you more resistant and raise INT and VIT.",
+          "stats": ["int", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 5
+    },
+    {
+      "id": "skill-resist-fatigue",
+      "name": "Resist Fatigue",
+      "category": "defense",
+      "description": "Skill that increases by being fatigued, or by making foes fatigued.",
+      "bonuses": [
+        {
+          "kind": "resistance",
+          "description": "Higher skill levels make you more resistant and raise INT and VIT.",
+          "stats": ["int", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 6
+    },
+    {
+      "id": "skill-resist-cold",
+      "name": "Resist Cold",
+      "category": "defense",
+      "description": "Skill that increases when sick, or by making foes sick.",
+      "bonuses": [
+        {
+          "kind": "resistance",
+          "description": "Higher skill levels make you more resistant and raise intelligence and vitality.",
+          "stats": ["int", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 7
+    },
+    {
+      "id": "skill-resist-knockout",
+      "name": "Resist Knockout",
+      "category": "defense",
+      "description": "Skill that increases when you get knocked out, or by knocking out foes.",
+      "bonuses": [
+        {
+          "kind": "resistance",
+          "description": "Higher skill levels make you more resistant and raise maximum RP.",
+          "stats": ["maxRp"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 8
     }
-  }
-]
+  ],
+  "other": [
+    {
+      "id": "skill-bathing",
+      "name": "Bathing",
+      "category": "other",
+      "description": "Skill that increases when you take a bath.",
+      "bonuses": [
+        {
+          "kind": "utility",
+          "description": "Higher skill levels raise maximum HP/RP and vitality.",
+          "stats": ["maxHp", "maxRp", "vit"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 1
+    },
+    {
+      "id": "skill-taming",
+      "name": "Taming",
+      "category": "other",
+      "description": "Skill that increases when you tame, brush or give presents to monsters.",
+      "bonuses": [
+        {
+          "kind": "monster",
+          "description": "Higher skill levels increase monsters' ATK and DEF and raise INT.",
+          "stats": ["atk", "def", "int"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 2
+    },
+    {
+      "id": "skill-throwing",
+      "name": "Throwing",
+      "category": "other",
+      "description": "Skill that increases when you throw items or monsters.",
+      "bonuses": [
+        {
+          "kind": "combat",
+          "description": "Higher skill levels increase throwing damage, decrease RP consumption and raise STR, VIT, and ATK.",
+          "stats": ["str", "vit", "atk"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 3
+    },
+    {
+      "id": "skill-leadership",
+      "name": "Leadership",
+      "category": "other",
+      "description": "Skill that increases as you lead a party of fellow adventurers.",
+      "bonuses": [
+        {
+          "kind": "party",
+          "description": "Higher skill levels raise STR, INT and your party's ATK and DEF.",
+          "stats": ["str", "int", "atk", "def"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 4
+    },
+    {
+      "id": "skill-bartering",
+      "name": "Bartering",
+      "category": "other",
+      "description": "Skill that increases as you sell items.",
+      "bonuses": [
+        {
+          "kind": "economy",
+          "description": "Higher skill levels raise INT and may teach you sales techniques to use in your store.",
+          "stats": ["int"]
+        }
+      ],
+      "unlocks": [],
+      "sourceOrder": 5
+    }
+  ]
+}

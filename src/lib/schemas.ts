@@ -237,10 +237,65 @@ export type RuneAbility = z.infer<typeof RuneAbilitySchema>;
 export const SkillSchema = z.object({
   id: z.string(),
   name: z.string(),
-  description: z.string().nullable().optional(),
-  unlocks: z.record(z.string(), z.string()).optional(),
+  category: z.enum([
+    'weapons',
+    'magic',
+    'farming',
+    'recipe',
+    'life',
+    'defense',
+    'other',
+  ]),
+  description: z.string(),
+  bonuses: z.array(
+    z.object({
+      kind: z.enum([
+        'stat',
+        'combat',
+        'resistance',
+        'crafting',
+        'farming',
+        'monster',
+        'party',
+        'economy',
+        'utility',
+      ]),
+      description: z.string(),
+      stats: z.array(
+        z.enum([
+          'maxHp',
+          'maxRp',
+          'atk',
+          'def',
+          'matk',
+          'mdef',
+          'str',
+          'vit',
+          'int',
+        ]),
+      ).default([]),
+    }),
+  ).default([]),
+  unlocks: z.array(
+    z.object({
+      level: z.number(),
+      effect: z.string(),
+    }),
+  ).default([]),
+  sourceOrder: z.number(),
 });
 export type Skill = z.infer<typeof SkillSchema>;
+
+export const SkillsDataSchema = z.object({
+  weapons: z.array(SkillSchema),
+  magic: z.array(SkillSchema),
+  farming: z.array(SkillSchema),
+  recipe: z.array(SkillSchema),
+  life: z.array(SkillSchema),
+  defense: z.array(SkillSchema),
+  other: z.array(SkillSchema),
+});
+export type SkillsData = z.infer<typeof SkillsDataSchema>;
 
 export const TrophySchema = z.object({
   id: z.string(),

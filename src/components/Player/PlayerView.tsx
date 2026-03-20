@@ -18,6 +18,7 @@ import {
   Sparkles,
   BookOpen,
 } from "lucide-react";
+import type { SkillsData } from "@/lib/schemas";
 
 const runeAbilityImages = import.meta.glob(
   "@/assets/images/rune-abilities/*.png",
@@ -30,6 +31,26 @@ const runeAbilityImages = import.meta.glob(
 const resolveRuneAbilityImage = (image?: string) => {
   if (!image) return undefined;
   return runeAbilityImages[`/src/assets/images/${image}`];
+};
+
+const SKILL_CATEGORY_ORDER: Array<keyof SkillsData> = [
+  "weapons",
+  "magic",
+  "farming",
+  "recipe",
+  "life",
+  "defense",
+  "other",
+];
+
+const SKILL_CATEGORY_LABELS: Record<keyof SkillsData, string> = {
+  weapons: "Weapon Skills",
+  magic: "Magic Skills",
+  farming: "Farming Skills",
+  recipe: "Recipe Skills",
+  life: "Life Skills",
+  defense: "Defense Skills",
+  other: "Other Skills",
 };
 
 export function PlayerView() {
@@ -309,55 +330,99 @@ export function PlayerView() {
                 </TabsContent>
 
                 <TabsContent value="skills" className="m-0 mt-2 space-y-4">
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {skills?.map((skill) => (
-                      <Card
-                        key={skill.id}
-                        className="py-0 overflow-hidden flex flex-col h-full"
-                      >
-                        <CardHeader className="bg-slate-50 border-b p-4 pb-3 space-y-0">
-                          <CardTitle className="text-lg flex items-center gap-2">
-                            <Shield className="w-5 h-5 text-slate-500" />
-                            {skill.name}
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-4 space-y-4 flex flex-col flex-1">
-                          <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                            {skill.description}
-                          </p>
+                  {skills &&
+                    SKILL_CATEGORY_ORDER.map((category) => {
+                      const categorySkills = skills[category];
 
-                          {skill.unlocks &&
-                            Object.keys(skill.unlocks).length > 0 && (
-                              <div className="pt-2 mt-auto">
-                                <h4 className="font-semibold text-xs uppercase tracking-wider mb-2 text-slate-500">
-                                  Unlocks
-                                </h4>
-                                <div className="space-y-2">
-                                  {Object.entries(skill.unlocks).map(
-                                    ([level, info]) => (
-                                      <div
-                                        key={level}
-                                        className="flex justify-between items-center text-sm p-2 rounded bg-slate-50 border gap-2"
-                                      >
-                                        <Badge
-                                          variant="secondary"
-                                          className="font-mono shrink-0"
-                                        >
-                                          {level}
-                                        </Badge>
-                                        <span className="font-medium text-slate-700 text-right">
-                                          {String(info)}
-                                        </span>
+                      if (categorySkills.length === 0) {
+                        return null;
+                      }
+
+                      return (
+                        <div key={category} className="space-y-4">
+                          <h3 className="text-xl font-bold border-b pb-2">
+                            {SKILL_CATEGORY_LABELS[category]}
+                          </h3>
+
+                          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            {categorySkills.map((skill) => (
+                              <Card
+                                key={skill.id}
+                                className="py-0 overflow-hidden flex flex-col h-full"
+                              >
+                                <CardHeader className="bg-slate-50 border-b p-4 pb-3 space-y-0">
+                                  <CardTitle className="text-lg flex items-center gap-2">
+                                    <Shield className="w-5 h-5 text-slate-500" />
+                                    {skill.name}
+                                  </CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-4 space-y-4 flex flex-col flex-1">
+                                  <p className="text-sm text-muted-foreground leading-relaxed">
+                                    {skill.description}
+                                  </p>
+
+                                  {skill.bonuses.length > 0 && (
+                                    <div className="space-y-2">
+                                      <h4 className="font-semibold text-xs uppercase tracking-wider text-slate-500">
+                                        Bonuses
+                                      </h4>
+                                      <div className="space-y-2">
+                                        {skill.bonuses.map((bonus) => (
+                                          <div
+                                            key={`${skill.id}-${bonus.kind}-${bonus.description}`}
+                                            className="rounded border bg-slate-50 p-3 text-sm"
+                                          >
+                                            <div className="flex items-center gap-2">
+                                              <Badge variant="secondary">
+                                                {bonus.kind}
+                                              </Badge>
+                                              {bonus.stats.length > 0 && (
+                                                <span className="text-xs text-slate-500">
+                                                  {bonus.stats.join(", ")}
+                                                </span>
+                                              )}
+                                            </div>
+                                            <p className="mt-2 text-muted-foreground">
+                                              {bonus.description}
+                                            </p>
+                                          </div>
+                                        ))}
                                       </div>
-                                    ),
+                                    </div>
                                   )}
-                                </div>
-                              </div>
-                            )}
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+
+                                  {skill.unlocks.length > 0 && (
+                                    <div className="pt-2 mt-auto">
+                                      <h4 className="font-semibold text-xs uppercase tracking-wider mb-2 text-slate-500">
+                                        Unlocks
+                                      </h4>
+                                      <div className="space-y-2">
+                                        {skill.unlocks.map((unlock) => (
+                                          <div
+                                            key={`${skill.id}-${unlock.level}`}
+                                            className="flex justify-between items-center text-sm p-2 rounded bg-slate-50 border gap-2"
+                                          >
+                                            <Badge
+                                              variant="secondary"
+                                              className="font-mono shrink-0"
+                                            >
+                                              Lv. {unlock.level}
+                                            </Badge>
+                                            <span className="font-medium text-slate-700 text-right">
+                                              {unlock.effect}
+                                            </span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </CardContent>
+                              </Card>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
                 </TabsContent>
 
                 <TabsContent value="trophies" className="m-0 mt-2 space-y-4">

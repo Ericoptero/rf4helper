@@ -1,5 +1,5 @@
-import { ItemSchema, CharacterSchema, MonsterSchema, ChestSchema, FestivalSchema, CropsDataSchema, FishSchema, OrderSchema, RequestSchema, RuneAbilitySchema, SkillSchema, TrophySchema } from './schemas';
-import type { Item, Character, Monster, Chest, Festival, CropsData, Fish, Order, RequestItem, RuneAbility, Skill, Trophy } from './schemas';
+import { ItemSchema, CharacterSchema, MonsterSchema, ChestSchema, FestivalSchema, CropsDataSchema, FishSchema, OrderSchema, RequestSchema, RuneAbilitySchema, SkillsDataSchema, TrophySchema } from './schemas';
+import type { Item, Character, Monster, Chest, Festival, CropsData, Fish, Order, RequestItem, RuneAbility, SkillsData, Trophy } from './schemas';
 /// <reference types="node" />
 import { z } from 'zod';
 
@@ -99,11 +99,11 @@ export const fetchRuneAbilities = async (): Promise<Record<string, RuneAbility[]
   return z.record(z.string(), z.array(RuneAbilitySchema)).parse(await response.json());
 };
 
-export const fetchSkills = async (): Promise<Skill[]> => {
+export const fetchSkills = async (): Promise<SkillsData> => {
   const url = `${BASE_URL}/data/skills.json`;
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Failed to fetch skills from ${url}`);
-  return z.array(SkillSchema).parse(await response.json());
+  return SkillsDataSchema.parse(await response.json());
 };
 
 export const fetchTrophies = async (): Promise<Record<string, Trophy[]>> => {

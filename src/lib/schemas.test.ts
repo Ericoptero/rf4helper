@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { ItemSchema, RecipeSchema, CharacterSchema, MonsterSchema } from './schemas';
+import {
+  ItemSchema,
+  RecipeSchema,
+  CharacterSchema,
+  MonsterSchema,
+  SkillsDataSchema,
+} from './schemas';
 
 describe('Zod Schemas', () => {
   describe('ItemSchema', () => {
@@ -285,6 +291,73 @@ describe('Zod Schemas', () => {
 
       const result = MonsterSchema.safeParse(validMonster);
       expect(result.success).toBe(true);
+    });
+  });
+
+  describe('SkillsDataSchema', () => {
+    it('parses grouped skills data with structured bonuses and unlocks', () => {
+      const validSkills = {
+        weapons: [
+          {
+            id: 'skill-short-sword',
+            name: 'Short Sword',
+            category: 'weapons',
+            description: 'Short Swords are balanced for both attack and defense.',
+            bonuses: [
+              {
+                kind: 'combat',
+                description: 'Higher skill levels increase damage and cut RP used.',
+                stats: [],
+              },
+              {
+                kind: 'stat',
+                description: 'Also raises maximum RP and STR.',
+                stats: ['maxRp', 'str'],
+              },
+            ],
+            unlocks: [
+              { level: 5, effect: 'Dash Attack' },
+              { level: 10, effect: 'Charge Attack' },
+            ],
+            sourceOrder: 1,
+          },
+        ],
+        magic: [
+          {
+            id: 'skill-fire',
+            name: 'Fire',
+            category: 'magic',
+            description: 'Skill needed to use fire.',
+            bonuses: [
+              {
+                kind: 'stat',
+                description: 'Also raises INT, FIRE M.ATK and M.DEF.',
+                stats: ['int', 'matk', 'mdef'],
+              },
+            ],
+            unlocks: [],
+            sourceOrder: 1,
+          },
+        ],
+        farming: [],
+        recipe: [],
+        life: [],
+        defense: [],
+        other: [],
+      };
+
+      const result = SkillsDataSchema.safeParse(validSkills);
+      expect(result.success).toBe(true);
+    });
+
+    it('requires all skill categories to be present', () => {
+      const invalidSkills = {
+        weapons: [],
+        magic: [],
+      };
+
+      const result = SkillsDataSchema.safeParse(invalidSkills);
+      expect(result.success).toBe(false);
     });
   });
 });
