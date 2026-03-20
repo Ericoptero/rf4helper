@@ -1,17 +1,9 @@
 [
   {
-    "id": "festival-spring-festivals",
-    "name": "Spring Festivals",
-    "season": null,
-    "day": null,
-    "orderable": false,
-    "description": null
-  },
-  {
     "id": "festival-new-years-day",
     "name": "New Year's Day",
-    "season": null,
-    "day": null,
+    "season": "Spring",
+    "day": 1,
     "orderable": false,
     "description": "New Year's Day (元日(がんじつ), Ganjitsu) is the held on the 1st of spring. Various adults in the game may give the protagonist an allowance for the new year. After the protagonist gets married, adults will no longer give any money. If either Noel or Luna are born, the protagonist will have the option to give their child 500G or nothing."
   },
@@ -50,74 +42,58 @@
   {
     "id": "festival-spring-harvest-festival",
     "name": "Spring Harvest Festival",
-    "season": null,
-    "day": null,
+    "season": "Spring",
+    "day": 28,
     "orderable": false,
     "description": "The Spring Harvest Festival (春の野菜大会, Haru no Yasai Taikai) is held on the 28th of spring. Bring a veggie or flower to Volkanon between 11:00 and 18:00. While the item you bring doesn't need to be seasonal, you will gain extra points if it is. Other things that earn points are crop level, whether or not the vegetable is giant, and duration of growth. After the crop has been evaluated, you will have the chance to appeal it, and three villagers will ask you questions about the crop, or your confide"
   },
   {
-    "id": "festival-summer-festivals",
-    "name": "Summer Festivals",
-    "season": null,
-    "day": null,
-    "orderable": false,
-    "description": null
-  },
-  {
     "id": "festival-beach-day",
     "name": "Beach Day",
-    "season": null,
-    "day": null,
+    "season": "Summer",
+    "day": 1,
     "orderable": false,
     "description": "Beach Day (湖開き, Mizuumi Hiraki) is held on the 1st of summer. It celebrates the opening of the beach. The townsfolk walk around and talk about the beach and swimming. The bachelors and bachelorettes wear bathing suits as well."
   },
   {
     "id": "festival-turnip-festival",
     "name": "Turnip Festival",
-    "season": null,
-    "day": null,
+    "season": "Summer",
+    "day": 11,
     "orderable": true,
     "description": "The Turnip Festival (せまるカブ祭り, Semaru Kabu Matsuri) is held on the 11th of summer. (Must be ordered with Prince/ss Points.) Turnips will appear and float across the screen, and you will be provided balls to toss at them. The more turnips you hit in a single toss, the more points each will be worth. Big, pink and gold turnips are worth more points. Yellow balls that appear can hit multiple turnips at once."
   },
   {
     "id": "festival-big-catch-contest",
     "name": "Big Catch Contest",
-    "season": null,
-    "day": null,
+    "season": "Summer",
+    "day": 15,
     "orderable": false,
     "description": "The Big Catch Contest (大物釣り大会, Oomono Tsuri Taikai) is held on the 15th of summer. Try and catch the largest you can in the time limit. Watch out, though. If you have Dylas in town, he has a tendency to hook things well over 100 inches long. However, whatever the biggest size you caught last year was will carry over, so you only really need to break the record for the previous year."
   },
   {
     "id": "festival-firefly-festival",
     "name": "Firefly Festival",
-    "season": null,
-    "day": null,
+    "season": "Summer",
+    "day": 19,
     "orderable": false,
     "description": "The Firefly Festival (ほたるび祭り, Hotarubi Matsuri) is held on the 19th of summer. Go on a date with a boyfriend/girlfriend/spouse at Dragon Lake. They must be invited the previous day. The time of meeting will be 19 hundred hours. (If a sub-event is active involving your potential date, they will be unable to be invited.)"
   },
   {
     "id": "festival-buddy-battle",
     "name": "Buddy Battle",
-    "season": null,
-    "day": null,
+    "season": "Summer",
+    "day": 24,
     "orderable": false,
     "description": "The Buddy Battle (ペット大会, Petto Taikai) is held on the 24th of summer. This is a monster battling contest where you will pick a maximum of two monsters from your barn to fight in a tournament. The higher their level and love level is, the better they will perform because you cannot influence them in any way during the fights. Having monsters with about 6-7 love will just be able to win. A warning, however, if you have Leon in town, his monsters are always in the final round and are very tough to "
   },
   {
     "id": "festival-summer-harvest-festival",
     "name": "Summer Harvest Festival",
-    "season": null,
-    "day": null,
+    "season": "Summer",
+    "day": 28,
     "orderable": false,
     "description": "The Summer Harvest Festival (夏の野菜大会, Natsu no Yasai Taikai) is held on the 28th of summer. Bring a veggie or flower to Volkanon between 11:00 and 18:00. While the item you bring doesn't need to be seasonal, you will gain extra points if it is. Other things that earn points are crop level, and duration of growth. After the crop has been evaluated, you will have the chance to appeal it, and three villagers will ask you questions about the crop, or your confidence in it. Each question you answer co"
-  },
-  {
-    "id": "festival-fall-festivals",
-    "name": "Fall Festivals",
-    "season": null,
-    "day": null,
-    "orderable": false,
-    "description": null
   },
   {
     "id": "festival-eating-contest",
@@ -166,14 +142,6 @@
     "day": 28,
     "orderable": false,
     "description": "Fall 28th Bring a veggie or flower to Volkanon between 11:00 and 18:00. While the item you bring doesn't need to be seasonal, you will gain extra points if it is. Other things that earn points are crop level, and duration of growth. After the crop has been evaluated, you will have the chance to appeal it, and three villagers will ask you questions about the crop, or your confidence in it. Each question you answer correctly will earn additional points."
-  },
-  {
-    "id": "festival-winter-festivals",
-    "name": "Winter Festivals",
-    "season": null,
-    "day": null,
-    "orderable": false,
-    "description": null
   },
   {
     "id": "festival-turnip-flurry",
