@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from './ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
 import { ScrollArea } from './ui/scroll-area';
 import { Search, X } from 'lucide-react';
 
@@ -197,6 +197,9 @@ export function PageLayout<T>({
             <>
               <SheetHeader className="mb-6">
                 <SheetTitle className="text-2xl">{detailsTitle ? detailsTitle(selectedItem) : 'Details'}</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Detailed information for the selected entry.
+                </SheetDescription>
               </SheetHeader>
               <div className="pb-8">
                 {renderDetails(selectedItem)}

@@ -8,7 +8,8 @@ import { createTestQueryClient } from '../lib/test-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 const mockItems: Record<string, Item> = {
-  'item-iron': { id: 'item-iron', name: 'Iron', type: 'Mineral', buy: 200, sell: 20, usedInRecipes: [] }
+  'item-bread': { id: 'item-bread', name: 'Bread', type: 'Food', buy: 200, sell: 20, usedInRecipes: [] },
+  'item-ambrosias-thorns': { id: 'item-ambrosias-thorns', name: "Ambrosia's Thorns", type: 'Boss Drop', buy: 7000, sell: 400, usedInRecipes: [] }
 };
 
 const mockCharacters: Record<string, Character> = {
@@ -99,7 +100,9 @@ describe('Data Fetching Hooks', () => {
       expect(result.current.isSuccess).toBe(true);
     });
     
-    expect(result.current.data?.['item-iron'].name).toBe('Iron');
+    expect(result.current.data?.['item-bread'].name).toBe('Bread');
+    expect(result.current.data?.['item-bread'].image).toBeTruthy();
+    expect(result.current.data?.['item-ambrosias-thorns'].image).toBeUndefined();
   });
 
   it('useCharacters returns validated data', async () => {

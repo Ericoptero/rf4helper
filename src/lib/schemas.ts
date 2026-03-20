@@ -4,15 +4,29 @@ export const ItemSchema = z.object({
   id: z.string(),
   name: z.string(),
   hexId: z.string().optional(),
+  image: z.string().optional(),
   type: z.string(),
   region: z.string().nullable().optional(),
-  tier: z.number().optional(),
   shippable: z.boolean().optional(),
   buy: z.number().optional(),
   sell: z.number().optional(),
+  category: z.string().optional(),
+  description: z.string().nullable().optional(),
+  monster: z.string().optional(),
   rarityPoints: z.number().optional(),
   rarityCategory: z.string().optional(),
   usedInRecipes: z.array(z.string()).optional(),
+  craft: z
+    .array(
+      z.object({
+        recipeId: z.string().optional(),
+        stationType: z.string(),
+        station: z.string().optional(),
+        level: z.number(),
+        ingredients: z.array(z.string()),
+      })
+    )
+    .optional(),
   craftedFrom: z
     .array(
       z.object({
@@ -24,6 +38,7 @@ export const ItemSchema = z.object({
       })
     )
     .optional(),
+  stats: z.record(z.string(), z.number()).optional(),
 });
 
 export type Item = z.infer<typeof ItemSchema>;

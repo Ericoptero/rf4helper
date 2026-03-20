@@ -24,6 +24,34 @@ describe('Zod Schemas', () => {
       expect(result.success).toBe(true);
     });
 
+    it('parses item dataset fields used by the details view', () => {
+      const validItem = {
+        id: 'item-bread',
+        name: 'Bread',
+        type: 'Food',
+        buy: 200,
+        sell: 20,
+        image: '/src/assets/images/items/bread.png',
+        description: 'Freshly baked bread.',
+        category: 'foodAndMedicineStrings',
+        monster: 'Buffamoo',
+        craft: [
+          {
+            ingredients: ['item-flour'],
+            stationType: 'Cooking',
+            level: 5,
+          },
+        ],
+        stats: {
+          hp: 10,
+          rp: 5,
+        },
+      };
+
+      const result = ItemSchema.safeParse(validItem);
+      expect(result.success).toBe(true);
+    });
+
     it('fails when id is missing', () => {
       const invalidItem = { name: 'Iron', type: 'Mineral' };
       const result = ItemSchema.safeParse(invalidItem);

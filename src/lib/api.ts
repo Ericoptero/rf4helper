@@ -1,5 +1,6 @@
 import { ItemSchema, CharacterSchema, MonsterSchema, ChestSchema, FestivalSchema, CropsDataSchema, FishSchema, OrderSchema, RequestSchema, RuneAbilitySchema, SkillsDataSchema, TrophySchema } from './schemas';
 import type { Item, Character, Monster, Chest, Festival, CropsData, Fish, Order, RequestItem, RuneAbility, SkillsData, Trophy } from './schemas';
+import { resolveItemImage } from './itemImages';
 /// <reference types="node" />
 import { z } from 'zod';
 
@@ -10,7 +11,17 @@ export const fetchItems = async (): Promise<Record<string, Item>> => {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Failed to fetch items from ${url}`);
   const rawData = await response.json();
-  const parsed = z.record(z.string(), ItemSchema).parse(rawData);
+  const rawItems = z.record(z.string(), z.record(z.string(), z.unknown())).parse(rawData);
+  const enrichedItems = Object.fromEntries(
+    Object.entries(rawItems).map(([key, item]) => [
+      key,
+      {
+        ...item,
+        image: resolveItemImage(typeof item.name === 'string' ? item.name : undefined),
+      },
+    ])
+  );
+  const parsed = z.record(z.string(), ItemSchema).parse(enrichedItems);
   return parsed;
 };
 
