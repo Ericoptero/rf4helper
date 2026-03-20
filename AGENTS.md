@@ -74,3 +74,7 @@ Continuing with the TDD format, upcoming tasks will include:
 3. Splitting `CalendarView.tsx` (361 lines) into sidebar + event detail sub-components.
 4. Route-level `loader` functions for data prefetching to eliminate loading flashes.
 5. Creating parametric character profile pages (`/characters/$characterId`).
+
+## Helper Script Policy
+- Before creating any helper script to manipulate data or gather data, always create it inside a temporary folder such as `/tmp`.
+- After the helper script has been used, remove it immediately so it does not remain in the repository or workspace as leftover tooling.
