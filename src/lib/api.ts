@@ -64,8 +64,7 @@ export const fetchFish = async (): Promise<Fish[]> => {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Failed to fetch fishing from ${url}`);
   const rawData = await response.json();
-  // fishing.json has {"fishByName": [...]}
-  const parsed = z.array(FishSchema).parse(rawData.fishByName || []);
+  const parsed = z.array(FishSchema).parse(rawData);
   return parsed;
 };
 

@@ -4,6 +4,31 @@ import { Badge } from '@/components/ui/badge';
 import { PageLayout } from '@/components/PageLayout';
 import { Coins, Fish as FishIcon, MapPin, Search } from 'lucide-react';
 import type { Fish } from '@/lib/schemas';
+import { resolveFishImage } from '@/lib/fishImages';
+
+const SEASON_ORDER = ['Spring', 'Summer', 'Fall', 'Winter'];
+
+function sortSeasons(seasons: string[] = []) {
+  return [...seasons].sort((a, b) => SEASON_ORDER.indexOf(a) - SEASON_ORDER.indexOf(b));
+}
+
+function FishImage({
+  fish,
+  className,
+  iconClassName,
+}: {
+  fish: Fish;
+  className: string;
+  iconClassName: string;
+}) {
+  const imageSrc = resolveFishImage(fish.image);
+
+  if (imageSrc) {
+    return <img src={imageSrc} alt={fish.name} className={className} />;
+  }
+
+  return <FishIcon className={iconClassName} aria-hidden="true" />;
+}
 
 function FishCard({ fish, onClick }: { fish: Fish, onClick: () => void }) {
   return (
@@ -12,7 +37,11 @@ function FishCard({ fish, onClick }: { fish: Fish, onClick: () => void }) {
         <div className="flex justify-between items-start gap-2">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-600 font-bold text-lg shrink-0">
-               <FishIcon className="w-6 h-6" />
+              <FishImage
+                fish={fish}
+                className="h-10 w-10 object-contain"
+                iconClassName="w-6 h-6"
+              />
             </div>
             <div>
               <CardTitle className="text-lg leading-tight line-clamp-1">{fish.name}</CardTitle>
@@ -41,11 +70,24 @@ function FishCard({ fish, onClick }: { fish: Fish, onClick: () => void }) {
 }
 
 function FishDetails({ fish }: { fish: Fish }) {
+  const locationsByRegion = (fish.locations ?? []).reduce<Record<string, NonNullable<Fish['locations']>>>((acc, location) => {
+    const existingLocations = acc[location.region] ?? [];
+    existingLocations.push(location);
+    acc[location.region] = existingLocations;
+    return acc;
+  }, {});
+
+  const sortedRegions = Object.keys(locationsByRegion).sort((a, b) => a.localeCompare(b));
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 bg-cyan-500/5 rounded-xl border border-cyan-500/20">
          <div className="w-32 h-32 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-600 font-bold text-6xl shadow-sm shrink-0">
-           <FishIcon className="w-16 h-16" />
+          <FishImage
+            fish={fish}
+            className="h-24 w-24 object-contain"
+            iconClassName="w-16 h-16"
+          />
          </div>
          <div className="text-center sm:text-left flex-1">
             <h2 className="text-3xl font-bold mb-2">{fish.name}</h2>
@@ -72,16 +114,44 @@ function FishDetails({ fish }: { fish: Fish }) {
 
       <div className="px-1 space-y-4">
          <h3 className="text-xl font-bold border-b pb-2 flex items-center gap-2">
-           <MapPin className="w-5 h-5 text-cyan-600" /> Fishing Locations
+           <MapPin className="w-5 h-5 text-cyan-600" /> Locations by Region
          </h3>
          
-         {fish.locations && fish.locations.length > 0 ? (
-           <div className="grid gap-2">
-             {fish.locations.map((loc, i) => (
-               <div key={i} className="flex items-center gap-3 p-3 rounded-lg border bg-muted/30">
-                 <Search className="w-4 h-4 text-muted-foreground shrink-0" />
-                 <span className="text-sm font-medium">{loc}</span>
-               </div>
+         {sortedRegions.length > 0 ? (
+           <div className="space-y-5">
+             {sortedRegions.map((region) => (
+               <section key={region} className="space-y-3">
+                 <div className="border-b pb-2">
+                   <h4 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{region}</h4>
+                 </div>
+                 <div className="grid gap-3">
+                   {locationsByRegion[region]?.map((location) => {
+                     const sortedSeasons = sortSeasons(location.seasons);
+
+                     return (
+                       <div key={`${location.region}-${location.spot}`} className="rounded-lg border bg-muted/30 p-3">
+                         <div className="flex items-start gap-3">
+                           <Search className="mt-0.5 w-4 h-4 text-muted-foreground shrink-0" />
+                           <div className="space-y-2">
+                             <div className="text-sm font-semibold">{location.spot}</div>
+                             <div className="flex flex-wrap gap-2">
+                               {sortedSeasons.length > 0 && (
+                                 <Badge variant="outline">Seasons: {sortedSeasons.join(', ')}</Badge>
+                               )}
+                               {location.map && (
+                                 <Badge variant="outline">Map: {location.map}</Badge>
+                               )}
+                               {location.other && location.other.length > 0 && (
+                                 <Badge variant="outline">Other: {location.other.join(', ')}</Badge>
+                               )}
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                     );
+                   })}
+                 </div>
+               </section>
              ))}
            </div>
          ) : (

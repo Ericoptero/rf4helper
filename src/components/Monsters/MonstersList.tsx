@@ -31,10 +31,6 @@ function getMonsterGroupKey(monster: Monster) {
   return monster.variantGroup ?? monster.name;
 }
 
-function getDisplayName(monster: Monster) {
-  return monster.variantGroup ?? monster.name;
-}
-
 function getRepresentativeVariant(variants: Monster[]) {
   return [...variants].sort((a, b) => {
     const aBase = a.variantSuffix ? 1 : 0;
@@ -304,13 +300,13 @@ function MonsterDetails({ group }: { group: MonsterGroup }) {
                  {monster.taming?.befriend !== null && (
                    <div className="flex items-center gap-2 p-3 rounded-lg border bg-muted/30">
                      <span className="font-semibold text-sm w-32">Befriend:</span>
-                     <span className="text-sm">{monster.taming.befriend}</span>
+                     <span className="text-sm">{monster.taming?.befriend}</span>
                    </div>
                  )}
                  {monster.taming?.isRideable !== null && (
                    <div className="flex items-center gap-2 p-3 rounded-lg border bg-muted/30">
                      <span className="font-semibold text-sm w-32">Rideable:</span>
-                     <span className="text-sm">{monster.taming.isRideable ? 'Yes' : 'No'}</span>
+                     <span className="text-sm">{monster.taming?.isRideable ? 'Yes' : 'No'}</span>
                    </div>
                  )}
                  {monster.taming?.favorite && monster.taming.favorite.length > 0 && (

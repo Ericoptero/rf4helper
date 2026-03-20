@@ -9,16 +9,28 @@ import userEvent from '@testing-library/user-event';
 import type { Fish } from '@/lib/schemas';
 
 const mockFish: Fish[] = [
-  { id: 'fish-masu', name: 'Masu Trout', sell: 200, shadow: 'small', locations: ['Water Ruins'] },
-  { id: 'fish-squid', name: 'Squid', sell: 120, shadow: 'medium', locations: ['Selphia Lake'] }
+  {
+    id: 'fish-masu',
+    name: 'Masu Trout',
+    image: 'fish/masu-trout.png',
+    sell: 200,
+    shadow: 'small',
+    locations: [
+      { region: 'Selphia', spot: 'Castle Gate', seasons: ['Spring'] },
+      { region: 'Sercerezo Hill', spot: 'Spring Spring', map: 'A1', other: ['Legendary Scale'] },
+    ],
+  },
+  {
+    id: 'fish-squid',
+    name: 'Squid',
+    sell: 120,
+    shadow: 'medium',
+    locations: [],
+  }
 ];
 
-const mockFishingData = {
-  fishByName: mockFish
-};
-
 const server = setupServer(
-  http.get('http://localhost:3000/data/fishing.json', () => HttpResponse.json(mockFishingData)),
+  http.get('http://localhost:3000/data/fishing.json', () => HttpResponse.json(mockFish)),
 );
 
 beforeAll(() => server.listen());
@@ -49,6 +61,7 @@ describe('FishingList Component', () => {
     // Check individual items
     expect(screen.getByText('Masu Trout')).toBeInTheDocument();
     expect(screen.getByText('Squid')).toBeInTheDocument();
+    expect(screen.getByAltText('Masu Trout')).toBeInTheDocument();
     
     // Test shadow badge (capitalize logic test via CSS)
     expect(screen.getByText(/small shadow/i)).toBeInTheDocument();
@@ -73,8 +86,27 @@ describe('FishingList Component', () => {
     }
 
     // Inside the drawer, the details should appear
-    expect(await screen.findByText('Fishing Locations')).toBeInTheDocument();
-    expect(screen.getByText('Water Ruins')).toBeInTheDocument();
+    expect(await screen.findByText('Locations by Region')).toBeInTheDocument();
+    expect(screen.getByText('Selphia')).toBeInTheDocument();
+    expect(screen.getByText('Castle Gate')).toBeInTheDocument();
+    expect(screen.getByText('Seasons: Spring')).toBeInTheDocument();
+    expect(screen.getByText('Map: A1')).toBeInTheDocument();
+    expect(screen.getByText('Other: Legendary Scale')).toBeInTheDocument();
+  });
+
+  it('falls back gracefully when a fish has no image or locations', async () => {
+    const user = userEvent.setup();
+    render(<FishingList />, { wrapper });
+
+    await waitFor(() => {
+      expect(screen.queryByText(/loading fish data.../i)).not.toBeInTheDocument();
+    });
+
+    await user.click(screen.getByText('Squid'));
+
+    expect(await screen.findByText('Locations by Region')).toBeInTheDocument();
+    expect(screen.getByText('No known locations for this fish.')).toBeInTheDocument();
+    expect(screen.queryByAltText('Squid')).not.toBeInTheDocument();
   });
 
   it('can open the select dropdown for filters', async () => {

@@ -4,6 +4,7 @@ import {
   RecipeSchema,
   CharacterSchema,
   MonsterSchema,
+  FishSchema,
   SkillsDataSchema,
 } from './schemas';
 
@@ -291,6 +292,65 @@ describe('Zod Schemas', () => {
 
       const result = MonsterSchema.safeParse(validMonster);
       expect(result.success).toBe(true);
+    });
+  });
+
+  describe('FishSchema', () => {
+    it('parses a fish with structured locations and an image', () => {
+      const validFish = {
+        id: 'fish-masu-trout',
+        name: 'Masu Trout',
+        itemId: 'item-masu-trout',
+        image: 'fish/masu-trout.png',
+        sell: 15,
+        buy: 300,
+        shadow: 'normal',
+        locations: [
+          {
+            region: 'Selphia',
+            spot: 'Castle Gate',
+            seasons: ['Spring'],
+          },
+          {
+            region: 'Sercerezo Hill',
+            spot: 'Spring Spring',
+            map: 'A1',
+            other: ['Legendary Scale'],
+          },
+        ],
+      };
+
+      const result = FishSchema.safeParse(validFish);
+      expect(result.success).toBe(true);
+    });
+
+    it('parses a fish without an image and with empty locations', () => {
+      const validFish = {
+        id: 'fish-chub',
+        name: 'Chub',
+        sell: 130,
+        buy: 2600,
+        shadow: 'normal',
+        locations: [],
+      };
+
+      const result = FishSchema.safeParse(validFish);
+      expect(result.success).toBe(true);
+    });
+
+    it('fails when a location entry is missing a required spot', () => {
+      const invalidFish = {
+        id: 'fish-squid',
+        name: 'Squid',
+        locations: [
+          {
+            region: 'Selphia',
+          },
+        ],
+      };
+
+      const result = FishSchema.safeParse(invalidFish);
+      expect(result.success).toBe(false);
     });
   });
 
