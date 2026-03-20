@@ -140,6 +140,11 @@ describe('MonstersList Component', () => {
 
     expect(screen.getByRole('heading', { name: 'Octopirate' })).toBeInTheDocument();
     expect(screen.getByText('Rate: 0.7%, 0.1%')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Nicknames' })).toBeInTheDocument();
+    expect(screen.getByText('Octo')).toBeInTheDocument();
+    expect(screen.getByText('Rideable:')).toBeInTheDocument();
+    expect(screen.getByText('Yes')).toBeInTheDocument();
+    expect(screen.getByText('Physical')).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Field Dungeon (Boss)' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Rune Prana F2 (Boss)' })).toBeInTheDocument();
 
@@ -148,6 +153,7 @@ describe('MonstersList Component', () => {
     expect(screen.getByText('A stronger Rune Prana encounter.')).toBeInTheDocument();
     expect(screen.getByText('Rate: 70%, 20%')).toBeInTheDocument();
     expect(screen.getByText('42000')).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Nicknames' })).not.toBeInTheDocument();
   });
 
   it('finds grouped cards by suffixed variant names', async () => {
@@ -180,5 +186,37 @@ describe('MonstersList Component', () => {
     expect(screen.getByRole('heading', { name: 'Death Orc' })).toBeInTheDocument();
     expect(screen.getByText('Not Tameable')).toBeInTheDocument();
     expect(screen.queryByText('Taming Info')).not.toBeInTheDocument();
+  });
+
+  it('hides rideable info when rideability is unknown and renders readable resistance labels', async () => {
+    const user = userEvent.setup();
+    render(<MonstersList />, { wrapper });
+
+    await waitFor(() => {
+      expect(screen.getByText('Death Orc')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByText('Octopirate'));
+
+    expect(screen.getByText('Physical')).toBeInTheDocument();
+    expect(screen.queryByText('HpDrain')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('tab', { name: 'Field Dungeon (Boss)' }));
+    expect(screen.getByText('Rideable:')).toBeInTheDocument();
+    expect(screen.getByText('Yes')).toBeInTheDocument();
+  });
+
+  it('hides rideable and nickname sections when data is missing', async () => {
+    const user = userEvent.setup();
+    render(<MonstersList />, { wrapper });
+
+    await waitFor(() => {
+      expect(screen.getByText('Orc')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByText('Orc'));
+
+    expect(screen.queryByText('Rideable:')).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Nicknames' })).not.toBeInTheDocument();
   });
 });

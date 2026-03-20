@@ -79,6 +79,32 @@ function formatDropRates(dropRates: number[]) {
   return dropRates.map((rate) => `${rate}%`).join(', ');
 }
 
+const resistanceLabels: Record<string, string> = {
+  normal: 'Physical',
+  fire: 'Fire',
+  water: 'Water',
+  earth: 'Earth',
+  wind: 'Wind',
+  light: 'Light',
+  dark: 'Dark',
+  love: 'Love',
+  poison: 'Poison',
+  seal: 'Seal',
+  paralysis: 'Paralysis',
+  sleep: 'Sleep',
+  fatigue: 'Fatigue',
+  illness: 'Illness',
+  faint: 'Faint',
+  hpDrain: 'HP Drain',
+  dizAttack: 'Diz Attack',
+  dizResist: 'Diz Resist',
+  knockDistance: 'Knock Distance',
+  additionalStunTime: 'Stun Attack',
+  knockResist: 'Knock Resist',
+  critAttack: 'Crit Attack',
+  critResist: 'Crit Resist',
+};
+
 function isMonsterActuallyTameable(monster: Monster) {
   return Boolean(monster.taming?.tameable && (monster.taming.befriend ?? 0) > 0);
 }
@@ -206,6 +232,19 @@ function MonsterDetails({ group }: { group: MonsterGroup }) {
              </div>
            )}
 
+           {monster.nickname && monster.nickname.length > 0 && (
+             <div>
+               <h3 className="text-xl font-bold mb-3 border-b pb-2">Nicknames</h3>
+               <div className="flex flex-wrap gap-2">
+                 {monster.nickname.map((nickname) => (
+                   <Badge key={nickname} variant="outline" className="bg-muted/30">
+                     {nickname}
+                   </Badge>
+                 ))}
+               </div>
+             </div>
+           )}
+
            <div>
              <h3 className="text-xl font-bold mb-3 border-b pb-2">Stats</h3>
              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -249,7 +288,7 @@ function MonsterDetails({ group }: { group: MonsterGroup }) {
                    if ((value ?? 0) < 0) color = 'text-red-600 bg-red-50 border-red-200';
                    return (
                      <div key={element} className={`flex justify-between items-center p-2 rounded border text-xs font-semibold ${color}`}>
-                       <span className="capitalize">{element}</span>
+                       <span>{resistanceLabels[element] ?? element}</span>
                        <span>{value ?? '—'}{typeof value === 'number' ? '%' : ''}</span>
                      </div>
                    );
@@ -266,6 +305,12 @@ function MonsterDetails({ group }: { group: MonsterGroup }) {
                    <div className="flex items-center gap-2 p-3 rounded-lg border bg-muted/30">
                      <span className="font-semibold text-sm w-32">Befriend:</span>
                      <span className="text-sm">{monster.taming.befriend}</span>
+                   </div>
+                 )}
+                 {monster.taming?.isRideable !== null && (
+                   <div className="flex items-center gap-2 p-3 rounded-lg border bg-muted/30">
+                     <span className="font-semibold text-sm w-32">Rideable:</span>
+                     <span className="text-sm">{monster.taming.isRideable ? 'Yes' : 'No'}</span>
                    </div>
                  )}
                  {monster.taming?.favorite && monster.taming.favorite.length > 0 && (
