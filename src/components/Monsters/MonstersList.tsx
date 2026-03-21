@@ -2,7 +2,7 @@ import React from 'react';
 import { useMonsters } from '@/hooks/queries';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { PageLayout } from '@/components/PageLayout';
+import { CatalogPageLayout } from '@/components/CatalogPageLayout';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Ghost, Heart, Sword, Shield, MapPin, Bone } from 'lucide-react';
@@ -359,7 +359,7 @@ export function MonstersList() {
   ];
 
   return (
-    <PageLayout<MonsterGroup>
+    <CatalogPageLayout<MonsterGroup>
       data={groupedMonsters}
       title="Monsters Compendium"
       searchKey={(group) => group.searchText}
@@ -368,6 +368,7 @@ export function MonstersList() {
       renderCard={(group, onClick) => <MonsterCard group={group} onClick={onClick} />}
       renderDetails={(group) => <MonsterDetails group={group} />}
       detailsTitle={() => `Monster Info`}
+      detailEmptyState="Select a monster to inspect variants, drops, resistances, and taming data."
     />
   );
 }

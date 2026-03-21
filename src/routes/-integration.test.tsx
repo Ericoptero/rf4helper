@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
@@ -72,16 +72,66 @@ describe('Routing Integration', () => {
       </QueryClientProvider>
     );
 
-    // Initial loading or immediate render check
-    await waitFor(() => {
-      expect(screen.getByText('Items Database')).toBeInTheDocument();
-    });
+    expect(await screen.findByText('Items Database', {}, { timeout: 3000 })).toBeInTheDocument();
+    expect(screen.getByText('Iron')).toBeInTheDocument();
+    expect(screen.getByText('Bread')).toBeInTheDocument();
+    expect(screen.getByText('Apple')).toBeInTheDocument();
+
+    expect(screen.getAllByRole('link', { name: /home/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: /items/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('button').length).toBeGreaterThan(0);
+    expect(
+      screen
+        .getAllByRole('link', { name: /items/i })
+        .some((link) => link.getAttribute('data-status') === 'active'),
+    ).toBe(true);
+    expect(screen.getByRole('complementary')).toHaveClass('lg:fixed');
+    expect(screen.getByRole('complementary')).toHaveClass('lg:h-dvh');
+    expect(screen.getByRole('main')).toHaveClass('lg:pl-64');
+  });
+
+  it('opens the mobile navigation drawer and closes it after navigation', async () => {
+    const user = userEvent.setup();
+    const router = createTestRouter(['/items']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    expect(await screen.findByText('Items Database', {}, { timeout: 3000 })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /open navigation menu/i }));
+
+    const dialog = await screen.findByRole('dialog');
+    expect(within(dialog).getByText('Navigation')).toBeInTheDocument();
+
+    await user.click(within(dialog).getByRole('link', { name: /^home$/i }));
 
     await waitFor(() => {
-      expect(screen.getByText('Iron')).toBeInTheDocument();
-      expect(screen.getByText('Bread')).toBeInTheDocument();
-      expect(screen.getByText('Apple')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /rune factory 4 helper/i })).toBeInTheDocument();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
+  });
+
+  it('renders the redesigned home route with category entry points', async () => {
+    const router = createTestRouter(['/']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /rune factory 4 helper/i })).toBeInTheDocument();
+    });
+
+    expect(screen.getAllByText(/enchanted codex/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: /items/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: /monsters/i }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: /characters/i }).length).toBeGreaterThan(0);
   });
 
   it('hydrates the items page from the letter search param', async () => {

@@ -76,6 +76,15 @@ const mockItems: Record<string, MockItem> = {
     },
     effects: [{ type: 'cure', targets: ['seal'] }],
   },
+  'item-fire-resist-charm': {
+    id: 'item-fire-resist-charm',
+    name: 'Fire Resist Charm',
+    type: 'Accessory',
+    buy: 1200,
+    sell: 300,
+    usedInRecipes: [],
+    effects: [{ type: 'resistance', target: 'fire', value: 25 }],
+  },
   'item-weapon-bread': {
     id: 'item-weapon-bread',
     name: 'Weapon Bread',
@@ -227,9 +236,10 @@ describe('ItemsList Component', () => {
     render(<ItemsList />, { wrapper });
 
     await user.click((await screen.findAllByText('Bread'))[0]);
+    const dialog = await screen.findByRole('dialog');
 
     expect(await screen.findByText('Freshly baked bread.')).toBeInTheDocument();
-    expect(screen.getByRole('img', { name: 'Bread image' })).toBeInTheDocument();
+    expect(within(dialog).getByRole('img', { name: 'Bread image' })).toBeInTheDocument();
     expect(screen.getAllByText('Food & Medicine Strings').length).toBeGreaterThan(0);
     expect(screen.getByText('Selphia General Store')).toBeInTheDocument();
     expect(screen.getByText('Buffamoo')).toBeInTheDocument();
@@ -238,11 +248,12 @@ describe('ItemsList Component', () => {
     expect(screen.getByText('Cooking')).toBeInTheDocument();
     expect(screen.getByText('Lv. 5')).toBeInTheDocument();
     expect(screen.getByText('Flour')).toBeInTheDocument();
-    expect(screen.getByText('Effects & Stats')).toBeInTheDocument();
+    expect(screen.getByText('Stats')).toBeInTheDocument();
     expect(screen.getByText('HP')).toBeInTheDocument();
     expect(screen.getByText('10')).toBeInTheDocument();
     expect(screen.getByText('RP')).toBeInTheDocument();
     expect(screen.getByText('5')).toBeInTheDocument();
+    expect(screen.queryByText('Additional Effects')).not.toBeInTheDocument();
     expect(screen.getByText('Used In Recipes')).toBeInTheDocument();
     expect(screen.getByText('Toast')).toBeInTheDocument();
     expect(screen.queryByText(/Tier/i)).not.toBeInTheDocument();
@@ -256,7 +267,8 @@ describe('ItemsList Component', () => {
     await user.click(await screen.findByText("Ambrosia's Thorns"));
 
     const sheet = await screen.findByRole('dialog');
-    expect(within(sheet).queryByText('Effects & Stats')).not.toBeInTheDocument();
+    expect(within(sheet).queryByText('Stats')).not.toBeInTheDocument();
+    expect(within(sheet).queryByText('Additional Effects')).not.toBeInTheDocument();
     expect(within(sheet).queryByText('Crafted From')).not.toBeInTheDocument();
     expect(within(sheet).queryByText('Used In Recipes')).not.toBeInTheDocument();
     expect(within(sheet).queryByText('Description')).not.toBeInTheDocument();
@@ -303,10 +315,22 @@ describe('ItemsList Component', () => {
 
     await user.click(await screen.findByText('Roundoff'));
 
-    expect(await screen.findByText('Effects & Stats')).toBeInTheDocument();
+    expect(await screen.findByText('Stats')).toBeInTheDocument();
     expect(screen.getByText('HP')).toBeInTheDocument();
     expect(screen.getByText('300')).toBeInTheDocument();
     expect(screen.getByText('Additional Effects')).toBeInTheDocument();
     expect(screen.getByText(/Cures Seal/i)).toBeInTheDocument();
+  });
+
+  it('renders effects without a stats section when the item has no stats', async () => {
+    const user = userEvent.setup();
+
+    render(<ItemsList />, { wrapper });
+
+    await user.click(await screen.findByText('Fire Resist Charm'));
+
+    expect(await screen.findByText('Additional Effects')).toBeInTheDocument();
+    expect(screen.getByText(/Fire resistance \+25%/i)).toBeInTheDocument();
+    expect(screen.queryByText('Stats')).not.toBeInTheDocument();
   });
 });

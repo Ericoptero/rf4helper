@@ -1,7 +1,7 @@
 import { useCharacters } from '@/hooks/queries';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { PageLayout } from '@/components/PageLayout';
+import { CatalogPageLayout } from '@/components/CatalogPageLayout';
 import { SheetDescription } from '@/components/ui/sheet';
 import { Shield, Smile, Swords } from 'lucide-react';
 import type { Character } from '@/lib/schemas';
@@ -269,7 +269,7 @@ export function CharactersList() {
   ];
 
   return (
-    <PageLayout<Character>
+    <CatalogPageLayout<Character>
       data={charsList}
       title="Characters"
       searchKey="name"
@@ -278,6 +278,7 @@ export function CharactersList() {
       renderCard={(char, onClick) => <CharacterCard character={char} onClick={onClick} />}
       renderDetails={(char) => <CharacterDetails character={char} />}
       detailsTitle={() => `Character Profile`}
+      detailEmptyState="Select a character to view profile, birthday, battle info, and gifts."
     />
   );
 }

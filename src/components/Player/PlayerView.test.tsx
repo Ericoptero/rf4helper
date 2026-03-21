@@ -132,6 +132,9 @@ describe('PlayerView Component', () => {
 
     // Check header
     expect(screen.getByText('Player Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('Progress Snapshot')).toBeInTheDocument();
+    expect(screen.getByText('Total Orders')).toBeInTheDocument();
+    expect(screen.getByText('Rune Libraries')).toBeInTheDocument();
 
     // Check Default Tab (Orders)
     expect(screen.getByText('Test Order')).toBeInTheDocument();

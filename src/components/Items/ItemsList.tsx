@@ -3,7 +3,7 @@ import { useItems } from '@/hooks/queries';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { PageLayout } from '@/components/PageLayout';
+import { CatalogPageLayout } from '@/components/CatalogPageLayout';
 import { Box, Coins, Star, Hammer, MapPin, ScrollText, Sparkles, Tags, PawPrint, Shield } from 'lucide-react';
 import type { Item } from '@/lib/schemas';
 import { capitalize, formatName, formatNumber } from '@/lib/formatters';
@@ -253,7 +253,7 @@ function ItemDetails({ item }: { item: Item }) {
         {stats.length > 0 && (
           <div>
             <h3 className="text-xl font-bold mb-3 border-b pb-2 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-emerald-500" /> Effects & Stats
+              <Sparkles className="w-5 h-5 text-emerald-500" /> Stats
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {stats.map(([stat, value]) => (
@@ -401,7 +401,7 @@ export function ItemsList({
   ];
 
   return (
-    <PageLayout<Item>
+    <CatalogPageLayout<Item>
       data={letterFilteredItems}
       title="Items Database"
       searchKey="name"
@@ -415,6 +415,7 @@ export function ItemsList({
       renderCard={(item, onClick) => <ItemCard item={item} onClick={onClick} />}
       renderDetails={(item) => <ItemDetails item={item} />}
       detailsTitle={(item) => item.name}
+      detailEmptyState="Select an item to inspect its stats, crafting data, and metadata."
     />
   );
 }

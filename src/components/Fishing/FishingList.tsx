@@ -1,7 +1,7 @@
 import { useFish } from '@/hooks/queries';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { PageLayout } from '@/components/PageLayout';
+import { CatalogPageLayout } from '@/components/CatalogPageLayout';
 import { Coins, Fish as FishIcon, MapPin, Search } from 'lucide-react';
 import type { Fish } from '@/lib/schemas';
 import { resolveFishImage } from '@/lib/fishImages';
@@ -193,7 +193,7 @@ export function FishingList() {
   ];
 
   return (
-    <PageLayout<Fish>
+    <CatalogPageLayout<Fish>
       data={allFish}
       title="Fishing Guide"
       searchKey="name"
@@ -202,6 +202,7 @@ export function FishingList() {
       renderCard={(fish, onClick) => <FishCard fish={fish} onClick={onClick} />}
       renderDetails={(fish) => <FishDetails fish={fish} />}
       detailsTitle={() => `Fish Details`}
+      detailEmptyState="Select a fish to inspect regions, spots, seasons, and prices."
     />
   );
 }

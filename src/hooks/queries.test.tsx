@@ -138,7 +138,7 @@ describe('Data Fetching Hooks', () => {
     expect(result.current.data?.['item-bread'].image).toBeTruthy();
     expect(result.current.data?.['item-masu-trout'].image).toBeTruthy();
     expect(result.current.data?.['item-power-wave'].image).toBeTruthy();
-    expect(result.current.data?.['item-ambrosias-thorns'].image).toBeUndefined();
+    expect(result.current.data?.['item-ambrosias-thorns'].image).toBeTruthy();
   });
 
   it('useCharacters returns validated data', async () => {

@@ -216,15 +216,71 @@ export function CalendarView() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-6rem)]">
-      <div className="px-6 py-4 border-b bg-muted/30">
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <CalendarIcon className="w-8 h-8 text-primary" /> Rune Factory 4 Calendar
+    <div className="flex flex-col gap-5 px-4 py-6 sm:px-6 lg:px-8">
+      <div className="rounded-3xl border bg-card/90 p-6 shadow-sm">
+        <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight">
+          <CalendarIcon className="h-8 w-8 text-primary" /> Rune Factory 4 Calendar
         </h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Explore seasonal festivals, birthdays, and crop timing in one planner.
+        </p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <Card className="rounded-3xl bg-card/90 shadow-sm">
+          <CardContent className="space-y-2 p-5">
+            <div className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+              Festivals This Season
+            </div>
+            <div className="flex items-end justify-between gap-3">
+              <div className="text-3xl font-bold">{seasonFestivals.length}</div>
+              <Badge variant="secondary" className="bg-purple-500/10 text-purple-700 dark:text-purple-200">
+                Festival Days
+              </Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Review festival dates and open details directly from the calendar grid.
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-3xl bg-card/90 shadow-sm">
+          <CardContent className="space-y-2 p-5">
+            <div className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+              Birthdays
+            </div>
+            <div className="flex items-end justify-between gap-3">
+              <div className="text-3xl font-bold">{seasonBirthdays.length}</div>
+              <Badge variant="secondary" className="bg-pink-500/10 text-pink-700 dark:text-pink-200">
+                Villagers
+              </Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Keep gift prep visible for each seasonal rotation without leaving the planner.
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-3xl bg-card/90 shadow-sm sm:col-span-2 xl:col-span-1">
+          <CardContent className="space-y-2 p-5">
+            <div className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+              Top Crops
+            </div>
+            <div className="flex items-end justify-between gap-3">
+              <div className="text-3xl font-bold">{seasonGoodCrops.length}</div>
+              <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-200">
+                Good Seasons
+              </Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Surface crops with seasonal advantages alongside their growth timing and resale value.
+            </p>
+          </CardContent>
+        </Card>
       </div>
       
-      <Tabs value={activeSeason} onValueChange={setActiveSeason} className="flex-1 flex flex-col min-h-0">
-        <div className="px-6 pt-4">
+      <Tabs value={activeSeason} onValueChange={setActiveSeason} className="flex min-h-[calc(100vh-15rem)] flex-col">
+        <div className="rounded-3xl border bg-card/90 p-4 shadow-sm">
           <TabsList className="grid w-full grid-cols-4 max-w-xl">
             {SEASONS.map(s => (
               <TabsTrigger key={s} value={s}>{s}</TabsTrigger>
@@ -232,9 +288,9 @@ export function CalendarView() {
           </TabsList>
         </div>
 
-        <div className="flex-1 flex flex-col md:flex-row min-h-0 p-6 gap-6 w-full">
+        <div className="flex min-h-0 flex-1 flex-col gap-6 md:flex-row">
           {/* 75% Calendar Grid */}
-          <div className="flex-3 flex flex-col border rounded-xl overflow-hidden bg-background shadow-sm">
+          <div className="flex flex-[3] flex-col overflow-hidden rounded-3xl border bg-card/90 shadow-sm">
              <div className="bg-muted p-3 border-b text-center font-semibold uppercase tracking-widest text-muted-foreground">
                {activeSeason} Season
              </div>
@@ -277,7 +333,7 @@ export function CalendarView() {
           </div>
 
           {/* 25% Sidebar */}
-          <div className="flex-1 flex flex-col gap-4 min-h-0">
+          <div className="flex min-h-0 flex-1 flex-col gap-4">
              <Card className="flex-1 flex flex-col min-h-0">
                <CardHeader className="py-4 border-b bg-muted/10">
                  <CardTitle className="text-lg flex items-center gap-2">

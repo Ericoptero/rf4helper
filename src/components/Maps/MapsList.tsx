@@ -1,6 +1,6 @@
 import { useChests } from '@/hooks/queries';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { PageLayout } from '@/components/PageLayout';
+import { CatalogPageLayout } from '@/components/CatalogPageLayout';
 import { Checkbox } from '@/components/ui/checkbox';
 import { MapPin, Box } from 'lucide-react';
 import type { Chest } from '@/lib/schemas';
@@ -135,7 +135,7 @@ export function MapsList() {
   ];
 
   return (
-    <PageLayout<MapRegion>
+    <CatalogPageLayout<MapRegion>
       data={mapRegions}
       title="World Maps & Chests"
       searchKey="name"
@@ -144,6 +144,7 @@ export function MapsList() {
       renderCard={(region, onClick) => <MapCard region={region} onClick={onClick} />}
       renderDetails={(region) => <MapDetails region={region} />}
       detailsTitle={() => `Map Details`}
+      detailEmptyState="Select a region to inspect room groupings and chest checklists."
     />
   );
 }

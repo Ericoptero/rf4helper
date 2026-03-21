@@ -86,58 +86,128 @@ export function PlayerView() {
     ...(requestsData?.generalStoreSeedRewards || []),
     ...(requestsData?.carnationStoreSeedRewards || []),
   ];
+  const runeLibraryCount = Object.keys(runeAbilitiesData || {}).length;
+  const populatedSkillSections = SKILL_CATEGORY_ORDER.filter(
+    (category) => (skills?.[category]?.length || 0) > 0,
+  ).length;
 
   return (
-    <div className="flex flex-col h-[calc(100vh-80px)] overflow-hidden bg-muted/20">
-      <div className="flex items-center gap-3 p-6 pb-2 shrink-0">
-        <div className="p-3 bg-indigo-500/10 rounded-xl text-indigo-600">
-          <Trophy className="w-8 h-8" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">
-            Player Dashboard
-          </h1>
-          <p className="text-muted-foreground">
-            Manage your progression, orders, requests, and trophies.
-          </p>
+    <div className="flex flex-col gap-5 px-4 py-6 sm:px-6 lg:px-8">
+      <div className="rounded-3xl border bg-card/90 p-6 shadow-sm">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="rounded-2xl bg-indigo-500/10 p-3 text-indigo-600">
+              <Trophy className="h-8 w-8" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-extrabold tracking-tight">
+                Player Dashboard
+              </h1>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Manage progression systems, request loops, combat arts, and completion goals.
+              </p>
+            </div>
+          </div>
+          <Badge variant="secondary" className="rounded-full bg-primary/10 px-3 py-1 text-primary">
+            Orders, skills, trophies
+          </Badge>
         </div>
       </div>
 
-      <div className="flex flex-col flex-1 min-h-0 p-6 pt-0 w-full">
-        <div className="flex flex-col min-h-0 h-full bg-background border rounded-xl shadow-sm overflow-hidden">
+      <section className="space-y-3">
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight">Progress Snapshot</h2>
+          <p className="text-sm text-muted-foreground">
+            A compact overview of the systems you browse most often in the player codex.
+          </p>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <Card className="rounded-3xl bg-card/90 shadow-sm">
+            <CardContent className="space-y-2 p-5">
+              <div className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+                Total Orders
+              </div>
+              <div className="text-3xl font-bold">{orders?.length || 0}</div>
+              <p className="text-sm text-muted-foreground">
+                Prince or princess directives available in the current board.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl bg-card/90 shadow-sm">
+            <CardContent className="space-y-2 p-5">
+              <div className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+                Request Board
+              </div>
+              <div className="text-3xl font-bold">{repeatableReqs.length + oneTimeReqs.length}</div>
+              <p className="text-sm text-muted-foreground">
+                Combined standard and repeatable requests with rewards and unlock conditions.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl bg-card/90 shadow-sm">
+            <CardContent className="space-y-2 p-5">
+              <div className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+                Rune Libraries
+              </div>
+              <div className="text-3xl font-bold">{runeLibraryCount}</div>
+              <p className="text-sm text-muted-foreground">
+                Rune ability groupings ready for quick comparison and buy or sell reference.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl bg-card/90 shadow-sm">
+            <CardContent className="space-y-2 p-5">
+              <div className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+                Skill Trees
+              </div>
+              <div className="text-3xl font-bold">{populatedSkillSections}</div>
+              <p className="text-sm text-muted-foreground">
+                Populated skill families plus a trophy ledger for long-tail completion goals.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="flex min-h-[calc(100vh-22rem)] flex-col overflow-hidden rounded-3xl border bg-card/90 shadow-sm">
           <Tabs
             defaultValue="orders"
             className="flex flex-col h-full w-full min-h-0"
           >
-            <div className="p-2 border-b shrink-0 overflow-x-auto">
-              <TabsList className="flex w-max min-w-full justify-start h-auto">
+            <div className="border-b px-4 py-4 shrink-0 overflow-x-auto">
+              <TabsList className="flex h-auto w-max min-w-full justify-start rounded-2xl bg-muted/70 p-1">
                 <TabsTrigger
                   value="orders"
-                  className="py-2.5 px-4 min-w-[120px]"
+                  className="min-w-[120px] px-4 py-2.5"
                 >
                   <Coins className="w-4 h-4 mr-2" /> Orders
                 </TabsTrigger>
                 <TabsTrigger
                   value="requests"
-                  className="py-2.5 px-4 min-w-[120px]"
+                  className="min-w-[120px] px-4 py-2.5"
                 >
                   <CheckSquare className="w-4 h-4 mr-2" /> Requests
                 </TabsTrigger>
                 <TabsTrigger
                   value="rune-abilities"
-                  className="py-2.5 px-4 min-w-[150px]"
+                  className="min-w-[150px] px-4 py-2.5"
                 >
                   <Sparkles className="w-4 h-4 mr-2" /> Rune Abilities
                 </TabsTrigger>
                 <TabsTrigger
                   value="skills"
-                  className="py-2.5 px-4 min-w-[120px]"
+                  className="min-w-[120px] px-4 py-2.5"
                 >
                   <Swords className="w-4 h-4 mr-2" /> Skills
                 </TabsTrigger>
                 <TabsTrigger
                   value="trophies"
-                  className="py-2.5 px-4 min-w-[120px]"
+                  className="min-w-[120px] px-4 py-2.5"
                 >
                   <Trophy className="w-4 h-4 mr-2" /> Trophies
                 </TabsTrigger>
@@ -145,13 +215,13 @@ export function PlayerView() {
             </div>
 
             <ScrollArea className="flex-1 min-h-0">
-              <div className="p-4">
+              <div className="p-4 sm:p-5">
                 <TabsContent value="orders" className="m-0 mt-2 space-y-4">
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {orders?.map((order) => (
                       <Card
                         key={order.id}
-                        className="py-0 hover:border-primary/50 transition-colors h-full flex flex-col"
+                        className="py-0 hover:border-primary/50 transition-colors h-full flex flex-col rounded-3xl"
                       >
                         <CardHeader className="p-4 pb-2 space-y-0">
                           <CardTitle className="text-lg">
@@ -194,7 +264,7 @@ export function PlayerView() {
                       {oneTimeReqs.map((req, i) => (
                         <Card
                           key={i}
-                          className="py-0 hover:border-primary/50 transition-colors h-full flex flex-col"
+                          className="py-0 hover:border-primary/50 transition-colors h-full flex flex-col rounded-3xl"
                         >
                           <CardHeader className="p-4 pb-2 space-y-0">
                             <CardTitle className="text-lg leading-tight">
@@ -242,7 +312,7 @@ export function PlayerView() {
                     </h3>
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                       {repeatableReqs.map((req, i) => (
-                        <Card key={i} className="py-0 h-full flex flex-col">
+                        <Card key={i} className="py-0 h-full flex flex-col rounded-3xl">
                           <CardHeader className="p-4 pb-2 space-y-0">
                             <CardTitle className="text-lg">
                               {req.request}
@@ -279,7 +349,7 @@ export function PlayerView() {
                             {abilities.map((ability, i) => (
                               <Card
                                 key={i}
-                                className="py-0 h-full flex flex-col"
+                                className="py-0 h-full flex flex-col rounded-3xl"
                               >
                                 <CardHeader className="p-4 pb-2">
                                   <div className="flex min-h-6 items-center gap-3">
@@ -348,7 +418,7 @@ export function PlayerView() {
                             {categorySkills.map((skill) => (
                               <Card
                                 key={skill.id}
-                                className="py-0 overflow-hidden flex flex-col h-full"
+                                className="py-0 overflow-hidden flex flex-col h-full rounded-3xl"
                               >
                                 <CardHeader className="bg-slate-50 border-b p-4 pb-3 space-y-0">
                                   <CardTitle className="text-lg flex items-center gap-2">
@@ -430,7 +500,7 @@ export function PlayerView() {
                     {allTrophies.map((trophy) => (
                       <Card
                         key={trophy.id}
-                        className="py-0 overflow-hidden bg-amber-500/5 border-amber-200 hover:border-amber-400 transition-colors flex flex-col h-full"
+                        className="py-0 overflow-hidden bg-amber-500/5 border-amber-200 hover:border-amber-400 transition-colors flex flex-col h-full rounded-3xl"
                       >
                         <CardHeader className="bg-amber-500/10 border-b border-amber-200/50 p-4 pb-3 space-y-0">
                           <CardTitle className="text-lg text-amber-900 flex items-center gap-2">

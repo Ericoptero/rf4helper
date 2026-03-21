@@ -80,6 +80,10 @@ describe('CalendarView Component', () => {
     expect(icon.getAttribute('src')).toContain('/src/assets/images/characters/icons/sm/');
     expect(icon.getAttribute('src')).toContain('amber');
 
+    expect(screen.getByText('Festivals This Season')).toBeInTheDocument();
+    expect(screen.getByText('Birthdays')).toBeInTheDocument();
+    expect(screen.getByText('Top Crops')).toBeInTheDocument();
+
     // Verify Best Crops for Spring
     expect(screen.getAllByText('Turnip').length).toBeGreaterThan(0);
   });
