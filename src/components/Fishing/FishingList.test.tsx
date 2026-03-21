@@ -45,15 +45,13 @@ describe('FishingList Component', () => {
 
   it('renders loading state initially', () => {
     render(<FishingList />, { wrapper });
-    expect(screen.getByText(/loading fish data.../i)).toBeInTheDocument();
+    expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
   });
 
   it('renders fish list and displays fish card data', async () => {
     render(<FishingList />, { wrapper });
 
-    await waitFor(() => {
-      expect(screen.queryByText(/loading fish data.../i)).not.toBeInTheDocument();
-    });
+    await screen.findByText('Fishing Guide');
 
     // Check title
     expect(screen.getByText('Fishing Guide')).toBeInTheDocument();
@@ -72,18 +70,10 @@ describe('FishingList Component', () => {
     const user = userEvent.setup();
     render(<FishingList />, { wrapper });
 
-    await waitFor(() => {
-      expect(screen.queryByText(/loading fish data.../i)).not.toBeInTheDocument();
-    });
+    await screen.findByText('Masu Trout');
 
     // We can click the card title or block, let's grab the card container by name
-    const masuCard = screen.getByText('Masu Trout').closest('.group\\/card');
-    if (masuCard) {
-      await user.click(masuCard);
-    } else {
-      // Fallback click on text
-      await user.click(screen.getByText('Masu Trout'));
-    }
+    await user.click(screen.getByText('Masu Trout'));
 
     // Inside the drawer, the details should appear
     expect(await screen.findByText('Locations by Region')).toBeInTheDocument();
@@ -98,9 +88,7 @@ describe('FishingList Component', () => {
     const user = userEvent.setup();
     render(<FishingList />, { wrapper });
 
-    await waitFor(() => {
-      expect(screen.queryByText(/loading fish data.../i)).not.toBeInTheDocument();
-    });
+    await screen.findByText('Squid');
 
     await user.click(screen.getByText('Squid'));
 
@@ -114,17 +102,15 @@ describe('FishingList Component', () => {
      const user = userEvent.setup();
      render(<FishingList />, { wrapper });
  
-     await waitFor(() => {
-       expect(screen.queryByText(/loading fish data.../i)).not.toBeInTheDocument();
-     });
+     await screen.findByText('Fishing Guide');
 
      // Select element is wrapped by radix, which has 'All' as default value text
-     const filterCombobox = screen.getAllByRole('combobox')[0]; // The first combobox should be the Filter Select (the second is Sort)
+     const filterCombobox = screen.getByRole('combobox', { name: 'Shadow' });
      await user.click(filterCombobox);
 
      // Wait for dropdown to open (Radix Portal appends to body)
      const listbox = await screen.findByRole('listbox');
-     expect(within(listbox).getByText('Small Shadow')).toBeInTheDocument();
-     expect(within(listbox).getByText('Medium Shadow')).toBeInTheDocument();
+     expect(within(listbox).getByText(/small shadow/i)).toBeInTheDocument();
+     expect(within(listbox).getByText(/medium shadow/i)).toBeInTheDocument();
   });
 });

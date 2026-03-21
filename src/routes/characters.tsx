@@ -1,10 +1,65 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { z } from 'zod';
 import { CharactersList } from '@/components/Characters/CharactersList';
 
+const charactersSearchSchema = z.object({
+  q: z.string().trim().min(1).optional().catch(undefined),
+  view: z.enum(['cards', 'table']).optional().catch(undefined),
+  sort: z.string().trim().min(1).optional().catch(undefined),
+  category: z.string().trim().min(1).optional().catch(undefined),
+  gender: z.string().trim().min(1).optional().catch(undefined),
+  season: z.string().trim().min(1).optional().catch(undefined),
+  battle: z.string().trim().min(1).optional().catch(undefined),
+  weaponType: z.string().trim().min(1).optional().catch(undefined),
+  detail: z.string().trim().min(1).optional().catch(undefined),
+});
+
+type CharactersSearch = z.infer<typeof charactersSearchSchema>;
+
 export const Route = createFileRoute('/characters')({
+  validateSearch: (search: Record<string, unknown>): CharactersSearch =>
+    charactersSearchSchema.parse(search),
   component: CharactersRoute,
 });
 
 function CharactersRoute() {
-  return <CharactersList />;
+  const search = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
+
+  const updateSearchValue = (key: keyof CharactersSearch, value?: string) => {
+    void navigate({
+      search: (previous) => {
+        const next = { ...previous };
+        if (!value) {
+          delete next[key];
+          return next;
+        }
+
+        next[key] = value;
+        return next;
+      },
+      replace: true,
+    });
+  };
+
+  return (
+    <CharactersList
+      searchTerm={search.q ?? ''}
+      onSearchTermChange={(value) => updateSearchValue('q', value.trim() || undefined)}
+      viewMode={search.view}
+      onViewModeChange={(value) => updateSearchValue('view', value === 'cards' ? undefined : value)}
+      sortValue={search.sort}
+      onSortValueChange={(value) => updateSearchValue('sort', value)}
+      detailValue={search.detail}
+      onDetailValueChange={(value) => updateSearchValue('detail', value)}
+      filterValues={{
+        category: search.category,
+        gender: search.gender,
+        season: search.season,
+        battle: search.battle,
+        weaponType: search.weaponType,
+      }}
+      onFilterValueChange={(key, value) => updateSearchValue(key as keyof CharactersSearch, value)}
+    />
+  );
 }

@@ -1,208 +1,211 @@
+import React from 'react';
+import { Coins, Fish as FishIcon, MapPin } from 'lucide-react';
 import { useFish } from '@/hooks/queries';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CatalogPageLayout } from '@/components/CatalogPageLayout';
-import { Coins, Fish as FishIcon, MapPin, Search } from 'lucide-react';
+import {
+  CatalogPageLayout,
+  type CatalogFilterDefinition,
+  type CatalogTableColumn,
+} from '@/components/CatalogPageLayout';
+import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/DetailDrawerContext';
+import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
+import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import type { Fish } from '@/lib/schemas';
 import { resolveFishImage } from '@/lib/fishImages';
 
 const SEASON_ORDER = ['Spring', 'Summer', 'Fall', 'Winter'];
 
-function sortSeasons(seasons: string[] = []) {
-  return [...seasons].sort((a, b) => SEASON_ORDER.indexOf(a) - SEASON_ORDER.indexOf(b));
+function getFishSeasonCoverage(fish: Fish) {
+  return [...new Set((fish.locations ?? []).flatMap((location) => location.seasons ?? []))].sort(
+    (a, b) => SEASON_ORDER.indexOf(a) - SEASON_ORDER.indexOf(b),
+  );
 }
 
-function FishImage({
-  fish,
-  className,
-  iconClassName,
-}: {
-  fish: Fish;
-  className: string;
-  iconClassName: string;
-}) {
+function FishCard({ fish, onClick }: { fish: Fish; onClick: () => void }) {
   const imageSrc = resolveFishImage(fish.image);
 
-  if (imageSrc) {
-    return <img src={imageSrc} alt={fish.name} className={className} />;
-  }
-
-  return <FishIcon className={iconClassName} aria-hidden="true" />;
-}
-
-function FishCard({ fish, onClick }: { fish: Fish, onClick: () => void }) {
   return (
-    <Card className="h-full flex flex-col justify-between hover:border-primary/50 transition-colors cursor-pointer" onClick={onClick}>
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-start gap-2">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-600 font-bold text-lg shrink-0">
-              <FishImage
-                fish={fish}
-                className="h-10 w-10 object-contain"
-                iconClassName="w-6 h-6"
-              />
+    <button type="button" onClick={onClick} className="block h-full w-full text-left">
+      <Card className="h-full cursor-pointer transition-colors hover:ring-primary/30">
+        <CardHeader className="pb-2">
+          <div className="flex items-start gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-300">
+              {imageSrc ? <img src={imageSrc} alt={fish.name} className="h-10 w-10 object-contain" /> : <FishIcon className="h-6 w-6" />}
             </div>
-            <div>
+            <div className="min-w-0">
               <CardTitle className="text-lg leading-tight line-clamp-1">{fish.name}</CardTitle>
-              {fish.shadow && <Badge variant="secondary" className="mt-1 capitalize px-2">{fish.shadow} Shadow</Badge>}
+              {fish.shadow ? <Badge className={getSemanticBadgeClass('fish')}>{fish.shadow} Shadow</Badge> : null}
             </div>
           </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap gap-2 mt-4">
-          <Badge variant="outline" className="flex items-center gap-1 bg-green-500/10 text-green-700 border-green-500/20">
-            <Coins className="w-3 h-3" /> Buy: {fish.buy ?? '-'}
+        </CardHeader>
+        <CardContent className="flex flex-wrap gap-2">
+          <Badge variant="outline" className={getSemanticBadgeClass('success')}>
+            <Coins className="mr-1 h-3 w-3" />
+            Buy: {fish.buy ?? '-'}
           </Badge>
-          <Badge variant="outline" className="flex items-center gap-1 bg-red-500/10 text-red-700 border-red-500/20">
-            <Coins className="w-3 h-3" /> Sell: {fish.sell ?? '-'}
+          <Badge variant="outline" className={getSemanticBadgeClass('danger')}>
+            <Coins className="mr-1 h-3 w-3" />
+            Sell: {fish.sell ?? '-'}
           </Badge>
-          {fish.locations && fish.locations.length > 0 && (
-            <Badge variant="outline" className="flex items-center gap-1 bg-blue-500/10 text-blue-700 border-blue-500/20">
-              <MapPin className="w-3 h-3" /> {fish.locations.length} Locations
-            </Badge>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+          <Badge variant="outline" className={getSemanticBadgeClass('map')}>
+            <MapPin className="mr-1 h-3 w-3" />
+            {fish.locations?.length ?? 0} Locations
+          </Badge>
+        </CardContent>
+      </Card>
+    </button>
   );
 }
 
-function FishDetails({ fish }: { fish: Fish }) {
-  const locationsByRegion = (fish.locations ?? []).reduce<Record<string, NonNullable<Fish['locations']>>>((acc, location) => {
-    const existingLocations = acc[location.region] ?? [];
-    existingLocations.push(location);
-    acc[location.region] = existingLocations;
-    return acc;
-  }, {});
-
-  const sortedRegions = Object.keys(locationsByRegion).sort((a, b) => a.localeCompare(b));
-
-  return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 bg-cyan-500/5 rounded-xl border border-cyan-500/20">
-         <div className="w-32 h-32 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-600 font-bold text-6xl shadow-sm shrink-0">
-          <FishImage
-            fish={fish}
-            className="h-24 w-24 object-contain"
-            iconClassName="w-16 h-16"
-          />
-         </div>
-         <div className="text-center sm:text-left flex-1">
-            <h2 className="text-3xl font-bold mb-2">{fish.name}</h2>
-            <div className="flex flex-wrap justify-center sm:justify-start gap-2 mb-4">
-              {fish.shadow ? (
-                <Badge className="capitalize">{fish.shadow} Shadow</Badge>
-              ) : (
-                <Badge variant="outline">Unknown Shadow</Badge>
-              )}
-            </div>
-            
-            <div className="flex flex-wrap justify-center sm:justify-start gap-3 mt-4">
-              <div className="inline-flex items-center gap-2 bg-green-500/10 text-green-700 rounded-lg px-3 py-1.5 border border-green-500/20">
-                <Coins className="w-4 h-4" />
-                <span className="font-semibold">Buy: {fish.buy ?? '-'}</span>
-              </div>
-              <div className="inline-flex items-center gap-2 bg-red-500/10 text-red-700 rounded-lg px-3 py-1.5 border border-red-500/20">
-                <Coins className="w-4 h-4" />
-                <span className="font-semibold">Sell: {fish.sell ?? '-'}</span>
-              </div>
-            </div>
-         </div>
-      </div>
-
-      <div className="px-1 space-y-4">
-         <h3 className="text-xl font-bold border-b pb-2 flex items-center gap-2">
-           <MapPin className="w-5 h-5 text-cyan-600" /> Locations by Region
-         </h3>
-         
-         {sortedRegions.length > 0 ? (
-           <div className="space-y-5">
-             {sortedRegions.map((region) => (
-               <section key={region} className="space-y-3">
-                 <div className="border-b pb-2">
-                   <h4 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{region}</h4>
-                 </div>
-                 <div className="grid gap-3">
-                   {locationsByRegion[region]?.map((location) => {
-                     const sortedSeasons = sortSeasons(location.seasons);
-
-                     return (
-                       <div key={`${location.region}-${location.spot}`} className="rounded-lg border bg-muted/30 p-3">
-                         <div className="flex items-start gap-3">
-                           <Search className="mt-0.5 w-4 h-4 text-muted-foreground shrink-0" />
-                           <div className="space-y-2">
-                             <div className="text-sm font-semibold">{location.spot}</div>
-                             <div className="flex flex-wrap gap-2">
-                               {sortedSeasons.length > 0 && (
-                                 <Badge variant="outline">Seasons: {sortedSeasons.join(', ')}</Badge>
-                               )}
-                               {location.map && (
-                                 <Badge variant="outline">Map: {location.map}</Badge>
-                               )}
-                               {location.other && location.other.length > 0 && (
-                                 <Badge variant="outline">Other: {location.other.join(', ')}</Badge>
-                               )}
-                             </div>
-                           </div>
-                         </div>
-                       </div>
-                     );
-                   })}
-                 </div>
-               </section>
-             ))}
-           </div>
-         ) : (
-           <div className="p-4 rounded-lg border bg-muted/30 text-center text-muted-foreground text-sm">
-             No known locations for this fish.
-           </div>
-         )}
-      </div>
-    </div>
-  );
-}
-
-export function FishingList() {
+function FishingCatalog({
+  searchTerm,
+  onSearchTermChange,
+  viewMode,
+  onViewModeChange,
+  sortValue,
+  onSortValueChange,
+  filterValues,
+  onFilterValueChange,
+}: {
+  searchTerm?: string;
+  onSearchTermChange?: (value: string) => void;
+  viewMode?: 'cards' | 'table';
+  onViewModeChange?: (value: 'cards' | 'table') => void;
+  sortValue?: string;
+  onSortValueChange?: (value: string) => void;
+  filterValues?: Record<string, string | undefined>;
+  onFilterValueChange?: (key: string, value: string | undefined) => void;
+}) {
   const { data: fishList, isLoading } = useFish();
-
-  if (isLoading) {
-    return <div className="p-8 text-center text-muted-foreground animate-pulse">Loading fish data...</div>;
-  }
-  
+  const { openRoot } = useDetailDrawer();
   const allFish = fishList || [];
 
-  // Create distinct shadows for filter
-  const shadowSet = new Set<string>();
-  allFish.forEach(f => {
-    if (f.shadow) shadowSet.add(f.shadow);
-  });
-  
-  const filterOptions = Array.from(shadowSet).sort().map(s => ({
-    label: `${s.charAt(0).toUpperCase() + s.slice(1)} Shadow`,
-    value: s,
-    filterFn: (fish: Fish) => fish.shadow === s
-  }));
+  const shadowOptions = Array.from(new Set(allFish.map((fish) => fish.shadow).filter(Boolean) as string[])).sort();
+  const regionOptions = Array.from(
+    new Set(allFish.flatMap((fish) => (fish.locations ?? []).map((location) => location.region))),
+  ).sort();
+  const seasonOptions = Array.from(
+    new Set(allFish.flatMap((fish) => (fish.locations ?? []).flatMap((location) => location.seasons ?? []))),
+  ).sort((a, b) => SEASON_ORDER.indexOf(a) - SEASON_ORDER.indexOf(b));
+
+  const filters: CatalogFilterDefinition<Fish>[] = [
+    {
+      key: 'shadow',
+      label: 'Shadow',
+      placement: 'primary',
+      options: shadowOptions.map((shadow) => ({ label: `${shadow} Shadow`, value: shadow })),
+      predicate: (fish, value) => fish.shadow === value,
+    },
+    {
+      key: 'region',
+      label: 'Region',
+      placement: 'advanced',
+      options: regionOptions.map((region) => ({ label: region, value: region })),
+      predicate: (fish, value) => (fish.locations ?? []).some((location) => location.region === value),
+    },
+    {
+      key: 'season',
+      label: 'Season',
+      placement: 'advanced',
+      options: seasonOptions.map((season) => ({ label: season, value: season })),
+      predicate: (fish, value) => (fish.locations ?? []).some((location) => location.seasons?.includes(value)),
+    },
+    {
+      key: 'hasMap',
+      label: 'Mapped Spot',
+      placement: 'advanced',
+      options: [{ label: 'Has map reference', value: 'yes' }],
+      predicate: (fish, value) => value !== 'yes' || (fish.locations ?? []).some((location) => Boolean(location.map)),
+    },
+  ];
 
   const sortOptions = [
     { label: 'Name (A-Z)', value: 'name-asc', sortFn: (a: Fish, b: Fish) => a.name.localeCompare(b.name) },
-    { label: 'Name (Z-A)', value: 'name-desc', sortFn: (a: Fish, b: Fish) => b.name.localeCompare(a.name) },
-    { label: 'Buy Price (High-Low)', value: 'buy-desc', sortFn: (a: Fish, b: Fish) => (b.buy || 0) - (a.buy || 0) },
     { label: 'Sell Price (High-Low)', value: 'sell-desc', sortFn: (a: Fish, b: Fish) => (b.sell || 0) - (a.sell || 0) },
+    { label: 'Locations (High-Low)', value: 'locations-desc', sortFn: (a: Fish, b: Fish) => (b.locations?.length || 0) - (a.locations?.length || 0) },
+  ];
+
+  const tableColumns: CatalogTableColumn<Fish>[] = [
+    { key: 'name', header: 'Name', cell: (fish) => fish.name },
+    { key: 'shadow', header: 'Shadow', cell: (fish) => fish.shadow ?? '—' },
+    { key: 'buy', header: 'Buy', cell: (fish) => fish.buy ?? '-' },
+    { key: 'sell', header: 'Sell', cell: (fish) => fish.sell ?? '-' },
+    { key: 'regions', header: 'Region Count', cell: (fish) => new Set((fish.locations ?? []).map((location) => location.region)).size },
+    { key: 'season', header: 'Season Coverage', cell: (fish) => getFishSeasonCoverage(fish).join(', ') || '—' },
   ];
 
   return (
-    <CatalogPageLayout<Fish>
-      data={allFish}
-      title="Fishing Guide"
-      searchKey="name"
-      sortOptions={sortOptions}
-      filterOptions={filterOptions}
-      renderCard={(fish, onClick) => <FishCard fish={fish} onClick={onClick} />}
-      renderDetails={(fish) => <FishDetails fish={fish} />}
-      detailsTitle={() => `Fish Details`}
-      detailEmptyState="Select a fish to inspect regions, spots, seasons, and prices."
-    />
+    <>
+      <CatalogPageLayout<Fish>
+        data={allFish}
+        title="Fishing Guide"
+        searchKey="name"
+        searchTerm={searchTerm}
+        onSearchTermChange={onSearchTermChange}
+        viewMode={viewMode}
+        onViewModeChange={onViewModeChange}
+        sortValue={sortValue}
+        onSortValueChange={onSortValueChange}
+        sortOptions={sortOptions}
+        filters={filters}
+        filterValues={filterValues}
+        onFilterValueChange={onFilterValueChange}
+        tableColumns={tableColumns}
+        getItemKey={(fish) => fish.id}
+        isLoading={isLoading}
+        renderCard={(fish, onClick) => <FishCard fish={fish} onClick={onClick} />}
+        onOpenItem={(fish) => openRoot({ type: 'fish', id: fish.id })}
+      />
+      <UniversalDetailsDrawer />
+    </>
+  );
+}
+
+export function FishingList({
+  detailValue,
+  onDetailValueChange,
+  searchTerm,
+  onSearchTermChange,
+  viewMode,
+  onViewModeChange,
+  sortValue,
+  onSortValueChange,
+  filterValues,
+  onFilterValueChange,
+}: {
+  detailValue?: string;
+  onDetailValueChange?: (value?: string) => void;
+  searchTerm?: string;
+  onSearchTermChange?: (value: string) => void;
+  viewMode?: 'cards' | 'table';
+  onViewModeChange?: (value: 'cards' | 'table') => void;
+  sortValue?: string;
+  onSortValueChange?: (value: string) => void;
+  filterValues?: Record<string, string | undefined>;
+  onFilterValueChange?: (key: string, value: string | undefined) => void;
+} = {}) {
+  const [internalDetailValue, setInternalDetailValue] = React.useState<string | undefined>();
+  const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
+  const [internalViewMode, setInternalViewMode] = React.useState<'cards' | 'table'>('cards');
+  const [internalSortValue, setInternalSortValue] = React.useState('name-asc');
+  const [internalFilterValues, setInternalFilterValues] = React.useState<Record<string, string | undefined>>({});
+
+  return (
+    <DetailDrawerProvider
+      detailValue={detailValue ?? internalDetailValue}
+      onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
+    >
+      <FishingCatalog
+        searchTerm={searchTerm ?? internalSearchTerm}
+        onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
+        viewMode={viewMode ?? internalViewMode}
+        onViewModeChange={onViewModeChange ?? setInternalViewMode}
+        sortValue={sortValue ?? internalSortValue}
+        onSortValueChange={onSortValueChange ?? setInternalSortValue}
+        filterValues={filterValues ?? internalFilterValues}
+        onFilterValueChange={onFilterValueChange ?? ((key, value) => setInternalFilterValues((previous) => ({ ...previous, [key]: value })))}
+      />
+    </DetailDrawerProvider>
   );
 }

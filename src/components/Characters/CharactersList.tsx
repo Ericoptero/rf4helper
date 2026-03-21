@@ -1,12 +1,18 @@
-import { useCharacters } from '@/hooks/queries';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { CatalogPageLayout } from '@/components/CatalogPageLayout';
-import { SheetDescription } from '@/components/ui/sheet';
+import React from 'react';
 import { Shield, Smile, Swords } from 'lucide-react';
-import type { Character } from '@/lib/schemas';
-import { formatName, formatNumber } from '@/lib/formatters';
+import { useCharacters } from '@/hooks/queries';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import {
+  CatalogPageLayout,
+  type CatalogFilterDefinition,
+  type CatalogTableColumn,
+} from '@/components/CatalogPageLayout';
+import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/DetailDrawerContext';
+import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
+import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import { resolveCharacterImage } from '@/lib/characterImages';
+import type { Character } from '@/lib/schemas';
 
 function formatBirthday(character: Character) {
   if (!character.birthday?.season || character.birthday.day == null) {
@@ -40,245 +46,194 @@ function CharacterAvatar({
   );
 }
 
-function CharacterCard({ character, onClick }: { character: Character, onClick: () => void }) {
-  // Mock friendship value for now
-  const friendshipLevel = 0;
-  
+function CharacterCard({ character, onClick }: { character: Character; onClick: () => void }) {
   return (
-    <Card className="h-full flex flex-col justify-between hover:border-primary/50 transition-colors" onClick={onClick}>
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-start gap-2">
-          <div className="flex items-center gap-3">
+    <button type="button" onClick={onClick} className="block h-full w-full text-left">
+      <Card className="h-full cursor-pointer transition-colors hover:ring-primary/30">
+        <CardHeader className="pb-2">
+          <div className="flex items-start gap-3">
             <CharacterAvatar
               src={character.icon.md}
               alt={`${character.name} icon`}
               fallback={character.name.charAt(0)}
-              className="w-12 h-12 rounded-full object-contain shrink-0"
+              className="h-12 w-12 rounded-full object-contain shrink-0"
             />
-            <div>
+            <div className="min-w-0">
               <CardTitle className="text-lg">{character.name}</CardTitle>
-              <Badge variant="secondary" className="mt-1">{character.category}</Badge>
+              <Badge className={getSemanticBadgeClass('character')}>{character.category}</Badge>
             </div>
           </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="flex items-center gap-2 mt-4 text-muted-foreground bg-muted/30 p-2 rounded-md">
-          <Smile className="w-5 h-5 text-green-500" />
-          <span className="font-medium text-foreground">{friendshipLevel}</span>
-          <span className="text-xs">/ 99</span>
-        </div>
-      </CardContent>
-    </Card>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <Badge variant="outline" className={getSemanticBadgeClass('neutral')}>
+            {character.gender ?? 'Unknown'}
+          </Badge>
+          <div className="flex items-center gap-2 rounded-md bg-muted/30 p-2 text-muted-foreground">
+            <Smile className="h-5 w-5 text-green-400" />
+            <span className="font-medium text-foreground">Birthday:</span>
+            <span className="text-xs">{formatBirthday(character)}</span>
+          </div>
+        </CardContent>
+      </Card>
+    </button>
   );
 }
 
-function CharacterDetails({ character }: { character: Character }) {
-  const battleStats = character.battle?.stats
-    ? [
-        ['Level', formatNumber(character.battle.stats.level)],
-        ['HP', formatNumber(character.battle.stats.hp)],
-        ['ATK', formatNumber(character.battle.stats.atk)],
-        ['DEF', formatNumber(character.battle.stats.def)],
-        ['MATK', formatNumber(character.battle.stats.matk)],
-        ['MDEF', formatNumber(character.battle.stats.mdef)],
-        ['STR', formatNumber(character.battle.stats.str)],
-        ['VIT', formatNumber(character.battle.stats.vit)],
-        ['INT', formatNumber(character.battle.stats.int)],
-      ]
-    : [];
-  const resistances = Object.entries(character.battle?.elementalResistances ?? {});
-
-  const renderGifts = (title: string, data: { items: string[], categories: string[] }, colorClass: string) => {
-    if (!data.items.length && !data.categories.length) return null;
-    return (
-      <div className="mb-4">
-        <h4 className={`text-sm font-semibold mb-2 ${colorClass}`}>{title}</h4>
-        <div className="flex flex-wrap gap-2">
-          {data.categories.map(c => (
-             <Badge key={c} variant="outline" className="bg-muted/50 border-primary/20">{c}</Badge>
-          ))}
-          {data.items.map(i => (
-            <Badge key={i} variant="secondary">{formatName(i)}</Badge>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  return (
-    <div className="flex flex-col gap-6">
-      <SheetDescription className="sr-only">
-        Detailed profile, birthday, gifts, and battle information for {character.name}.
-      </SheetDescription>
-
-      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 bg-muted/20 rounded-xl border">
-         <div className="flex w-full justify-center sm:w-auto sm:justify-start">
-           <CharacterAvatar
-             src={character.portrait}
-             alt={`${character.name} portrait`}
-             fallback={character.name.charAt(0)}
-             className="max-h-[22rem] w-auto max-w-[14rem] rounded-xl object-contain shadow-sm shrink-0"
-           />
-         </div>
-         <div className="text-center sm:text-left flex-1">
-            <h2 className="text-3xl font-bold mb-2">{character.name}</h2>
-            <div className="flex flex-wrap justify-center sm:justify-start gap-2 mb-4">
-              <Badge>{character.category}</Badge>
-              <Badge variant="outline">Birthday: {formatBirthday(character)}</Badge>
-              <Badge variant="outline">Gender: {character.gender ?? 'Unknown'}</Badge>
-            </div>
-            <div className="inline-flex items-center justify-center sm:justify-start gap-2 text-muted-foreground bg-background rounded-lg p-2 border">
-              <Smile className="w-6 h-6 text-green-500" />
-              <span className="font-semibold text-foreground text-xl">0</span>
-              <span>/ 999</span>
-            </div>
-         </div>
-      </div>
-
-      <div className="px-1">
-        <h3 className="text-xl font-bold mb-4 border-b pb-2">Profile</h3>
-        <div className="mb-4 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-lg border bg-muted/20 p-3">
-            <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Gender</div>
-            <div className="mt-1 text-sm font-medium">Gender: {character.gender ?? 'Unknown'}</div>
-          </div>
-          <div className="rounded-lg border bg-muted/20 p-3">
-            <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Birthday</div>
-            <div className="mt-1 text-sm font-medium">Birthday: {formatBirthday(character)}</div>
-          </div>
-        </div>
-        <p className="text-sm leading-6 text-muted-foreground">
-          {character.description ?? 'Description unavailable.'}
-        </p>
-      </div>
-
-      <div className="px-1">
-        <h3 className="text-xl font-bold mb-4 border-b pb-2">Battle Info</h3>
-        {character.battle ? (
-          <div className="space-y-4">
-            <div className="rounded-xl border bg-muted/20 p-4">
-              <div className="mb-2 flex items-center gap-2 font-semibold">
-                <Swords className="h-4 w-4 text-primary" />
-                Battle Summary
-              </div>
-              <p className="text-sm leading-6 text-muted-foreground">
-                {character.battle.description ?? 'Battle description unavailable.'}
-              </p>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-xl border bg-muted/20 p-4">
-                <h4 className="mb-3 font-semibold">Equipment</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-muted-foreground">Weapon</span>
-                    <span>{character.battle.weapon ?? 'Unknown'}</span>
-                  </div>
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-muted-foreground">Weapon Type</span>
-                    <span>{character.battle.weaponType ?? 'Unknown'}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-xl border bg-muted/20 p-4">
-                <h4 className="mb-3 font-semibold">Skills</h4>
-                <div className="flex flex-wrap gap-2">
-                  {character.battle.skills.length > 0 ? character.battle.skills.map(skill => (
-                    <Badge key={skill} variant="secondary">{skill}</Badge>
-                  )) : (
-                    <span className="text-sm text-muted-foreground">No listed skills.</span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-xl border bg-muted/20 p-4">
-              <h4 className="mb-3 font-semibold">Stats</h4>
-              {battleStats.length > 0 ? (
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {battleStats.map(([label, value]) => (
-                    <div key={label} className="rounded-lg border bg-background/70 p-3">
-                      <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</div>
-                      <div className="mt-1 text-lg font-semibold">{value}</div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">Stats unavailable.</p>
-              )}
-            </div>
-
-            <div className="rounded-xl border bg-muted/20 p-4">
-              <div className="mb-3 flex items-center gap-2 font-semibold">
-                <Shield className="h-4 w-4 text-primary" />
-                Elemental Resistances
-              </div>
-              {resistances.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {resistances.map(([element, value]) => (
-                    <Badge key={element} variant="outline" className="h-auto py-1">
-                      {element} {value == null ? '—' : `${value}%`}
-                    </Badge>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">Elemental resistance data unavailable.</p>
-              )}
-            </div>
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">Battle information unavailable.</p>
-        )}
-      </div>
-
-      <div className="px-1">
-        <h3 className="text-xl font-bold mb-4 border-b pb-2">Gift Preferences</h3>
-        {renderGifts('Loves', character.gifts.love, 'text-pink-500')}
-        {renderGifts('Likes', character.gifts.like, 'text-orange-500')}
-        {renderGifts('Neutral', character.gifts.neutral, 'text-blue-500')}
-        {renderGifts('Dislikes', character.gifts.dislike, 'text-purple-500')}
-        {renderGifts('Hates', character.gifts.hate, 'text-red-500')}
-      </div>
-    </div>
-  );
-}
-
-export function CharactersList() {
+function CharactersCatalog({
+  searchTerm,
+  onSearchTermChange,
+  viewMode,
+  onViewModeChange,
+  sortValue,
+  onSortValueChange,
+  filterValues,
+  onFilterValueChange,
+}: {
+  searchTerm?: string;
+  onSearchTermChange?: (value: string) => void;
+  viewMode?: 'cards' | 'table';
+  onViewModeChange?: (value: 'cards' | 'table') => void;
+  sortValue?: string;
+  onSortValueChange?: (value: string) => void;
+  filterValues?: Record<string, string | undefined>;
+  onFilterValueChange?: (key: string, value: string | undefined) => void;
+}) {
   const { data: characters, isLoading } = useCharacters();
+  const { openRoot } = useDetailDrawer();
+  const list = Object.values(characters || {});
 
-  if (isLoading) {
-    return <div className="p-8 text-center text-muted-foreground animate-pulse">Loading characters...</div>;
-  }
+  const categories = Array.from(new Set(list.map((character) => character.category))).sort();
+  const genders = Array.from(new Set(list.map((character) => character.gender).filter(Boolean) as string[])).sort();
+  const seasons = Array.from(
+    new Set(list.map((character) => character.birthday?.season).filter(Boolean) as string[]),
+  ).sort();
+  const weaponTypes = Array.from(
+    new Set(list.map((character) => character.battle?.weaponType).filter(Boolean) as string[]),
+  ).sort();
 
-  const charsList = Object.values(characters || {});
-  
-  // Create distinct categories for filter
-  const categories = Array.from(new Set(charsList.map(c => c.category))).sort();
-  const filterOptions = categories.map(c => ({
-    label: c,
-    value: c,
-    filterFn: (char: Character) => char.category === c
-  }));
+  const filters: CatalogFilterDefinition<Character>[] = [
+    {
+      key: 'category',
+      label: 'Category',
+      placement: 'primary',
+      options: categories.map((category) => ({ label: category, value: category.toLowerCase() })),
+      predicate: (character, value) => character.category.toLowerCase() === value,
+    },
+    {
+      key: 'gender',
+      label: 'Gender',
+      placement: 'primary',
+      options: genders.map((gender) => ({ label: gender, value: gender.toLowerCase() })),
+      predicate: (character, value) => character.gender?.toLowerCase() === value,
+    },
+    {
+      key: 'season',
+      label: 'Birthday Season',
+      placement: 'advanced',
+      options: seasons.map((season) => ({ label: season, value: season.toLowerCase() })),
+      predicate: (character, value) => character.birthday?.season?.toLowerCase() === value,
+    },
+    {
+      key: 'battle',
+      label: 'Battle Data',
+      placement: 'advanced',
+      options: [{ label: 'Has battle data', value: 'yes' }],
+      predicate: (character, value) => value !== 'yes' || Boolean(character.battle),
+    },
+    {
+      key: 'weaponType',
+      label: 'Weapon Type',
+      placement: 'advanced',
+      options: weaponTypes.map((weaponType) => ({ label: weaponType, value: weaponType.toLowerCase() })),
+      predicate: (character, value) => character.battle?.weaponType?.toLowerCase() === value,
+    },
+  ];
 
   const sortOptions = [
     { label: 'Name (A-Z)', value: 'name-asc', sortFn: (a: Character, b: Character) => a.name.localeCompare(b.name) },
-    { label: 'Name (Z-A)', value: 'name-desc', sortFn: (a: Character, b: Character) => b.name.localeCompare(a.name) },
-    { label: 'Category', value: 'cat-asc', sortFn: (a: Character, b: Character) => a.category.localeCompare(b.category) },
+    { label: 'Birthday', value: 'birthday-asc', sortFn: (a: Character, b: Character) => (a.birthday?.day || 99) - (b.birthday?.day || 99) },
+  ];
+
+  const tableColumns: CatalogTableColumn<Character>[] = [
+    { key: 'name', header: 'Name', cell: (character) => character.name },
+    { key: 'category', header: 'Category', cell: (character) => character.category },
+    { key: 'gender', header: 'Gender', cell: (character) => character.gender ?? 'Unknown' },
+    { key: 'birthday', header: 'Birthday', cell: (character) => formatBirthday(character) },
+    { key: 'weaponType', header: 'Weapon Type', cell: (character) => character.battle?.weaponType ?? 'Unknown' },
+    { key: 'battle', header: 'Battle Data', cell: (character) => (character.battle ? 'Yes' : 'No') },
   ];
 
   return (
-    <CatalogPageLayout<Character>
-      data={charsList}
-      title="Characters"
-      searchKey="name"
-      sortOptions={sortOptions}
-      filterOptions={filterOptions}
-      renderCard={(char, onClick) => <CharacterCard character={char} onClick={onClick} />}
-      renderDetails={(char) => <CharacterDetails character={char} />}
-      detailsTitle={() => `Character Profile`}
-      detailEmptyState="Select a character to view profile, birthday, battle info, and gifts."
-    />
+    <>
+      <CatalogPageLayout<Character>
+        data={list}
+        title="Characters"
+        searchKey="name"
+        searchTerm={searchTerm}
+        onSearchTermChange={onSearchTermChange}
+        viewMode={viewMode}
+        onViewModeChange={onViewModeChange}
+        sortValue={sortValue}
+        onSortValueChange={onSortValueChange}
+        sortOptions={sortOptions}
+        filters={filters}
+        filterValues={filterValues}
+        onFilterValueChange={onFilterValueChange}
+        tableColumns={tableColumns}
+        getItemKey={(character) => character.id}
+        isLoading={isLoading}
+        renderCard={(character, onClick) => <CharacterCard character={character} onClick={onClick} />}
+        onOpenItem={(character) => openRoot({ type: 'character', id: character.id })}
+      />
+      <UniversalDetailsDrawer />
+    </>
+  );
+}
+
+export function CharactersList({
+  detailValue,
+  onDetailValueChange,
+  searchTerm,
+  onSearchTermChange,
+  viewMode,
+  onViewModeChange,
+  sortValue,
+  onSortValueChange,
+  filterValues,
+  onFilterValueChange,
+}: {
+  detailValue?: string;
+  onDetailValueChange?: (value?: string) => void;
+  searchTerm?: string;
+  onSearchTermChange?: (value: string) => void;
+  viewMode?: 'cards' | 'table';
+  onViewModeChange?: (value: 'cards' | 'table') => void;
+  sortValue?: string;
+  onSortValueChange?: (value: string) => void;
+  filterValues?: Record<string, string | undefined>;
+  onFilterValueChange?: (key: string, value: string | undefined) => void;
+} = {}) {
+  const [internalDetailValue, setInternalDetailValue] = React.useState<string | undefined>();
+  const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
+  const [internalViewMode, setInternalViewMode] = React.useState<'cards' | 'table'>('cards');
+  const [internalSortValue, setInternalSortValue] = React.useState('name-asc');
+  const [internalFilterValues, setInternalFilterValues] = React.useState<Record<string, string | undefined>>({});
+
+  return (
+    <DetailDrawerProvider
+      detailValue={detailValue ?? internalDetailValue}
+      onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
+    >
+      <CharactersCatalog
+        searchTerm={searchTerm ?? internalSearchTerm}
+        onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
+        viewMode={viewMode ?? internalViewMode}
+        onViewModeChange={onViewModeChange ?? setInternalViewMode}
+        sortValue={sortValue ?? internalSortValue}
+        onSortValueChange={onSortValueChange ?? setInternalSortValue}
+        filterValues={filterValues ?? internalFilterValues}
+        onFilterValueChange={onFilterValueChange ?? ((key, value) => setInternalFilterValues((previous) => ({ ...previous, [key]: value })))}
+      />
+    </DetailDrawerProvider>
   );
 }

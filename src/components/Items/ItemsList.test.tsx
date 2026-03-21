@@ -62,6 +62,24 @@ const mockItems: Record<string, MockItem> = {
       rp: 5,
     },
   },
+  'item-flour': {
+    id: 'item-flour',
+    name: 'Flour',
+    image: 'items/bread.png',
+    type: 'Ingredient',
+    buy: 80,
+    sell: 12,
+    usedInRecipes: [],
+  },
+  'item-toast': {
+    id: 'item-toast',
+    name: 'Toast',
+    image: 'items/bread.png',
+    type: 'Food',
+    buy: 280,
+    sell: 42,
+    usedInRecipes: [],
+  },
   'item-roundoff': {
     id: 'item-roundoff',
     name: 'Roundoff',
@@ -160,15 +178,13 @@ describe('ItemsList Component', () => {
 
   it('renders loading state initially', () => {
     render(<ItemsList />, { wrapper });
-    expect(screen.getByText(/loading items.../i)).toBeInTheDocument();
+    expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
   });
 
   it('renders items after successful fetch', async () => {
     render(<ItemsList />, { wrapper });
 
-    await waitFor(() => {
-      expect(screen.queryByText(/loading items.../i)).not.toBeInTheDocument();
-    });
+    await screen.findAllByText('Bread');
 
     expect(screen.getAllByText('Bread').length).toBeGreaterThan(0);
     expect(screen.getByText('Weapon Bread')).toBeInTheDocument();
@@ -176,7 +192,7 @@ describe('ItemsList Component', () => {
     expect(screen.getByText("Ambrosia's Thorns")).toBeInTheDocument();
     expect(screen.getByText('Apple')).toBeInTheDocument();
     expect(screen.getByText('10-Fold Steel')).toBeInTheDocument();
-    expect(screen.getByText('Food')).toBeInTheDocument();
+    expect(screen.getAllByText('Food').length).toBeGreaterThan(0);
     expect(screen.getByText('Boss Drop')).toBeInTheDocument();
     expect(screen.getAllByText(/Buy:\s*200/).length).toBeGreaterThan(0);
   });
@@ -247,7 +263,8 @@ describe('ItemsList Component', () => {
     expect(screen.getByText('Crafted From')).toBeInTheDocument();
     expect(screen.getByText('Cooking')).toBeInTheDocument();
     expect(screen.getByText('Lv. 5')).toBeInTheDocument();
-    expect(screen.getByText('Flour')).toBeInTheDocument();
+    expect(screen.getAllByText('Flour').length).toBeGreaterThan(0);
+    expect(within(dialog).getByRole('img', { name: 'Flour image' })).toBeInTheDocument();
     expect(screen.getByText('Stats')).toBeInTheDocument();
     expect(screen.getByText('HP')).toBeInTheDocument();
     expect(screen.getByText('10')).toBeInTheDocument();
@@ -255,7 +272,7 @@ describe('ItemsList Component', () => {
     expect(screen.getByText('5')).toBeInTheDocument();
     expect(screen.queryByText('Additional Effects')).not.toBeInTheDocument();
     expect(screen.getByText('Used In Recipes')).toBeInTheDocument();
-    expect(screen.getByText('Toast')).toBeInTheDocument();
+    expect(screen.getAllByText('Toast').length).toBeGreaterThan(0);
     expect(screen.queryByText(/Tier/i)).not.toBeInTheDocument();
   });
 

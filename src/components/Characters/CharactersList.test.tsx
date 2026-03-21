@@ -70,18 +70,16 @@ describe('CharactersList Component', () => {
 
   it('renders loading state initially', () => {
     render(<CharactersList />, { wrapper });
-    expect(screen.getByText(/loading characters.../i)).toBeInTheDocument();
+    expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
   });
 
   it('renders characters after successful fetch', async () => {
     render(<CharactersList />, { wrapper });
 
-    await waitFor(() => {
-      expect(screen.queryByText(/loading characters.../i)).not.toBeInTheDocument();
-    });
+    await screen.findByText('Forte');
 
     expect(screen.getByText('Forte')).toBeInTheDocument();
-    expect(screen.getByText('Bachelorettes')).toBeInTheDocument();
+    expect(screen.getAllByText('Bachelorettes').length).toBeGreaterThan(0);
     const icon = screen.getByAltText('Forte icon');
     expect(icon.getAttribute('src')).toContain('/src/assets/images/characters/icons/md/');
     expect(icon.getAttribute('src')).toContain('forte');
@@ -92,10 +90,7 @@ describe('CharactersList Component', () => {
 
     render(<CharactersList />, { wrapper });
 
-    await waitFor(() => {
-      expect(screen.queryByText(/loading characters.../i)).not.toBeInTheDocument();
-    });
-
+    await screen.findByText('Forte');
     await user.click(screen.getByText('Forte'));
 
     expect(await screen.findByText('A steadfast knight of Selphia.')).toBeInTheDocument();
@@ -111,7 +106,7 @@ describe('CharactersList Component', () => {
     expect(screen.getByText('Long Sword')).toBeInTheDocument();
     expect(screen.getByText('Rush Attack')).toBeInTheDocument();
     expect(screen.getByText('Shield Strike')).toBeInTheDocument();
-    expect(screen.getByText('fire 0%')).toBeInTheDocument();
+    expect(screen.getByText(/fire 0%/i)).toBeInTheDocument();
   });
 
   it('renders graceful fallbacks when optional character fields are null', async () => {
@@ -143,10 +138,7 @@ describe('CharactersList Component', () => {
 
     render(<CharactersList />, { wrapper });
 
-    await waitFor(() => {
-      expect(screen.queryByText(/loading characters.../i)).not.toBeInTheDocument();
-    });
-
+    await screen.findByText('Eliza');
     await user.click(screen.getByText('Eliza'));
 
     expect((await screen.findAllByText('Birthday: Unknown')).length).toBeGreaterThan(0);

@@ -1,121 +1,134 @@
-import { render, screen } from '@testing-library/react';
+import React from 'react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { CatalogPageLayout } from './CatalogPageLayout';
+import { describe, expect, it, vi } from 'vitest';
+import { CatalogPageLayout, type CatalogFilterDefinition, type CatalogTableColumn } from './CatalogPageLayout';
+import { Card, CardContent } from './ui/card';
 
 type Entry = {
   id: string;
   name: string;
   type: string;
+  region: string;
 };
 
 const entries: Entry[] = [
-  { id: 'turnip', name: 'Turnip', type: 'Crop' },
-  { id: 'broadsword', name: 'Broadsword', type: 'Weapon' },
+  { id: 'turnip', name: 'Turnip', type: 'Crop', region: 'Selphia Plains' },
+  { id: 'broadsword', name: 'Broadsword', type: 'Weapon', region: 'Selphia' },
 ];
 
-function mockMatchMedia(matches: boolean) {
-  const original = window.matchMedia;
+const sortOptions = [
+  {
+    label: 'Name (A-Z)',
+    value: 'name-asc',
+    sortFn: (a: Entry, b: Entry) => a.name.localeCompare(b.name),
+  },
+];
 
-  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
-    matches: query === '(min-width: 1280px)' ? matches : false,
-    media: query,
-    onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })) as typeof window.matchMedia;
+const filters: CatalogFilterDefinition<Entry>[] = [
+  {
+    key: 'type',
+    label: 'Type',
+    placement: 'primary',
+    options: [
+      { label: 'Crop', value: 'crop' },
+      { label: 'Weapon', value: 'weapon' },
+    ],
+    predicate: (entry, value) => entry.type.toLowerCase() === value,
+  },
+  {
+    key: 'region',
+    label: 'Region',
+    placement: 'advanced',
+    options: [{ label: 'Selphia Plains', value: 'selphia-plains' }],
+    predicate: (entry, value) => entry.region.toLowerCase().replace(/\s+/g, '-') === value,
+  },
+];
 
-  return () => {
-    window.matchMedia = original;
-  };
+const tableColumns: CatalogTableColumn<Entry>[] = [
+  { key: 'name', header: 'Name', cell: (entry) => entry.name },
+  { key: 'type', header: 'Type', cell: (entry) => entry.type },
+];
+
+function ControlledCatalogHarness() {
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [viewMode, setViewMode] = React.useState<'cards' | 'table'>('cards');
+  const [sortValue, setSortValue] = React.useState('name-asc');
+  const [filterValues, setFilterValues] = React.useState<Record<string, string | undefined>>({});
+
+  return (
+    <CatalogPageLayout<Entry>
+      data={entries}
+      title="Items"
+      searchKey="name"
+      searchTerm={searchTerm}
+      onSearchTermChange={setSearchTerm}
+      viewMode={viewMode}
+      onViewModeChange={setViewMode}
+      sortValue={sortValue}
+      onSortValueChange={setSortValue}
+      sortOptions={sortOptions}
+      filters={filters}
+      filterValues={filterValues}
+      onFilterValueChange={(key, value) =>
+        setFilterValues((previous) => ({ ...previous, [key]: value }))
+      }
+      tableColumns={tableColumns}
+      getItemKey={(entry) => entry.id}
+      renderCard={(entry, onOpen) => (
+        <button type="button" onClick={onOpen}>
+          <Card>
+            <CardContent>{entry.name}</CardContent>
+          </Card>
+        </button>
+      )}
+      onOpenItem={vi.fn()}
+    />
+  );
 }
 
-afterEach(() => {
-  vi.restoreAllMocks();
-});
-
 describe('CatalogPageLayout', () => {
-  it('opens item details in a right-side drawer on wide screens', async () => {
-    const restore = mockMatchMedia(true);
+  it('switches between cards and table views using controlled state', async () => {
     const user = userEvent.setup();
 
-    render(
-      <CatalogPageLayout<Entry>
-        data={entries}
-        title="Items"
-        searchKey="name"
-        renderCard={(item) => <div>{item.name}</div>}
-        renderDetails={(item) => <div>{item.name} details</div>}
-        detailsTitle={(item) => item.name}
-      />,
-    );
+    render(<ControlledCatalogHarness />);
 
-    expect(screen.queryByText('Select an item')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Cards' })).toHaveAttribute('data-state', 'on');
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Turnip' })).toBeInTheDocument();
 
-    await user.click(screen.getByText('Broadsword'));
+    await user.click(screen.getByRole('button', { name: 'Table' }));
 
-    expect(screen.getByRole('heading', { name: 'Broadsword' })).toBeInTheDocument();
-    expect(screen.getByText('Broadsword details')).toBeInTheDocument();
-    expect(document.querySelector('[data-slot="sheet-content"][data-side="right"]')).toBeInTheDocument();
-    expect(document.querySelector('[data-testid="catalog-detail-scroll"]')).toBeInTheDocument();
-
-    restore();
+    expect(screen.getByRole('button', { name: 'Table' })).toHaveAttribute('data-state', 'on');
+    expect(screen.getByRole('table')).toBeInTheDocument();
+    expect(within(screen.getByRole('table')).getByText('Broadsword')).toBeInTheDocument();
   });
 
-  it('keeps the drawer open and swaps content when another item is selected', async () => {
-    const restore = mockMatchMedia(true);
+  it('opens advanced filters in a separate sheet and applies them', async () => {
     const user = userEvent.setup();
 
-    render(
-      <CatalogPageLayout<Entry>
-        data={entries}
-        title="Items"
-        searchKey="name"
-        renderCard={(item) => <div>{item.name}</div>}
-        renderDetails={(item) => <div>{item.name} details</div>}
-        detailsTitle={(item) => item.name}
-      />,
-    );
+    render(<ControlledCatalogHarness />);
 
-    await user.click(screen.getByText('Turnip'));
-    expect(await screen.findByText('Turnip details')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /more filters/i }));
 
-    await user.click(screen.getByText('Broadsword'));
+    const dialog = await screen.findByRole('dialog');
+    expect(within(dialog).getByText('Advanced Filters')).toBeInTheDocument();
 
-    expect(screen.getByRole('heading', { name: 'Broadsword' })).toBeInTheDocument();
-    expect(screen.getByText('Broadsword details')).toBeInTheDocument();
-    expect(screen.queryByText('Turnip details')).not.toBeInTheDocument();
-    expect(document.querySelectorAll('[data-slot="sheet-content"][data-side="right"]').length).toBe(1);
+    await user.click(within(dialog).getByRole('combobox', { name: /region/i }));
+    await user.click(await screen.findByRole('option', { name: 'Selphia Plains' }));
+    await user.click(within(dialog).getByRole('button', { name: 'Close' }));
 
-    restore();
+    expect(screen.getByText('Turnip')).toBeInTheDocument();
+    expect(screen.queryByText('Broadsword')).not.toBeInTheDocument();
   });
 
-  it('opens the same right-side drawer on narrower screens', async () => {
-    const restore = mockMatchMedia(false);
-    const user = userEvent.setup();
+  it('renders each card as the interactive surface instead of a layout wrapper button', () => {
+    render(<ControlledCatalogHarness />);
 
-    render(
-      <CatalogPageLayout<Entry>
-        data={entries}
-        title="Items"
-        searchKey="name"
-        renderCard={(item) => <div>{item.name}</div>}
-        renderDetails={(item) => <div>{item.name} details</div>}
-        detailsTitle={(item) => item.name}
-      />,
-    );
+    const turnipButton = screen.getByRole('button', { name: 'Turnip' });
+    const cardWrapper = turnipButton.querySelector('[data-slot="card"]');
 
-    expect(screen.queryByText('Select an item')).not.toBeInTheDocument();
-
-    await user.click(screen.getByText('Turnip'));
-
-    expect(await screen.findByRole('heading', { name: 'Turnip' })).toBeInTheDocument();
-    expect(screen.getByText('Turnip details')).toBeInTheDocument();
-    expect(document.querySelector('[data-slot="sheet-content"][data-side="right"]')).toBeInTheDocument();
-
-    restore();
+    expect(cardWrapper).not.toBeNull();
+    expect(turnipButton.parentElement).not.toHaveAttribute('data-slot', 'card');
   });
 });

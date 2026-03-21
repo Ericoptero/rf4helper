@@ -61,7 +61,7 @@ describe('CalendarView Component', () => {
 
   it('renders loading state initially', () => {
     render(<CalendarView />, { wrapper });
-    expect(screen.getByText(/loading calendar data.../i)).toBeInTheDocument();
+    expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
   });
 
   it('renders spring season default with its events', async () => {
@@ -116,7 +116,7 @@ describe('CalendarView Component', () => {
 
     await user.click(screen.getAllByText('Amber')[0]);
 
-    expect(await screen.findByText("Amber's Birthday")).toBeInTheDocument();
+    expect((await screen.findAllByText("Amber's Birthday")).length).toBeGreaterThan(0);
     expect(screen.getAllByAltText('Amber icon')[0].getAttribute('src')).toContain('amber');
   });
 });

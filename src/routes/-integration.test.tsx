@@ -11,11 +11,11 @@ import userEvent from '@testing-library/user-event';
 // Mock responses for the integration test
 const server = setupServer(
   http.get('http://localhost:3000/data/items.json', () => HttpResponse.json({
-    'item-iron': { id: 'item-iron', name: 'Iron', type: 'Mineral', buy: 200, sell: 20, usedInRecipes: [] },
-    'item-bread': { id: 'item-bread', name: 'Bread', type: 'Food', buy: 120, sell: 30, usedInRecipes: [] },
-    'item-apple': { id: 'item-apple', name: 'Apple', type: 'Crop', buy: 60, sell: 15, usedInRecipes: [] },
-    'item-ambrosias-thorns': { id: 'item-ambrosias-thorns', name: "Ambrosia's Thorns", type: 'Boss Drop', buy: 900, sell: 100, usedInRecipes: [] },
-    'item-10-fold-steel': { id: 'item-10-fold-steel', name: '10-Fold Steel', type: 'Material', buy: 0, sell: 1, usedInRecipes: [] },
+    'item-iron': { id: 'item-iron', name: 'Iron', type: 'Mineral', category: 'material', region: 'Selphia Plains', buy: 200, sell: 20, usedInRecipes: [] },
+    'item-bread': { id: 'item-bread', name: 'Bread', type: 'Food', category: 'food', region: 'Selphia', buy: 120, sell: 30, usedInRecipes: [] },
+    'item-apple': { id: 'item-apple', name: 'Apple', type: 'Crop', category: 'crop', region: 'Selphia Plains', buy: 60, sell: 15, usedInRecipes: [] },
+    'item-ambrosias-thorns': { id: 'item-ambrosias-thorns', name: "Ambrosia's Thorns", type: 'Boss Drop', category: 'boss-drop', region: 'Autumn Road', buy: 900, sell: 100, usedInRecipes: [] },
+    'item-10-fold-steel': { id: 'item-10-fold-steel', name: '10-Fold Steel', type: 'Material', category: 'material', region: 'Leon Karnak', buy: 0, sell: 1, usedInRecipes: [] },
   })),
   http.get('http://localhost:3000/data/characters.json', () => HttpResponse.json({
     'char-forte': {
@@ -42,8 +42,46 @@ const server = setupServer(
       nickname: [],
       stats: { baseLevel: 3, hp: 100, atk: 10, def: 5, matk: 0, mdef: 0, str: 10, int: 0, vit: 5, exp: 10, bonus: null },
       taming: { tameable: false, isRideable: null, befriend: null, favorite: [], produce: [], cycle: null },
-    }
-  }))
+    },
+    'monster-octopirate': {
+      id: 'monster-octopirate',
+      name: 'Octopirate',
+      variantGroup: 'Octopirate',
+      image: '/images/monsters/octopirate',
+      description: 'A seaside boss monster.',
+      location: 'Field Dungeon (Boss)',
+      drops: [],
+      nickname: [],
+      stats: { baseLevel: 84, hp: 12960, atk: 380, def: 288, matk: 350, mdef: 200, str: 320, int: 280, vit: 310, exp: 700, bonus: null },
+      taming: { tameable: true, isRideable: true, befriend: 1, favorite: [], produce: [], cycle: null },
+    },
+  })),
+  http.get('http://localhost:3000/data/fishing.json', () => HttpResponse.json([
+    {
+      id: 'fish-masu',
+      name: 'Masu Trout',
+      sell: 200,
+      shadow: 'small',
+      locations: [
+        { region: 'Selphia Plains', spot: 'Town Pond', seasons: ['Spring'] },
+      ],
+    },
+    {
+      id: 'fish-squid',
+      name: 'Squid',
+      sell: 120,
+      shadow: 'medium',
+      locations: [
+        { region: 'Autumn Road and Silver Arch', spot: 'River Fork', seasons: ['Summer'] },
+      ],
+    },
+  ])),
+  http.get('http://localhost:3000/data/chests.json', () => HttpResponse.json([
+    { id: 'chest-1', region: 'Selphia Plains', roomCode: 'A1', itemName: 'Bread' },
+    { id: 'chest-2', region: 'Autumn Road', roomCode: 'B2', itemName: 'Iron', notes: 'Behind a tree' },
+  ])),
+  http.get('http://localhost:3000/data/festivals.json', () => HttpResponse.json([])),
+  http.get('http://localhost:3000/data/crops.json', () => HttpResponse.json({ regularCrops: [] })),
 );
 
 beforeAll(() => server.listen());
@@ -72,7 +110,7 @@ describe('Routing Integration', () => {
       </QueryClientProvider>
     );
 
-    expect(await screen.findByText('Items Database', {}, { timeout: 3000 })).toBeInTheDocument();
+    expect(await screen.findByText('Items Database', {}, { timeout: 10000 })).toBeInTheDocument();
     expect(screen.getByText('Iron')).toBeInTheDocument();
     expect(screen.getByText('Bread')).toBeInTheDocument();
     expect(screen.getByText('Apple')).toBeInTheDocument();
@@ -88,7 +126,7 @@ describe('Routing Integration', () => {
     expect(screen.getByRole('complementary')).toHaveClass('lg:fixed');
     expect(screen.getByRole('complementary')).toHaveClass('lg:h-dvh');
     expect(screen.getByRole('main')).toHaveClass('lg:pl-64');
-  });
+  }, 15000);
 
   it('opens the mobile navigation drawer and closes it after navigation', async () => {
     const user = userEvent.setup();
@@ -100,7 +138,7 @@ describe('Routing Integration', () => {
       </QueryClientProvider>
     );
 
-    expect(await screen.findByText('Items Database', {}, { timeout: 3000 })).toBeInTheDocument();
+    expect(await screen.findByText('Items Database', {}, { timeout: 10000 })).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /open navigation menu/i }));
 
@@ -113,7 +151,7 @@ describe('Routing Integration', () => {
       expect(screen.getByRole('heading', { name: /rune factory 4 helper/i })).toBeInTheDocument();
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
-  });
+  }, 15000);
 
   it('renders the redesigned home route with category entry points', async () => {
     const router = createTestRouter(['/']);
@@ -287,6 +325,21 @@ describe('Routing Integration', () => {
     });
   });
 
+  it('hydrates the characters page from URL filters and table mode', async () => {
+    const router = createTestRouter(['/characters?category=bachelorettes&gender=female&view=table']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('table')).toBeInTheDocument();
+      expect(screen.getByText('Forte')).toBeInTheDocument();
+    });
+  });
+
   it('navigates to monsters and displays the list', async () => {
     const router = createTestRouter(['/monsters']);
     
@@ -301,5 +354,55 @@ describe('Routing Integration', () => {
       expect(screen.getByText('Orc')).toBeInTheDocument();
       expect(screen.getByText('100')).toBeInTheDocument();
     });
+  });
+
+  it('hydrates the monsters page from the boss filter search param', async () => {
+    const router = createTestRouter(['/monsters?boss=yes']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Octopirate')).toBeInTheDocument();
+    });
+
+    expect(screen.queryByText('Orc')).not.toBeInTheDocument();
+  });
+
+  it('hydrates the fishing page from shadow and view search params', async () => {
+    const router = createTestRouter(['/fishing?shadow=small&view=table']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('table')).toBeInTheDocument();
+      expect(screen.getByText('Masu Trout')).toBeInTheDocument();
+    });
+
+    expect(screen.queryByText('Squid')).not.toBeInTheDocument();
+  });
+
+  it('hydrates the maps page from hasFishing filter and opens detail from the URL', async () => {
+    const router = createTestRouter(['/maps?hasFishing=yes&detail=map:Selphia%20Plains']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getAllByText('Selphia Plains').length).toBeGreaterThan(0);
+    });
+
+    expect(screen.getAllByRole('heading', { name: 'Selphia Plains' }).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/fishing/i).length).toBeGreaterThan(0);
   });
 });

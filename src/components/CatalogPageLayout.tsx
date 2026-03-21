@@ -1,26 +1,33 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Search, X } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { Filter, Search, Table2, LayoutGrid, X } from 'lucide-react';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from './ui/sheet';
+import { Button } from './ui/button';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from './ui/sheet';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import { cn } from '@/lib/utils';
 
-type SortOption<T> = {
+export type SortOption<T> = {
   label: string;
   value: string;
   sortFn: (a: T, b: T) => number;
 };
 
-type FilterOption<T> = {
+export type CatalogFilterDefinition<T> = {
+  key: string;
   label: string;
-  value: string;
-  filterFn: (item: T) => boolean;
+  placement?: 'primary' | 'advanced';
+  allLabel?: string;
+  options: Array<{ label: string; value: string }>;
+  predicate: (item: T, value: string) => boolean;
+};
+
+export type CatalogTableColumn<T> = {
+  key: string;
+  header: string;
+  className?: string;
+  cell: (item: T) => React.ReactNode;
 };
 
 export interface CatalogPageLayoutProps<T> {
@@ -28,15 +35,22 @@ export interface CatalogPageLayoutProps<T> {
   title: string;
   searchKey?: keyof T | ((item: T) => string);
   sortOptions?: SortOption<T>[];
-  filterOptions?: FilterOption<T>[];
-  renderCard: (item: T, onClick: () => void) => React.ReactNode;
-  renderDetails: (item: T) => React.ReactNode;
-  detailsTitle?: (item: T) => string;
+  sortValue?: string;
+  onSortValueChange?: (value: string) => void;
+  filters?: CatalogFilterDefinition<T>[];
+  filterValues?: Record<string, string | undefined>;
+  onFilterValueChange?: (key: string, value: string | undefined) => void;
+  renderCard: (item: T, onOpen: () => void) => React.ReactNode;
+  tableColumns?: CatalogTableColumn<T>[];
+  getItemKey: (item: T) => string;
+  onOpenItem: (item: T) => void;
   isLoading?: boolean;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   extraControls?: React.ReactNode;
-  detailEmptyState?: string;
+  viewMode?: 'cards' | 'table';
+  onViewModeChange?: (value: 'cards' | 'table') => void;
+  emptyState?: string;
 }
 
 function CatalogSkeletonCard() {
@@ -47,58 +61,96 @@ function CatalogSkeletonCard() {
   );
 }
 
+function FilterSelect<T>({
+  definition,
+  value,
+  onValueChange,
+}: {
+  definition: CatalogFilterDefinition<T>;
+  value?: string;
+  onValueChange: (value?: string) => void;
+}) {
+  return (
+    <div className="space-y-2">
+      <label className="text-sm font-medium text-foreground" htmlFor={`filter-${definition.key}`}>
+        {definition.label}
+      </label>
+      <Select value={value ?? 'all'} onValueChange={(nextValue) => onValueChange(nextValue === 'all' ? undefined : nextValue)}>
+        <SelectTrigger
+          id={`filter-${definition.key}`}
+          aria-label={definition.label}
+          className="h-11 w-full rounded-xl bg-card"
+        >
+          <SelectValue placeholder={definition.label} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">{definition.allLabel ?? `All ${definition.label}`}</SelectItem>
+          {definition.options.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
 export function CatalogPageLayout<T>({
   data,
   title,
   searchKey,
   sortOptions,
-  filterOptions,
+  sortValue,
+  onSortValueChange,
+  filters,
+  filterValues,
+  onFilterValueChange,
   renderCard,
-  renderDetails,
-  detailsTitle,
+  tableColumns,
+  getItemKey,
+  onOpenItem,
   isLoading = false,
-  searchTerm,
+  searchTerm = '',
   onSearchTermChange,
   extraControls,
+  viewMode = 'cards',
+  onViewModeChange,
+  emptyState = 'No results found.',
 }: CatalogPageLayoutProps<T>) {
-  const [internalSearchTerm, setInternalSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<string>(sortOptions?.[0]?.value || '');
-  const [filterBy, setFilterBy] = useState<string>('all');
-  const [selectedItem, setSelectedItem] = useState<T | null>(null);
-
-  const resolvedSearchTerm = searchTerm ?? internalSearchTerm;
-  const setResolvedSearchTerm = onSearchTermChange ?? setInternalSearchTerm;
-
-  const handleClearSearch = useCallback(() => setResolvedSearchTerm(''), [setResolvedSearchTerm]);
+  const [filtersSheetOpen, setFiltersSheetOpen] = React.useState(false);
+  const primaryFilters = (filters ?? []).filter((filter) => filter.placement !== 'advanced');
+  const advancedFilters = (filters ?? []).filter((filter) => filter.placement === 'advanced');
 
   const filteredAndSortedData = useMemo(() => {
     let result = [...data];
 
-    if (resolvedSearchTerm && searchKey) {
-      const lower = resolvedSearchTerm.toLowerCase();
+    if (searchTerm && searchKey) {
+      const lower = searchTerm.toLowerCase();
       result = result.filter((item) => {
-        const value =
-          typeof searchKey === 'function' ? searchKey(item) : String(item[searchKey]);
+        const value = typeof searchKey === 'function' ? searchKey(item) : String(item[searchKey]);
         return String(value).toLowerCase().includes(lower);
       });
     }
 
-    if (filterBy !== 'all' && filterOptions) {
-      const activeFilter = filterOptions.find((option) => option.value === filterBy);
-      if (activeFilter) {
-        result = result.filter(activeFilter.filterFn);
+    for (const definition of filters ?? []) {
+      const activeValue = filterValues?.[definition.key];
+      if (!activeValue) {
+        continue;
       }
+
+      result = result.filter((item) => definition.predicate(item, activeValue));
     }
 
-    if (sortBy && sortOptions) {
-      const activeSort = sortOptions.find((option) => option.value === sortBy);
+    if (sortValue && sortOptions) {
+      const activeSort = sortOptions.find((option) => option.value === sortValue);
       if (activeSort) {
         result.sort(activeSort.sortFn);
       }
     }
 
     return result;
-  }, [data, filterBy, filterOptions, resolvedSearchTerm, searchKey, sortBy, sortOptions]);
+  }, [data, filterValues, filters, searchKey, searchTerm, sortOptions, sortValue]);
 
   if (isLoading) {
     return (
@@ -137,50 +189,44 @@ export function CatalogPageLayout<T>({
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        {searchKey && (
+        {searchKey ? (
           <div className="relative w-full sm:w-80">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search..."
-              value={resolvedSearchTerm}
-              onChange={(event) => setResolvedSearchTerm(event.target.value)}
+              value={searchTerm}
+              onChange={(event) => onSearchTermChange?.(event.target.value)}
               className="h-11 rounded-xl border-border/70 bg-card pl-9 pr-9"
             />
-            {resolvedSearchTerm && (
+            {searchTerm ? (
               <button
                 type="button"
-                onClick={handleClearSearch}
+                onClick={() => onSearchTermChange?.('')}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                 aria-label="Clear search"
               >
                 <X className="h-4 w-4" />
               </button>
-            )}
+            ) : null}
           </div>
-        )}
+        ) : null}
 
         {extraControls}
 
-        {filterOptions && filterOptions.length > 0 && (
-          <Select value={filterBy} onValueChange={setFilterBy}>
-            <SelectTrigger className="h-11 w-[180px] rounded-xl bg-card">
-              <SelectValue placeholder="Filter..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              {filterOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
+        {primaryFilters.map((definition) => (
+          <div key={definition.key} className="w-full sm:w-[220px]">
+            <FilterSelect
+              definition={definition}
+              value={filterValues?.[definition.key]}
+              onValueChange={(value) => onFilterValueChange?.(definition.key, value)}
+            />
+          </div>
+        ))}
 
-        {sortOptions && sortOptions.length > 0 && (
-          <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="h-11 w-[180px] rounded-xl bg-card">
-              <SelectValue placeholder="Sort..." />
+        {sortOptions && sortOptions.length > 0 ? (
+          <Select value={sortValue} onValueChange={onSortValueChange}>
+            <SelectTrigger className="h-11 w-[220px] rounded-xl bg-card" aria-label="Sort">
+              <SelectValue placeholder="Sort" />
             </SelectTrigger>
             <SelectContent>
               {sortOptions.map((option) => (
@@ -190,59 +236,107 @@ export function CatalogPageLayout<T>({
               ))}
             </SelectContent>
           </Select>
-        )}
+        ) : null}
+
+        {advancedFilters.length > 0 ? (
+          <Button
+            type="button"
+            variant="outline"
+            className="h-11 rounded-xl"
+            onClick={() => setFiltersSheetOpen(true)}
+          >
+            <Filter className="mr-2 h-4 w-4" />
+            More Filters
+          </Button>
+        ) : null}
+
+        <div className="ml-auto inline-flex items-center rounded-xl border bg-card p-1">
+          <Button
+            type="button"
+            variant={viewMode === 'cards' ? 'default' : 'ghost'}
+            size="sm"
+            data-state={viewMode === 'cards' ? 'on' : 'off'}
+            onClick={() => onViewModeChange?.('cards')}
+          >
+            <LayoutGrid className="mr-2 h-4 w-4" />
+            Cards
+          </Button>
+          <Button
+            type="button"
+            variant={viewMode === 'table' ? 'default' : 'ghost'}
+            size="sm"
+            data-state={viewMode === 'table' ? 'on' : 'off'}
+            onClick={() => onViewModeChange?.('table')}
+          >
+            <Table2 className="mr-2 h-4 w-4" />
+            Table
+          </Button>
+        </div>
       </div>
 
       <div className="min-w-0 rounded-3xl border bg-card/90 p-4 shadow-sm">
         <ScrollArea className="h-[calc(100vh-15rem)] min-h-[28rem] pr-2">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
-            {filteredAndSortedData.map((item, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => setSelectedItem(item)}
-                className="text-left transition-transform hover:-translate-y-0.5"
-              >
-                {renderCard(item, () => setSelectedItem(item))}
-              </button>
-            ))}
-            {filteredAndSortedData.length === 0 && (
-              <div className="col-span-full rounded-2xl border border-dashed px-6 py-20 text-center text-muted-foreground">
-                No results found.
-              </div>
-            )}
-          </div>
+          {viewMode === 'table' && tableColumns && tableColumns.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  {tableColumns.map((column) => (
+                    <TableHead key={column.key}>{column.header}</TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredAndSortedData.map((item) => (
+                  <TableRow
+                    key={getItemKey(item)}
+                    className="cursor-pointer"
+                    onClick={() => onOpenItem(item)}
+                  >
+                    {tableColumns.map((column) => (
+                      <TableCell key={column.key} className={column.className}>
+                        {column.cell(item)}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
+              {filteredAndSortedData.map((item) => (
+                <div key={getItemKey(item)} className={cn('min-w-0')}>
+                  {renderCard(item, () => onOpenItem(item))}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {filteredAndSortedData.length === 0 ? (
+            <div className="rounded-2xl border border-dashed px-6 py-20 text-center text-muted-foreground">
+              {emptyState}
+            </div>
+          ) : null}
         </ScrollArea>
       </div>
 
-      <Sheet
-        modal={false}
-        open={!!selectedItem}
-        onOpenChange={(open) => !open && setSelectedItem(null)}
-      >
-        <SheetContent
-          side="right"
-          className="w-full p-0 sm:max-w-xl lg:max-w-2xl"
-          overlayClassName="bg-black/40 lg:bg-black/10 lg:pointer-events-none"
-        >
-          {selectedItem && (
-            <>
-              <div className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur">
-                <SheetHeader className="pr-14">
-                  <SheetTitle>{detailsTitle ? detailsTitle(selectedItem) : 'Details'}</SheetTitle>
-                  <SheetDescription className="sr-only">
-                    View the selected entry details.
-                  </SheetDescription>
-                </SheetHeader>
-              </div>
-              <div
-                data-testid="catalog-detail-scroll"
-                className="min-h-0 flex-1 overflow-y-auto px-6 pb-6 pt-6"
-              >
-                {renderDetails(selectedItem)}
-              </div>
-            </>
-          )}
+      <Sheet open={filtersSheetOpen} onOpenChange={setFiltersSheetOpen}>
+        <SheetContent side="right" className="w-full sm:max-w-lg">
+          <SheetHeader>
+            <SheetTitle>Advanced Filters</SheetTitle>
+            <SheetDescription>
+              Refine the current list using more specific criteria.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="mt-6 space-y-4">
+            {advancedFilters.map((definition) => (
+              <FilterSelect
+                key={definition.key}
+                definition={definition}
+                value={filterValues?.[definition.key]}
+                onValueChange={(value) => onFilterValueChange?.(definition.key, value)}
+              />
+            ))}
+          </div>
         </SheetContent>
       </Sheet>
     </div>

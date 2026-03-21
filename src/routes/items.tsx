@@ -1,28 +1,52 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { ItemsList, type ItemLetterFilter } from '@/components/Items/ItemsList';
 import { z } from 'zod';
+import { ItemsList, type ItemLetterFilter } from '@/components/Items/ItemsList';
 
 type ItemsSearch = {
   letter?: ItemLetterFilter;
   q?: string;
+  view?: 'cards' | 'table';
+  sort?: string;
+  type?: string;
+  category?: string;
+  region?: string;
+  ship?: string;
+  buyable?: string;
+  sellable?: string;
+  rarity?: string;
+  craft?: string;
+  effects?: string;
+  detail?: string;
 };
 
 const itemLetterFilterSchema = z.enum(['all', ...'abcdefghijklmnopqrstuvwxyz'.split(''), '#'] as [ItemLetterFilter, ...ItemLetterFilter[]]);
 const itemsSearchSchema = z.object({
   letter: itemLetterFilterSchema.optional().catch(undefined),
   q: z.string().trim().min(1).optional().catch(undefined),
+  view: z.enum(['cards', 'table']).optional().catch(undefined),
+  sort: z.string().trim().min(1).optional().catch(undefined),
+  type: z.string().trim().min(1).optional().catch(undefined),
+  category: z.string().trim().min(1).optional().catch(undefined),
+  region: z.string().trim().min(1).optional().catch(undefined),
+  ship: z.string().trim().min(1).optional().catch(undefined),
+  buyable: z.string().trim().min(1).optional().catch(undefined),
+  sellable: z.string().trim().min(1).optional().catch(undefined),
+  rarity: z.string().trim().min(1).optional().catch(undefined),
+  craft: z.string().trim().min(1).optional().catch(undefined),
+  effects: z.string().trim().min(1).optional().catch(undefined),
+  detail: z.string().trim().min(1).optional().catch(undefined),
 });
 
 export const Route = createFileRoute('/items')({
   validateSearch: (search: Record<string, unknown>): ItemsSearch => {
     const parsedSearch = itemsSearchSchema.parse({
+      ...search,
       letter: typeof search.letter === 'string' ? search.letter.toLowerCase() : undefined,
-      q: typeof search.q === 'string' ? search.q : undefined,
     });
 
     return {
+      ...parsedSearch,
       letter: parsedSearch.letter === 'all' ? undefined : parsedSearch.letter,
-      q: parsedSearch.q,
     };
   },
   component: ItemsRoute,
@@ -32,50 +56,50 @@ function ItemsRoute() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const updateLetterFilter = (letter: ItemLetterFilter) => {
+  const updateSearchValue = (key: keyof ItemsSearch, value?: string) => {
     void navigate({
       search: (previous) => {
-        const { letter: _letter, ...rest } = previous;
-
-        if (letter === 'all') {
-          return rest;
+        const next = { ...previous };
+        if (!value) {
+          delete next[key];
+          return next;
         }
 
-        return {
-          ...rest,
-          letter,
-        };
+        next[key] = value as never;
+        return next;
       },
       replace: true,
     });
   };
 
-  const updateSearchTerm = (value: string) => {
-    const normalizedValue = value.trim();
-
-    void navigate({
-      search: (previous) => {
-        const { q: _q, ...rest } = previous;
-
-        if (!normalizedValue) {
-          return rest;
-        }
-
-        return {
-          ...rest,
-          q: normalizedValue,
-        };
-      },
-      replace: true,
-    });
+  const updateLetterFilter = (letter: ItemLetterFilter) => {
+    updateSearchValue('letter', letter === 'all' ? undefined : letter);
   };
 
   return (
     <ItemsList
       searchTerm={search.q ?? ''}
-      onSearchTermChange={updateSearchTerm}
+      onSearchTermChange={(value) => updateSearchValue('q', value.trim() || undefined)}
       letterFilter={search.letter ?? 'all'}
       onLetterFilterChange={updateLetterFilter}
+      viewMode={search.view}
+      onViewModeChange={(value) => updateSearchValue('view', value === 'cards' ? undefined : value)}
+      sortValue={search.sort}
+      onSortValueChange={(value) => updateSearchValue('sort', value)}
+      detailValue={search.detail}
+      onDetailValueChange={(value) => updateSearchValue('detail', value)}
+      filterValues={{
+        type: search.type,
+        category: search.category,
+        region: search.region,
+        ship: search.ship,
+        buyable: search.buyable,
+        sellable: search.sellable,
+        rarity: search.rarity,
+        craft: search.craft,
+        effects: search.effects,
+      }}
+      onFilterValueChange={(key, value) => updateSearchValue(key as keyof ItemsSearch, value)}
     />
   );
 }
