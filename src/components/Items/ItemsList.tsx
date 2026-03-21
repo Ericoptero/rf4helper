@@ -1,6 +1,8 @@
+import React from 'react';
 import { useItems } from '@/hooks/queries';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { PageLayout } from '@/components/PageLayout';
 import { Box, Coins, Star, Hammer, MapPin, ScrollText, Sparkles, Tags, PawPrint, Shield } from 'lucide-react';
 import type { Item } from '@/lib/schemas';
@@ -44,6 +46,57 @@ function getItemCrafts(item: Item) {
 
 function getItemStats(item: Item) {
   return Object.entries(item.stats ?? {}).filter(([, value]) => value !== 0);
+}
+
+const alphabetFilters = ['all', ...'abcdefghijklmnopqrstuvwxyz'.split(''), '#'] as const;
+export type ItemLetterFilter = typeof alphabetFilters[number];
+
+function getItemLetterBucket(name: string) {
+  const firstCharacter = name.trim().charAt(0).toLowerCase();
+  return /^[a-z]$/.test(firstCharacter) ? firstCharacter : '#';
+}
+
+function filterItemsByLetter(items: Item[], letter: ItemLetterFilter) {
+  if (letter === 'all') {
+    return items;
+  }
+
+  return items.filter((item) => getItemLetterBucket(item.name) === letter);
+}
+
+function AlphabetFilter({
+  value,
+  onValueChange,
+}: {
+  value: ItemLetterFilter;
+  onValueChange: (value: ItemLetterFilter) => void;
+}) {
+  return (
+    <div className="flex w-full flex-wrap gap-2 lg:w-auto">
+      {alphabetFilters.map((letter) => {
+        const isActive = value === letter;
+        const label = letter === 'all' ? 'All' : letter.toUpperCase();
+
+        return (
+          <Button
+            key={letter}
+            type="button"
+            variant={isActive ? 'default' : 'outline'}
+            size="sm"
+            aria-pressed={isActive}
+            onClick={() => onValueChange(letter)}
+            className={
+              isActive
+                ? 'border-primary/40 bg-primary text-primary-foreground shadow-sm'
+                : 'border-primary/15 bg-card/70 text-muted-foreground hover:border-primary/40 hover:bg-primary/10 hover:text-foreground'
+            }
+          >
+            {label}
+          </Button>
+        );
+      })}
+    </div>
+  );
 }
 
 function ItemCard({ item, onClick }: { item: Item, onClick: () => void }) {
@@ -253,17 +306,34 @@ function ItemDetails({ item }: { item: Item }) {
   );
 }
 
-export function ItemsList() {
+export function ItemsList({
+  searchTerm,
+  onSearchTermChange,
+  letterFilter,
+  onLetterFilterChange,
+}: {
+  searchTerm?: string;
+  onSearchTermChange?: (value: string) => void;
+  letterFilter?: ItemLetterFilter;
+  onLetterFilterChange?: (value: ItemLetterFilter) => void;
+} = {}) {
   const { data: items, isLoading } = useItems();
+  const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
+  const [internalLetterFilter, setInternalLetterFilter] = React.useState<ItemLetterFilter>('all');
 
   if (isLoading) {
     return <div className="p-8 text-center text-muted-foreground animate-pulse">Loading items...</div>;
   }
 
   const itemsList = Object.values(items || {});
+  const resolvedSearchTerm = searchTerm ?? internalSearchTerm;
+  const resolvedLetterFilter = letterFilter ?? internalLetterFilter;
+  const setResolvedSearchTerm = onSearchTermChange ?? setInternalSearchTerm;
+  const setResolvedLetterFilter = onLetterFilterChange ?? setInternalLetterFilter;
+  const letterFilteredItems = filterItemsByLetter(itemsList, resolvedLetterFilter);
   
   // Create distinct types for filter
-  const types = Array.from(new Set(itemsList.map(item => item.type))).sort();
+  const types = Array.from(new Set(letterFilteredItems.map(item => item.type))).sort();
   const filterOptions = types.map(t => ({
     label: t,
     value: t,
@@ -280,11 +350,16 @@ export function ItemsList() {
 
   return (
     <PageLayout<Item>
-      data={itemsList}
+      data={letterFilteredItems}
       title="Items Database"
       searchKey="name"
       sortOptions={sortOptions}
       filterOptions={filterOptions}
+      searchTerm={resolvedSearchTerm}
+      onSearchTermChange={setResolvedSearchTerm}
+      extraControls={
+        <AlphabetFilter value={resolvedLetterFilter} onValueChange={setResolvedLetterFilter} />
+      }
       renderCard={(item, onClick) => <ItemCard item={item} onClick={onClick} />}
       renderDetails={(item) => <ItemDetails item={item} />}
       detailsTitle={(item) => item.name}

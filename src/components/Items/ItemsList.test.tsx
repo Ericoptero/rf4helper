@@ -42,7 +42,23 @@ const mockItems: Record<string, Item> = {
     buy: 1000,
     sell: 250,
     usedInRecipes: [],
-  }
+  },
+  'item-apple': {
+    id: 'item-apple',
+    name: 'Apple',
+    type: 'Crop',
+    buy: 60,
+    sell: 30,
+    usedInRecipes: [],
+  },
+  'item-10-fold-steel': {
+    id: 'item-10-fold-steel',
+    name: '10-Fold Steel',
+    type: 'Material',
+    buy: 0,
+    sell: 1,
+    usedInRecipes: [],
+  },
 };
 
 const server = setupServer(
@@ -75,9 +91,52 @@ describe('ItemsList Component', () => {
 
     expect(screen.getByText('Bread')).toBeInTheDocument();
     expect(screen.getByText("Ambrosia's Thorns")).toBeInTheDocument();
+    expect(screen.getByText('Apple')).toBeInTheDocument();
+    expect(screen.getByText('10-Fold Steel')).toBeInTheDocument();
     expect(screen.getByText('Food')).toBeInTheDocument();
     expect(screen.getByText('Boss Drop')).toBeInTheDocument();
     expect(screen.getByText(/Buy:\s*200/)).toBeInTheDocument();
+  });
+
+  it('renders alphabet controls and filters items by selected letter', async () => {
+    const user = userEvent.setup();
+
+    render(<ItemsList />, { wrapper });
+
+    await screen.findByText('Bread');
+
+    expect(screen.getByRole('button', { name: 'All' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'A' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'B' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '#' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'A' }));
+
+    expect(screen.getByText("Ambrosia's Thorns")).toBeInTheDocument();
+    expect(screen.getByText('Apple')).toBeInTheDocument();
+    expect(screen.queryByText('Bread')).not.toBeInTheDocument();
+    expect(screen.queryByText('10-Fold Steel')).not.toBeInTheDocument();
+  });
+
+  it('combines search, alphabet filter, and type filter', async () => {
+    const user = userEvent.setup();
+
+    render(<ItemsList />, { wrapper });
+
+    await screen.findByText('Bread');
+
+    await user.type(screen.getByPlaceholderText(/search/i), 'a');
+    await user.click(screen.getByRole('button', { name: 'A' }));
+
+    const filterCombobox = screen.getAllByRole('combobox')[0];
+    await user.click(filterCombobox);
+
+    const listbox = await screen.findByRole('listbox');
+    await user.click(within(listbox).getByText('Crop'));
+
+    expect(screen.getByText('Apple')).toBeInTheDocument();
+    expect(screen.queryByText("Ambrosia's Thorns")).not.toBeInTheDocument();
+    expect(screen.queryByText('Bread')).not.toBeInTheDocument();
   });
 
   it('renders item image on the card when available', async () => {

@@ -8,8 +8,42 @@ import { createTestQueryClient } from '../lib/test-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 const mockItems: Record<string, Item> = {
-  'item-bread': { id: 'item-bread', name: 'Bread', type: 'Food', buy: 200, sell: 20, usedInRecipes: [] },
-  'item-ambrosias-thorns': { id: 'item-ambrosias-thorns', name: "Ambrosia's Thorns", type: 'Boss Drop', buy: 7000, sell: 400, usedInRecipes: [] }
+  'item-bread': {
+    id: 'item-bread',
+    name: 'Bread',
+    image: 'items/bread.png',
+    type: 'Food',
+    buy: 200,
+    sell: 20,
+    usedInRecipes: []
+  },
+  'item-masu-trout': {
+    id: 'item-masu-trout',
+    name: 'Masu Trout',
+    image: 'fish/masu-trout.png',
+    type: 'Fish',
+    buy: 360,
+    sell: 60,
+    usedInRecipes: []
+  },
+  'item-power-wave': {
+    id: 'item-power-wave',
+    name: 'Power Wave',
+    image: 'rune-abilities/rune-power-wave.png',
+    type: 'Rune Ability',
+    buy: 0,
+    sell: 0,
+    usedInRecipes: []
+  },
+  'item-ambrosias-thorns': {
+    id: 'item-ambrosias-thorns',
+    name: "Ambrosia's Thorns",
+    image: 'items/ambrosias-thorns.png',
+    type: 'Boss Drop',
+    buy: 7000,
+    sell: 400,
+    usedInRecipes: []
+  }
 };
 
 const mockCharacters: Record<string, Character> = {
@@ -102,6 +136,8 @@ describe('Data Fetching Hooks', () => {
     
     expect(result.current.data?.['item-bread'].name).toBe('Bread');
     expect(result.current.data?.['item-bread'].image).toBeTruthy();
+    expect(result.current.data?.['item-masu-trout'].image).toBeTruthy();
+    expect(result.current.data?.['item-power-wave'].image).toBeTruthy();
     expect(result.current.data?.['item-ambrosias-thorns'].image).toBeUndefined();
   });
 

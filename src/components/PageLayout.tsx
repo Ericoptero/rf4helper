@@ -15,6 +15,9 @@ export interface PageLayoutProps<T> {
   renderDetails: (item: T) => React.ReactNode;
   detailsTitle?: (item: T) => string;
   isLoading?: boolean;
+  searchTerm?: string;
+  onSearchTermChange?: (value: string) => void;
+  extraControls?: React.ReactNode;
 }
 
 // Skeleton card for loading states
@@ -47,20 +50,25 @@ export function PageLayout<T>({
   renderDetails,
   detailsTitle,
   isLoading = false,
+  searchTerm,
+  onSearchTermChange,
+  extraControls,
 }: PageLayoutProps<T>) {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [internalSearchTerm, setInternalSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<string>(sortOptions?.[0]?.value || '');
   const [filterBy, setFilterBy] = useState<string>('all');
   const [selectedItem, setSelectedItem] = useState<T | null>(null);
+  const resolvedSearchTerm = searchTerm ?? internalSearchTerm;
+  const setResolvedSearchTerm = onSearchTermChange ?? setInternalSearchTerm;
 
-  const handleClearSearch = useCallback(() => setSearchTerm(''), []);
+  const handleClearSearch = useCallback(() => setResolvedSearchTerm(''), [setResolvedSearchTerm]);
 
   const filteredAndSortedData = useMemo(() => {
     let result = [...data];
     
     // Global text search
-    if (searchTerm && searchKey) {
-      const lower = searchTerm.toLowerCase();
+    if (resolvedSearchTerm && searchKey) {
+      const lower = resolvedSearchTerm.toLowerCase();
       result = result.filter(item => {
         const val = typeof searchKey === 'function' ? searchKey(item) : String(item[searchKey]);
         return String(val).toLowerCase().includes(lower);
@@ -84,7 +92,7 @@ export function PageLayout<T>({
     }
 
     return result;
-  }, [data, searchTerm, searchKey, filterBy, filterOptions, sortBy, sortOptions]);
+  }, [data, resolvedSearchTerm, searchKey, filterBy, filterOptions, sortBy, sortOptions]);
 
   if (isLoading) {
     return (
@@ -125,11 +133,11 @@ export function PageLayout<T>({
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
             <Input 
               placeholder="Search..." 
-              value={searchTerm} 
-              onChange={e => setSearchTerm(e.target.value)}
+              value={resolvedSearchTerm} 
+              onChange={e => setResolvedSearchTerm(e.target.value)}
               className="pl-9 pr-8"
             />
-            {searchTerm && (
+            {resolvedSearchTerm && (
               <button
                 onClick={handleClearSearch}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
@@ -140,6 +148,8 @@ export function PageLayout<T>({
             )}
           </div>
         )}
+
+        {extraControls}
         
         {filterOptions && filterOptions.length > 0 && (
           <Select value={filterBy} onValueChange={setFilterBy}>

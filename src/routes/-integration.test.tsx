@@ -6,11 +6,16 @@ import { RouterProvider, createMemoryHistory, createRouter } from '@tanstack/rea
 import { QueryClientProvider } from '@tanstack/react-query';
 import { createTestQueryClient } from '@/lib/test-utils';
 import { routeTree } from '../routeTree.gen';
+import userEvent from '@testing-library/user-event';
 
 // Mock responses for the integration test
 const server = setupServer(
   http.get('http://localhost:3000/data/items.json', () => HttpResponse.json({
-    'item-iron': { id: 'item-iron', name: 'Iron', type: 'Mineral', buy: 200, sell: 20, usedInRecipes: [] }
+    'item-iron': { id: 'item-iron', name: 'Iron', type: 'Mineral', buy: 200, sell: 20, usedInRecipes: [] },
+    'item-bread': { id: 'item-bread', name: 'Bread', type: 'Food', buy: 120, sell: 30, usedInRecipes: [] },
+    'item-apple': { id: 'item-apple', name: 'Apple', type: 'Crop', buy: 60, sell: 15, usedInRecipes: [] },
+    'item-ambrosias-thorns': { id: 'item-ambrosias-thorns', name: "Ambrosia's Thorns", type: 'Boss Drop', buy: 900, sell: 100, usedInRecipes: [] },
+    'item-10-fold-steel': { id: 'item-10-fold-steel', name: '10-Fold Steel', type: 'Material', buy: 0, sell: 1, usedInRecipes: [] },
   })),
   http.get('http://localhost:3000/data/characters.json', () => HttpResponse.json({
     'char-forte': {
@@ -72,10 +77,147 @@ describe('Routing Integration', () => {
       expect(screen.getByText('Items Database')).toBeInTheDocument();
     });
 
-    // Wait for data to load and verifying table content appears
     await waitFor(() => {
       expect(screen.getByText('Iron')).toBeInTheDocument();
-      expect(screen.getByText('Mineral')).toBeInTheDocument();
+      expect(screen.getByText('Bread')).toBeInTheDocument();
+      expect(screen.getByText('Apple')).toBeInTheDocument();
+    });
+  });
+
+  it('hydrates the items page from the letter search param', async () => {
+    const router = createTestRouter(['/items?letter=b']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Bread')).toBeInTheDocument();
+    });
+
+    expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+    expect(screen.queryByText('Iron')).not.toBeInTheDocument();
+    expect(screen.queryByText('10-Fold Steel')).not.toBeInTheDocument();
+  });
+
+  it('hydrates the items page from the non-letter bucket search param', async () => {
+    const router = createTestRouter(['/items?letter=%23']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('10-Fold Steel')).toBeInTheDocument();
+    });
+
+    expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+    expect(screen.queryByText('Bread')).not.toBeInTheDocument();
+  });
+
+  it('hydrates the items page from the q search param', async () => {
+    const router = createTestRouter(['/items?q=thorn']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('thorn')).toBeInTheDocument();
+      expect(screen.getByText("Ambrosia's Thorns")).toBeInTheDocument();
+    });
+
+    expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+  });
+
+  it('combines letter and q search params on the items page', async () => {
+    const router = createTestRouter(['/items?letter=a&q=am']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText("Ambrosia's Thorns")).toBeInTheDocument();
+    });
+
+    expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+    expect(screen.queryByText('Bread')).not.toBeInTheDocument();
+  });
+
+  it('falls back to the default items view when the letter search param is invalid', async () => {
+    const router = createTestRouter(['/items?letter=invalid']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Iron')).toBeInTheDocument();
+      expect(screen.getByText('Bread')).toBeInTheDocument();
+      expect(screen.getByText('Apple')).toBeInTheDocument();
+    });
+  });
+
+  it('updates the items URL when the alphabet filter is changed', async () => {
+    const user = userEvent.setup();
+    const router = createTestRouter(['/items']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Iron')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'A' }));
+
+    await waitFor(() => {
+      expect(router.state.location.search).toMatchObject({ letter: 'a' });
+      expect(screen.getByText('Apple')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: 'All' }));
+
+    await waitFor(() => {
+      expect(router.state.location.search).toEqual({});
+      expect(screen.getByText('Iron')).toBeInTheDocument();
+    });
+  });
+
+  it('updates the items URL when the search input changes', async () => {
+    const user = userEvent.setup();
+    const router = createTestRouter(['/items']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Iron')).toBeInTheDocument();
+    });
+
+    const searchInput = screen.getByPlaceholderText(/search/i);
+    await user.type(searchInput, 'thorn');
+
+    await waitFor(() => {
+      expect(router.state.location.search).toMatchObject({ q: 'thorn' });
+      expect(screen.getByText("Ambrosia's Thorns")).toBeInTheDocument();
     });
   });
 

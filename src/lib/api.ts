@@ -17,7 +17,10 @@ export const fetchItems = async (): Promise<Record<string, Item>> => {
       key,
       {
         ...item,
-        image: resolveItemImage(typeof item.name === 'string' ? item.name : undefined),
+        image: resolveItemImage(
+          typeof item.name === 'string' ? item.name : undefined,
+          typeof item.image === 'string' ? item.image : undefined
+        ),
       },
     ])
   );
