@@ -15,16 +15,16 @@ const itemStatLabels: Record<string, string> = {
   rpMax: 'Max RP',
   atk: 'ATK',
   def: 'DEF',
+  matk: 'M.ATK',
+  mdef: 'M.DEF',
   str: 'STR',
   vit: 'VIT',
   int: 'INT',
   crit: 'Crit',
-  res: 'Resist',
   diz: 'Dizzy',
   drain: 'Drain',
   stun: 'Stun',
   knock: 'Knock',
-  aRK: 'ARK',
 };
 
 function formatItemCategory(category: string) {
@@ -46,6 +46,27 @@ function getItemCrafts(item: Item) {
 
 function getItemStats(item: Item) {
   return Object.entries(item.stats ?? {}).filter(([, value]) => value !== 0);
+}
+
+function formatEffectTarget(target: string) {
+  return target
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .split(' ')
+    .map(capitalize)
+    .join(' ');
+}
+
+function formatEffectLabel(effect: NonNullable<Item['effects']>[number]) {
+  if (effect.type === 'cure') {
+    return `Cures ${effect.targets.map(formatEffectTarget).join(', ')}`;
+  }
+
+  if (effect.type === 'resistance') {
+    return `${formatEffectTarget(effect.target)} resistance ${effect.value > 0 ? '+' : ''}${effect.value}%`;
+  }
+
+  const chance = effect.chance !== undefined ? ` (${effect.chance}%)` : '';
+  return `Inflicts ${formatEffectTarget(effect.target)} on ${effect.trigger}${chance}`;
 }
 
 const alphabetFilters = ['all', ...'abcdefghijklmnopqrstuvwxyz'.split(''), '#'] as const;
@@ -157,6 +178,7 @@ function ItemCard({ item, onClick }: { item: Item, onClick: () => void }) {
 function ItemDetails({ item }: { item: Item }) {
   const crafts = getItemCrafts(item);
   const stats = getItemStats(item);
+  const effects = item.effects ?? [];
   const hasDescription = !!item.description;
 
   return (
@@ -244,6 +266,21 @@ function ItemDetails({ item }: { item: Item }) {
           </div>
         )}
 
+        {effects.length > 0 && (
+          <div>
+            <h3 className="text-xl font-bold mb-3 border-b pb-2 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-emerald-500" /> Additional Effects
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {effects.map((effect, index) => (
+                <Badge key={`${effect.type}-${index}`} variant="outline" className="bg-muted/50">
+                  {formatEffectLabel(effect)}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
+
         {crafts.length > 0 && (
           <div>
             <h3 className="text-xl font-bold mb-3 border-b pb-2 flex items-center gap-2">
@@ -262,6 +299,21 @@ function ItemDetails({ item }: { item: Item }) {
                     ))}
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {item.groupMembers && item.groupMembers.length > 0 && (
+          <div>
+            <h3 className="text-xl font-bold mb-3 border-b pb-2 flex items-center gap-2 text-muted-foreground">
+              <Tags className="w-5 h-5" /> Group Members
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {item.groupMembers.map((memberId, index) => (
+                <Badge key={`${memberId}-${index}`} variant="outline" className="bg-muted/50">
+                  {formatName(memberId)}
+                </Badge>
               ))}
             </div>
           </div>

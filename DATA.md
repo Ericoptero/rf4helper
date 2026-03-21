@@ -30,31 +30,114 @@ Cada entidade tem um **slug prefixado** que serve como ID único:
 
 ### 1. `items.json` — Registro Central (Hub)
 
-**Formato:** `Object<slug, Item>` (1083 itens)
+**Formato:** `Object<slug, Item>` (1093 itens)
 
 O arquivo central do dataset. Todos os outros arquivos apontam para itens usando o slug `item-*`.
 
-| Campo            | Tipo      | Descrição                          |
-| ---------------- | --------- | ---------------------------------- |
-| `id`             | string    | `item-*` slug                      |
-| `name`           | string    | Nome do item                       |
-| `hexId`          | string    | ID hexadecimal interno             |
-| `type`           | string    | Mineral, Crop, Dish, Fish, etc.    |
-| `region`         | string    | Região onde encontrar              |
-| `tier`           | number    | Nível/tier do item                 |
-| `shippable`      | boolean   | Pode ser vendido/enviado           |
-| `buy`            | number    | Preço de compra                    |
-| `sell`           | number    | Preço de venda                     |
-| `rarityPoints`   | number?   | Pontos de raridade (merged)        |
-| `rarityCategory` | string?   | Categoria de raridade (merged)     |
-| `usedInRecipes`  | string[]? | IDs de receitas que usam este item |
-| `craftedFrom`    | object[]? | Receitas que produzem este item    |
+`craft` é o campo canônico de receitas no item. `usedInRecipes` é derivado de `craft.ingredients`.
+
+| Campo            | Tipo      | Descrição |
+| ---------------- | --------- | --------- |
+| `id`             | string    | `item-*` slug |
+| `name`           | string    | Nome do item |
+| `hexId`          | string?   | ID hexadecimal interno |
+| `image`          | string?   | Path relativo de imagem |
+| `type`           | string    | Mineral, Crop, Dish, Fish, Category, Bread, etc. |
+| `region`         | string?   | Região onde encontrar |
+| `shippable`      | boolean?  | Pode ser vendido/enviado |
+| `buy`            | number?   | Preço de compra |
+| `sell`           | number?   | Preço de venda |
+| `category`       | string?   | Categoria interna usada na UI |
+| `description`    | string?   | Descrição/flavor text |
+| `monster`        | string?   | Monstro associado ao drop, quando houver |
+| `rarityPoints`   | number?   | Pontos de raridade (merged) |
+| `rarityCategory` | string?   | Categoria de raridade (merged) |
+| `groupMembers`   | string[]? | Apenas em `type: "Category"` source-backed; lista de `item-*` membros do grupo |
+| `usedInRecipes`  | string[]? | Reverse links derivados: itens cujo `craft.ingredients` usam este item |
+| `craft`          | object[]? | Receitas que produzem este item |
+| `craftedFrom`    | object[]? | Campo legado suportado por compatibilidade; não é mais o campo principal |
+| `stats`          | object?   | Stats numéricos achatados e normalizados |
+| `effects`        | object[]? | Efeitos não achatáveis: cura, resistência e inflict/proc |
+
+**Estrutura de `craft`:**
+
+```ts
+{
+  recipeId?: string;
+  stationType: string;
+  station?: string;
+  level: number;
+  ingredients: string[]; // item-* slugs
+}[]
+```
+
+**Chaves válidas em `stats`:**
+
+```ts
+{
+  hp?: number;
+  rp?: number;
+  hpMax?: number;
+  rpMax?: number;
+  atk?: number;
+  def?: number;
+  matk?: number;
+  mdef?: number;
+  str?: number;
+  vit?: number;
+  int?: number;
+  crit?: number;
+  diz?: number;
+  drain?: number;
+  stun?: number;
+  knock?: number;
+}
+```
+
+**Estrutura de `effects`:**
+
+```ts
+type ItemEffect =
+  | { type: "cure"; targets: string[] }
+  | { type: "resistance"; target: string; value: number }
+  | { type: "inflict"; target: string; trigger: "attack" | "consume"; chance?: number };
+```
+
+**Exemplo de item com `stats`:**
+
+```json
+{
+  "id": "item-magic-shield",
+  "name": "Magic Shield",
+  "stats": { "def": 84, "mdef": 78, "int": 5 },
+  "effects": [{ "type": "resistance", "target": "seal", "value": 100 }]
+}
+```
+
+**Exemplo de categoria com `groupMembers`:**
+
+```json
+{
+  "id": "item-minerals",
+  "name": "Minerals",
+  "type": "Category",
+  "groupMembers": [
+    "item-iron",
+    "item-bronze",
+    "item-silver",
+    "item-gold",
+    "item-platinum",
+    "item-orichalcum",
+    "item-dragonic-stone"
+  ]
+}
+```
 
 ---
 
 ### 2. `recipes.json` — Receitas
 
-**Formato:** `Array<Recipe>` (614 receitas)
+**Formato:** `Array<Recipe>` (631 receitas)
 
 | Campo         | Tipo     | Descrição                             |
 | ------------- | -------- | ------------------------------------- |
@@ -258,7 +341,7 @@ Mesma estrutura do `forgingDetails.json`.
 const items = await fetch("/data/items.json").then((r) => r.json());
 const iron = items["item-iron"];
 console.log(iron.usedInRecipes);
-// → ["recipe-iron", "recipe-iron-spore", ...]
+// → ["item-broadsword", "item-steel-sword", ...]
 ```
 
 ### Receita → Detalhes dos ingredientes
@@ -315,7 +398,8 @@ for (const [section, recipes] of Object.entries(cooking)) {
 | De → Para              | Caminho                                             |
 | ---------------------- | --------------------------------------------------- |
 | Item → Receitas        | `items[slug].usedInRecipes`                         |
-| Item → Como craftar    | `items[slug].craftedFrom`                           |
+| Item → Como craftar    | `items[slug].craft`                                 |
+| Categoria → Membros    | `items[slug].groupMembers[]`                        |
 | Item → Raridade        | `items[slug].rarityPoints`                          |
 | Item → Quem ama        | `chars[*].gifts.love.items.includes(slug)`          |
 | Item → Baús            | `chests.find(c => c.itemId === slug)`               |

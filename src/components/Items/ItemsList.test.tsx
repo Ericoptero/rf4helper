@@ -8,7 +8,34 @@ import { ItemsList } from './ItemsList';
 import { createTestQueryClient } from '@/lib/test-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 
-const mockItems: Record<string, Item> = {
+type MockEffect =
+  | { type: 'cure'; targets: string[] }
+  | { type: 'resistance'; target: string; value: number }
+  | { type: 'inflict'; target: string; trigger: 'attack' | 'consume'; chance?: number };
+
+type MockItem = Item & {
+  groupMembers?: string[];
+  effects?: MockEffect[];
+};
+
+const mockItems: Record<string, MockItem> = {
+  'item-minerals': {
+    id: 'item-minerals',
+    name: 'Minerals',
+    type: 'Category',
+    buy: 0,
+    sell: 0,
+    usedInRecipes: ['item-broadsword'],
+    groupMembers: ['item-iron'],
+  },
+  'item-iron': {
+    id: 'item-iron',
+    name: 'Iron',
+    type: 'Mineral',
+    buy: 200,
+    sell: 20,
+    usedInRecipes: [],
+  },
   'item-bread': {
     id: 'item-bread',
     name: 'Bread',
@@ -35,6 +62,36 @@ const mockItems: Record<string, Item> = {
       rp: 5,
     },
   },
+  'item-roundoff': {
+    id: 'item-roundoff',
+    name: 'Roundoff',
+    type: 'Potion',
+    buy: 800,
+    sell: 60,
+    description: 'Medicine that dissolves seals.',
+    category: 'medicine',
+    usedInRecipes: [],
+    stats: {
+      hp: 300,
+    },
+    effects: [{ type: 'cure', targets: ['seal'] }],
+  },
+  'item-weapon-bread': {
+    id: 'item-weapon-bread',
+    name: 'Weapon Bread',
+    type: 'Bread',
+    buy: 0,
+    sell: 100,
+    usedInRecipes: [],
+  },
+  'item-weapon-bread-plus': {
+    id: 'item-weapon-bread-plus',
+    name: 'Weapon Bread+',
+    type: 'Bread',
+    buy: 999999,
+    sell: 3000,
+    usedInRecipes: [],
+  },
   'item-ambrosias-thorns': {
     id: 'item-ambrosias-thorns',
     name: "Ambrosia's Thorns",
@@ -58,6 +115,21 @@ const mockItems: Record<string, Item> = {
     buy: 0,
     sell: 1,
     usedInRecipes: [],
+  },
+  'item-broadsword': {
+    id: 'item-broadsword',
+    name: 'Broadsword',
+    type: 'Forge',
+    buy: 90,
+    sell: 23,
+    usedInRecipes: [],
+    craft: [
+      {
+        ingredients: ['item-minerals'],
+        stationType: 'Forging',
+        level: 1,
+      },
+    ],
   },
 };
 
@@ -89,13 +161,15 @@ describe('ItemsList Component', () => {
       expect(screen.queryByText(/loading items.../i)).not.toBeInTheDocument();
     });
 
-    expect(screen.getByText('Bread')).toBeInTheDocument();
+    expect(screen.getAllByText('Bread').length).toBeGreaterThan(0);
+    expect(screen.getByText('Weapon Bread')).toBeInTheDocument();
+    expect(screen.getByText('Weapon Bread+')).toBeInTheDocument();
     expect(screen.getByText("Ambrosia's Thorns")).toBeInTheDocument();
     expect(screen.getByText('Apple')).toBeInTheDocument();
     expect(screen.getByText('10-Fold Steel')).toBeInTheDocument();
     expect(screen.getByText('Food')).toBeInTheDocument();
     expect(screen.getByText('Boss Drop')).toBeInTheDocument();
-    expect(screen.getByText(/Buy:\s*200/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Buy:\s*200/).length).toBeGreaterThan(0);
   });
 
   it('renders alphabet controls and filters items by selected letter', async () => {
@@ -103,7 +177,7 @@ describe('ItemsList Component', () => {
 
     render(<ItemsList />, { wrapper });
 
-    await screen.findByText('Bread');
+    await screen.findAllByText('Bread');
 
     expect(screen.getByRole('button', { name: 'All' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'A' })).toBeInTheDocument();
@@ -123,7 +197,7 @@ describe('ItemsList Component', () => {
 
     render(<ItemsList />, { wrapper });
 
-    await screen.findByText('Bread');
+    await screen.findAllByText('Bread');
 
     await user.type(screen.getByPlaceholderText(/search/i), 'a');
     await user.click(screen.getByRole('button', { name: 'A' }));
@@ -152,7 +226,7 @@ describe('ItemsList Component', () => {
 
     render(<ItemsList />, { wrapper });
 
-    await user.click(await screen.findByText('Bread'));
+    await user.click((await screen.findAllByText('Bread'))[0]);
 
     expect(await screen.findByText('Freshly baked bread.')).toBeInTheDocument();
     expect(screen.getByRole('img', { name: 'Bread image' })).toBeInTheDocument();
@@ -186,5 +260,53 @@ describe('ItemsList Component', () => {
     expect(within(sheet).queryByText('Crafted From')).not.toBeInTheDocument();
     expect(within(sheet).queryByText('Used In Recipes')).not.toBeInTheDocument();
     expect(within(sheet).queryByText('Description')).not.toBeInTheDocument();
+  });
+
+  it('renders category ingredients in the crafted from section', async () => {
+    const user = userEvent.setup();
+
+    render(<ItemsList />, { wrapper });
+
+    await user.click(await screen.findByText('Broadsword'));
+
+    expect(await screen.findByText('Crafted From')).toBeInTheDocument();
+    expect(screen.getByText('Forging')).toBeInTheDocument();
+    expect(screen.getAllByText('Minerals').length).toBeGreaterThan(0);
+  });
+
+  it('shows generic recipe reverse links on category items', async () => {
+    const user = userEvent.setup();
+
+    render(<ItemsList />, { wrapper });
+
+    await user.click(await screen.findByText('Minerals'));
+
+    expect(await screen.findByText('Used In Recipes')).toBeInTheDocument();
+    expect(screen.getAllByText('Broadsword').length).toBeGreaterThan(0);
+  });
+
+  it('renders group members for category items', async () => {
+    const user = userEvent.setup();
+
+    render(<ItemsList />, { wrapper });
+
+    await user.click(await screen.findByText('Minerals'));
+
+    expect(await screen.findByText('Group Members')).toBeInTheDocument();
+    expect(screen.getAllByText('Iron').length).toBeGreaterThan(0);
+  });
+
+  it('renders non-flat effects alongside normalized stats', async () => {
+    const user = userEvent.setup();
+
+    render(<ItemsList />, { wrapper });
+
+    await user.click(await screen.findByText('Roundoff'));
+
+    expect(await screen.findByText('Effects & Stats')).toBeInTheDocument();
+    expect(screen.getByText('HP')).toBeInTheDocument();
+    expect(screen.getByText('300')).toBeInTheDocument();
+    expect(screen.getByText('Additional Effects')).toBeInTheDocument();
+    expect(screen.getByText(/Cures Seal/i)).toBeInTheDocument();
   });
 });

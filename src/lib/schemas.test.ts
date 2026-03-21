@@ -24,6 +24,25 @@ describe('Zod Schemas', () => {
       expect(result.success).toBe(true);
     });
 
+    it('parses normalized category membership and non-flat effects', () => {
+      const validItem = {
+        id: 'item-minerals',
+        name: 'Minerals',
+        type: 'Category',
+        buy: 0,
+        sell: 0,
+        groupMembers: ['item-iron', 'item-bronze'],
+        effects: [
+          { type: 'resistance', target: 'seal', value: 100 },
+          { type: 'cure', targets: ['seal'] },
+          { type: 'inflict', target: 'poison', trigger: 'attack', chance: 25 },
+        ],
+      };
+
+      const result = ItemSchema.safeParse(validItem);
+      expect(result.success).toBe(true);
+    });
+
     it('parses item dataset fields used by the details view', () => {
       const validItem = {
         id: 'item-bread',
@@ -50,6 +69,20 @@ describe('Zod Schemas', () => {
 
       const result = ItemSchema.safeParse(validItem);
       expect(result.success).toBe(true);
+    });
+
+    it('fails when stats contain unsupported legacy keys', () => {
+      const invalidItem = {
+        id: 'item-bad',
+        name: 'Bad Item',
+        type: 'Food',
+        stats: {
+          res: 50,
+        },
+      };
+
+      const result = ItemSchema.safeParse(invalidItem);
+      expect(result.success).toBe(false);
     });
 
     it('fails when id is missing', () => {

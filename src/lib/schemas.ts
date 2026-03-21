@@ -1,5 +1,42 @@
 import { z } from 'zod';
 
+const ItemEffectSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('cure'),
+    targets: z.array(z.string()),
+  }),
+  z.object({
+    type: z.literal('resistance'),
+    target: z.string(),
+    value: z.number(),
+  }),
+  z.object({
+    type: z.literal('inflict'),
+    target: z.string(),
+    trigger: z.enum(['attack', 'consume']),
+    chance: z.number().optional(),
+  }),
+]);
+
+const ItemStatsSchema = z.object({
+  hp: z.number().optional(),
+  rp: z.number().optional(),
+  hpMax: z.number().optional(),
+  rpMax: z.number().optional(),
+  atk: z.number().optional(),
+  def: z.number().optional(),
+  matk: z.number().optional(),
+  mdef: z.number().optional(),
+  str: z.number().optional(),
+  vit: z.number().optional(),
+  int: z.number().optional(),
+  crit: z.number().optional(),
+  diz: z.number().optional(),
+  drain: z.number().optional(),
+  stun: z.number().optional(),
+  knock: z.number().optional(),
+}).strict();
+
 export const ItemSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -15,6 +52,7 @@ export const ItemSchema = z.object({
   monster: z.string().optional(),
   rarityPoints: z.number().optional(),
   rarityCategory: z.string().optional(),
+  groupMembers: z.array(z.string()).optional(),
   usedInRecipes: z.array(z.string()).optional(),
   craft: z
     .array(
@@ -38,7 +76,8 @@ export const ItemSchema = z.object({
       })
     )
     .optional(),
-  stats: z.record(z.string(), z.number()).optional(),
+  stats: ItemStatsSchema.optional(),
+  effects: z.array(ItemEffectSchema).optional(),
 });
 
 export type Item = z.infer<typeof ItemSchema>;
