@@ -25,16 +25,18 @@ function MapsRoute() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const updateSearchValue = (key: keyof MapsSearch, value?: string) => {
+  const updateSearchValue = (key: keyof MapsSearch, value?: string | string[]) => {
+    const normalizedValue = Array.isArray(value) ? value.join(',') || undefined : value;
+
     void navigate({
       search: (previous) => {
         const next = { ...previous };
-        if (!value) {
+        if (!normalizedValue) {
           delete next[key];
           return next;
         }
 
-        next[key] = value;
+        next[key] = normalizedValue;
         return next;
       },
       replace: true,

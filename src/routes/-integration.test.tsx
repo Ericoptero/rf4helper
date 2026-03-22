@@ -172,7 +172,7 @@ describe('Routing Integration', () => {
     expect(screen.getAllByRole('link', { name: /characters/i }).length).toBeGreaterThan(0);
   });
 
-  it('hydrates the items page from the letter search param', async () => {
+  it('ignores the removed letter search param on the items page', async () => {
     const router = createTestRouter(['/items?letter=b']);
 
     render(
@@ -185,12 +185,12 @@ describe('Routing Integration', () => {
       expect(screen.getByText('Bread')).toBeInTheDocument();
     });
 
-    expect(screen.queryByText('Apple')).not.toBeInTheDocument();
-    expect(screen.queryByText('Iron')).not.toBeInTheDocument();
-    expect(screen.queryByText('10-Fold Steel')).not.toBeInTheDocument();
+    expect(screen.getByText('Apple')).toBeInTheDocument();
+    expect(screen.getByText('Iron')).toBeInTheDocument();
+    expect(screen.getByText('10-Fold Steel')).toBeInTheDocument();
   });
 
-  it('hydrates the items page from the non-letter bucket search param', async () => {
+  it('ignores the removed non-letter bucket search param on the items page', async () => {
     const router = createTestRouter(['/items?letter=%23']);
 
     render(
@@ -203,8 +203,8 @@ describe('Routing Integration', () => {
       expect(screen.getByText('10-Fold Steel')).toBeInTheDocument();
     });
 
-    expect(screen.queryByText('Apple')).not.toBeInTheDocument();
-    expect(screen.queryByText('Bread')).not.toBeInTheDocument();
+    expect(screen.getByText('Apple')).toBeInTheDocument();
+    expect(screen.getByText('Bread')).toBeInTheDocument();
   });
 
   it('hydrates the items page from the q search param', async () => {
@@ -224,7 +224,7 @@ describe('Routing Integration', () => {
     expect(screen.queryByText('Apple')).not.toBeInTheDocument();
   });
 
-  it('combines letter and q search params on the items page', async () => {
+  it('applies q search params while ignoring removed letter search params on the items page', async () => {
     const router = createTestRouter(['/items?letter=a&q=am']);
 
     render(
@@ -241,7 +241,7 @@ describe('Routing Integration', () => {
     expect(screen.queryByText('Bread')).not.toBeInTheDocument();
   });
 
-  it('falls back to the default items view when the letter search param is invalid', async () => {
+  it('falls back to the default items view when the removed letter search param is invalid', async () => {
     const router = createTestRouter(['/items?letter=invalid']);
 
     render(
@@ -257,9 +257,9 @@ describe('Routing Integration', () => {
     });
   });
 
-  it('updates the items URL when the alphabet filter is changed', async () => {
+  it('drops the removed letter search param on the next items route interaction', async () => {
     const user = userEvent.setup();
-    const router = createTestRouter(['/items']);
+    const router = createTestRouter(['/items?letter=a']);
 
     render(
       <QueryClientProvider client={createTestQueryClient()}>
@@ -271,17 +271,12 @@ describe('Routing Integration', () => {
       expect(screen.getByText('Iron')).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole('button', { name: 'A' }));
+    const searchInput = screen.getByPlaceholderText(/search/i);
+    await user.type(searchInput, 'iron');
 
     await waitFor(() => {
-      expect(router.state.location.search).toMatchObject({ letter: 'a' });
-      expect(screen.getByText('Apple')).toBeInTheDocument();
-    });
-
-    await user.click(screen.getByRole('button', { name: 'All' }));
-
-    await waitFor(() => {
-      expect(router.state.location.search).toEqual({});
+      expect(router.state.location.search).toMatchObject({ q: 'iron' });
+      expect(router.state.location.search).not.toHaveProperty('letter');
       expect(screen.getByText('Iron')).toBeInTheDocument();
     });
   });

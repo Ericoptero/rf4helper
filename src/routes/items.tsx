@@ -1,9 +1,8 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { z } from 'zod';
-import { ItemsList, type ItemLetterFilter } from '@/components/Items/ItemsList';
+import { ItemsList } from '@/components/Items/ItemsList';
 
 type ItemsSearch = {
-  letter?: ItemLetterFilter;
   q?: string;
   view?: 'cards' | 'table';
   sort?: string;
@@ -19,9 +18,7 @@ type ItemsSearch = {
   detail?: string;
 };
 
-const itemLetterFilterSchema = z.enum(['all', ...'abcdefghijklmnopqrstuvwxyz'.split(''), '#'] as [ItemLetterFilter, ...ItemLetterFilter[]]);
 const itemsSearchSchema = z.object({
-  letter: itemLetterFilterSchema.optional().catch(undefined),
   q: z.string().trim().min(1).optional().catch(undefined),
   view: z.enum(['cards', 'table']).optional().catch(undefined),
   sort: z.string().trim().min(1).optional().catch(undefined),
@@ -38,17 +35,7 @@ const itemsSearchSchema = z.object({
 });
 
 export const Route = createFileRoute('/items')({
-  validateSearch: (search: Record<string, unknown>): ItemsSearch => {
-    const parsedSearch = itemsSearchSchema.parse({
-      ...search,
-      letter: typeof search.letter === 'string' ? search.letter.toLowerCase() : undefined,
-    });
-
-    return {
-      ...parsedSearch,
-      letter: parsedSearch.letter === 'all' ? undefined : parsedSearch.letter,
-    };
-  },
+  validateSearch: (search: Record<string, unknown>): ItemsSearch => itemsSearchSchema.parse(search),
   component: ItemsRoute,
 });
 
@@ -56,32 +43,29 @@ function ItemsRoute() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const updateSearchValue = (key: keyof ItemsSearch, value?: string) => {
+  const updateSearchValue = (key: keyof ItemsSearch, value?: string | string[]) => {
+    const normalizedValue = Array.isArray(value) ? value.join(',') || undefined : value;
+
     void navigate({
       search: (previous) => {
         const next = { ...previous };
-        if (!value) {
+        delete (next as Record<string, unknown>).letter;
+        if (!normalizedValue) {
           delete next[key];
           return next;
         }
 
-        next[key] = value as never;
+        next[key] = normalizedValue as never;
         return next;
       },
       replace: true,
     });
   };
 
-  const updateLetterFilter = (letter: ItemLetterFilter) => {
-    updateSearchValue('letter', letter === 'all' ? undefined : letter);
-  };
-
   return (
     <ItemsList
       searchTerm={search.q ?? ''}
       onSearchTermChange={(value) => updateSearchValue('q', value.trim() || undefined)}
-      letterFilter={search.letter ?? 'all'}
-      onLetterFilterChange={updateLetterFilter}
       viewMode={search.view}
       onViewModeChange={(value) => updateSearchValue('view', value === 'cards' ? undefined : value)}
       sortValue={search.sort}

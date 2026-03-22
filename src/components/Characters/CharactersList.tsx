@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   CatalogPageLayout,
+  type CatalogFilterValue,
   type CatalogFilterDefinition,
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
@@ -95,8 +96,8 @@ function CharactersCatalog({
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
-  filterValues?: Record<string, string | undefined>;
-  onFilterValueChange?: (key: string, value: string | undefined) => void;
+  filterValues?: Record<string, CatalogFilterValue>;
+  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 }) {
   const { data: characters, isLoading } = useCharacters();
   const { openRoot } = useDetailDrawer();
@@ -210,14 +211,14 @@ export function CharactersList({
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
-  filterValues?: Record<string, string | undefined>;
-  onFilterValueChange?: (key: string, value: string | undefined) => void;
+  filterValues?: Record<string, CatalogFilterValue>;
+  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 } = {}) {
   const [internalDetailValue, setInternalDetailValue] = React.useState<string | undefined>();
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
   const [internalViewMode, setInternalViewMode] = React.useState<'cards' | 'table'>('cards');
   const [internalSortValue, setInternalSortValue] = React.useState('name-asc');
-  const [internalFilterValues, setInternalFilterValues] = React.useState<Record<string, string | undefined>>({});
+  const [internalFilterValues, setInternalFilterValues] = React.useState<Record<string, CatalogFilterValue>>({});
 
   return (
     <DetailDrawerProvider

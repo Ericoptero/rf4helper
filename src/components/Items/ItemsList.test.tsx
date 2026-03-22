@@ -197,27 +197,17 @@ describe('ItemsList Component', () => {
     expect(screen.getAllByText(/Buy:\s*200/).length).toBeGreaterThan(0);
   });
 
-  it('renders alphabet controls and filters items by selected letter', async () => {
-    const user = userEvent.setup();
-
+  it('does not render alphabet controls', async () => {
     render(<ItemsList />, { wrapper });
 
     await screen.findAllByText('Bread');
 
-    expect(screen.getByRole('button', { name: 'All' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'A' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'B' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '#' })).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: 'A' }));
-
-    expect(screen.getByText("Ambrosia's Thorns")).toBeInTheDocument();
-    expect(screen.getByText('Apple')).toBeInTheDocument();
-    expect(screen.queryByText('Bread')).not.toBeInTheDocument();
-    expect(screen.queryByText('10-Fold Steel')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'All' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'A' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '#' })).not.toBeInTheDocument();
   });
 
-  it('combines search, alphabet filter, and type filter', async () => {
+  it('combines search and drawer type filter', async () => {
     const user = userEvent.setup();
 
     render(<ItemsList />, { wrapper });
@@ -225,13 +215,16 @@ describe('ItemsList Component', () => {
     await screen.findAllByText('Bread');
 
     await user.type(screen.getByPlaceholderText(/search/i), 'a');
-    await user.click(screen.getByRole('button', { name: 'A' }));
+    await user.click(screen.getByRole('button', { name: /more filters/i }));
 
-    const filterCombobox = screen.getAllByRole('combobox')[0];
+    const dialog = await screen.findByRole('dialog');
+    const filterCombobox = within(dialog).getByRole('combobox', { name: 'Type' });
     await user.click(filterCombobox);
+    await user.type(filterCombobox, 'Crop');
 
-    const listbox = await screen.findByRole('listbox');
-    await user.click(within(listbox).getByText('Crop'));
+    const option = await screen.findByRole('option', { name: 'Crop' });
+    await user.click(option);
+    await user.click(within(dialog).getByRole('button', { name: /apply filters/i }));
 
     expect(screen.getByText('Apple')).toBeInTheDocument();
     expect(screen.queryByText("Ambrosia's Thorns")).not.toBeInTheDocument();

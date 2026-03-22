@@ -3,9 +3,9 @@ import { Box, Coins, Hammer, MapPin, Star } from 'lucide-react';
 import { useItems } from '@/hooks/queries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   CatalogPageLayout,
+  type CatalogFilterValue,
   type CatalogFilterDefinition,
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
@@ -13,52 +13,6 @@ import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/Deta
 import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import type { Item } from '@/lib/schemas';
-
-const alphabetFilters = ['all', ...'abcdefghijklmnopqrstuvwxyz'.split(''), '#'] as const;
-export type ItemLetterFilter = typeof alphabetFilters[number];
-
-function getItemLetterBucket(name: string) {
-  const firstCharacter = name.trim().charAt(0).toLowerCase();
-  return /^[a-z]$/.test(firstCharacter) ? firstCharacter : '#';
-}
-
-function filterItemsByLetter(items: Item[], letter: ItemLetterFilter) {
-  if (letter === 'all') {
-    return items;
-  }
-
-  return items.filter((item) => getItemLetterBucket(item.name) === letter);
-}
-
-function AlphabetFilter({
-  value,
-  onValueChange,
-}: {
-  value: ItemLetterFilter;
-  onValueChange: (value: ItemLetterFilter) => void;
-}) {
-  return (
-    <div className="flex w-full flex-wrap gap-2 lg:w-auto">
-      {alphabetFilters.map((letter) => {
-        const isActive = value === letter;
-        const label = letter === 'all' ? 'All' : letter.toUpperCase();
-
-        return (
-          <Button
-            key={letter}
-            type="button"
-            variant={isActive ? 'default' : 'outline'}
-            size="sm"
-            aria-pressed={isActive}
-            onClick={() => onValueChange(letter)}
-          >
-            {label}
-          </Button>
-        );
-      })}
-    </div>
-  );
-}
 
 function ItemCard({ item, onClick }: { item: Item; onClick: () => void }) {
   const isCrafted = Boolean(item.craft?.length || item.craftedFrom?.length);
@@ -121,8 +75,6 @@ function ItemCard({ item, onClick }: { item: Item; onClick: () => void }) {
 function ItemsCatalog({
   searchTerm,
   onSearchTermChange,
-  letterFilter,
-  onLetterFilterChange,
   viewMode,
   onViewModeChange,
   sortValue,
@@ -132,25 +84,22 @@ function ItemsCatalog({
 }: {
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
-  letterFilter?: ItemLetterFilter;
-  onLetterFilterChange?: (value: ItemLetterFilter) => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
-  filterValues?: Record<string, string | undefined>;
-  onFilterValueChange?: (key: string, value: string | undefined) => void;
+  filterValues?: Record<string, CatalogFilterValue>;
+  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 }) {
   const { data: items, isLoading } = useItems();
   const { openRoot } = useDetailDrawer();
 
   const list = Object.values(items || {});
-  const filteredByLetter = filterItemsByLetter(list, letterFilter ?? 'all');
-  const types = Array.from(new Set(filteredByLetter.map((item) => item.type))).sort();
-  const categories = Array.from(new Set(filteredByLetter.map((item) => item.category).filter(Boolean) as string[])).sort();
-  const regions = Array.from(new Set(filteredByLetter.map((item) => item.region).filter(Boolean) as string[])).sort();
+  const types = Array.from(new Set(list.map((item) => item.type))).sort();
+  const categories = Array.from(new Set(list.map((item) => item.category).filter(Boolean) as string[])).sort();
+  const regions = Array.from(new Set(list.map((item) => item.region).filter(Boolean) as string[])).sort();
   const rarityCategories = Array.from(
-    new Set(filteredByLetter.map((item) => item.rarityCategory).filter(Boolean) as string[]),
+    new Set(list.map((item) => item.rarityCategory).filter(Boolean) as string[]),
   ).sort();
 
   const filters: CatalogFilterDefinition<Item>[] = [
@@ -178,21 +127,21 @@ function ItemsCatalog({
     {
       key: 'ship',
       label: 'Shippable',
-      placement: 'advanced',
+      control: 'boolean-toggle',
       options: [{ label: 'Shippable', value: 'yes' }],
       predicate: (item, value) => value !== 'yes' || Boolean(item.shippable),
     },
     {
       key: 'buyable',
       label: 'Buyable',
-      placement: 'advanced',
+      control: 'boolean-toggle',
       options: [{ label: 'Buyable', value: 'yes' }],
       predicate: (item, value) => value !== 'yes' || (item.buy ?? 0) > 0,
     },
     {
       key: 'sellable',
       label: 'Sellable',
-      placement: 'advanced',
+      control: 'boolean-toggle',
       options: [{ label: 'Sellable', value: 'yes' }],
       predicate: (item, value) => value !== 'yes' || (item.sell ?? 0) > 0,
     },
@@ -206,14 +155,14 @@ function ItemsCatalog({
     {
       key: 'craft',
       label: 'Crafting',
-      placement: 'advanced',
+      control: 'boolean-toggle',
       options: [{ label: 'Has crafting data', value: 'yes' }],
       predicate: (item, value) => value !== 'yes' || Boolean(item.craft?.length || item.craftedFrom?.length),
     },
     {
       key: 'effects',
       label: 'Effects',
-      placement: 'advanced',
+      control: 'boolean-toggle',
       options: [{ label: 'Has effects', value: 'yes' }],
       predicate: (item, value) => value !== 'yes' || Boolean(item.effects?.length),
     },
@@ -239,7 +188,7 @@ function ItemsCatalog({
   return (
     <>
       <CatalogPageLayout<Item>
-        data={filteredByLetter}
+        data={list}
         title="Items Database"
         searchKey="name"
         searchTerm={searchTerm}
@@ -255,7 +204,6 @@ function ItemsCatalog({
         tableColumns={tableColumns}
         getItemKey={(item) => item.id}
         isLoading={isLoading}
-        extraControls={<AlphabetFilter value={letterFilter ?? 'all'} onValueChange={onLetterFilterChange ?? (() => undefined)} />}
         renderCard={(item, onClick) => <ItemCard item={item} onClick={onClick} />}
         onOpenItem={(item) => openRoot({ type: 'item', id: item.id })}
       />
@@ -269,8 +217,6 @@ export function ItemsList({
   onDetailValueChange,
   searchTerm,
   onSearchTermChange,
-  letterFilter,
-  onLetterFilterChange,
   viewMode,
   onViewModeChange,
   sortValue,
@@ -282,21 +228,18 @@ export function ItemsList({
   onDetailValueChange?: (value?: string) => void;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
-  letterFilter?: ItemLetterFilter;
-  onLetterFilterChange?: (value: ItemLetterFilter) => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
-  filterValues?: Record<string, string | undefined>;
-  onFilterValueChange?: (key: string, value: string | undefined) => void;
+  filterValues?: Record<string, CatalogFilterValue>;
+  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 } = {}) {
   const [internalDetailValue, setInternalDetailValue] = React.useState<string | undefined>();
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
-  const [internalLetterFilter, setInternalLetterFilter] = React.useState<ItemLetterFilter>('all');
   const [internalViewMode, setInternalViewMode] = React.useState<'cards' | 'table'>('cards');
   const [internalSortValue, setInternalSortValue] = React.useState('name-asc');
-  const [internalFilterValues, setInternalFilterValues] = React.useState<Record<string, string | undefined>>({});
+  const [internalFilterValues, setInternalFilterValues] = React.useState<Record<string, CatalogFilterValue>>({});
 
   return (
     <DetailDrawerProvider
@@ -306,8 +249,6 @@ export function ItemsList({
       <ItemsCatalog
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
-        letterFilter={letterFilter ?? internalLetterFilter}
-        onLetterFilterChange={onLetterFilterChange ?? setInternalLetterFilter}
         viewMode={viewMode ?? internalViewMode}
         onViewModeChange={onViewModeChange ?? setInternalViewMode}
         sortValue={sortValue ?? internalSortValue}

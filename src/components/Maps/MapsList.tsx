@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   CatalogPageLayout,
+  type CatalogFilterValue,
   type CatalogFilterDefinition,
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
@@ -64,8 +65,8 @@ function MapsCatalog({
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
-  filterValues?: Record<string, string | undefined>;
-  onFilterValueChange?: (key: string, value: string | undefined) => void;
+  filterValues?: Record<string, CatalogFilterValue>;
+  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 }) {
   const { data: chests, isLoading: chestsLoading } = useChests();
   const { data: fish, isLoading: fishLoading } = useFish();
@@ -77,21 +78,21 @@ function MapsCatalog({
     {
       key: 'hasFishing',
       label: 'Fishing',
-      placement: 'primary',
+      control: 'boolean-toggle',
       options: [{ label: 'Has Fishing Locations', value: 'yes' }],
       predicate: (region, value) => value !== 'yes' || region.fishingLocations.length > 0,
     },
     {
       key: 'hasNotes',
       label: 'Notes',
-      placement: 'advanced',
+      control: 'boolean-toggle',
       options: [{ label: 'Has Chest Notes', value: 'yes' }],
       predicate: (region, value) => value !== 'yes' || region.chests.some((chest) => Boolean(chest.notes)),
     },
     {
       key: 'hasRecipe',
       label: 'Recipes',
-      placement: 'advanced',
+      control: 'boolean-toggle',
       options: [{ label: 'Has Recipe Chest', value: 'yes' }],
       predicate: (region, value) => value !== 'yes' || region.chests.some((chest) => Boolean(chest.recipe)),
     },
@@ -174,14 +175,14 @@ export function MapsList({
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
-  filterValues?: Record<string, string | undefined>;
-  onFilterValueChange?: (key: string, value: string | undefined) => void;
+  filterValues?: Record<string, CatalogFilterValue>;
+  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 } = {}) {
   const [internalDetailValue, setInternalDetailValue] = React.useState<string | undefined>();
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
   const [internalViewMode, setInternalViewMode] = React.useState<'cards' | 'table'>('cards');
   const [internalSortValue, setInternalSortValue] = React.useState('name-asc');
-  const [internalFilterValues, setInternalFilterValues] = React.useState<Record<string, string | undefined>>({});
+  const [internalFilterValues, setInternalFilterValues] = React.useState<Record<string, CatalogFilterValue>>({});
 
   return (
     <DetailDrawerProvider

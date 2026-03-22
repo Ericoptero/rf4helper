@@ -103,12 +103,13 @@ describe('FishingList Component', () => {
      render(<FishingList />, { wrapper });
  
      await screen.findByText('Fishing Guide');
+     await user.click(screen.getByRole('button', { name: /more filters/i }));
 
-     // Select element is wrapped by radix, which has 'All' as default value text
-     const filterCombobox = screen.getByRole('combobox', { name: 'Shadow' });
+     const dialog = await screen.findByRole('dialog');
+     const filterCombobox = within(dialog).getByRole('combobox', { name: 'Shadow' });
      await user.click(filterCombobox);
+     await user.type(filterCombobox, 'shadow');
 
-     // Wait for dropdown to open (Radix Portal appends to body)
      const listbox = await screen.findByRole('listbox');
      expect(within(listbox).getByText(/small shadow/i)).toBeInTheDocument();
      expect(within(listbox).getByText(/medium shadow/i)).toBeInTheDocument();
