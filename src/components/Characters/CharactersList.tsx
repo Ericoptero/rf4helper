@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Smile, Swords } from 'lucide-react';
+import { Smile } from 'lucide-react';
 import { useCharacters } from '@/hooks/queries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,10 +10,13 @@ import {
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
 import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/DetailDrawerContext';
-import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import { resolveCharacterImage } from '@/lib/characterImages';
 import type { Character } from '@/lib/schemas';
+
+const CharacterDetailsDrawer = React.lazy(() =>
+  import('@/components/details/CharacterDetailsDrawer').then((module) => ({ default: module.CharacterDetailsDrawer })),
+);
 
 function formatBirthday(character: Character) {
   if (!character.birthday?.season || character.birthday.day == null) {
@@ -186,7 +189,9 @@ function CharactersCatalog({
         renderCard={(character, onClick) => <CharacterCard character={character} onClick={onClick} />}
         onOpenItem={(character) => openRoot({ type: 'character', id: character.id })}
       />
-      <UniversalDetailsDrawer />
+      <React.Suspense fallback={null}>
+        <CharacterDetailsDrawer />
+      </React.Suspense>
     </>
   );
 }

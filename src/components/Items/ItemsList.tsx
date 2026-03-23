@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Coins, Hammer, MapPin, Star } from 'lucide-react';
+import { Box, Coins, Hammer, Star } from 'lucide-react';
 import { useItems } from '@/hooks/queries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

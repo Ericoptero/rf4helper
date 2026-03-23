@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  ArrowLeft,
   Box,
   Calendar as CalendarIcon,
   Coins,
@@ -15,22 +14,19 @@ import {
   Sparkles,
   Sword,
   Wheat,
-  X,
 } from 'lucide-react';
 import { useCharacters, useChests, useCrops, useFestivals, useFish, useItems, useMonsters } from '@/hooks/queries';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { resolveCharacterImage } from '@/lib/characterImages';
 import { resolveFishImage } from '@/lib/fishImages';
 import { buildMapRegions } from '@/lib/mapFishingRelations';
 import { buildMonsterGroups, isMonsterActuallyTameable } from '@/lib/monsterGroups';
 import { capitalize, formatName, formatNumber } from '@/lib/formatters';
-import type { Character, Crop, Festival, Fish, Item, Monster } from '@/lib/schemas';
+import type { Character, Crop, Festival, Fish, Item } from '@/lib/schemas';
 import { useDetailDrawer } from './DetailDrawerContext';
+import { CatalogDetailsDrawerShell } from './CatalogDetailsDrawerShell';
 import { LinkedEntityToken } from './LinkedEntityToken';
 import { getSemanticBadgeClass } from './semanticBadges';
 
@@ -928,7 +924,7 @@ function CropDetailsContent({ crop }: { crop: Crop }) {
 }
 
 export function UniversalDetailsDrawer() {
-  const { current, canGoBack, back, close } = useDetailDrawer();
+  const { current } = useDetailDrawer();
   const { data: items } = useItems();
   const { data: characters } = useCharacters();
   const { data: monsters } = useMonsters();
@@ -983,39 +979,5 @@ export function UniversalDetailsDrawer() {
     }
   }, [characters, crops, current, festivals, fish, items, mapRegions, monsterGroups]);
 
-  return (
-    <Sheet open={!!resolved} onOpenChange={(open) => !open && close()}>
-      <SheetContent side="right" className="w-full p-0 sm:max-w-xl lg:max-w-2xl" showCloseButton={false}>
-        {resolved ? (
-          <>
-            <div className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur">
-              <div className="flex items-center gap-2 px-4 py-3">
-                {canGoBack ? (
-                  <Button type="button" variant="ghost" size="icon-sm" onClick={back}>
-                    <ArrowLeft className="h-4 w-4" />
-                    <span className="sr-only">Back</span>
-                  </Button>
-                ) : null}
-                <div className="min-w-0 flex-1">
-                  <SheetHeader className="p-0 pr-12">
-                    <SheetTitle>{resolved.title}</SheetTitle>
-                    <SheetDescription className="sr-only">
-                      View the selected entry details.
-                    </SheetDescription>
-                  </SheetHeader>
-                </div>
-                <Button type="button" variant="ghost" size="icon-sm" onClick={close}>
-                  <X className="h-4 w-4" />
-                  <span className="sr-only">Close</span>
-                </Button>
-              </div>
-            </div>
-            <ScrollArea data-testid="catalog-detail-scroll" className="min-h-0 flex-1">
-              <div className="px-6 pb-6 pt-6">{resolved.content}</div>
-            </ScrollArea>
-          </>
-        ) : null}
-      </SheetContent>
-    </Sheet>
-  );
+  return <CatalogDetailsDrawerShell resolved={resolved} />;
 }

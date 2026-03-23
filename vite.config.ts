@@ -31,5 +31,7 @@ export default defineConfig({
     },
     setupFiles: "./src/setupTests.ts",
     globals: true,
+    exclude: ['tests/playwright/**', 'node_modules/**', 'dist/**'],
+    maxWorkers: 1,
   },
 });

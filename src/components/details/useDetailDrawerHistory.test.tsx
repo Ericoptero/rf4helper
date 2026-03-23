@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { useDetailDrawerHistory, type DetailEntityReference } from './useDetailDrawerHistory';
+import { useDetailDrawerHistory } from './useDetailDrawerHistory';
+import type { DetailEntityReference } from './detailTypes';
 
 function HistoryHarness() {
   const history = useDetailDrawerHistory();

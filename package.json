@@ -7,8 +7,16 @@
     "dev": "vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "typecheck": "tsc -b",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "test:run": "vitest --run",
+    "test:unit": "vitest --run",
+    "test:e2e": "playwright test --grep @smoke",
+    "test:visual": "playwright test --grep @visual",
+    "check": "npm run lint && npm run typecheck && npm run test:unit && npm run test:visual",
+    "check:changed": "node scripts/check-changed.mjs",
+    "prepare": "husky"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
@@ -33,6 +41,7 @@
   "devDependencies": {
     "@babel/core": "^7.29.0",
     "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.58.2",
     "@rolldown/plugin-babel": "^0.2.0",
     "@tanstack/eslint-plugin-query": "^5.91.4",
     "@tanstack/router-plugin": "^1.166.12",
@@ -51,7 +60,9 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "husky": "^9.1.7",
     "jsdom": "^29.0.0",
+    "lint-staged": "^16.4.0",
     "msw": "^2.12.11",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.56.1",

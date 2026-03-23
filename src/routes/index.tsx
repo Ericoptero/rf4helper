@@ -12,6 +12,7 @@ import {
   Users,
 } from 'lucide-react';
 import { useCharacters, useItems, useMonsters } from '@/hooks/queries';
+import { appSurfaceClassNames } from '@/lib/catalogPresentation';
 
 type CategoryCard = {
   to: string;
@@ -110,7 +111,7 @@ function Dashboard() {
 
   return (
     <div className="flex flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
-      <section className="rounded-3xl border bg-card/90 p-6 shadow-sm">
+      <section className={`${appSurfaceClassNames.shell} p-6`}>
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           <Sparkles className="h-3.5 w-3.5" />
           Enchanted Codex
@@ -131,7 +132,7 @@ function Dashboard() {
           <Link
             key={to}
             to={to}
-            className="group rounded-2xl border bg-card/90 p-5 shadow-sm transition-transform hover:-translate-y-0.5 hover:border-primary/40"
+            className={`group ${appSurfaceClassNames.interactivePanel} p-5`}
           >
             <div className="flex items-start justify-between gap-4">
               <div className={`rounded-xl border px-3 py-3 ${accentClass}`}>

@@ -12,6 +12,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
+import { appSurfaceClassNames } from '@/lib/catalogPresentation';
 
 export function AppShell() {
   const { theme, toggleTheme } = useTheme();
@@ -19,7 +20,7 @@ export function AppShell() {
   return (
     <div className="min-h-dvh bg-background text-foreground">
       <div className="flex min-h-dvh">
-        <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:h-dvh lg:w-64 lg:flex-col lg:border-r lg:bg-card/85 lg:backdrop-blur">
+        <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:h-dvh lg:w-64 lg:flex-col ${appSurfaceClassNames.sidebar}`}>
           <div className="flex items-center justify-between border-b px-4 py-4">
             <Link to="/" className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-sm font-black text-primary-foreground">
@@ -103,7 +104,7 @@ export function AppShell() {
                   </SheetTrigger>
                   <SheetContent
                     side="left"
-                    className="w-[88vw] max-w-sm p-0"
+                    className={`w-[88vw] max-w-sm p-0 ${appSurfaceClassNames.drawer}`}
                   >
                     <SheetHeader className="border-b px-4 py-4 text-left">
                       <SheetTitle>Navigation</SheetTitle>

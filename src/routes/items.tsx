@@ -1,22 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { z } from 'zod';
 import { ItemsList } from '@/components/Items/ItemsList';
-
-type ItemsSearch = {
-  q?: string;
-  view?: 'cards' | 'table';
-  sort?: string;
-  type?: string;
-  category?: string;
-  region?: string;
-  ship?: string;
-  buyable?: string;
-  sellable?: string;
-  rarity?: string;
-  craft?: string;
-  effects?: string;
-  detail?: string;
-};
+import { normalizeCatalogViewMode, type CatalogViewMode } from '@/lib/catalogPresentation';
 
 const itemsSearchSchema = z.object({
   q: z.string().trim().min(1).optional().catch(undefined),
@@ -34,6 +19,8 @@ const itemsSearchSchema = z.object({
   detail: z.string().trim().min(1).optional().catch(undefined),
 });
 
+type ItemsSearch = z.infer<typeof itemsSearchSchema>;
+
 export const Route = createFileRoute('/items')({
   validateSearch: (search: Record<string, unknown>): ItemsSearch => itemsSearchSchema.parse(search),
   component: ItemsRoute,
@@ -43,20 +30,23 @@ function ItemsRoute() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const updateSearchValue = (key: keyof ItemsSearch, value?: string | string[]) => {
+  const updateSearchValue = <K extends keyof ItemsSearch>(
+    key: K,
+    value?: ItemsSearch[K] | string[],
+  ) => {
     const normalizedValue = Array.isArray(value) ? value.join(',') || undefined : value;
 
     void navigate({
       search: (previous) => {
-        const next = { ...previous };
-        delete (next as Record<string, unknown>).letter;
+        const next: Record<string, string | undefined> = { ...previous };
+        delete next.letter;
         if (!normalizedValue) {
           delete next[key];
-          return next;
+          return next as ItemsSearch;
         }
 
-        next[key] = normalizedValue as never;
-        return next;
+        next[key] = normalizedValue;
+        return next as ItemsSearch;
       },
       replace: true,
     });
@@ -66,8 +56,8 @@ function ItemsRoute() {
     <ItemsList
       searchTerm={search.q ?? ''}
       onSearchTermChange={(value) => updateSearchValue('q', value.trim() || undefined)}
-      viewMode={search.view}
-      onViewModeChange={(value) => updateSearchValue('view', value === 'cards' ? undefined : value)}
+      viewMode={normalizeCatalogViewMode(search.view)}
+      onViewModeChange={(value: CatalogViewMode) => updateSearchValue('view', value === 'cards' ? undefined : value)}
       sortValue={search.sort}
       onSortValueChange={(value) => updateSearchValue('sort', value)}
       detailValue={search.detail}

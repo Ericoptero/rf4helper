@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
@@ -53,6 +53,9 @@ const mockCharacters: Record<string, Character> = {
 };
 
 const server = setupServer(
+  http.get('http://localhost:3000/data/items.json', () => {
+    return HttpResponse.json({});
+  }),
   http.get('http://localhost:3000/data/characters.json', () => {
     return HttpResponse.json(mockCharacters);
   })
@@ -146,4 +149,5 @@ describe('CharactersList Component', () => {
     expect(screen.getByText('Description unavailable.')).toBeInTheDocument();
     expect(screen.getByText('Battle information unavailable.')).toBeInTheDocument();
   });
+
 });

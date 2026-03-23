@@ -1,0 +1,8 @@
+{
+  "*.{js,mjs,cjs,ts,tsx}": [
+    "eslint --max-warnings=0"
+  ],
+  "src/**/*.{ts,tsx}": [
+    "vitest related --run"
+  ]
+}

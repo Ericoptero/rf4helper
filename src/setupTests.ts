@@ -17,11 +17,13 @@ afterAll(() => server.close());
 
 // Polyfills for missing jsdom features required by Radix UI
 if (typeof window !== 'undefined') {
-  window.PointerEvent = window.PointerEvent || class PointerEvent extends Event {
+  const PointerEventPolyfill = class PointerEventPolyfill extends Event {
     constructor(type: string, params: PointerEventInit = {}) {
       super(type, params);
     }
-  } as any;
+  };
+
+  window.PointerEvent = window.PointerEvent || (PointerEventPolyfill as unknown as typeof window.PointerEvent);
   window.HTMLElement.prototype.hasPointerCapture = vi.fn();
   window.HTMLElement.prototype.setPointerCapture = vi.fn();
   window.HTMLElement.prototype.releasePointerCapture = vi.fn();

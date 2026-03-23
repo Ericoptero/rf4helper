@@ -46,8 +46,6 @@ function MapCard({ region, onClick }: { region: MapRegionRecord; onClick: () => 
 }
 
 function MapsCatalog({
-  detailValue,
-  onDetailValueChange,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -57,8 +55,6 @@ function MapsCatalog({
   filterValues,
   onFilterValueChange,
 }: {
-  detailValue?: string;
-  onDetailValueChange?: (value?: string) => void;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -190,8 +186,6 @@ export function MapsList({
       onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
     >
       <MapsCatalog
-        detailValue={detailValue ?? internalDetailValue}
-        onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
         viewMode={viewMode ?? internalViewMode}

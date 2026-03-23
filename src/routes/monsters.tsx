@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { z } from 'zod';
 import { MonstersList } from '@/components/Monsters/MonstersList';
+import { normalizeCatalogViewMode, type CatalogViewMode } from '@/lib/catalogPresentation';
 
 const monstersSearchSchema = z.object({
   q: z.string().trim().min(1).optional().catch(undefined),
@@ -26,19 +27,22 @@ function MonstersRoute() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const updateSearchValue = (key: keyof MonstersSearch, value?: string | string[]) => {
+  const updateSearchValue = <K extends keyof MonstersSearch>(
+    key: K,
+    value?: MonstersSearch[K] | string[],
+  ) => {
     const normalizedValue = Array.isArray(value) ? value.join(',') || undefined : value;
 
     void navigate({
       search: (previous) => {
-        const next = { ...previous };
+        const next: Record<string, string | undefined> = { ...previous };
         if (!normalizedValue) {
           delete next[key];
-          return next;
+          return next as MonstersSearch;
         }
 
         next[key] = normalizedValue;
-        return next;
+        return next as MonstersSearch;
       },
       replace: true,
     });
@@ -48,8 +52,8 @@ function MonstersRoute() {
     <MonstersList
       searchTerm={search.q ?? ''}
       onSearchTermChange={(value) => updateSearchValue('q', value.trim() || undefined)}
-      viewMode={search.view}
-      onViewModeChange={(value) => updateSearchValue('view', value === 'cards' ? undefined : value)}
+      viewMode={normalizeCatalogViewMode(search.view)}
+      onViewModeChange={(value: CatalogViewMode) => updateSearchValue('view', value === 'cards' ? undefined : value)}
       sortValue={search.sort}
       onSortValueChange={(value) => updateSearchValue('sort', value)}
       detailValue={search.detail}

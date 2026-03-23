@@ -132,22 +132,23 @@ describe('MonstersList Component', () => {
     });
 
     await user.click(screen.getByText('Octopirate'));
+    const dialog = await screen.findByRole('dialog', { name: 'Octopirate' });
 
     expect(screen.getAllByText('Octopirate').length).toBeGreaterThan(0);
-    expect(screen.getByText('Rate: 0.7%, 0.1%')).toBeInTheDocument();
+    expect(dialog).toHaveTextContent('Ammonite');
+    expect(dialog).toHaveTextContent('Nicknames');
     expect(screen.getByRole('heading', { name: 'Nicknames' })).toBeInTheDocument();
     expect(screen.getByText('Octo')).toBeInTheDocument();
-    expect(screen.getByText('Rideable:')).toBeInTheDocument();
-    expect(screen.getByText('Yes')).toBeInTheDocument();
-    expect(screen.getByText(/Physical 0%/i)).toBeInTheDocument();
+    expect(dialog).toHaveTextContent('Rideable: Yes');
+    expect(dialog).toHaveTextContent('Physical 0%');
     expect(screen.getByRole('tab', { name: 'Field Dungeon (Boss)' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Rune Prana F2 (Boss)' })).toBeInTheDocument();
 
     await user.click(screen.getByRole('tab', { name: 'Rune Prana F2 (Boss)' }));
 
-    expect(screen.getByText('A stronger Rune Prana encounter.')).toBeInTheDocument();
-    expect(screen.getByText('Rate: 70%, 20%')).toBeInTheDocument();
-    expect(screen.getByText('42000')).toBeInTheDocument();
+    expect(dialog).toHaveTextContent('A stronger Rune Prana encounter.');
+    expect(dialog).toHaveTextContent('Vital Gummi');
+    expect(dialog).toHaveTextContent('42000');
     expect(screen.queryByRole('heading', { name: 'Nicknames' })).not.toBeInTheDocument();
   });
 
@@ -175,9 +176,10 @@ describe('MonstersList Component', () => {
     expect(deathOrcCard).not.toHaveTextContent(/tameable/i);
 
     await user.click(screen.getByText('Death Orc'));
+    const dialog = await screen.findByRole('dialog', { name: 'Death Orc' });
 
     expect(screen.getAllByText('Death Orc').length).toBeGreaterThan(0);
-    expect(screen.getByText('Not Tameable')).toBeInTheDocument();
+    expect(dialog).toHaveTextContent('Not Tameable');
     expect(screen.queryByText('Taming Info')).not.toBeInTheDocument();
   });
 
@@ -190,13 +192,13 @@ describe('MonstersList Component', () => {
     });
 
     await user.click(screen.getByText('Octopirate'));
+    const dialog = await screen.findByRole('dialog', { name: 'Octopirate' });
 
-    expect(screen.getByText(/Physical 0%/i)).toBeInTheDocument();
+    expect(dialog).toHaveTextContent('Physical 0%');
     expect(screen.queryByText('HpDrain')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('tab', { name: 'Field Dungeon (Boss)' }));
-    expect(screen.getByText('Rideable:')).toBeInTheDocument();
-    expect(screen.getByText('Yes')).toBeInTheDocument();
+    expect(dialog).toHaveTextContent('Rideable: Yes');
   });
 
   it('hides rideable and nickname sections when data is missing', async () => {
@@ -211,5 +213,15 @@ describe('MonstersList Component', () => {
 
     expect(screen.queryByText('Rideable:')).not.toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'Nicknames' })).not.toBeInTheDocument();
+  });
+
+  it('hydrates the monster drawer from detailValue without loading unrelated domain content', async () => {
+    render(<MonstersList detailValue="monster:monster-octopirate" />, { wrapper });
+
+    const dialog = await screen.findByRole('dialog', { name: 'Octopirate' });
+
+    expect(dialog).toHaveTextContent('A shelled octopus found along the seashore in the summer. Spurts ink.');
+    expect(dialog).toHaveTextContent('Drops');
+    expect(dialog).not.toHaveTextContent('Gift Preferences');
   });
 });

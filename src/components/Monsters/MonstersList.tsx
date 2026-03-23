@@ -10,9 +10,12 @@ import {
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
 import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/DetailDrawerContext';
-import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import { buildMonsterGroups, isMonsterActuallyTameable, type MonsterGroup } from '@/lib/monsterGroups';
+
+const MonsterDetailsDrawer = React.lazy(() =>
+  import('@/components/details/MonsterDetailsDrawer').then((module) => ({ default: module.MonsterDetailsDrawer })),
+);
 
 const monsterImages = import.meta.glob('@/assets/images/monsters/*.png', {
   eager: true,
@@ -174,7 +177,9 @@ function MonstersCatalog({
         renderCard={(group, onClick) => <MonsterCard group={group} onClick={onClick} />}
         onOpenItem={(group) => openRoot({ type: 'monster', id: group.key })}
       />
-      <UniversalDetailsDrawer />
+      <React.Suspense fallback={null}>
+        <MonsterDetailsDrawer />
+      </React.Suspense>
     </>
   );
 }

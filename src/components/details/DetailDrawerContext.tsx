@@ -42,33 +42,31 @@ export function DetailDrawerProvider({
     history.syncTo(decoded);
   }, [currentEncoded, detailValue, history]);
 
-  const value = React.useMemo<DetailDrawerContextValue>(() => {
-    return {
-      current: history.current,
-      canGoBack: history.canGoBack,
-      openRoot: (entry) => {
-        history.openRoot(entry);
-        internalNavigationRef.current = true;
-        onDetailValueChange(encodeDetailEntity(entry));
-      },
-      openLinked: (entry) => {
-        history.openLinked(entry);
-        internalNavigationRef.current = true;
-        onDetailValueChange(encodeDetailEntity(entry));
-      },
-      back: () => {
-        const previous = history.stack.at(-2) ?? null;
-        history.back();
-        internalNavigationRef.current = true;
-        onDetailValueChange(previous ? encodeDetailEntity(previous) : undefined);
-      },
-      close: () => {
-        history.close();
-        internalNavigationRef.current = true;
-        onDetailValueChange(undefined);
-      },
-    };
-  }, [history, onDetailValueChange]);
+  const value: DetailDrawerContextValue = {
+    current: history.current,
+    canGoBack: history.canGoBack,
+    openRoot: (entry) => {
+      history.openRoot(entry);
+      internalNavigationRef.current = true;
+      onDetailValueChange(encodeDetailEntity(entry));
+    },
+    openLinked: (entry) => {
+      history.openLinked(entry);
+      internalNavigationRef.current = true;
+      onDetailValueChange(encodeDetailEntity(entry));
+    },
+    back: () => {
+      const previous = history.stack.at(-2) ?? null;
+      history.back();
+      internalNavigationRef.current = true;
+      onDetailValueChange(previous ? encodeDetailEntity(previous) : undefined);
+    },
+    close: () => {
+      history.close();
+      internalNavigationRef.current = true;
+      onDetailValueChange(undefined);
+    },
+  };
 
   return <DetailDrawerContext.Provider value={value}>{children}</DetailDrawerContext.Provider>;
 }

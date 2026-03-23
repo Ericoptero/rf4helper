@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { z } from 'zod';
 import { CharactersList } from '@/components/Characters/CharactersList';
+import { normalizeCatalogViewMode, type CatalogViewMode } from '@/lib/catalogPresentation';
 
 const charactersSearchSchema = z.object({
   q: z.string().trim().min(1).optional().catch(undefined),
@@ -26,19 +27,22 @@ function CharactersRoute() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
 
-  const updateSearchValue = (key: keyof CharactersSearch, value?: string | string[]) => {
+  const updateSearchValue = <K extends keyof CharactersSearch>(
+    key: K,
+    value?: CharactersSearch[K] | string[],
+  ) => {
     const normalizedValue = Array.isArray(value) ? value.join(',') || undefined : value;
 
     void navigate({
       search: (previous) => {
-        const next = { ...previous };
+        const next: Record<string, string | undefined> = { ...previous };
         if (!normalizedValue) {
           delete next[key];
-          return next;
+          return next as CharactersSearch;
         }
 
         next[key] = normalizedValue;
-        return next;
+        return next as CharactersSearch;
       },
       replace: true,
     });
@@ -48,8 +52,8 @@ function CharactersRoute() {
     <CharactersList
       searchTerm={search.q ?? ''}
       onSearchTermChange={(value) => updateSearchValue('q', value.trim() || undefined)}
-      viewMode={search.view}
-      onViewModeChange={(value) => updateSearchValue('view', value === 'cards' ? undefined : value)}
+      viewMode={normalizeCatalogViewMode(search.view)}
+      onViewModeChange={(value: CatalogViewMode) => updateSearchValue('view', value === 'cards' ? undefined : value)}
       sortValue={search.sort}
       onSortValueChange={(value) => updateSearchValue('sort', value)}
       detailValue={search.detail}

@@ -410,6 +410,36 @@ describe('Routing Integration', () => {
     expect(screen.queryByText('Orc')).not.toBeInTheDocument();
   });
 
+  it('hydrates the characters page detail drawer from the URL', async () => {
+    const router = createTestRouter(['/characters?detail=character:char-forte']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    const dialog = await screen.findByRole('dialog', { name: 'Forte' });
+
+    expect(dialog).toHaveTextContent('A steadfast knight of Selphia.');
+    expect(dialog).toHaveTextContent('Gift Preferences');
+  });
+
+  it('hydrates the monsters page detail drawer from the URL', async () => {
+    const router = createTestRouter(['/monsters?detail=monster:monster-octopirate']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    const dialog = await screen.findByRole('dialog', { name: 'Octopirate' });
+
+    expect(dialog).toHaveTextContent('A seaside boss monster.');
+    expect(dialog).toHaveTextContent('Taming Info');
+  });
+
   it('hydrates the fishing page from shadow and view search params', async () => {
     const router = createTestRouter(['/fishing?shadow=small&view=table']);
 
