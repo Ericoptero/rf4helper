@@ -471,8 +471,11 @@ describe('Routing Integration', () => {
       expect(screen.getByRole('heading', { name: /interactive crafter/i })).toBeInTheDocument();
     });
 
-    expect(screen.getByLabelText(/weapon appearance/i)).toHaveValue('item-claymore');
-    expect(screen.getByLabelText(/weapon base/i)).toHaveValue('item-broadsword');
+    expect(screen.getByRole('button', { name: /appearance/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /recipe 6/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /upgrade 9/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('img', { name: 'Claymore' }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('img', { name: 'Broadsword' }).length).toBeGreaterThan(0);
     expect(screen.getByText(/light ore can only safely copy/i)).toBeInTheDocument();
     expect(screen.getAllByText(/advanced breakdown/i).length).toBeGreaterThan(0);
   });
@@ -491,7 +494,13 @@ describe('Routing Integration', () => {
       expect(screen.getByRole('heading', { name: /interactive crafter/i })).toBeInTheDocument();
     });
 
-    await user.selectOptions(screen.getByLabelText(/weapon appearance/i), 'item-claymore');
+    await user.click(screen.getByRole('button', { name: /appearance/i }));
+    const drawer = await screen.findByRole('dialog');
+    const combobox = within(drawer).getByRole('combobox', { name: /appearance item/i });
+    await user.click(combobox);
+    await user.clear(combobox);
+    await user.type(combobox, 'Clay');
+    await user.click(await within(drawer).findByRole('option', { name: 'Claymore' }));
 
     await waitFor(() => {
       expect(router.state.location.search).toHaveProperty('build');
