@@ -1,6 +1,6 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
-import { fetchItems, fetchCharacters, fetchMonsters, fetchChests, fetchFestivals, fetchCrops, fetchFish, fetchOrders, fetchRequests, fetchRuneAbilities, fetchSkills, fetchTrophies } from '../lib/api';
-import type { Item, Character, Monster, Chest, Festival, CropsData, Fish, Order, RequestItem, RuneAbility, SkillsData, Trophy } from '../lib/schemas';
+import { fetchItems, fetchCharacters, fetchMonsters, fetchChests, fetchFestivals, fetchCrops, fetchFish, fetchOrders, fetchRequests, fetchRuneAbilities, fetchSkills, fetchTrophies, fetchCrafterData } from '../lib/api';
+import type { Item, Character, Monster, Chest, Festival, CropsData, Fish, Order, RequestItem, RuneAbility, SkillsData, Trophy, CrafterData } from '../lib/schemas';
 
 /**
  * All game data is static — it never changes at runtime.
@@ -104,6 +104,14 @@ export const useTrophies = (): UseQueryResult<Record<string, Trophy[]>, Error> =
   return useQuery({
     queryKey: ['trophies'],
     queryFn: fetchTrophies,
+    ...STATIC_QUERY_OPTIONS,
+  });
+};
+
+export const useCrafterData = (): UseQueryResult<CrafterData, Error> => {
+  return useQuery({
+    queryKey: ['crafter'],
+    queryFn: fetchCrafterData,
     ...STATIC_QUERY_OPTIONS,
   });
 };

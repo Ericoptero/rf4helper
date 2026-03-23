@@ -1,0 +1,216 @@
+{
+  "slotConfigs": [
+    {
+      "key": "weapon",
+      "label": "Weapon",
+      "stationType": "Forging",
+      "stations": ["Short Sword", "Long Sword", "Spear", "Axe", "Hammer", "Dual Blade", "Fist", "Staff"],
+      "supportsAppearance": true,
+      "inheritSlots": 3,
+      "upgradeSlots": 9
+    },
+    {
+      "key": "armor",
+      "label": "Armor",
+      "stationType": "Crafting",
+      "stations": ["Armor"],
+      "supportsAppearance": true,
+      "inheritSlots": 3,
+      "upgradeSlots": 9
+    },
+    {
+      "key": "headgear",
+      "label": "Headgear",
+      "stationType": "Crafting",
+      "stations": ["Headgear"],
+      "supportsAppearance": true,
+      "inheritSlots": 3,
+      "upgradeSlots": 9
+    },
+    {
+      "key": "shield",
+      "label": "Shield",
+      "stationType": "Crafting",
+      "stations": ["Shield"],
+      "supportsAppearance": true,
+      "inheritSlots": 3,
+      "upgradeSlots": 9
+    },
+    {
+      "key": "accessory",
+      "label": "Accessory",
+      "stationType": "Crafting",
+      "stations": ["Accessory"],
+      "supportsAppearance": false,
+      "inheritSlots": 3,
+      "upgradeSlots": 9
+    },
+    {
+      "key": "shoes",
+      "label": "Shoes",
+      "stationType": "Crafting",
+      "stations": ["Shoes"],
+      "supportsAppearance": false,
+      "inheritSlots": 3,
+      "upgradeSlots": 9
+    }
+  ],
+  "defaults": {
+    "weapon": {
+      "appearanceId": "item-broadsword",
+      "baseId": "item-broadsword",
+      "inherits": [
+        { "itemId": "item-shade-stone", "level": 10 },
+        { "itemId": "item-glitta-augite", "level": 10 },
+        { "itemId": "item-glitta-augite", "level": 10 }
+      ],
+      "upgrades": [
+        { "itemId": "item-firewyrm-scale", "level": 10 },
+        { "itemId": "item-10-fold-steel", "level": 10 },
+        { "itemId": "item-chimera-tail", "level": 10 },
+        { "itemId": "item-melody-bottle", "level": 10 },
+        { "itemId": "item-legendary-scale", "level": 10 },
+        { "itemId": "item-glitta-augite", "level": 10 },
+        { "itemId": "item-double-steel", "level": 10 },
+        { "itemId": "item-melody-bottle", "level": 10 },
+        { "itemId": "item-holy-spore", "level": 10 }
+      ]
+    },
+    "armor": {
+      "appearanceId": "item-royal-garter",
+      "baseId": "item-four-dragons-vest",
+      "inherits": [
+        { "itemId": "item-object-x", "level": 10 },
+        { "itemId": "item-mealy-apple", "level": 10 },
+        { "itemId": "item-mealy-apple", "level": 10 }
+      ],
+      "upgrades": [
+        { "itemId": "item-mealy-apple", "level": 10 },
+        { "itemId": "item-mealy-apple", "level": 10 },
+        { "itemId": "item-object-x", "level": 10 },
+        { "itemId": "item-firewyrm-scale", "level": 10 },
+        { "itemId": "item-10-fold-steel", "level": 10 },
+        { "itemId": "item-green-core", "level": 10 },
+        { "itemId": "item-red-core", "level": 10 },
+        { "itemId": "item-yellow-core", "level": 10 },
+        { "itemId": "item-blue-core", "level": 10 }
+      ]
+    },
+    "headgear": {
+      "appearanceId": "item-feathered-hat",
+      "baseId": "item-feathered-hat",
+      "inherits": [
+        { "itemId": "item-object-x", "level": 10 },
+        { "itemId": "item-mealy-apple", "level": 10 },
+        { "itemId": "item-mealy-apple", "level": 10 }
+      ],
+      "upgrades": [
+        { "itemId": "item-mealy-apple", "level": 10 },
+        { "itemId": "item-mealy-apple", "level": 10 },
+        { "itemId": "item-object-x", "level": 10 },
+        { "itemId": "item-firewyrm-scale", "level": 10 },
+        { "itemId": "item-10-fold-steel", "level": 10 },
+        { "itemId": "item-green-core", "level": 10 },
+        { "itemId": "item-red-core", "level": 10 },
+        { "itemId": "item-yellow-core", "level": 10 },
+        { "itemId": "item-blue-core", "level": 10 }
+      ]
+    },
+    "shield": {
+      "appearanceId": "item-rune-shield",
+      "baseId": "item-rune-shield",
+      "inherits": [],
+      "upgrades": []
+    },
+    "accessory": {
+      "baseId": "item-strange-pendant",
+      "inherits": [],
+      "upgrades": []
+    },
+    "shoes": {
+      "baseId": "item-heavy-boots",
+      "inherits": [],
+      "upgrades": []
+    },
+    "food": {
+      "baseId": "item-glitter-sashimi",
+      "ingredients": [
+        { "itemId": "item-golden-turnip", "level": 10 },
+        { "itemId": "item-golden-turnip", "level": 10 },
+        { "itemId": "item-golden-turnip", "level": 10 },
+        { "itemId": "item-golden-turnip", "level": 10 },
+        { "itemId": "item-golden-turnip", "level": 10 },
+        { "itemId": "item-glitter-snapper", "level": 10 }
+      ]
+    }
+  },
+  "specialMaterialRules": [
+    { "itemId": "item-object-x", "behavior": "invert" },
+    { "itemId": "item-double-steel", "behavior": "doublePrevious" },
+    { "itemId": "item-10-fold-steel", "behavior": "tenFoldPrevious" },
+    { "itemId": "item-light-ore", "behavior": "lightOre" }
+  ],
+  "weaponClassByStation": {
+    "Short Sword": "Short Sword",
+    "Long Sword": "Long Sword",
+    "Spear": "Spear",
+    "Axe": "Axe/Hammer",
+    "Hammer": "Axe/Hammer",
+    "Dual Blade": "Dual Blade",
+    "Fist": "Fist",
+    "Staff": "Staff"
+  },
+  "shieldCoverageByWeaponClass": {
+    "Short Sword": "full",
+    "Long Sword": "partial",
+    "Spear": "partial",
+    "Axe/Hammer": "partial",
+    "Staff": "partial",
+    "Dual Blade": "none",
+    "Fist": "none"
+  },
+  "chargeAttackByWeaponClass": {
+    "Short Sword": "Rush Slash",
+    "Long Sword": "Cyclone",
+    "Spear": "Millionstrike",
+    "Axe/Hammer": "Grand Impact",
+    "Dual Blade": "Twin Blitz",
+    "Fist": "Flash Palm",
+    "Staff": "Rune Burst"
+  },
+  "staffChargeByCrystalId": {
+    "item-fire-crystal": "Fireball",
+    "item-water-crystal": "Aqua Prison",
+    "item-earth-crystal": "Earth Spike",
+    "item-wind-crystal": "Sonic Wind"
+  },
+  "levelBonusTiers": [
+    { "threshold": 0, "tier": 0, "label": "", "stats": {} },
+    { "threshold": 30, "tier": 1, "label": "The materials used in making it were good quality.", "stats": { "atk": 10, "matk": 5, "def": 6, "mdef": 5 } },
+    { "threshold": 60, "tier": 2, "label": "A lot of good materials were used in making it.", "stats": { "atk": 25, "matk": 10, "def": 15, "mdef": 12 } },
+    { "threshold": 90, "tier": 3, "label": "The materials used in making it were great quality.", "stats": { "atk": 70, "matk": 40, "def": 36, "mdef": 28 } },
+    { "threshold": 120, "tier": 4, "label": "The materials used in making it were almost perfect.", "stats": { "atk": 200, "matk": 180, "def": 180, "mdef": 170 } },
+    { "threshold": 150, "tier": 5, "label": "Incredible! The materials used in making this were all perfect!", "stats": { "atk": 700, "matk": 650, "def": 350, "mdef": 350 } }
+  ],
+  "rarityBonusTiers": [
+    { "threshold": 0, "tier": 0, "label": "", "stats": {} },
+    { "threshold": 25, "tier": 1, "label": "It looks like it was made with some unusual materials.", "stats": { "atk": 10, "matk": 5, "def": 3, "mdef": 3 } },
+    { "threshold": 50, "tier": 2, "label": "It looks like it was made with unusual materials.", "stats": { "atk": 40, "matk": 15, "def": 10, "mdef": 10 } },
+    { "threshold": 75, "tier": 3, "label": "It looks like it was made with some rather unusual materials.", "stats": { "atk": 80, "matk": 35, "def": 20, "mdef": 20 } },
+    { "threshold": 100, "tier": 4, "label": "It looks like it was made with rare materials.", "stats": { "atk": 150, "matk": 100, "def": 50, "mdef": 50 } },
+    { "threshold": 125, "tier": 5, "label": "It looks like it was made with pretty rare materials.", "stats": { "atk": 300, "matk": 160, "def": 90, "mdef": 90 } },
+    { "threshold": 150, "tier": 6, "label": "It looks like it was made with really rare materials.", "stats": { "atk": 500, "matk": 400, "def": 150, "mdef": 150 } },
+    { "threshold": 175, "tier": 7, "label": "It looks like it was made with extremely rare materials.", "stats": { "atk": 1000, "matk": 950, "def": 400, "mdef": 400 } },
+    { "threshold": 200, "tier": 8, "label": "Incredible! It looks like it was made with nothing but the rarest of materials!", "stats": { "atk": 2000, "matk": 1800, "def": 800, "mdef": 780 } }
+  ],
+  "foodOverrides": {
+    "item-golden-turnip": {
+      "additive": { "hp": 800 },
+      "multipliers": { "str": 0.025 }
+    },
+    "item-glitter-snapper": {
+      "additive": { "str": 1 },
+      "multipliers": {}
+    }
+  }
+}

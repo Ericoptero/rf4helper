@@ -367,3 +367,97 @@ export const TrophySchema = z.object({
   requirements: z.string().nullable().optional(),
 });
 export type Trophy = z.infer<typeof TrophySchema>;
+
+export const CrafterSlotKeySchema = z.enum([
+  'weapon',
+  'armor',
+  'headgear',
+  'shield',
+  'accessory',
+  'shoes',
+]);
+export type CrafterSlotKey = z.infer<typeof CrafterSlotKeySchema>;
+
+export const CrafterMaterialSelectionSchema = z.object({
+  itemId: z.string().optional(),
+  level: z.number().int().min(1).max(10).default(10),
+});
+export type CrafterMaterialSelection = z.infer<typeof CrafterMaterialSelectionSchema>;
+
+export const CrafterBuildEquipmentSlotSchema = z.object({
+  appearanceId: z.string().optional(),
+  baseId: z.string().optional(),
+  inherits: z.array(CrafterMaterialSelectionSchema).default([]),
+  upgrades: z.array(CrafterMaterialSelectionSchema).default([]),
+});
+export type CrafterBuildEquipmentSlot = z.infer<typeof CrafterBuildEquipmentSlotSchema>;
+
+export const CrafterBuildFoodSchema = z.object({
+  baseId: z.string().optional(),
+  ingredients: z.array(CrafterMaterialSelectionSchema).default([]),
+});
+export type CrafterBuildFood = z.infer<typeof CrafterBuildFoodSchema>;
+
+export const CrafterDefaultsSchema = z.object({
+  weapon: CrafterBuildEquipmentSlotSchema,
+  armor: CrafterBuildEquipmentSlotSchema,
+  headgear: CrafterBuildEquipmentSlotSchema,
+  shield: CrafterBuildEquipmentSlotSchema,
+  accessory: CrafterBuildEquipmentSlotSchema,
+  shoes: CrafterBuildEquipmentSlotSchema,
+  food: CrafterBuildFoodSchema,
+});
+export type CrafterDefaults = z.infer<typeof CrafterDefaultsSchema>;
+
+export const CrafterSlotConfigSchema = z.object({
+  key: CrafterSlotKeySchema,
+  label: z.string(),
+  stationType: z.enum(['Forging', 'Crafting']),
+  stations: z.array(z.string()).default([]),
+  supportsAppearance: z.boolean().default(false),
+  inheritSlots: z.number().int().min(0).default(0),
+  upgradeSlots: z.number().int().min(0).default(0),
+});
+export type CrafterSlotConfig = z.infer<typeof CrafterSlotConfigSchema>;
+
+export const CrafterMaterialRuleSchema = z.object({
+  itemId: z.string(),
+  behavior: z.enum(['invert', 'doublePrevious', 'tenFoldPrevious', 'lightOre']),
+});
+export type CrafterMaterialRule = z.infer<typeof CrafterMaterialRuleSchema>;
+
+export const CrafterTierSchema = z.object({
+  threshold: z.number(),
+  tier: z.number().int().min(0),
+  label: z.string(),
+  stats: ItemStatsSchema.default({}),
+});
+export type CrafterTier = z.infer<typeof CrafterTierSchema>;
+
+export const CrafterFoodOverrideSchema = z.object({
+  additive: ItemStatsSchema.default({}),
+  multipliers: ItemStatsSchema.default({}),
+});
+export type CrafterFoodOverride = z.infer<typeof CrafterFoodOverrideSchema>;
+
+export const CrafterDataSchema = z.object({
+  slotConfigs: z.array(CrafterSlotConfigSchema),
+  defaults: CrafterDefaultsSchema,
+  specialMaterialRules: z.array(CrafterMaterialRuleSchema).default([]),
+  weaponClassByStation: z.record(z.string(), z.string()).default({}),
+  shieldCoverageByWeaponClass: z.record(z.string(), z.enum(['full', 'partial', 'none'])).default({}),
+  chargeAttackByWeaponClass: z.record(z.string(), z.string()).default({}),
+  staffChargeByCrystalId: z.record(z.string(), z.string()).default({}),
+  levelBonusTiers: z.array(CrafterTierSchema).default([]),
+  rarityBonusTiers: z.array(CrafterTierSchema).default([]),
+  foodOverrides: z.record(z.string(), CrafterFoodOverrideSchema).default({}),
+});
+export type CrafterData = z.infer<typeof CrafterDataSchema>;
+
+export const CrafterWarningSchema = z.object({
+  code: z.string(),
+  severity: z.enum(['info', 'warning', 'error']),
+  slot: z.string().optional(),
+  message: z.string(),
+});
+export type CrafterWarning = z.infer<typeof CrafterWarningSchema>;

@@ -14,6 +14,7 @@ import { Route as MonstersRouteImport } from './routes/monsters'
 import { Route as MapsRouteImport } from './routes/maps'
 import { Route as ItemsRouteImport } from './routes/items'
 import { Route as FishingRouteImport } from './routes/fishing'
+import { Route as CrafterRouteImport } from './routes/crafter'
 import { Route as CharactersRouteImport } from './routes/characters'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as IndexRouteImport } from './routes/index'
@@ -43,6 +44,11 @@ const FishingRoute = FishingRouteImport.update({
   path: '/fishing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CrafterRoute = CrafterRouteImport.update({
+  id: '/crafter',
+  path: '/crafter',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CharactersRoute = CharactersRouteImport.update({
   id: '/characters',
   path: '/characters',
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/calendar': typeof CalendarRoute
   '/characters': typeof CharactersRoute
+  '/crafter': typeof CrafterRoute
   '/fishing': typeof FishingRoute
   '/items': typeof ItemsRoute
   '/maps': typeof MapsRoute
@@ -73,6 +80,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/calendar': typeof CalendarRoute
   '/characters': typeof CharactersRoute
+  '/crafter': typeof CrafterRoute
   '/fishing': typeof FishingRoute
   '/items': typeof ItemsRoute
   '/maps': typeof MapsRoute
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/calendar': typeof CalendarRoute
   '/characters': typeof CharactersRoute
+  '/crafter': typeof CrafterRoute
   '/fishing': typeof FishingRoute
   '/items': typeof ItemsRoute
   '/maps': typeof MapsRoute
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/calendar'
     | '/characters'
+    | '/crafter'
     | '/fishing'
     | '/items'
     | '/maps'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/calendar'
     | '/characters'
+    | '/crafter'
     | '/fishing'
     | '/items'
     | '/maps'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/'
     | '/calendar'
     | '/characters'
+    | '/crafter'
     | '/fishing'
     | '/items'
     | '/maps'
@@ -127,6 +139,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CalendarRoute: typeof CalendarRoute
   CharactersRoute: typeof CharactersRoute
+  CrafterRoute: typeof CrafterRoute
   FishingRoute: typeof FishingRoute
   ItemsRoute: typeof ItemsRoute
   MapsRoute: typeof MapsRoute
@@ -171,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FishingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/crafter': {
+      id: '/crafter'
+      path: '/crafter'
+      fullPath: '/crafter'
+      preLoaderRoute: typeof CrafterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/characters': {
       id: '/characters'
       path: '/characters'
@@ -199,6 +219,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CalendarRoute: CalendarRoute,
   CharactersRoute: CharactersRoute,
+  CrafterRoute: CrafterRoute,
   FishingRoute: FishingRoute,
   ItemsRoute: ItemsRoute,
   MapsRoute: MapsRoute,

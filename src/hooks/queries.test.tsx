@@ -2,8 +2,8 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-import type { Item, Character, Monster } from '../lib/schemas';
-import { useItems, useCharacters, useMonsters } from './queries';
+import type { CrafterData, Item, Character, Monster } from '../lib/schemas';
+import { useItems, useCharacters, useMonsters, useCrafterData } from './queries';
 import { createTestQueryClient } from '../lib/test-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 
@@ -101,6 +101,34 @@ const mockMonsters: Record<string, Monster> = {
   }
 };
 
+const mockCrafterData: CrafterData = {
+  slotConfigs: [
+    { key: 'weapon', label: 'Weapon', stationType: 'Forging', stations: ['Short Sword'], supportsAppearance: true, inheritSlots: 3, upgradeSlots: 9 },
+  ],
+  defaults: {
+    weapon: {
+      appearanceId: 'item-bread',
+      baseId: 'item-bread',
+      inherits: [],
+      upgrades: [],
+    },
+    armor: { baseId: '', appearanceId: '', inherits: [], upgrades: [] },
+    headgear: { baseId: '', appearanceId: '', inherits: [], upgrades: [] },
+    shield: { baseId: '', appearanceId: '', inherits: [], upgrades: [] },
+    accessory: { baseId: '', inherits: [], upgrades: [] },
+    shoes: { baseId: '', inherits: [], upgrades: [] },
+    food: { baseId: '', ingredients: [] },
+  },
+  specialMaterialRules: [],
+  weaponClassByStation: { 'Short Sword': 'Short Sword' },
+  shieldCoverageByWeaponClass: { 'Short Sword': 'full' },
+  chargeAttackByWeaponClass: { 'Short Sword': 'Rush Slash' },
+  staffChargeByCrystalId: {},
+  levelBonusTiers: [],
+  rarityBonusTiers: [],
+  foodOverrides: {},
+};
+
 const server = setupServer(
   http.get('http://localhost:3000/data/items.json', () => {
     return HttpResponse.json(mockItems);
@@ -110,6 +138,9 @@ const server = setupServer(
   }),
   http.get('http://localhost:3000/data/monsters.json', () => {
     return HttpResponse.json(mockMonsters);
+  }),
+  http.get('http://localhost:3000/data/crafter.json', () => {
+    return HttpResponse.json(mockCrafterData);
   })
 );
 
@@ -171,5 +202,16 @@ describe('Data Fetching Hooks', () => {
     });
     
     expect(result.current.data?.['monster-orc'].name).toBe('Orc');
+  });
+
+  it('useCrafterData returns validated data', async () => {
+    const { result } = renderHook(() => useCrafterData(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(result.current.data?.slotConfigs[0]?.key).toBe('weapon');
+    expect(result.current.data?.defaults.weapon.baseId).toBe('item-bread');
   });
 });

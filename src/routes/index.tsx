@@ -4,6 +4,7 @@ import {
   CalendarDays,
   Fish,
   Gamepad2,
+  Hammer,
   Map,
   Package,
   Skull,
@@ -49,6 +50,14 @@ const categories: CategoryCard[] = [
     accentClass: 'border-pink-500/40 bg-pink-500/5 text-pink-400',
     summary: 'Companion profiles with rich support data.',
     useCount: 'characters',
+  },
+  {
+    to: '/crafter',
+    label: 'Crafter',
+    description: 'Interactive loadout planner for inheritance, upgrades and food.',
+    icon: Hammer,
+    accentClass: 'border-emerald-500/40 bg-emerald-500/5 text-emerald-400',
+    summary: 'Single-page build planner with live totals and craft steps.',
   },
   {
     to: '/calendar',

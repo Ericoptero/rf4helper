@@ -16,6 +16,17 @@ const server = setupServer(
     'item-apple': { id: 'item-apple', name: 'Apple', type: 'Crop', category: 'crop', region: 'Selphia Plains', buy: 60, sell: 15, usedInRecipes: [] },
     'item-ambrosias-thorns': { id: 'item-ambrosias-thorns', name: "Ambrosia's Thorns", type: 'Boss Drop', category: 'boss-drop', region: 'Autumn Road', buy: 900, sell: 100, usedInRecipes: [] },
     'item-10-fold-steel': { id: 'item-10-fold-steel', name: '10-Fold Steel', type: 'Material', category: 'material', region: 'Leon Karnak', buy: 0, sell: 1, usedInRecipes: [] },
+    'item-broadsword': { id: 'item-broadsword', name: 'Broadsword', type: 'Forge', category: 'shortSword', craft: [{ recipeId: 'item-broadsword#1', stationType: 'Forging', station: 'Short Sword', level: 1, ingredients: ['item-iron'] }], stats: { atk: 5, diz: 6 }, usedInRecipes: [] },
+    'item-claymore': { id: 'item-claymore', name: 'Claymore', type: 'Forge', category: 'longSword', craft: [{ recipeId: 'item-claymore#2', stationType: 'Forging', station: 'Long Sword', level: 2, ingredients: ['item-iron'] }], stats: { atk: 10 }, usedInRecipes: [] },
+    'item-royal-garter': { id: 'item-royal-garter', name: 'Royal Garter', type: 'Craft', category: 'armor', craft: [{ recipeId: 'item-royal-garter#90', stationType: 'Crafting', station: 'Armor', level: 90, ingredients: ['item-iron'] }], stats: { def: 100 }, usedInRecipes: [] },
+    'item-feathered-hat': { id: 'item-feathered-hat', name: 'Feathered Hat', type: 'Craft', category: 'headgear', craft: [{ recipeId: 'item-feathered-hat#51', stationType: 'Crafting', station: 'Headgear', level: 51, ingredients: ['item-iron'] }], stats: { def: 20 }, usedInRecipes: [] },
+    'item-rune-shield': { id: 'item-rune-shield', name: 'Rune Shield', type: 'Craft', category: 'shield', craft: [{ recipeId: 'item-rune-shield#94', stationType: 'Crafting', station: 'Shield', level: 94, ingredients: ['item-iron'] }], stats: { def: 80 }, effects: [{ type: 'resistance', target: 'light', value: 50 }], usedInRecipes: [] },
+    'item-strange-pendant': { id: 'item-strange-pendant', name: 'Strange Pendant', type: 'Craft', category: 'accessory', craft: [{ recipeId: 'item-strange-pendant#85', stationType: 'Crafting', station: 'Accessory', level: 85, ingredients: ['item-iron'] }], stats: { str: 30 }, usedInRecipes: [] },
+    'item-heavy-boots': { id: 'item-heavy-boots', name: 'Heavy Boots', type: 'Craft', category: 'shoes', craft: [{ recipeId: 'item-heavy-boots#20', stationType: 'Crafting', station: 'Shoes', level: 20, ingredients: ['item-iron'] }], stats: { def: 22 }, usedInRecipes: [] },
+    'item-glitter-sashimi': { id: 'item-glitter-sashimi', name: 'Glitter Sashimi', type: 'Dish', craft: [{ recipeId: 'item-glitter-sashimi#92', stationType: 'Cooking', station: 'Knife', level: 92, ingredients: ['item-apple'] }], stats: { hp: 5000, str: 150 }, usedInRecipes: [] },
+    'item-object-x': { id: 'item-object-x', name: 'Object X', type: 'Potion', category: 'medicine', usedInRecipes: [] },
+    'item-double-steel': { id: 'item-double-steel', name: 'Double Steel', type: 'Material', category: 'material', usedInRecipes: [] },
+    'item-light-ore': { id: 'item-light-ore', name: 'Light Ore', type: 'Material', category: 'material', usedInRecipes: [] },
   })),
   http.get('http://localhost:3000/data/characters.json', () => HttpResponse.json({
     'char-forte': {
@@ -82,6 +93,38 @@ const server = setupServer(
   ])),
   http.get('http://localhost:3000/data/festivals.json', () => HttpResponse.json([])),
   http.get('http://localhost:3000/data/crops.json', () => HttpResponse.json({ regularCrops: [] })),
+  http.get('http://localhost:3000/data/crafter.json', () => HttpResponse.json({
+    slotConfigs: [
+      { key: 'weapon', label: 'Weapon', stationType: 'Forging', stations: ['Short Sword', 'Long Sword'], supportsAppearance: true, inheritSlots: 3, upgradeSlots: 9 },
+      { key: 'armor', label: 'Armor', stationType: 'Crafting', stations: ['Armor'], supportsAppearance: true, inheritSlots: 3, upgradeSlots: 9 },
+      { key: 'headgear', label: 'Headgear', stationType: 'Crafting', stations: ['Headgear'], supportsAppearance: true, inheritSlots: 3, upgradeSlots: 9 },
+      { key: 'shield', label: 'Shield', stationType: 'Crafting', stations: ['Shield'], supportsAppearance: true, inheritSlots: 3, upgradeSlots: 9 },
+      { key: 'accessory', label: 'Accessory', stationType: 'Crafting', stations: ['Accessory'], supportsAppearance: false, inheritSlots: 3, upgradeSlots: 9 },
+      { key: 'shoes', label: 'Shoes', stationType: 'Crafting', stations: ['Shoes'], supportsAppearance: false, inheritSlots: 3, upgradeSlots: 9 },
+    ],
+    defaults: {
+      weapon: { appearanceId: 'item-broadsword', baseId: 'item-broadsword', inherits: [], upgrades: [{ itemId: 'item-10-fold-steel', level: 10 }] },
+      armor: { appearanceId: 'item-royal-garter', baseId: 'item-royal-garter', inherits: [], upgrades: [] },
+      headgear: { appearanceId: 'item-feathered-hat', baseId: 'item-feathered-hat', inherits: [], upgrades: [] },
+      shield: { appearanceId: 'item-rune-shield', baseId: 'item-rune-shield', inherits: [], upgrades: [] },
+      accessory: { baseId: 'item-strange-pendant', inherits: [], upgrades: [] },
+      shoes: { baseId: 'item-heavy-boots', inherits: [], upgrades: [] },
+      food: { baseId: 'item-glitter-sashimi', ingredients: [] },
+    },
+    specialMaterialRules: [
+      { itemId: 'item-object-x', behavior: 'invert' },
+      { itemId: 'item-double-steel', behavior: 'doublePrevious' },
+      { itemId: 'item-10-fold-steel', behavior: 'tenFoldPrevious' },
+      { itemId: 'item-light-ore', behavior: 'lightOre' },
+    ],
+    weaponClassByStation: { 'Short Sword': 'Short Sword', 'Long Sword': 'Long Sword' },
+    shieldCoverageByWeaponClass: { 'Short Sword': 'full', 'Long Sword': 'partial' },
+    chargeAttackByWeaponClass: { 'Short Sword': 'Rush Slash', 'Long Sword': 'Cyclone' },
+    staffChargeByCrystalId: {},
+    levelBonusTiers: [],
+    rarityBonusTiers: [],
+    foodOverrides: {},
+  })),
 );
 
 beforeAll(() => server.listen());
@@ -399,5 +442,60 @@ describe('Routing Integration', () => {
 
     expect(screen.getAllByRole('heading', { name: 'Selphia Plains' }).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/fishing/i).length).toBeGreaterThan(0);
+  });
+
+  it('renders the crafter route and hydrates build state from the URL', async () => {
+    const build = JSON.stringify({
+      weapon: {
+        appearanceId: 'item-claymore',
+        baseId: 'item-broadsword',
+        inherits: [{ itemId: 'item-light-ore', level: 10 }],
+        upgrades: [{ itemId: 'item-10-fold-steel', level: 10 }],
+      },
+      armor: { appearanceId: 'item-royal-garter', baseId: 'item-royal-garter', inherits: [], upgrades: [] },
+      headgear: { appearanceId: 'item-feathered-hat', baseId: 'item-feathered-hat', inherits: [], upgrades: [] },
+      shield: { appearanceId: 'item-rune-shield', baseId: 'item-rune-shield', inherits: [], upgrades: [] },
+      accessory: { baseId: 'item-strange-pendant', inherits: [], upgrades: [] },
+      shoes: { baseId: 'item-heavy-boots', inherits: [], upgrades: [] },
+      food: { baseId: 'item-glitter-sashimi', ingredients: [] },
+    });
+    const router = createTestRouter([`/crafter?${new URLSearchParams({ view: 'advanced', build }).toString()}`]);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /interactive crafter/i })).toBeInTheDocument();
+    });
+
+    expect(screen.getByLabelText(/weapon appearance/i)).toHaveValue('item-claymore');
+    expect(screen.getByLabelText(/weapon base/i)).toHaveValue('item-broadsword');
+    expect(screen.getByText(/light ore can only safely copy/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/advanced breakdown/i).length).toBeGreaterThan(0);
+  });
+
+  it('updates the crafter URL when the build changes', async () => {
+    const user = userEvent.setup();
+    const router = createTestRouter(['/crafter']);
+
+    render(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /interactive crafter/i })).toBeInTheDocument();
+    });
+
+    await user.selectOptions(screen.getByLabelText(/weapon appearance/i), 'item-claymore');
+
+    await waitFor(() => {
+      expect(router.state.location.search).toHaveProperty('build');
+      expect(String(router.state.location.search.build)).toContain('item-claymore');
+    });
   });
 });
