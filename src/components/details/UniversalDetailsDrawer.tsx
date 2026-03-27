@@ -165,7 +165,7 @@ function ItemDetailsContent({ item, items }: { item: Item; items?: Record<string
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-indigo-400/20 bg-indigo-500/5 p-6">
-        <div className="flex flex-col gap-6 sm:flex-row">
+        <div className="flex flex-col items-center gap-6">
           {item.image ? (
             <img
               src={item.image}
@@ -177,9 +177,9 @@ function ItemDetailsContent({ item, items }: { item: Item; items?: Record<string
               {item.name.charAt(0)}
             </div>
           )}
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-3xl font-bold">{item.name}</h2>
+          <div className="min-w-0 space-y-4 text-center">
+            <div className="min-w-0">
+              <h2 className="break-words text-3xl font-bold">{item.name}</h2>
               <div className="mt-2 flex flex-wrap gap-2">
                 <Badge className={getSemanticBadgeClass('item')}>{item.type}</Badge>
                 {item.category ? (
@@ -195,7 +195,7 @@ function ItemDetailsContent({ item, items }: { item: Item; items?: Record<string
                 ) : null}
               </div>
             </div>
-            {item.description ? <p className="text-sm leading-6 text-muted-foreground">{item.description}</p> : null}
+            {item.description ? <p className="break-words text-sm leading-6 text-muted-foreground">{item.description}</p> : null}
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline" className={getSemanticBadgeClass('success')}>
                 <Coins className="mr-1 h-3 w-3" />
@@ -388,13 +388,13 @@ function CharacterDetailsContent({
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border bg-muted/20 p-6">
-        <div className="flex flex-col gap-6 sm:flex-row">
-          <div className="flex w-full justify-center sm:w-auto sm:justify-start">
+        <div className="flex flex-col items-center gap-6">
+          <div className="flex w-full justify-center">
             <CharacterAvatar character={character} portrait />
           </div>
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-3xl font-bold">{character.name}</h2>
+          <div className="min-w-0 space-y-4 text-center">
+            <div className="min-w-0">
+              <h2 className="break-words text-3xl font-bold">{character.name}</h2>
               <div className="mt-2 flex flex-wrap gap-2">
                 <Badge className={getSemanticBadgeClass('character')}>{character.category}</Badge>
                 <Badge variant="outline" className={getSemanticBadgeClass('neutral')}>
@@ -405,7 +405,7 @@ function CharacterDetailsContent({
                 </Badge>
               </div>
             </div>
-            <p className="text-sm leading-6 text-muted-foreground">
+            <p className="break-words text-sm leading-6 text-muted-foreground">
               {character.description ?? 'Description unavailable.'}
             </p>
           </div>
@@ -496,12 +496,12 @@ function BirthdayDetailsContent({ character }: { character: Character }) {
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-pink-400/20 bg-pink-500/5 p-6">
-        <div className="flex items-center gap-6">
+        <div className="flex flex-col items-center gap-6">
           <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-300">
             <CharacterAvatar character={character} />
           </div>
-          <div className="space-y-3">
-            <h2 className="text-3xl font-bold">{character.name}'s Birthday</h2>
+          <div className="min-w-0 space-y-3 text-center">
+            <h2 className="break-words text-3xl font-bold">{character.name}'s Birthday</h2>
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline" className={getSemanticBadgeClass('character')}>
                 <Gift className="mr-1 h-3 w-3" />
@@ -577,12 +577,14 @@ function MonsterDetailsContent({
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-orange-400/20 bg-orange-500/5 p-6">
-        <div className="flex items-center gap-6">
+        <div className="flex flex-col items-center gap-6">
           <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-300">
             {imageSrc ? <img src={imageSrc} alt={monster.name} className="h-20 w-20 object-contain" /> : <Ghost className="h-12 w-12" />}
           </div>
-          <div className="space-y-3">
-            <h2 className="text-3xl font-bold">{group.displayName}</h2>
+          <div className="min-w-0 space-y-3 text-center">
+            <div className="min-w-0">
+              <h2 className="break-words text-3xl font-bold">{group.displayName}</h2>
+            </div>
             <div className="flex flex-wrap gap-2">
               {isMonsterActuallyTameable(monster) ? (
                 <Badge className={getSemanticBadgeClass('success')}>Tameable</Badge>
@@ -616,7 +618,7 @@ function MonsterDetailsContent({
 
       {monster.description ? (
         <DetailSection title="Description" icon={<Ghost className="h-4 w-4 text-orange-300" />}>
-          <p className="text-sm leading-6 text-muted-foreground">{monster.description}</p>
+          <p className="break-words text-sm leading-6 text-muted-foreground">{monster.description}</p>
         </DetailSection>
       ) : null}
 
@@ -723,7 +725,7 @@ function FishDetailsContent({ fish }: { fish: Fish }) {
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-cyan-400/20 bg-cyan-500/5 p-6">
-        <div className="flex flex-col gap-6 sm:flex-row">
+        <div className="flex flex-col items-center gap-6">
           <div className="flex h-32 w-32 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-200">
             {resolveFishImage(fish.image) ? (
               <img src={resolveFishImage(fish.image)} alt={fish.name} className="h-24 w-24 object-contain" />
@@ -731,8 +733,8 @@ function FishDetailsContent({ fish }: { fish: Fish }) {
               <Search className="h-16 w-16" />
             )}
           </div>
-          <div className="space-y-3">
-            <h2 className="text-3xl font-bold">{fish.name}</h2>
+          <div className="min-w-0 space-y-3 text-center">
+            <h2 className="break-words text-3xl font-bold">{fish.name}</h2>
             <div className="flex flex-wrap gap-2">
               {fish.shadow ? <Badge className={getSemanticBadgeClass('fish')}>{fish.shadow} Shadow</Badge> : null}
               <Badge variant="outline" className={getSemanticBadgeClass('success')}>Buy: {fish.buy ?? '-'}</Badge>
@@ -800,12 +802,12 @@ function MapDetailsContent({ region }: { region: ReturnType<typeof buildMapRegio
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-blue-400/20 bg-blue-500/5 p-6">
-        <div className="flex items-center gap-6">
+        <div className="flex flex-col items-center gap-6">
           <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-300">
             <MapPin className="h-12 w-12" />
           </div>
-          <div className="space-y-3">
-            <h2 className="text-3xl font-bold">{region.name}</h2>
+          <div className="min-w-0 space-y-3 text-center">
+            <h2 className="break-words text-3xl font-bold">{region.name}</h2>
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline" className={getSemanticBadgeClass('warning')}>
                 {region.chests.length} Total Chests
@@ -870,12 +872,12 @@ function FestivalDetailsContent({ festival }: { festival: Festival }) {
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-violet-400/20 bg-violet-500/5 p-6">
-        <div className="flex items-center gap-6">
+        <div className="flex flex-col items-center gap-6">
           <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-300">
             <Sparkles className="h-12 w-12" />
           </div>
-          <div className="space-y-3">
-            <h2 className="text-3xl font-bold">{festival.name}</h2>
+          <div className="min-w-0 space-y-3 text-center">
+            <h2 className="break-words text-3xl font-bold">{festival.name}</h2>
             <div className="flex flex-wrap gap-2">
               <Badge className={getSemanticBadgeClass('calendar')}>
                 {festival.season ? `${festival.season} ${festival.day}` : 'Multi-Season'}
@@ -886,7 +888,7 @@ function FestivalDetailsContent({ festival }: { festival: Festival }) {
         </div>
       </div>
       <DetailSection title="Description" icon={<CalendarIcon className="h-4 w-4 text-violet-300" />}>
-        <p className="rounded-xl border bg-muted/30 p-4 text-sm leading-6 text-muted-foreground">
+        <p className="break-words rounded-xl border bg-muted/30 p-4 text-sm leading-6 text-muted-foreground">
           {festival.description || 'No description available for this festival.'}
         </p>
       </DetailSection>
@@ -898,12 +900,12 @@ function CropDetailsContent({ crop }: { crop: Crop }) {
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/5 p-6">
-        <div className="flex items-center gap-6">
+        <div className="flex flex-col items-center gap-6">
           <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-300">
             <Wheat className="h-12 w-12" />
           </div>
-          <div className="space-y-3">
-            <h2 className="text-3xl font-bold">{crop.name}</h2>
+          <div className="min-w-0 space-y-3 text-center">
+            <h2 className="break-words text-3xl font-bold">{crop.name}</h2>
             <div className="flex flex-wrap gap-2">
               <Badge className={getSemanticBadgeClass('success')}>Crop</Badge>
               {crop.regrows ? <Badge variant="outline" className={getSemanticBadgeClass('info')}>Regrows</Badge> : null}

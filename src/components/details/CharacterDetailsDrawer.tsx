@@ -123,13 +123,13 @@ function CharacterDetailsContent({
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border bg-muted/20 p-6">
-        <div className="flex flex-col gap-6 sm:flex-row">
-          <div className="flex w-full justify-center sm:w-auto sm:justify-start">
+        <div className="flex flex-col items-center gap-6">
+          <div className="flex w-full justify-center">
             <CharacterAvatar character={character} portrait />
           </div>
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-3xl font-bold">{character.name}</h2>
+          <div className="min-w-0 space-y-4 text-center">
+            <div className="min-w-0">
+              <h2 className="break-words text-3xl font-bold">{character.name}</h2>
               <div className="mt-2 flex flex-wrap gap-2">
                 <Badge className={getSemanticBadgeClass('character')}>{character.category}</Badge>
                 <Badge variant="outline" className={getSemanticBadgeClass('neutral')}>
@@ -140,7 +140,7 @@ function CharacterDetailsContent({
                 </Badge>
               </div>
             </div>
-            <p className="text-sm leading-6 text-muted-foreground">
+            <p className="break-words text-sm leading-6 text-muted-foreground">
               {character.description ?? 'Description unavailable.'}
             </p>
           </div>
@@ -231,12 +231,12 @@ function BirthdayDetailsContent({ character }: { character: Character }) {
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-pink-400/20 bg-pink-500/5 p-6">
-        <div className="flex items-center gap-6">
+        <div className="flex flex-col items-center gap-6">
           <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-pink-500/10 text-pink-300">
             <CharacterAvatar character={character} />
           </div>
-          <div className="space-y-3">
-            <h2 className="text-3xl font-bold">{character.name}'s Birthday</h2>
+          <div className="min-w-0 space-y-3 text-center">
+            <h2 className="break-words text-3xl font-bold">{character.name}'s Birthday</h2>
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline" className={getSemanticBadgeClass('character')}>
                 <Gift className="mr-1 h-3 w-3" />

@@ -114,12 +114,14 @@ function MonsterDetailsContent({
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-orange-400/20 bg-orange-500/5 p-6">
-        <div className="flex items-center gap-6">
+        <div className="flex flex-col items-center gap-6">
           <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-300">
             {imageSrc ? <img src={imageSrc} alt={monster.name} className="h-20 w-20 object-contain" /> : <Ghost className="h-12 w-12" />}
           </div>
-          <div className="space-y-3">
-            <h2 className="text-3xl font-bold">{group.displayName}</h2>
+          <div className="min-w-0 space-y-3 text-center">
+            <div className="min-w-0">
+              <h2 className="break-words text-3xl font-bold">{group.displayName}</h2>
+            </div>
             <div className="flex flex-wrap gap-2">
               {isMonsterActuallyTameable(monster) ? (
                 <Badge className={getSemanticBadgeClass('success')}>Tameable</Badge>
@@ -153,7 +155,7 @@ function MonsterDetailsContent({
 
       {monster.description ? (
         <DetailSection title="Description" icon={<Ghost className="h-4 w-4 text-orange-300" />}>
-          <p className="text-sm leading-6 text-muted-foreground">{monster.description}</p>
+          <p className="break-words text-sm leading-6 text-muted-foreground">{monster.description}</p>
         </DetailSection>
       ) : null}
 

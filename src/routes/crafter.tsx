@@ -5,7 +5,7 @@ import { useCrafterData, useItems } from '@/hooks/queries';
 
 type CrafterSearch = {
   build?: string;
-  view?: 'simple' | 'advanced';
+  view?: string;
 };
 
 const crafterSearchSchema = z.object({
@@ -23,7 +23,7 @@ const crafterSearchSchema = z.object({
       return undefined;
     })
     .catch(undefined),
-  view: z.enum(['simple', 'advanced']).optional().catch(undefined),
+  view: z.string().optional().catch(undefined),
 });
 
 export const Route = createFileRoute('/crafter')({
@@ -46,21 +46,11 @@ function CrafterRoute() {
       items={items}
       crafterData={crafterData}
       serializedBuild={search.build}
-      viewMode={search.view ?? 'simple'}
       onSerializedBuildChange={(build) => {
         void navigate({
           search: (previous) => ({
             ...previous,
             build,
-          }),
-          replace: true,
-        });
-      }}
-      onViewModeChange={(view) => {
-        void navigate({
-          search: (previous) => ({
-            ...previous,
-            view,
           }),
           replace: true,
         });

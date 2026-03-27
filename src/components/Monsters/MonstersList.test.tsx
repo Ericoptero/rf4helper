@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { http, HttpResponse } from 'msw';
@@ -223,5 +223,25 @@ describe('MonstersList Component', () => {
     expect(dialog).toHaveTextContent('A shelled octopus found along the seashore in the summer. Spurts ink.');
     expect(dialog).toHaveTextContent('Drops');
     expect(dialog).not.toHaveTextContent('Gift Preferences');
+  });
+
+  it('renders the monster drawer full width on mobile with a column hero layout', async () => {
+    const user = userEvent.setup();
+
+    render(<MonstersList />, { wrapper });
+
+    await screen.findByText('Octopirate');
+    await user.click(screen.getByText('Octopirate'));
+
+    const dialog = await screen.findByRole('dialog', { name: 'Octopirate' });
+    const heroImage = within(dialog).getByAltText('Octopirate');
+    const hero = heroImage.closest('div')?.parentElement;
+    const heroTitle = within(dialog).getAllByText('Octopirate', { selector: 'h2' })[1];
+
+    expect(dialog).toHaveClass('w-full');
+    expect(dialog).not.toHaveClass('data-[side=right]:w-3/4');
+    expect(hero).toHaveClass('flex-col');
+    expect(hero?.className).not.toContain('sm:flex-row');
+    expect(heroTitle.closest('div')).toHaveClass('min-w-0');
   });
 });

@@ -15,7 +15,11 @@ export function CatalogDetailsDrawerShell({ resolved }: { resolved: ResolvedDeta
 
   return (
     <Sheet open={!!resolved} onOpenChange={(open) => !open && close()}>
-      <SheetContent side="right" className="w-full p-0 sm:max-w-xl lg:max-w-2xl" showCloseButton={false}>
+      <SheetContent
+        side="right"
+        className="w-full overflow-hidden p-0 sm:max-w-xl lg:max-w-2xl"
+        showCloseButton={false}
+      >
         {resolved ? (
           <>
             <div className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur">
@@ -40,8 +44,8 @@ export function CatalogDetailsDrawerShell({ resolved }: { resolved: ResolvedDeta
                 </Button>
               </div>
             </div>
-            <ScrollArea data-testid="catalog-detail-scroll" className="min-h-0 flex-1">
-              <div className="px-6 pb-6 pt-6">{resolved.content}</div>
+            <ScrollArea data-testid="catalog-detail-scroll" className="min-h-0 flex-1 overflow-x-hidden">
+              <div className="min-w-0 overflow-x-hidden px-6 pb-6 pt-6">{resolved.content}</div>
             </ScrollArea>
           </>
         ) : null}

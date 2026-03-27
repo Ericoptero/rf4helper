@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
@@ -148,6 +148,31 @@ describe('CharactersList Component', () => {
     expect(screen.getAllByText('Gender: Unknown').length).toBeGreaterThan(0);
     expect(screen.getByText('Description unavailable.')).toBeInTheDocument();
     expect(screen.getByText('Battle information unavailable.')).toBeInTheDocument();
+  });
+
+  it('renders the drawer full width on mobile with a column hero layout', async () => {
+    const user = userEvent.setup();
+    server.use(
+      http.get('http://localhost:3000/data/characters.json', () => {
+        return HttpResponse.json(mockCharacters);
+      }),
+    );
+
+    render(<CharactersList />, { wrapper });
+
+    await screen.findByText('Forte');
+    await user.click(screen.getByText('Forte'));
+
+    const dialog = await screen.findByRole('dialog', { name: 'Forte' });
+    const sheetContent = dialog;
+    const hero = within(dialog).getByAltText('Forte portrait').closest('div')?.parentElement;
+    const heroTitle = within(dialog).getAllByText('Forte', { selector: 'h2' })[1];
+
+    expect(sheetContent).toHaveClass('w-full');
+    expect(sheetContent).not.toHaveClass('data-[side=right]:w-3/4');
+    expect(hero).toHaveClass('flex-col');
+    expect(hero?.className).not.toContain('sm:flex-row');
+    expect(heroTitle.closest('div')).toHaveClass('min-w-0');
   });
 
 });

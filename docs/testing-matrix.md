@@ -1,4 +1,5 @@
 # Testing Matrix
+Use playwright-cli when testing playwright.
 
 ## Required Checks
 - `npm run lint`: ESLint, React hooks, React Compiler compatibility, and dead-code hygiene.

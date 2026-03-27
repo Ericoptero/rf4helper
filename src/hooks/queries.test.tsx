@@ -102,31 +102,54 @@ const mockMonsters: Record<string, Monster> = {
 };
 
 const mockCrafterData: CrafterData = {
+  schemaVersion: 1,
   slotConfigs: [
-    { key: 'weapon', label: 'Weapon', stationType: 'Forging', stations: ['Short Sword'], supportsAppearance: true, inheritSlots: 3, upgradeSlots: 9 },
+    {
+      key: 'weapon',
+      label: 'Weapon',
+      stationType: 'Forging',
+      stations: ['Short Sword'],
+      supportsAppearance: false,
+      supportsBaseSelection: true,
+      recipeSlots: 6,
+      inheritSlots: 3,
+      upgradeSlots: 9,
+      carrierId: null,
+      levelBonusTargets: ['atk', 'matk'],
+      rarityBonusTarget: 'weapon',
+    },
   ],
   defaults: {
     weapon: {
-      appearanceId: 'item-bread',
-      baseId: 'item-bread',
+      appearanceId: undefined,
+      baseId: undefined,
+      recipe: [],
       inherits: [],
       upgrades: [],
     },
-    armor: { baseId: '', appearanceId: '', inherits: [], upgrades: [] },
-    headgear: { baseId: '', appearanceId: '', inherits: [], upgrades: [] },
-    shield: { baseId: '', appearanceId: '', inherits: [], upgrades: [] },
-    accessory: { baseId: '', inherits: [], upgrades: [] },
-    shoes: { baseId: '', inherits: [], upgrades: [] },
-    food: { baseId: '', ingredients: [] },
+    armor: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+    headgear: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+    shield: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+    accessory: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+    shoes: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+    food: { baseId: undefined, recipe: [] },
   },
   specialMaterialRules: [],
   weaponClassByStation: { 'Short Sword': 'Short Sword' },
   shieldCoverageByWeaponClass: { 'Short Sword': 'full' },
+  starterWeaponByClass: { 'Short Sword': 'item-bread' },
   chargeAttackByWeaponClass: { 'Short Sword': 'Rush Slash' },
   staffChargeByCrystalId: {},
   levelBonusTiers: [],
   rarityBonusTiers: [],
   foodOverrides: {},
+  recipes: { equipment: {}, food: {} },
+  stats: { weapon: {}, armor: {} },
+  materials: { weapon: {}, armor: {}, food: {} },
+  food: { baseStats: {} },
+  bonusEffects: {},
+  staff: { chargeAttacks: {}, bases: {} },
+  fixtures: {},
 };
 
 const server = setupServer(
@@ -212,6 +235,8 @@ describe('Data Fetching Hooks', () => {
     });
 
     expect(result.current.data?.slotConfigs[0]?.key).toBe('weapon');
-    expect(result.current.data?.defaults.weapon.baseId).toBe('item-bread');
+    expect(result.current.data?.defaults.weapon.appearanceId).toBeUndefined();
+    expect(result.current.data?.defaults.weapon.baseId).toBeUndefined();
+    expect(result.current.data?.defaults.weapon.recipe).toEqual([]);
   });
 });

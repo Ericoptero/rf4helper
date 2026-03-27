@@ -95,21 +95,21 @@ const server = setupServer(
   http.get('http://localhost:3000/data/crops.json', () => HttpResponse.json({ regularCrops: [] })),
   http.get('http://localhost:3000/data/crafter.json', () => HttpResponse.json({
     slotConfigs: [
-      { key: 'weapon', label: 'Weapon', stationType: 'Forging', stations: ['Short Sword', 'Long Sword'], supportsAppearance: true, inheritSlots: 3, upgradeSlots: 9 },
-      { key: 'armor', label: 'Armor', stationType: 'Crafting', stations: ['Armor'], supportsAppearance: true, inheritSlots: 3, upgradeSlots: 9 },
-      { key: 'headgear', label: 'Headgear', stationType: 'Crafting', stations: ['Headgear'], supportsAppearance: true, inheritSlots: 3, upgradeSlots: 9 },
-      { key: 'shield', label: 'Shield', stationType: 'Crafting', stations: ['Shield'], supportsAppearance: true, inheritSlots: 3, upgradeSlots: 9 },
-      { key: 'accessory', label: 'Accessory', stationType: 'Crafting', stations: ['Accessory'], supportsAppearance: false, inheritSlots: 3, upgradeSlots: 9 },
-      { key: 'shoes', label: 'Shoes', stationType: 'Crafting', stations: ['Shoes'], supportsAppearance: false, inheritSlots: 3, upgradeSlots: 9 },
+      { key: 'weapon', label: 'Weapon', stationType: 'Forging', stations: ['Short Sword', 'Long Sword'], supportsAppearance: false, supportsBaseSelection: true, recipeSlots: 6, inheritSlots: 3, upgradeSlots: 9, carrierId: null, levelBonusTargets: ['atk', 'matk'], rarityBonusTarget: 'weapon' },
+      { key: 'armor', label: 'Armor', stationType: 'Crafting', stations: ['Armor'], supportsAppearance: false, supportsBaseSelection: true, recipeSlots: 6, inheritSlots: 3, upgradeSlots: 9, carrierId: 'item-iron', levelBonusTargets: ['def', 'mdef'], rarityBonusTarget: 'def' },
+      { key: 'headgear', label: 'Headgear', stationType: 'Crafting', stations: ['Headgear'], supportsAppearance: false, supportsBaseSelection: true, recipeSlots: 6, inheritSlots: 3, upgradeSlots: 9, carrierId: 'item-iron', levelBonusTargets: ['def', 'mdef'], rarityBonusTarget: 'mdef' },
+      { key: 'shield', label: 'Shield', stationType: 'Crafting', stations: ['Shield'], supportsAppearance: false, supportsBaseSelection: true, recipeSlots: 6, inheritSlots: 3, upgradeSlots: 9, carrierId: 'item-iron', levelBonusTargets: ['def', 'mdef'], rarityBonusTarget: 'def' },
+      { key: 'accessory', label: 'Accessory', stationType: 'Crafting', stations: ['Accessory'], supportsAppearance: false, supportsBaseSelection: true, recipeSlots: 6, inheritSlots: 3, upgradeSlots: 9, carrierId: 'item-iron', levelBonusTargets: ['def', 'mdef'], rarityBonusTarget: 'mdef' },
+      { key: 'shoes', label: 'Shoes', stationType: 'Crafting', stations: ['Shoes'], supportsAppearance: false, supportsBaseSelection: true, recipeSlots: 6, inheritSlots: 3, upgradeSlots: 9, carrierId: 'item-iron', levelBonusTargets: ['def', 'mdef'], rarityBonusTarget: 'def' },
     ],
     defaults: {
-      weapon: { appearanceId: 'item-broadsword', baseId: 'item-broadsword', inherits: [], upgrades: [{ itemId: 'item-10-fold-steel', level: 10 }] },
-      armor: { appearanceId: 'item-royal-garter', baseId: 'item-royal-garter', inherits: [], upgrades: [] },
-      headgear: { appearanceId: 'item-feathered-hat', baseId: 'item-feathered-hat', inherits: [], upgrades: [] },
-      shield: { appearanceId: 'item-rune-shield', baseId: 'item-rune-shield', inherits: [], upgrades: [] },
-      accessory: { baseId: 'item-strange-pendant', inherits: [], upgrades: [] },
-      shoes: { baseId: 'item-heavy-boots', inherits: [], upgrades: [] },
-      food: { baseId: 'item-glitter-sashimi', ingredients: [] },
+      weapon: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+      armor: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+      headgear: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+      shield: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+      accessory: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+      shoes: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+      food: { baseId: undefined, recipe: [] },
     },
     specialMaterialRules: [
       { itemId: 'item-object-x', behavior: 'invert' },
@@ -119,11 +119,70 @@ const server = setupServer(
     ],
     weaponClassByStation: { 'Short Sword': 'Short Sword', 'Long Sword': 'Long Sword' },
     shieldCoverageByWeaponClass: { 'Short Sword': 'full', 'Long Sword': 'partial' },
+    starterWeaponByClass: { 'Short Sword': 'item-broadsword', 'Long Sword': 'item-claymore' },
     chargeAttackByWeaponClass: { 'Short Sword': 'Rush Slash', 'Long Sword': 'Cyclone' },
     staffChargeByCrystalId: {},
     levelBonusTiers: [],
     rarityBonusTiers: [],
     foodOverrides: {},
+    recipes: {
+      equipment: {
+        weapon: {
+          'item-broadsword': { itemName: 'Broadsword', station: 'Short Sword', materials: ['item-iron', null, null, null, null, null], materialNames: ['Iron', null, null, null, null, null], rarity: 1 },
+          'item-claymore': { itemName: 'Claymore', station: 'Long Sword', materials: ['item-iron', null, null, null, null, null], materialNames: ['Iron', null, null, null, null, null], rarity: 1 },
+        },
+        armor: {
+          'item-royal-garter': { itemName: 'Royal Garter', station: 'Armor', materials: ['item-iron', null, null, null, null, null], materialNames: ['Iron', null, null, null, null, null], rarity: 1 },
+        },
+        headgear: {
+          'item-feathered-hat': { itemName: 'Feathered Hat', station: 'Headgear', materials: ['item-iron', null, null, null, null, null], materialNames: ['Iron', null, null, null, null, null], rarity: 1 },
+        },
+        shield: {
+          'item-rune-shield': { itemName: 'Rune Shield', station: 'Shield', materials: ['item-iron', null, null, null, null, null], materialNames: ['Iron', null, null, null, null, null], rarity: 1 },
+        },
+        accessory: {
+          'item-strange-pendant': { itemName: 'Strange Pendant', station: 'Accessory', materials: ['item-iron', null, null, null, null, null], materialNames: ['Iron', null, null, null, null, null], rarity: 1 },
+        },
+        shoes: {
+          'item-heavy-boots': { itemName: 'Heavy Boots', station: 'Shoes', materials: ['item-iron', null, null, null, null, null], materialNames: ['Iron', null, null, null, null, null], rarity: 1 },
+        },
+      },
+      food: {
+        'item-glitter-sashimi': { itemName: 'Glitter Sashimi', station: 'Knife', materials: ['item-apple', null, null, null, null, null], materialNames: ['Apple', null, null, null, null, null], rarity: 1 },
+      },
+    },
+    stats: {
+      weapon: {
+        'item-broadsword': { itemName: 'Broadsword', stats: { atk: 5 }, weaponClass: 'Short Sword' },
+        'item-claymore': { itemName: 'Claymore', stats: { atk: 10 }, weaponClass: 'Long Sword' },
+      },
+      armor: {
+        'item-royal-garter': { itemName: 'Royal Garter', stats: { def: 100 } },
+        'item-feathered-hat': { itemName: 'Feathered Hat', stats: { def: 20 } },
+        'item-rune-shield': { itemName: 'Rune Shield', stats: { def: 80 }, resistances: { light: 0.5 } },
+        'item-strange-pendant': { itemName: 'Strange Pendant', stats: { str: 30 } },
+        'item-heavy-boots': { itemName: 'Heavy Boots', stats: { def: 22 } },
+      },
+    },
+    materials: {
+      weapon: {
+        'item-10-fold-steel': { itemName: '10-Fold Steel', rarity: 1 },
+        'item-double-steel': { itemName: 'Double Steel', rarity: 1 },
+        'item-light-ore': { itemName: 'Light Ore', rarity: 1 },
+      },
+      armor: {},
+      food: {
+        'item-apple': { additive: { hp: 10 } },
+      },
+    },
+    food: {
+      baseStats: {
+        'item-glitter-sashimi': { additive: { hp: 5000, str: 150 } },
+      },
+    },
+    bonusEffects: {},
+    staff: { chargeAttacks: {}, bases: {} },
+    fixtures: {},
   })),
 );
 
@@ -477,19 +536,18 @@ describe('Routing Integration', () => {
   it('renders the crafter route and hydrates build state from the URL', async () => {
     const build = JSON.stringify({
       weapon: {
-        appearanceId: 'item-claymore',
-        baseId: 'item-broadsword',
-        inherits: [{ itemId: 'item-light-ore', level: 10 }],
+        appearanceId: 'item-broadsword',
+        recipe: [{ itemId: 'item-claymore', level: 8 }, { itemId: 'item-light-ore', level: 10 }],
         upgrades: [{ itemId: 'item-10-fold-steel', level: 10 }],
       },
-      armor: { appearanceId: 'item-royal-garter', baseId: 'item-royal-garter', inherits: [], upgrades: [] },
-      headgear: { appearanceId: 'item-feathered-hat', baseId: 'item-feathered-hat', inherits: [], upgrades: [] },
-      shield: { appearanceId: 'item-rune-shield', baseId: 'item-rune-shield', inherits: [], upgrades: [] },
-      accessory: { baseId: 'item-strange-pendant', inherits: [], upgrades: [] },
-      shoes: { baseId: 'item-heavy-boots', inherits: [], upgrades: [] },
-      food: { baseId: 'item-glitter-sashimi', ingredients: [] },
+      armor: { appearanceId: 'item-royal-garter', recipe: [], inherits: [], upgrades: [] },
+      headgear: { appearanceId: 'item-feathered-hat', recipe: [], inherits: [], upgrades: [] },
+      shield: { appearanceId: 'item-rune-shield', recipe: [], inherits: [], upgrades: [] },
+      accessory: { appearanceId: 'item-strange-pendant', recipe: [], inherits: [], upgrades: [] },
+      shoes: { appearanceId: 'item-heavy-boots', recipe: [], inherits: [], upgrades: [] },
+      food: { baseId: 'item-glitter-sashimi', recipe: [] },
     });
-    const router = createTestRouter([`/crafter?${new URLSearchParams({ view: 'advanced', build }).toString()}`]);
+    const router = createTestRouter([`/crafter?${new URLSearchParams({ build, view: 'advanced' }).toString()}`]);
 
     render(
       <QueryClientProvider client={createTestQueryClient()}>
@@ -501,13 +559,23 @@ describe('Routing Integration', () => {
       expect(screen.getByRole('heading', { name: /interactive crafter/i })).toBeInTheDocument();
     });
 
-    expect(screen.getByRole('button', { name: /appearance/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /dashboard/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /final build/i })).toBeInTheDocument();
+    await userEvent.setup().click(screen.getByRole('tab', { name: /weapon/i }));
+    expect(screen.getByRole('button', { name: /broadsword/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /appearance/i })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /recipe 6/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /upgrade 9/i })).toBeInTheDocument();
-    expect(screen.getAllByRole('img', { name: 'Claymore' }).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole('img', { name: 'Broadsword' }).length).toBeGreaterThan(0);
-    expect(screen.getByText(/light ore can only safely copy/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/advanced breakdown/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/broadsword/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/actual base/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/claymore/i).length).toBeGreaterThan(0);
+    expect(screen.queryByRole('button', { name: /simple/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /advanced/i })).not.toBeInTheDocument();
+    expect(screen.queryByText(/craft notes/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/^resume$/i)).toBeInTheDocument();
+    expect(screen.queryByRole('tab', { name: /breakdown/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('tab', { name: /final build/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('tab', { name: /readme/i })).not.toBeInTheDocument();
   });
 
   it('updates the crafter URL when the build changes', async () => {
@@ -524,17 +592,19 @@ describe('Routing Integration', () => {
       expect(screen.getByRole('heading', { name: /interactive crafter/i })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole('button', { name: /appearance/i }));
-    const drawer = await screen.findByRole('dialog');
-    const combobox = within(drawer).getByRole('combobox', { name: /appearance item/i });
-    await user.click(combobox);
-    await user.clear(combobox);
-    await user.type(combobox, 'Clay');
-    await user.click(await within(drawer).findByRole('option', { name: 'Claymore' }));
+    await user.click(screen.getByRole('tab', { name: /weapon/i }));
+    await user.click(screen.getByRole('button', { name: /base/i }));
+    const dialog = await screen.findByRole('dialog', { name: /select base/i });
+    const search = within(dialog).getByRole('searchbox', { name: /search items/i });
+    await user.clear(search);
+    await user.type(search, 'Clay');
+    await user.click(await within(dialog).findByRole('button', { name: /claymore/i }));
+    await user.click(within(dialog).getByRole('button', { name: /apply/i }));
 
     await waitFor(() => {
       expect(router.state.location.search).toHaveProperty('build');
       expect(String(router.state.location.search.build)).toContain('item-claymore');
+      expect(String(router.state.location.search.build)).toContain('appearanceId');
     });
   });
 });
