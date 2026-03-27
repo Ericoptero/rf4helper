@@ -13,6 +13,7 @@ import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/Deta
 import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import type { Item } from '@/lib/schemas';
+import type { CatalogOption } from '@/server/catalogQueries';
 
 function ItemCard({ item, onClick }: { item: Item; onClick: () => void }) {
   const isCrafted = Boolean(item.craft?.length || item.craftedFrom?.length);
@@ -73,6 +74,10 @@ function ItemCard({ item, onClick }: { item: Item; onClick: () => void }) {
 }
 
 function ItemsCatalog({
+  itemsData,
+  totalCount,
+  filterOptions,
+  serverDriven = false,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -82,6 +87,15 @@ function ItemsCatalog({
   filterValues,
   onFilterValueChange,
 }: {
+  itemsData?: Record<string, Item>;
+  totalCount?: number;
+  filterOptions?: {
+    type: CatalogOption[];
+    category: CatalogOption[];
+    region: CatalogOption[];
+    rarity: CatalogOption[];
+  };
+  serverDriven?: boolean;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -91,14 +105,15 @@ function ItemsCatalog({
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 }) {
-  const { data: items, isLoading } = useItems();
+  const { data: fetchedItems, isLoading } = useItems();
   const { openRoot } = useDetailDrawer();
 
+  const items = itemsData ?? fetchedItems;
   const list = Object.values(items || {});
-  const types = Array.from(new Set(list.map((item) => item.type))).sort();
-  const categories = Array.from(new Set(list.map((item) => item.category).filter(Boolean) as string[])).sort();
-  const regions = Array.from(new Set(list.map((item) => item.region).filter(Boolean) as string[])).sort();
-  const rarityCategories = Array.from(
+  const derivedTypes = Array.from(new Set(list.map((item) => item.type))).sort();
+  const derivedCategories = Array.from(new Set(list.map((item) => item.category).filter(Boolean) as string[])).sort();
+  const derivedRegions = Array.from(new Set(list.map((item) => item.region).filter(Boolean) as string[])).sort();
+  const derivedRarityCategories = Array.from(
     new Set(list.map((item) => item.rarityCategory).filter(Boolean) as string[]),
   ).sort();
 
@@ -107,21 +122,21 @@ function ItemsCatalog({
       key: 'type',
       label: 'Type',
       placement: 'primary',
-      options: types.map((type) => ({ label: type, value: type.toLowerCase() })),
+      options: filterOptions?.type ?? derivedTypes.map((type) => ({ label: type, value: type.toLowerCase() })),
       predicate: (item, value) => item.type.toLowerCase() === value,
     },
     {
       key: 'category',
       label: 'Category',
       placement: 'advanced',
-      options: categories.map((category) => ({ label: category, value: category.toLowerCase() })),
+      options: filterOptions?.category ?? derivedCategories.map((category) => ({ label: category, value: category.toLowerCase() })),
       predicate: (item, value) => item.category?.toLowerCase() === value,
     },
     {
       key: 'region',
       label: 'Region',
       placement: 'advanced',
-      options: regions.map((region) => ({ label: region, value: region.toLowerCase() })),
+      options: filterOptions?.region ?? derivedRegions.map((region) => ({ label: region, value: region.toLowerCase() })),
       predicate: (item, value) => item.region?.toLowerCase() === value,
     },
     {
@@ -149,7 +164,7 @@ function ItemsCatalog({
       key: 'rarity',
       label: 'Rarity',
       placement: 'advanced',
-      options: rarityCategories.map((rarity) => ({ label: rarity, value: rarity.toLowerCase() })),
+      options: filterOptions?.rarity ?? derivedRarityCategories.map((rarity) => ({ label: rarity, value: rarity.toLowerCase() })),
       predicate: (item, value) => item.rarityCategory?.toLowerCase() === value,
     },
     {
@@ -189,6 +204,7 @@ function ItemsCatalog({
     <>
       <CatalogPageLayout<Item>
         data={list}
+        totalCount={totalCount}
         title="Items Database"
         searchKey="name"
         searchTerm={searchTerm}
@@ -203,7 +219,8 @@ function ItemsCatalog({
         onFilterValueChange={onFilterValueChange}
         tableColumns={tableColumns}
         getItemKey={(item) => item.id}
-        isLoading={isLoading}
+        isLoading={!itemsData && isLoading}
+        disableClientFiltering={serverDriven}
         renderCard={(item, onClick) => <ItemCard item={item} onClick={onClick} />}
         onOpenItem={(item) => openRoot({ type: 'item', id: item.id })}
       />
@@ -213,6 +230,10 @@ function ItemsCatalog({
 }
 
 export function ItemsList({
+  items,
+  totalCount,
+  filterOptions,
+  serverDriven = false,
   detailValue,
   onDetailValueChange,
   searchTerm,
@@ -224,6 +245,15 @@ export function ItemsList({
   filterValues,
   onFilterValueChange,
 }: {
+  items?: Record<string, Item>;
+  totalCount?: number;
+  filterOptions?: {
+    type: CatalogOption[];
+    category: CatalogOption[];
+    region: CatalogOption[];
+    rarity: CatalogOption[];
+  };
+  serverDriven?: boolean;
   detailValue?: string;
   onDetailValueChange?: (value?: string) => void;
   searchTerm?: string;
@@ -247,6 +277,10 @@ export function ItemsList({
       onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
     >
       <ItemsCatalog
+        itemsData={items}
+        totalCount={totalCount}
+        filterOptions={filterOptions}
+        serverDriven={serverDriven}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
         viewMode={viewMode ?? internalViewMode}

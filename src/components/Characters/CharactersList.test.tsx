@@ -84,8 +84,86 @@ describe('CharactersList Component', () => {
     expect(screen.getByText('Forte')).toBeInTheDocument();
     expect(screen.getAllByText('Bachelorettes').length).toBeGreaterThan(0);
     const icon = screen.getByAltText('Forte icon');
-    expect(icon.getAttribute('src')).toContain('/src/assets/images/characters/icons/md/');
+    expect(icon.getAttribute('src')).toContain('/images/characters/icons/md/');
     expect(icon.getAttribute('src')).toContain('forte');
+  });
+
+  it('supports controlled table mode sorting and server-driven filter combinations', async () => {
+    const controlledCharacters = {
+      ...mockCharacters,
+      'char-vishnal': {
+        id: 'char-vishnal',
+        name: 'Vishnal',
+        category: 'Bachelors',
+        icon: {
+          sm: '/characters/icons/sm/vishnal.png',
+          md: '/characters/icons/md/vishnal.png',
+        },
+        portrait: '/characters/portrait/vishnal.png',
+        gender: 'Male',
+        description: 'A butler in training.',
+        birthday: { season: 'Spring', day: 3 },
+        battle: {
+          description: 'A quick attacker.',
+          stats: {
+            level: 20,
+            hp: 500,
+            atk: 180,
+            def: 120,
+            matk: 80,
+            mdef: 90,
+            str: 110,
+            vit: 100,
+            int: 70,
+          },
+          elementalResistances: {},
+          skills: ['Rapid Slash'],
+          weapon: 'Butler Blade',
+          weaponType: 'Short Sword',
+        },
+        gifts: {
+          love: { items: [], categories: [] },
+          like: { items: [], categories: [] },
+          neutral: { items: [], categories: [] },
+          dislike: { items: [], categories: [] },
+          hate: { items: [], categories: [] },
+        },
+      },
+    } satisfies Record<string, Character>;
+
+    const { rerender } = render(
+      <CharactersList
+        characters={controlledCharacters}
+        viewMode="table"
+        sortValue="birthday-asc"
+      />,
+      { wrapper },
+    );
+
+    const rows = await screen.findAllByRole('row');
+    expect(within(rows[1]!).getAllByRole('cell')[0]).toHaveTextContent('Vishnal');
+    expect(within(rows[2]!).getAllByRole('cell')[0]).toHaveTextContent('Forte');
+
+    rerender(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <CharactersList
+          characters={controlledCharacters}
+          viewMode="table"
+          searchTerm="for"
+          filterValues={{
+            category: 'bachelorettes',
+            gender: 'female',
+            season: 'summer',
+            battle: 'yes',
+            weaponType: 'long sword',
+          }}
+        />
+      </QueryClientProvider>,
+    );
+
+    expect(await screen.findByText('Forte')).toBeInTheDocument();
+    expect(screen.queryByText('Vishnal')).not.toBeInTheDocument();
+    expect(screen.getByText('Long Sword')).toBeInTheDocument();
   });
 
   it('renders full character details from the enriched dataset', async () => {

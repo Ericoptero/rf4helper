@@ -28,19 +28,28 @@ function CharacterIcon({ character }: { character: Character }) {
 }
 
 function CalendarContent({
+  festivalsData,
+  cropsData,
+  charactersData,
   season,
   onSeasonChange,
 }: {
+  festivalsData?: import('@/lib/schemas').Festival[];
+  cropsData?: import('@/lib/schemas').CropsData;
+  charactersData?: Record<string, Character>;
   season: string;
   onSeasonChange: (season: string) => void;
 }) {
-  const { data: festivals, isLoading: festivalsLoading } = useFestivals();
-  const { data: cropsData, isLoading: cropsLoading } = useCrops();
-  const { data: charactersMap, isLoading: charactersLoading } = useCharacters();
+  const { data: fetchedFestivals, isLoading: festivalsLoading } = useFestivals();
+  const { data: fetchedCropsData, isLoading: cropsLoading } = useCrops();
+  const { data: fetchedCharactersMap, isLoading: charactersLoading } = useCharacters();
   const { openRoot } = useDetailDrawer();
+  const festivals = festivalsData ?? fetchedFestivals;
+  const resolvedCropsData = cropsData ?? fetchedCropsData;
+  const charactersMap = charactersData ?? fetchedCharactersMap;
 
   const characters = React.useMemo(() => Object.values(charactersMap || {}), [charactersMap]);
-  const crops = React.useMemo(() => cropsData?.regularCrops || [], [cropsData]);
+  const crops = React.useMemo(() => resolvedCropsData?.regularCrops || [], [resolvedCropsData]);
 
   const seasonFestivals = React.useMemo(() => (festivals || []).filter((festival) => festival.season === season), [festivals, season]);
   const seasonBirthdays = React.useMemo(() => characters.filter((character) => character.birthday?.season === season), [characters, season]);
@@ -221,11 +230,17 @@ function CalendarContent({
 }
 
 export function CalendarView({
+  festivals,
+  cropsData,
+  characters,
   season,
   onSeasonChange,
   detailValue,
   onDetailValueChange,
 }: {
+  festivals?: import('@/lib/schemas').Festival[];
+  cropsData?: import('@/lib/schemas').CropsData;
+  characters?: Record<string, Character>;
   season?: string;
   onSeasonChange?: (season: string) => void;
   detailValue?: string;
@@ -240,6 +255,9 @@ export function CalendarView({
       onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
     >
       <CalendarContent
+        festivalsData={festivals}
+        cropsData={cropsData}
+        charactersData={characters}
         season={season ?? internalSeason}
         onSeasonChange={onSeasonChange ?? setInternalSeason}
       />

@@ -10,21 +10,14 @@ import {
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
 import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/DetailDrawerContext';
+import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import { buildMonsterGroups, isMonsterActuallyTameable, type MonsterGroup } from '@/lib/monsterGroups';
-
-const MonsterDetailsDrawer = React.lazy(() =>
-  import('@/components/details/MonsterDetailsDrawer').then((module) => ({ default: module.MonsterDetailsDrawer })),
-);
-
-const monsterImages = import.meta.glob('@/assets/images/monsters/*.png', {
-  eager: true,
-  import: 'default',
-}) as Record<string, string>;
+import { resolveMonsterImageUrl } from '@/lib/publicAssetUrls';
+import type { CatalogOption } from '@/server/catalogQueries';
 
 function resolveMonsterImage(image?: string) {
-  if (!image) return undefined;
-  return monsterImages[`/src/assets${image}.png`];
+  return resolveMonsterImageUrl(image);
 }
 
 function MonsterCard({ group, onClick }: { group: MonsterGroup; onClick: () => void }) {
@@ -78,6 +71,10 @@ function MonsterCard({ group, onClick }: { group: MonsterGroup; onClick: () => v
 }
 
 function MonstersCatalog({
+  monstersData,
+  totalCount,
+  filterOptions,
+  serverDriven = false,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -87,6 +84,12 @@ function MonstersCatalog({
   filterValues,
   onFilterValueChange,
 }: {
+  monstersData?: Record<string, import('@/lib/schemas').Monster>;
+  totalCount?: number;
+  filterOptions?: {
+    location: CatalogOption[];
+  };
+  serverDriven?: boolean;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -96,8 +99,9 @@ function MonstersCatalog({
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 }) {
-  const { data: monsters, isLoading } = useMonsters();
+  const { data: fetchedMonsters, isLoading } = useMonsters();
   const { openRoot } = useDetailDrawer();
+  const monsters = monstersData ?? fetchedMonsters;
   const groups = React.useMemo(() => buildMonsterGroups(Object.values(monsters || {})), [monsters]);
   const locations = Array.from(new Set(groups.flatMap((group) => group.locations))).sort();
 
@@ -127,7 +131,7 @@ function MonstersCatalog({
       key: 'location',
       label: 'Location',
       placement: 'advanced',
-      options: locations.map((location) => ({ label: location, value: location.toLowerCase() })),
+      options: filterOptions?.location ?? locations.map((location) => ({ label: location, value: location.toLowerCase() })),
       predicate: (group, value) => group.locations.some((location) => location.toLowerCase() === value),
     },
     {
@@ -159,6 +163,7 @@ function MonstersCatalog({
     <>
       <CatalogPageLayout<MonsterGroup>
         data={groups}
+        totalCount={totalCount}
         title="Monsters Compendium"
         searchKey={(group) => group.searchText}
         searchTerm={searchTerm}
@@ -173,18 +178,21 @@ function MonstersCatalog({
         onFilterValueChange={onFilterValueChange}
         tableColumns={tableColumns}
         getItemKey={(group) => group.key}
-        isLoading={isLoading}
+        isLoading={!monstersData && isLoading}
+        disableClientFiltering={serverDriven}
         renderCard={(group, onClick) => <MonsterCard group={group} onClick={onClick} />}
         onOpenItem={(group) => openRoot({ type: 'monster', id: group.key })}
       />
-      <React.Suspense fallback={null}>
-        <MonsterDetailsDrawer />
-      </React.Suspense>
+      <UniversalDetailsDrawer />
     </>
   );
 }
 
 export function MonstersList({
+  monsters,
+  totalCount,
+  filterOptions,
+  serverDriven = false,
   detailValue,
   onDetailValueChange,
   searchTerm,
@@ -196,6 +204,12 @@ export function MonstersList({
   filterValues,
   onFilterValueChange,
 }: {
+  monsters?: Record<string, import('@/lib/schemas').Monster>;
+  totalCount?: number;
+  filterOptions?: {
+    location: CatalogOption[];
+  };
+  serverDriven?: boolean;
   detailValue?: string;
   onDetailValueChange?: (value?: string) => void;
   searchTerm?: string;
@@ -219,6 +233,10 @@ export function MonstersList({
       onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
     >
       <MonstersCatalog
+        monstersData={monsters}
+        totalCount={totalCount}
+        filterOptions={filterOptions}
+        serverDriven={serverDriven}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
         viewMode={viewMode ?? internalViewMode}

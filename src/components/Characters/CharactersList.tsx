@@ -10,13 +10,11 @@ import {
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
 import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/DetailDrawerContext';
+import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import { resolveCharacterImage } from '@/lib/characterImages';
 import type { Character } from '@/lib/schemas';
-
-const CharacterDetailsDrawer = React.lazy(() =>
-  import('@/components/details/CharacterDetailsDrawer').then((module) => ({ default: module.CharacterDetailsDrawer })),
-);
+import type { CatalogOption } from '@/server/catalogQueries';
 
 function formatBirthday(character: Character) {
   if (!character.birthday?.season || character.birthday.day == null) {
@@ -84,6 +82,10 @@ function CharacterCard({ character, onClick }: { character: Character; onClick: 
 }
 
 function CharactersCatalog({
+  charactersData,
+  totalCount,
+  filterOptions,
+  serverDriven = false,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -93,6 +95,15 @@ function CharactersCatalog({
   filterValues,
   onFilterValueChange,
 }: {
+  charactersData?: Record<string, Character>;
+  totalCount?: number;
+  filterOptions?: {
+    category: CatalogOption[];
+    gender: CatalogOption[];
+    season: CatalogOption[];
+    weaponType: CatalogOption[];
+  };
+  serverDriven?: boolean;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -102,8 +113,9 @@ function CharactersCatalog({
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 }) {
-  const { data: characters, isLoading } = useCharacters();
+  const { data: fetchedCharacters, isLoading } = useCharacters();
   const { openRoot } = useDetailDrawer();
+  const characters = charactersData ?? fetchedCharacters;
   const list = Object.values(characters || {});
 
   const categories = Array.from(new Set(list.map((character) => character.category))).sort();
@@ -120,21 +132,21 @@ function CharactersCatalog({
       key: 'category',
       label: 'Category',
       placement: 'primary',
-      options: categories.map((category) => ({ label: category, value: category.toLowerCase() })),
+      options: filterOptions?.category ?? categories.map((category) => ({ label: category, value: category.toLowerCase() })),
       predicate: (character, value) => character.category.toLowerCase() === value,
     },
     {
       key: 'gender',
       label: 'Gender',
       placement: 'primary',
-      options: genders.map((gender) => ({ label: gender, value: gender.toLowerCase() })),
+      options: filterOptions?.gender ?? genders.map((gender) => ({ label: gender, value: gender.toLowerCase() })),
       predicate: (character, value) => character.gender?.toLowerCase() === value,
     },
     {
       key: 'season',
       label: 'Birthday Season',
       placement: 'advanced',
-      options: seasons.map((season) => ({ label: season, value: season.toLowerCase() })),
+      options: filterOptions?.season ?? seasons.map((season) => ({ label: season, value: season.toLowerCase() })),
       predicate: (character, value) => character.birthday?.season?.toLowerCase() === value,
     },
     {
@@ -148,7 +160,7 @@ function CharactersCatalog({
       key: 'weaponType',
       label: 'Weapon Type',
       placement: 'advanced',
-      options: weaponTypes.map((weaponType) => ({ label: weaponType, value: weaponType.toLowerCase() })),
+      options: filterOptions?.weaponType ?? weaponTypes.map((weaponType) => ({ label: weaponType, value: weaponType.toLowerCase() })),
       predicate: (character, value) => character.battle?.weaponType?.toLowerCase() === value,
     },
   ];
@@ -171,6 +183,7 @@ function CharactersCatalog({
     <>
       <CatalogPageLayout<Character>
         data={list}
+        totalCount={totalCount}
         title="Characters"
         searchKey="name"
         searchTerm={searchTerm}
@@ -185,18 +198,21 @@ function CharactersCatalog({
         onFilterValueChange={onFilterValueChange}
         tableColumns={tableColumns}
         getItemKey={(character) => character.id}
-        isLoading={isLoading}
+        isLoading={!charactersData && isLoading}
+        disableClientFiltering={serverDriven}
         renderCard={(character, onClick) => <CharacterCard character={character} onClick={onClick} />}
         onOpenItem={(character) => openRoot({ type: 'character', id: character.id })}
       />
-      <React.Suspense fallback={null}>
-        <CharacterDetailsDrawer />
-      </React.Suspense>
+      <UniversalDetailsDrawer />
     </>
   );
 }
 
 export function CharactersList({
+  characters,
+  totalCount,
+  filterOptions,
+  serverDriven = false,
   detailValue,
   onDetailValueChange,
   searchTerm,
@@ -208,6 +224,15 @@ export function CharactersList({
   filterValues,
   onFilterValueChange,
 }: {
+  characters?: Record<string, Character>;
+  totalCount?: number;
+  filterOptions?: {
+    category: CatalogOption[];
+    gender: CatalogOption[];
+    season: CatalogOption[];
+    weaponType: CatalogOption[];
+  };
+  serverDriven?: boolean;
   detailValue?: string;
   onDetailValueChange?: (value?: string) => void;
   searchTerm?: string;
@@ -231,6 +256,10 @@ export function CharactersList({
       onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
     >
       <CharactersCatalog
+        charactersData={characters}
+        totalCount={totalCount}
+        filterOptions={filterOptions}
+        serverDriven={serverDriven}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
         viewMode={viewMode ?? internalViewMode}

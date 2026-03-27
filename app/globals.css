@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@source "./**/*.{ts,tsx}";
+@source "../src/**/*.{ts,tsx}";
+@import "../node_modules/tw-animate-css/dist/tw-animate.css";
+@import "../node_modules/shadcn/dist/tailwind.css";
+@import "@fontsource-variable/inter";
+@import "../src/index.css";

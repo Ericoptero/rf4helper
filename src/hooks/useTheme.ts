@@ -1,6 +1,23 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 
 type Theme = 'light' | 'dark';
+
+function getInitialTheme(): Theme {
+  if (typeof window === 'undefined') {
+    return 'dark';
+  }
+
+  const stored = localStorage.getItem('rf4-theme') as Theme | null;
+  if (stored === 'light' || stored === 'dark') {
+    return stored;
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function subscribeHydration() {
+  return () => {};
+}
 
 /**
  * Custom hook to manage dark mode with localStorage persistence.
@@ -8,12 +25,8 @@ type Theme = 'light' | 'dark';
  * their manual choice in localStorage under "rf4-theme".
  */
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window === 'undefined') return 'dark';
-    const stored = localStorage.getItem('rf4-theme') as Theme | null;
-    if (stored === 'light' || stored === 'dark') return stored;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  });
+  const [theme, setThemeState] = useState<Theme>(getInitialTheme);
+  const isHydrated = useSyncExternalStore(subscribeHydration, () => true, () => false);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -22,6 +35,7 @@ export function useTheme() {
     } else {
       root.classList.remove('dark');
     }
+    root.style.colorScheme = theme;
     localStorage.setItem('rf4-theme', theme);
   }, [theme]);
 
@@ -29,5 +43,5 @@ export function useTheme() {
     setThemeState((prev) => (prev === 'dark' ? 'light' : 'dark'));
   }, []);
 
-  return { theme, toggleTheme } as const;
+  return { theme, toggleTheme, isHydrated } as const;
 }

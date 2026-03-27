@@ -123,6 +123,42 @@ describe('MonstersList Component', () => {
     expect(screen.queryByText('Octopirate 2')).not.toBeInTheDocument();
   });
 
+  it('supports controlled table mode sorting and server-driven filter combinations', async () => {
+    const { rerender } = render(
+      <MonstersList
+        monsters={mockMonsters}
+        viewMode="table"
+        sortValue="level-desc"
+      />,
+      { wrapper },
+    );
+
+    const rows = await screen.findAllByRole('row');
+    expect(within(rows[1]!).getAllByRole('cell')[0]).toHaveTextContent('Death Orc');
+    expect(within(rows[2]!).getAllByRole('cell')[0]).toHaveTextContent('Octopirate');
+
+    rerender(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <MonstersList
+          monsters={mockMonsters}
+          viewMode="table"
+          searchTerm="octo"
+          filterValues={{
+            tameable: 'yes',
+            boss: 'yes',
+            rideable: 'yes',
+            location: 'field dungeon (boss)',
+            drops: 'yes',
+          }}
+        />
+      </QueryClientProvider>,
+    );
+
+    expect(await screen.findByText('Octopirate')).toBeInTheDocument();
+    expect(screen.queryByText('Death Orc')).not.toBeInTheDocument();
+    expect(screen.getAllByText('Yes').length).toBeGreaterThan(0);
+  });
+
   it('shows a location-labeled variant switcher and updates details when switching', async () => {
     const user = userEvent.setup();
     render(<MonstersList />, { wrapper });

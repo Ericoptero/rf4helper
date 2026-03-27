@@ -77,7 +77,7 @@ describe('CalendarView Component', () => {
     // Verify birthday is taken from characters.json
     expect(screen.getAllByText('Amber').length).toBeGreaterThan(0);
     const icon = screen.getByAltText('Amber icon');
-    expect(icon.getAttribute('src')).toContain('/src/assets/images/characters/icons/sm/');
+    expect(icon.getAttribute('src')).toContain('/images/characters/icons/sm/');
     expect(icon.getAttribute('src')).toContain('amber');
 
     expect(screen.getByText('Festivals This Season')).toBeInTheDocument();
@@ -116,7 +116,7 @@ describe('CalendarView Component', () => {
 
     await user.click(screen.getAllByText('Amber')[0]);
 
-    expect((await screen.findAllByText("Amber's Birthday")).length).toBeGreaterThan(0);
+    expect(await screen.findByRole('dialog', { name: "Amber's Birthday" })).toBeInTheDocument();
     expect(screen.getAllByAltText('Amber icon')[0].getAttribute('src')).toContain('amber');
   });
 });

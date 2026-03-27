@@ -14,6 +14,7 @@ import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDra
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import type { Fish } from '@/lib/schemas';
 import { resolveFishImage } from '@/lib/fishImages';
+import type { CatalogOption } from '@/server/catalogQueries';
 
 const SEASON_ORDER = ['Spring', 'Summer', 'Fall', 'Winter'];
 
@@ -60,6 +61,10 @@ function FishCard({ fish, onClick }: { fish: Fish; onClick: () => void }) {
 }
 
 function FishingCatalog({
+  fishData,
+  totalCount,
+  filterOptions,
+  serverDriven = false,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -69,6 +74,14 @@ function FishingCatalog({
   filterValues,
   onFilterValueChange,
 }: {
+  fishData?: Fish[];
+  totalCount?: number;
+  filterOptions?: {
+    shadow: CatalogOption[];
+    region: CatalogOption[];
+    season: CatalogOption[];
+  };
+  serverDriven?: boolean;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -78,9 +91,9 @@ function FishingCatalog({
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 }) {
-  const { data: fishList, isLoading } = useFish();
+  const { data: fetchedFishList, isLoading } = useFish();
   const { openRoot } = useDetailDrawer();
-  const allFish = fishList || [];
+  const allFish = fishData ?? fetchedFishList ?? [];
 
   const shadowOptions = Array.from(new Set(allFish.map((fish) => fish.shadow).filter(Boolean) as string[])).sort();
   const regionOptions = Array.from(
@@ -95,21 +108,21 @@ function FishingCatalog({
       key: 'shadow',
       label: 'Shadow',
       placement: 'primary',
-      options: shadowOptions.map((shadow) => ({ label: `${shadow} Shadow`, value: shadow })),
+      options: filterOptions?.shadow ?? shadowOptions.map((shadow) => ({ label: `${shadow} Shadow`, value: shadow })),
       predicate: (fish, value) => fish.shadow === value,
     },
     {
       key: 'region',
       label: 'Region',
       placement: 'advanced',
-      options: regionOptions.map((region) => ({ label: region, value: region })),
+      options: filterOptions?.region ?? regionOptions.map((region) => ({ label: region, value: region })),
       predicate: (fish, value) => (fish.locations ?? []).some((location) => location.region === value),
     },
     {
       key: 'season',
       label: 'Season',
       placement: 'advanced',
-      options: seasonOptions.map((season) => ({ label: season, value: season })),
+      options: filterOptions?.season ?? seasonOptions.map((season) => ({ label: season, value: season })),
       predicate: (fish, value) => (fish.locations ?? []).some((location) => location.seasons?.includes(value)),
     },
     {
@@ -140,6 +153,7 @@ function FishingCatalog({
     <>
       <CatalogPageLayout<Fish>
         data={allFish}
+        totalCount={totalCount}
         title="Fishing Guide"
         searchKey="name"
         searchTerm={searchTerm}
@@ -154,7 +168,8 @@ function FishingCatalog({
         onFilterValueChange={onFilterValueChange}
         tableColumns={tableColumns}
         getItemKey={(fish) => fish.id}
-        isLoading={isLoading}
+        isLoading={!fishData && isLoading}
+        disableClientFiltering={serverDriven}
         renderCard={(fish, onClick) => <FishCard fish={fish} onClick={onClick} />}
         onOpenItem={(fish) => openRoot({ type: 'fish', id: fish.id })}
       />
@@ -164,6 +179,10 @@ function FishingCatalog({
 }
 
 export function FishingList({
+  fish,
+  totalCount,
+  filterOptions,
+  serverDriven = false,
   detailValue,
   onDetailValueChange,
   searchTerm,
@@ -175,6 +194,14 @@ export function FishingList({
   filterValues,
   onFilterValueChange,
 }: {
+  fish?: Fish[];
+  totalCount?: number;
+  filterOptions?: {
+    shadow: CatalogOption[];
+    region: CatalogOption[];
+    season: CatalogOption[];
+  };
+  serverDriven?: boolean;
   detailValue?: string;
   onDetailValueChange?: (value?: string) => void;
   searchTerm?: string;
@@ -198,6 +225,10 @@ export function FishingList({
       onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
     >
       <FishingCatalog
+        fishData={fish}
+        totalCount={totalCount}
+        filterOptions={filterOptions}
+        serverDriven={serverDriven}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
         viewMode={viewMode ?? internalViewMode}

@@ -236,7 +236,85 @@ describe('ItemsList Component', () => {
 
     const breadImage = await screen.findByRole('img', { name: 'Bread image' });
     expect(breadImage).toHaveAttribute('src');
-    expect(screen.queryByRole('img', { name: "Ambrosia's Thorns image" })).not.toBeInTheDocument();
+    expect(await screen.findByRole('img', { name: "Ambrosia's Thorns image" })).toHaveAttribute('src');
+  });
+
+  it('supports controlled table mode sorting and server-friendly filter combinations', async () => {
+    const { rerender } = render(
+      <ItemsList
+        items={mockItems}
+        viewMode="table"
+        sortValue="sell-desc"
+      />,
+      { wrapper },
+    );
+
+    const rows = await screen.findAllByRole('row');
+    expect(within(rows[1]!).getAllByRole('cell')[0]).toHaveTextContent('Weapon Bread+');
+    expect(within(rows[2]!).getAllByRole('cell')[0]).toHaveTextContent('Fire Resist Charm');
+
+    rerender(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <ItemsList
+          items={mockItems}
+          viewMode="table"
+          searchTerm="bread"
+          filterValues={{
+            category: 'foodandmedicinestrings',
+            region: 'selphia general store',
+            ship: 'yes',
+            rarity: 'food',
+          }}
+        />
+      </QueryClientProvider>,
+    );
+
+    expect(await screen.findByText('Bread')).toBeInTheDocument();
+    expect(screen.queryByText('Weapon Bread')).not.toBeInTheDocument();
+
+    rerender(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <ItemsList
+          items={mockItems}
+          viewMode="table"
+          filterValues={{
+            type: 'bread',
+            buyable: 'yes',
+            sellable: 'yes',
+          }}
+        />
+      </QueryClientProvider>,
+    );
+
+    expect(await screen.findByText('Weapon Bread+')).toBeInTheDocument();
+    expect(screen.queryByText('Weapon Bread')).not.toBeInTheDocument();
+
+    rerender(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <ItemsList
+          items={mockItems}
+          viewMode="table"
+          searchTerm="sword"
+          filterValues={{ craft: 'yes' }}
+        />
+      </QueryClientProvider>,
+    );
+
+    expect(await screen.findByText('Broadsword')).toBeInTheDocument();
+    expect(screen.queryByText('Bread')).not.toBeInTheDocument();
+
+    rerender(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <ItemsList
+          items={mockItems}
+          viewMode="table"
+          filterValues={{ effects: 'yes' }}
+        />
+      </QueryClientProvider>,
+    );
+
+    expect(await screen.findByText('Roundoff')).toBeInTheDocument();
+    expect(screen.getByText('Fire Resist Charm')).toBeInTheDocument();
   });
 
   it('shows the item image and all meaningful details in the sheet', async () => {

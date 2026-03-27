@@ -46,6 +46,11 @@ function MapCard({ region, onClick }: { region: MapRegionRecord; onClick: () => 
 }
 
 function MapsCatalog({
+  regionsData,
+  chestsData,
+  fishData,
+  totalCount,
+  serverDriven = false,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -55,6 +60,11 @@ function MapsCatalog({
   filterValues,
   onFilterValueChange,
 }: {
+  regionsData?: MapRegionRecord[];
+  chestsData?: import('@/lib/schemas').Chest[];
+  fishData?: import('@/lib/schemas').Fish[];
+  totalCount?: number;
+  serverDriven?: boolean;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -64,11 +74,16 @@ function MapsCatalog({
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 }) {
-  const { data: chests, isLoading: chestsLoading } = useChests();
-  const { data: fish, isLoading: fishLoading } = useFish();
+  const { data: fetchedChests, isLoading: chestsLoading } = useChests();
+  const { data: fetchedFish, isLoading: fishLoading } = useFish();
   const { openRoot } = useDetailDrawer();
+  const chests = chestsData ?? fetchedChests;
+  const fish = fishData ?? fetchedFish;
 
-  const regions = React.useMemo(() => buildMapRegions(chests ?? [], fish ?? []), [chests, fish]);
+  const regions = React.useMemo(
+    () => regionsData ?? buildMapRegions(chests ?? [], fish ?? []),
+    [chests, fish, regionsData],
+  );
 
   const filters: CatalogFilterDefinition<MapRegionRecord>[] = [
     {
@@ -128,6 +143,7 @@ function MapsCatalog({
     <>
       <CatalogPageLayout<MapRegionRecord>
         data={regions}
+        totalCount={totalCount}
         title="World Maps & Chests"
         searchKey="name"
         searchTerm={searchTerm}
@@ -142,7 +158,8 @@ function MapsCatalog({
         onFilterValueChange={onFilterValueChange}
         tableColumns={tableColumns}
         getItemKey={(region) => region.id}
-        isLoading={chestsLoading || fishLoading}
+        isLoading={(!chestsData && chestsLoading) || (!fishData && fishLoading)}
+        disableClientFiltering={serverDriven}
         renderCard={(region, onClick) => <MapCard region={region} onClick={onClick} />}
         onOpenItem={(region) => openRoot({ type: 'map', id: region.id })}
       />
@@ -152,6 +169,11 @@ function MapsCatalog({
 }
 
 export function MapsList({
+  regions,
+  chests,
+  fish,
+  totalCount,
+  serverDriven = false,
   detailValue,
   onDetailValueChange,
   searchTerm,
@@ -163,6 +185,11 @@ export function MapsList({
   filterValues,
   onFilterValueChange,
 }: {
+  regions?: MapRegionRecord[];
+  chests?: import('@/lib/schemas').Chest[];
+  fish?: import('@/lib/schemas').Fish[];
+  totalCount?: number;
+  serverDriven?: boolean;
   detailValue?: string;
   onDetailValueChange?: (value?: string) => void;
   searchTerm?: string;
@@ -186,6 +213,11 @@ export function MapsList({
       onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
     >
       <MapsCatalog
+        regionsData={regions}
+        chestsData={chests}
+        fishData={fish}
+        totalCount={totalCount}
+        serverDriven={serverDriven}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
         viewMode={viewMode ?? internalViewMode}

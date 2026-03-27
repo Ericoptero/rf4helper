@@ -205,7 +205,13 @@ export function CrafterSelectorDialog({
                       >
                         <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                           {itemPreview.imageSrc ? (
-                            <img src={itemPreview.imageSrc} alt={`${item.name} icon`} className="h-8 w-8 object-contain" />
+                            <img
+                              src={itemPreview.imageSrc}
+                              alt={`${item.name} icon`}
+                              className="h-8 w-8 object-contain"
+                              loading="eager"
+                              decoding="sync"
+                            />
                           ) : (
                             <Sparkles className="h-4 w-4" />
                           )}
@@ -253,7 +259,13 @@ export function CrafterSelectorDialog({
 
                   <div className="flex h-20 items-center justify-center rounded-2xl border bg-background/70">
                     {previewData.imageSrc ? (
-                      <img src={previewData.imageSrc} alt={`${previewItem?.name ?? 'Selected item'} icon`} className="h-16 w-16 object-contain" />
+                      <img
+                        src={previewData.imageSrc}
+                        alt={`${previewItem?.name ?? 'Selected item'} icon`}
+                        className="h-16 w-16 object-contain"
+                        loading="eager"
+                        decoding="sync"
+                      />
                     ) : (
                       <Sparkles className="h-6 w-6 text-primary" />
                     )}

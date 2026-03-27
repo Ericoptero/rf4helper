@@ -15,25 +15,21 @@ import {
   Sword,
   Wheat,
 } from 'lucide-react';
-import { useCharacters, useChests, useCrops, useFestivals, useFish, useItems, useMonsters } from '@/hooks/queries';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { resolveCharacterImage } from '@/lib/characterImages';
 import { resolveFishImage } from '@/lib/fishImages';
+import { resolveMonsterImageUrl } from '@/lib/publicAssetUrls';
 import { buildMapRegions } from '@/lib/mapFishingRelations';
 import { buildMonsterGroups, isMonsterActuallyTameable } from '@/lib/monsterGroups';
 import { capitalize, formatName, formatNumber } from '@/lib/formatters';
 import type { Character, Crop, Festival, Fish, Item } from '@/lib/schemas';
+import type { DetailPayload } from '@/server/details';
 import { useDetailDrawer } from './DetailDrawerContext';
 import { CatalogDetailsDrawerShell } from './CatalogDetailsDrawerShell';
 import { LinkedEntityToken } from './LinkedEntityToken';
 import { getSemanticBadgeClass } from './semanticBadges';
-
-const monsterImages = import.meta.glob('@/assets/images/monsters/*.png', {
-  eager: true,
-  import: 'default',
-}) as Record<string, string>;
 
 const itemStatLabels: Record<string, string> = {
   hp: 'HP',
@@ -81,8 +77,7 @@ const resistanceLabels: Record<string, string> = {
 };
 
 function resolveMonsterImage(image?: string) {
-  if (!image) return undefined;
-  return monsterImages[`/src/assets${image}.png`];
+  return resolveMonsterImageUrl(image);
 }
 
 function DetailSection({
@@ -927,59 +922,98 @@ function CropDetailsContent({ crop }: { crop: Crop }) {
 
 export function UniversalDetailsDrawer() {
   const { current } = useDetailDrawer();
-  const { data: items } = useItems();
-  const { data: characters } = useCharacters();
-  const { data: monsters } = useMonsters();
-  const { data: fish } = useFish();
-  const { data: chests } = useChests();
-  const { data: festivals } = useFestivals();
-  const { data: crops } = useCrops();
+  const [payload, setPayload] = React.useState<DetailPayload | null>(null);
+  const [status, setStatus] = React.useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
 
-  const monsterGroups = React.useMemo(() => buildMonsterGroups(Object.values(monsters ?? {})), [monsters]);
-  const mapRegions = React.useMemo(() => buildMapRegions(chests ?? [], fish ?? []), [chests, fish]);
+  React.useEffect(() => {
+    if (!current) {
+      setPayload(null);
+      setStatus('idle');
+      return;
+    }
+
+    const detailReference = current;
+    const controller = new AbortController();
+
+    async function loadDetail() {
+      setStatus('loading');
+
+      try {
+        const response = await fetch(`/api/details/${detailReference.type}/${detailReference.id}`, {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to load detail payload for ${detailReference.type}:${detailReference.id}`);
+        }
+
+        const nextPayload = (await response.json()) as DetailPayload;
+        setPayload(nextPayload);
+        setStatus('ready');
+      } catch (error) {
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        setPayload(null);
+        setStatus('error');
+        console.error(error);
+      }
+    }
+
+    void loadDetail();
+
+    return () => controller.abort();
+  }, [current]);
 
   const resolved = React.useMemo(() => {
     if (!current) {
       return null;
     }
 
-    switch (current.type) {
-      case 'item': {
-        const item = items?.[current.id];
-        return item ? { title: item.name, content: <ItemDetailsContent item={item} items={items} /> } : null;
-      }
-      case 'character': {
-        const character = characters?.[current.id];
-        return character ? { title: character.name, content: <CharacterDetailsContent character={character} items={items} /> } : null;
-      }
-      case 'birthday': {
-        const character = characters?.[current.id];
-        return character ? { title: `${character.name}'s Birthday`, content: <BirthdayDetailsContent character={character} /> } : null;
-      }
-      case 'monster': {
-        const group = monsterGroups.find((entry) => entry.key === current.id || entry.representative.id === current.id);
-        return group ? { title: group.displayName, content: <MonsterDetailsContent group={group} items={items} /> } : null;
-      }
-      case 'fish': {
-        const fishEntry = (fish ?? []).find((entry) => entry.id === current.id);
-        return fishEntry ? { title: fishEntry.name, content: <FishDetailsContent fish={fishEntry} /> } : null;
-      }
-      case 'map': {
-        const region = mapRegions.find((entry) => entry.id === current.id);
-        return region ? { title: region.name, content: <MapDetailsContent region={region} /> } : null;
-      }
-      case 'festival': {
-        const festival = (festivals ?? []).find((entry) => entry.id === current.id);
-        return festival ? { title: festival.name, content: <FestivalDetailsContent festival={festival} /> } : null;
-      }
-      case 'crop': {
-        const crop = crops?.regularCrops?.find((entry) => entry.id === current.id);
-        return crop ? { title: crop.name, content: <CropDetailsContent crop={crop} /> } : null;
-      }
+    if (status === 'loading') {
+      return {
+        title: 'Loading details',
+        content: (
+          <div className="rounded-2xl border border-dashed px-6 py-20 text-center text-muted-foreground">
+            Loading entry details...
+          </div>
+        ),
+      };
+    }
+
+    if (status === 'error' || !payload) {
+      return {
+        title: 'Details unavailable',
+        content: (
+          <div className="rounded-2xl border border-dashed px-6 py-20 text-center text-muted-foreground">
+            We could not load this entry right now.
+          </div>
+        ),
+      };
+    }
+
+    switch (payload.type) {
+      case 'item':
+        return { title: payload.item.name, content: <ItemDetailsContent item={payload.item} items={payload.items} /> };
+      case 'character':
+        return { title: payload.character.name, content: <CharacterDetailsContent character={payload.character} items={payload.items} /> };
+      case 'birthday':
+        return { title: `${payload.character.name}'s Birthday`, content: <BirthdayDetailsContent character={payload.character} /> };
+      case 'monster':
+        return { title: payload.group.displayName, content: <MonsterDetailsContent group={payload.group} items={payload.items} /> };
+      case 'fish':
+        return { title: payload.fish.name, content: <FishDetailsContent fish={payload.fish} /> };
+      case 'map':
+        return { title: payload.region.name, content: <MapDetailsContent region={payload.region} /> };
+      case 'festival':
+        return { title: payload.festival.name, content: <FestivalDetailsContent festival={payload.festival} /> };
+      case 'crop':
+        return { title: payload.crop.name, content: <CropDetailsContent crop={payload.crop} /> };
       default:
         return null;
     }
-  }, [characters, crops, current, festivals, fish, items, mapRegions, monsterGroups]);
+  }, [current, payload, status]);
 
   return <CatalogDetailsDrawerShell resolved={resolved} />;
 }

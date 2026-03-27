@@ -5,16 +5,12 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatName } from '@/lib/formatters';
 import { buildMonsterGroups, isMonsterActuallyTameable, type MonsterGroup } from '@/lib/monsterGroups';
+import { resolveMonsterImageUrl } from '@/lib/publicAssetUrls';
 import type { Item } from '@/lib/schemas';
 import { useDetailDrawer } from './DetailDrawerContext';
 import { LinkedEntityToken } from './LinkedEntityToken';
 import { CatalogDetailsDrawerShell, type ResolvedDetailContent } from './CatalogDetailsDrawerShell';
 import { getSemanticBadgeClass } from './semanticBadges';
-
-const monsterImages = import.meta.glob('@/assets/images/monsters/*.png', {
-  eager: true,
-  import: 'default',
-}) as Record<string, string>;
 
 const resistanceLabels: Record<string, string> = {
   normal: 'Physical',
@@ -43,8 +39,7 @@ const resistanceLabels: Record<string, string> = {
 };
 
 function resolveMonsterImage(image?: string) {
-  if (!image) return undefined;
-  return monsterImages[`/src/assets${image}.png`];
+  return resolveMonsterImageUrl(image);
 }
 
 function formatDropRates(dropRates: number[]) {

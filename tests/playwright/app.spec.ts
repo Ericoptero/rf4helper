@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 
 async function preparePage(page: Page, theme: 'light' | 'dark' = 'light') {
   await page.addInitScript((selectedTheme) => {
@@ -17,6 +17,18 @@ async function preparePage(page: Page, theme: 'light' | 'dark' = 'light') {
       }
     `,
   });
+}
+
+async function waitForLoadedImages(locator: Locator, minimumLoadedImages: number) {
+  await expect
+    .poll(
+      async () =>
+        locator.locator('img').evaluateAll((images) =>
+          images.filter((image) => image instanceof HTMLImageElement && image.complete).length,
+        ),
+      { timeout: 10_000 },
+    )
+    .toBeGreaterThanOrEqual(minimumLoadedImages);
 }
 
 test.describe('app smoke', () => {
@@ -127,6 +139,7 @@ test.describe('app visual baselines', () => {
     await expect(dialog.getByRole('combobox', { name: /sort items/i })).toBeVisible();
     await expect(dialog.getByRole('button', { name: /rarity \+15/i })).toBeVisible();
     await expect(dialog.getByRole('button', { name: /turnip heaven/i })).toBeVisible();
+    await waitForLoadedImages(dialog, 6);
 
     await expect(dialog).toHaveScreenshot('crafter-selector-sort-dark.png', { timeout: 30_000 });
   });

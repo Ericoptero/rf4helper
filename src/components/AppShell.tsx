@@ -1,5 +1,11 @@
-import { Link, Outlet } from '@tanstack/react-router';
+'use client';
+
+import type { ReactNode } from 'react';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, Moon, Sun } from 'lucide-react';
+
 import { appNavSections } from '@/lib/navigation';
 import { useTheme } from '@/hooks/useTheme';
 import {
@@ -8,21 +14,100 @@ import {
   SheetContent,
   SheetDescription,
   SheetHeader,
-  SheetTrigger,
   SheetTitle,
+  SheetTrigger,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { appSurfaceClassNames } from '@/lib/catalogPresentation';
+import { cn } from '@/lib/utils';
 
-export function AppShell() {
-  const { theme, toggleTheme } = useTheme();
+function isActivePath(pathname: string, href: string) {
+  if (href === '/') {
+    return pathname === href;
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function NavItem({
+  href,
+  label,
+  icon: Icon,
+  pathname,
+  className,
+}: {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  pathname: string;
+  className?: string;
+}) {
+  const active = isActivePath(pathname, href);
+
+  return (
+    <Link
+      href={href}
+      data-status={active ? 'active' : undefined}
+      className={cn(
+        'flex items-center gap-3 rounded-xl text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground',
+        active && 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground',
+        className,
+      )}
+    >
+      <Icon className="h-4 w-4" />
+      <span>{label}</span>
+    </Link>
+  );
+}
+
+function ThemeToggleButton({
+  theme,
+  toggleTheme,
+  isHydrated,
+}: {
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+  isHydrated: boolean;
+}) {
+  const ariaLabel = isHydrated
+    ? `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`
+    : 'Toggle color theme';
+
+  return (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      className="flex h-9 w-9 items-center justify-center rounded-lg border bg-background/60 transition-colors hover:bg-muted"
+      aria-label={ariaLabel}
+    >
+      {isHydrated ? (
+        theme === 'dark' ? (
+          <Sun className="h-4 w-4 text-amber-400" />
+        ) : (
+          <Moon className="h-4 w-4 text-indigo-600" />
+        )
+      ) : (
+        <span
+          aria-hidden="true"
+          className="block h-4 w-4 rounded-full bg-muted-foreground/40"
+        />
+      )}
+    </button>
+  );
+}
+
+export function AppShell({ children }: { children: ReactNode }) {
+  const pathname = usePathname() ?? '/';
+  const { theme, toggleTheme, isHydrated } = useTheme();
 
   return (
     <div className="min-h-dvh bg-background text-foreground">
       <div className="flex min-h-dvh">
-        <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:h-dvh lg:w-64 lg:flex-col ${appSurfaceClassNames.sidebar}`}>
+        <aside
+          className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:h-dvh lg:w-64 lg:flex-col ${appSurfaceClassNames.sidebar}`}
+        >
           <div className="flex items-center justify-between border-b px-4 py-4">
-            <Link to="/" className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-sm font-black text-primary-foreground">
                 RF4
               </div>
@@ -33,18 +118,11 @@ export function AppShell() {
                 </div>
               </div>
             </Link>
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border bg-background/60 transition-colors hover:bg-muted"
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-4 w-4 text-amber-400" />
-              ) : (
-                <Moon className="h-4 w-4 text-indigo-600" />
-              )}
-            </button>
+            <ThemeToggleButton
+              theme={theme}
+              toggleTheme={toggleTheme}
+              isHydrated={isHydrated}
+            />
           </div>
 
           <div className="flex-1 overflow-y-auto px-3 py-4">
@@ -55,15 +133,15 @@ export function AppShell() {
                     {section.title}
                   </div>
                   <div className="space-y-1">
-                    {section.items.map(({ to, label, icon: Icon }) => (
-                      <Link
+                    {section.items.map(({ to, label, icon }) => (
+                      <NavItem
                         key={to}
-                        to={to}
-                        className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&.active]:bg-primary [&.active]:text-primary-foreground"
-                      >
-                        <Icon className="h-4 w-4" />
-                        <span>{label}</span>
-                      </Link>
+                        href={to}
+                        label={label}
+                        icon={icon}
+                        pathname={pathname}
+                        className="px-3 py-2.5"
+                      />
                     ))}
                   </div>
                 </div>
@@ -122,15 +200,17 @@ export function AppShell() {
                                 {section.title}
                               </div>
                               <div className="space-y-1">
-                                {section.items.map(({ to, label, icon: Icon }) => (
+                                {section.items.map(({ to, label, icon }) => (
                                   <SheetClose asChild key={to}>
-                                    <Link
-                                      to={to}
-                                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&.active]:bg-primary [&.active]:text-primary-foreground"
-                                    >
-                                      <Icon className="h-4 w-4" />
-                                      <span>{label}</span>
-                                    </Link>
+                                    <div>
+                                      <NavItem
+                                        href={to}
+                                        label={label}
+                                        icon={icon}
+                                        pathname={pathname}
+                                        className="px-3 py-3"
+                                      />
+                                    </div>
                                   </SheetClose>
                                 ))}
                               </div>
@@ -156,7 +236,7 @@ export function AppShell() {
                   </SheetContent>
                 </Sheet>
 
-                <Link to="/" className="flex items-center gap-2">
+                <Link href="/" className="flex items-center gap-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-xs font-black text-primary-foreground">
                     RF4
                   </div>
@@ -167,24 +247,15 @@ export function AppShell() {
                 </Link>
               </div>
 
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="flex h-9 w-9 items-center justify-center rounded-lg border bg-background/60 transition-colors hover:bg-muted"
-                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-              >
-                {theme === 'dark' ? (
-                  <Sun className="h-4 w-4 text-amber-400" />
-                ) : (
-                  <Moon className="h-4 w-4 text-indigo-600" />
-                )}
-              </button>
+              <ThemeToggleButton
+                theme={theme}
+                toggleTheme={toggleTheme}
+                isHydrated={isHydrated}
+              />
             </div>
           </div>
 
-          <main className="min-w-0 flex-1 lg:pl-64">
-            <Outlet />
-          </main>
+          <main className="min-w-0 flex-1 lg:pl-64">{children}</main>
         </div>
       </div>
     </div>

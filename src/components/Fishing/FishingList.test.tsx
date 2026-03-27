@@ -17,7 +17,7 @@ const mockFish: Fish[] = [
     shadow: 'small',
     locations: [
       { region: 'Selphia', spot: 'Castle Gate', seasons: ['Spring'] },
-      { region: 'Sercerezo Hill', spot: 'Spring Spring', map: 'A1', other: ['Legendary Scale'] },
+      { region: 'Sercerezo Hill', spot: 'Spring Spring', seasons: ['Winter', 'Fall'], map: 'A1', other: ['Legendary Scale'] },
     ],
   },
   {
@@ -113,5 +113,70 @@ describe('FishingList Component', () => {
      const listbox = await screen.findByRole('listbox');
      expect(within(listbox).getByText(/small shadow/i)).toBeInTheDocument();
      expect(within(listbox).getByText(/medium shadow/i)).toBeInTheDocument();
+  });
+
+  it('supports controlled table mode sorting and server-driven filter combinations', async () => {
+    const { rerender } = render(
+      <FishingList
+        fish={mockFish}
+        viewMode="table"
+        sortValue="locations-desc"
+      />,
+      { wrapper },
+    );
+
+    const rows = await screen.findAllByRole('row');
+    expect(within(rows[1]!).getAllByRole('cell')[0]).toHaveTextContent('Masu Trout');
+    expect(within(rows[2]!).getAllByRole('cell')[0]).toHaveTextContent('Squid');
+    expect(screen.getByText('Spring, Fall, Winter')).toBeInTheDocument();
+
+    rerender(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <FishingList
+          fish={mockFish}
+          viewMode="table"
+          sortValue="sell-desc"
+        />
+      </QueryClientProvider>,
+    );
+
+    const sellSortedRows = await screen.findAllByRole('row');
+    expect(within(sellSortedRows[1]!).getAllByRole('cell')[0]).toHaveTextContent('Masu Trout');
+    expect(within(sellSortedRows[2]!).getAllByRole('cell')[0]).toHaveTextContent('Squid');
+
+    rerender(
+      <QueryClientProvider client={createTestQueryClient()}>
+        <FishingList
+          fish={mockFish}
+          viewMode="table"
+          searchTerm="Masu"
+          filterValues={{
+            shadow: 'small',
+            region: 'Selphia',
+            season: 'Spring',
+            hasMap: 'yes',
+          }}
+        />
+      </QueryClientProvider>,
+    );
+
+    expect(await screen.findByText('Masu Trout')).toBeInTheDocument();
+    expect(screen.queryByText('Squid')).not.toBeInTheDocument();
+    expect(screen.getByText('Spring, Fall, Winter')).toBeInTheDocument();
+  });
+
+  it('applies filters through the internal uncontrolled state handlers', async () => {
+    const user = userEvent.setup();
+    render(<FishingList />, { wrapper });
+
+    await screen.findByText('Fishing Guide');
+    await user.click(screen.getByRole('button', { name: /more filters/i }));
+
+    const dialog = await screen.findByRole('dialog');
+    await user.click(within(dialog).getByRole('button', { name: /has map reference/i }));
+    await user.click(within(dialog).getByRole('button', { name: /apply filters/i }));
+
+    expect(await screen.findByText('Masu Trout')).toBeInTheDocument();
+    expect(screen.queryByText('Squid')).not.toBeInTheDocument();
   });
 });

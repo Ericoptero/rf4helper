@@ -3,10 +3,7 @@
 - why it changed
 
 ## Checks
-- [ ] `npm run lint`
-- [ ] `npm run typecheck`
-- [ ] `npm run test:run`
-- [ ] `npm run test:visual`
+- [ ] `npm run ci`
 
 ## Visual Evidence
 - [ ] UI change included updated Playwright screenshots or no visual impact

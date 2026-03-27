@@ -1,3 +1,5 @@
+'use client';
+
 import {
   useOrders,
   useRequests,
@@ -19,19 +21,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import type { SkillsData } from "@/lib/schemas";
-
-const runeAbilityImages = import.meta.glob(
-  "@/assets/images/rune-abilities/*.png",
-  {
-    eager: true,
-    import: "default",
-  },
-) as Record<string, string>;
-
-const resolveRuneAbilityImage = (image?: string) => {
-  if (!image) return undefined;
-  return runeAbilityImages[`/src/assets/images/${image}`];
-};
+import { resolveRuneAbilityImageUrl } from "@/lib/publicAssetUrls";
 
 const SKILL_CATEGORY_ORDER: Array<keyof SkillsData> = [
   "weapons",
@@ -53,13 +43,31 @@ const SKILL_CATEGORY_LABELS: Record<keyof SkillsData, string> = {
   other: "Other Skills",
 };
 
-export function PlayerView() {
-  const { data: orders, isLoading: isLoadingOrders } = useOrders();
-  const { data: requestsData, isLoading: isLoadingReqs } = useRequests();
-  const { data: runeAbilitiesData, isLoading: isLoadingRunes } =
+export function PlayerView({
+  orders: ordersData,
+  requestsData: requestsProp,
+  runeAbilitiesData: runeAbilitiesProp,
+  skills: skillsProp,
+  trophiesData: trophiesProp,
+}: {
+  orders?: import('@/lib/schemas').Order[];
+  requestsData?: Record<string, import('@/lib/schemas').RequestItem[]>;
+  runeAbilitiesData?: Record<string, import('@/lib/schemas').RuneAbility[]>;
+  skills?: SkillsData;
+  trophiesData?: Record<string, import('@/lib/schemas').Trophy[]>;
+} = {}) {
+  const { data: fetchedOrders, isLoading: isLoadingOrders } = useOrders();
+  const { data: fetchedRequestsData, isLoading: isLoadingReqs } = useRequests();
+  const { data: fetchedRuneAbilitiesData, isLoading: isLoadingRunes } =
     useRuneAbilities();
-  const { data: skills, isLoading: isLoadingSkills } = useSkills();
-  const { data: trophiesData, isLoading: isLoadingTrophies } = useTrophies();
+  const { data: fetchedSkills, isLoading: isLoadingSkills } = useSkills();
+  const { data: fetchedTrophiesData, isLoading: isLoadingTrophies } = useTrophies();
+
+  const orders = ordersData ?? fetchedOrders;
+  const requestsData = requestsProp ?? fetchedRequestsData;
+  const runeAbilitiesData = runeAbilitiesProp ?? fetchedRuneAbilitiesData;
+  const skills = skillsProp ?? fetchedSkills;
+  const trophiesData = trophiesProp ?? fetchedTrophiesData;
 
   const isLoading =
     isLoadingOrders ||
@@ -353,9 +361,9 @@ export function PlayerView() {
                               >
                                 <CardHeader className="p-4 pb-2">
                                   <div className="flex min-h-6 items-center gap-3">
-                                    {resolveRuneAbilityImage(ability.image) && (
+                                    {resolveRuneAbilityImageUrl(ability.image) && (
                                       <img
-                                        src={resolveRuneAbilityImage(ability.image)}
+                                        src={resolveRuneAbilityImageUrl(ability.image)}
                                         alt={ability.name}
                                         className="block h-6 w-6 shrink-0 object-contain"
                                         loading="lazy"

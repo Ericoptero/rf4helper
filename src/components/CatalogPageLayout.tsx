@@ -37,6 +37,7 @@ export type CatalogTableColumn<T> = {
 
 export interface CatalogPageLayoutProps<T> {
   data: T[];
+  totalCount?: number;
   title: string;
   searchKey?: keyof T | ((item: T) => string);
   sortOptions?: SortOption<T>[];
@@ -56,6 +57,7 @@ export interface CatalogPageLayoutProps<T> {
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   emptyState?: string;
+  disableClientFiltering?: boolean;
 }
 
 function normalizeFilterValue(value: CatalogFilterValue) {
@@ -99,6 +101,7 @@ function CatalogSkeletonCard() {
 
 export function CatalogPageLayout<T>({
   data,
+  totalCount,
   title,
   searchKey,
   sortOptions,
@@ -118,6 +121,7 @@ export function CatalogPageLayout<T>({
   viewMode = 'cards',
   onViewModeChange,
   emptyState = 'No results found.',
+  disableClientFiltering = false,
 }: CatalogPageLayoutProps<T>) {
   const [filtersSheetOpen, setFiltersSheetOpen] = React.useState(false);
   const [draftFilterValues, setDraftFilterValues] = React.useState<Record<string, CatalogFilterValue>>({});
@@ -152,6 +156,10 @@ export function CatalogPageLayout<T>({
   }, [filterValues, filtersSheetOpen, orderedFilters]);
 
   const filteredAndSortedData = useMemo(() => {
+    if (disableClientFiltering) {
+      return data;
+    }
+
     let result = [...data];
 
     if (searchTerm && searchKey) {
@@ -181,7 +189,9 @@ export function CatalogPageLayout<T>({
     }
 
     return result;
-  }, [data, filterValues, orderedFilters, searchKey, searchTerm, sortOptions, sortValue]);
+  }, [data, disableClientFiltering, filterValues, orderedFilters, searchKey, searchTerm, sortOptions, sortValue]);
+
+  const resolvedTotalCount = totalCount ?? data.length;
 
   const appliedFilterChips = useMemo(() => {
     return orderedFilters.flatMap((definition) => {
@@ -258,9 +268,9 @@ export function CatalogPageLayout<T>({
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {filteredAndSortedData.length === data.length
-              ? `${data.length.toLocaleString()} total`
-              : `${filteredAndSortedData.length.toLocaleString()} of ${data.length.toLocaleString()}`}
+            {filteredAndSortedData.length === resolvedTotalCount
+              ? `${resolvedTotalCount.toLocaleString()} total`
+              : `${filteredAndSortedData.length.toLocaleString()} of ${resolvedTotalCount.toLocaleString()}`}
           </p>
         </div>
       </div>

@@ -264,4 +264,84 @@ describe('CatalogPageLayout', () => {
     expect(cardWrapper).not.toBeNull();
     expect(turnipButton.parentElement).not.toHaveAttribute('data-slot', 'card');
   });
+
+  it('clears the controlled search term and opens table rows through the provided callback', async () => {
+    const user = userEvent.setup();
+    const onOpenItem = vi.fn();
+
+    function SearchHarness() {
+      const [searchTerm, setSearchTerm] = React.useState('turnip');
+
+      return (
+        <CatalogPageLayout<Entry>
+          data={entries}
+          title="Items"
+          searchKey="name"
+          searchTerm={searchTerm}
+          onSearchTermChange={setSearchTerm}
+          viewMode="table"
+          onViewModeChange={vi.fn()}
+          sortValue="name-asc"
+          onSortValueChange={vi.fn()}
+          sortOptions={sortOptions}
+          filters={filters}
+          filterValues={{}}
+          onFilterValueChange={vi.fn()}
+          tableColumns={tableColumns}
+          getItemKey={(entry) => entry.id}
+          renderCard={(entry, onOpen) => (
+            <button type="button" onClick={onOpen}>
+              {entry.name}
+            </button>
+          )}
+          onOpenItem={onOpenItem}
+        />
+      );
+    }
+
+    render(<SearchHarness />);
+
+    expect(screen.getByLabelText(/clear search/i)).toBeInTheDocument();
+    await user.click(screen.getByLabelText(/clear search/i));
+
+    expect(screen.queryByLabelText(/clear search/i)).not.toBeInTheDocument();
+
+    const firstDataRow = screen.getAllByRole('row')[1];
+    await user.click(firstDataRow!);
+
+    expect(onOpenItem).toHaveBeenCalledWith(entries[1]);
+  });
+
+  it('can skip client filtering when disableClientFiltering is enabled', () => {
+    render(
+      <CatalogPageLayout<Entry>
+        data={entries}
+        title="Items"
+        searchKey="name"
+        searchTerm="turnip"
+        onSearchTermChange={vi.fn()}
+        viewMode="cards"
+        onViewModeChange={vi.fn()}
+        sortValue="name-asc"
+        onSortValueChange={vi.fn()}
+        sortOptions={sortOptions}
+        filters={filters}
+        filterValues={{ featured: 'yes' }}
+        onFilterValueChange={vi.fn()}
+        tableColumns={tableColumns}
+        getItemKey={(entry) => entry.id}
+        renderCard={(entry, onOpen) => (
+          <button type="button" onClick={onOpen}>
+            {entry.name}
+          </button>
+        )}
+        onOpenItem={vi.fn()}
+        disableClientFiltering
+      />,
+    );
+
+    expect(screen.getByText('Turnip')).toBeInTheDocument();
+    expect(screen.getByText('Broadsword')).toBeInTheDocument();
+    expect(screen.getByText('Pink Turnip')).toBeInTheDocument();
+  });
 });
