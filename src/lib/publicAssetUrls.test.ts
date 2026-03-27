@@ -13,6 +13,10 @@ describe('public asset url resolvers', () => {
     expect(resolveItemImageUrl('Bread', 'items/Fresh Bread.png')).toBe('/images/items/fresh-bread.png');
   });
 
+  it('keeps already-public item image paths intact', () => {
+    expect(resolveItemImageUrl('Bread', '/images/items/bread.png')).toBe('/images/items/bread.png');
+  });
+
   it('resolves item images from names when no asset path is present', () => {
     expect(resolveItemImageUrl("Ambrosia's Thorns")).toBe('/images/items/ambrosia-s-thorns.png');
     expect(resolveItemImageUrl(undefined, undefined)).toBeUndefined();

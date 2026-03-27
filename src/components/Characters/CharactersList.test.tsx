@@ -166,6 +166,20 @@ describe('CharactersList Component', () => {
     expect(screen.getByText('Long Sword')).toBeInTheDocument();
   });
 
+  it('renders battle data as a quick toggle instead of a combobox filter', async () => {
+    const user = userEvent.setup();
+
+    render(<CharactersList characters={mockCharacters} />, { wrapper });
+
+    await screen.findByText('Forte');
+    await user.click(screen.getByRole('button', { name: /more filters/i }));
+
+    const dialog = await screen.findByRole('dialog');
+    expect(within(dialog).getByText('Quick Toggles')).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: /has battle data/i })).toBeInTheDocument();
+    expect(within(dialog).queryByRole('combobox', { name: /battle data/i })).not.toBeInTheDocument();
+  });
+
   it('renders full character details from the enriched dataset', async () => {
     const user = userEvent.setup();
 

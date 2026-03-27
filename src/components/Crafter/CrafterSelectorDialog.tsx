@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafter';
+import { useIncrementalReveal } from '@/hooks/useIncrementalReveal';
 import { cn } from '@/lib/utils';
 import type { Item } from '@/lib/schemas';
 
@@ -68,6 +69,7 @@ export function CrafterSelectorDialog({
   const [draftItemId, setDraftItemId] = React.useState<string | undefined>();
   const [draftLevel, setDraftLevel] = React.useState(selectedLevel);
   const [sortMode, setSortMode] = React.useState<CrafterSortMode>('name-asc');
+  const optionsListRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     if (!open) return;
@@ -114,6 +116,13 @@ export function CrafterSelectorDialog({
   const previewItem = draftItem ?? selectedItem;
   const previewData = getItemPreviewData(previewItem);
   const resolvedItemId = draftItemId ?? selectedItemId;
+  const { hasMore, sentinelRef, visibleCount } = useIncrementalReveal<HTMLDivElement>({
+    itemCount: visibleOptions.length,
+    batchSize: 24,
+    resetKeys: [open, query, sortMode, title, selectedItemId, visibleOptions],
+    rootRef: optionsListRef,
+  });
+  const renderedOptions = visibleOptions.slice(0, visibleCount);
   const handleApply = () => {
     if (!resolvedItemId) return;
     onApply({
@@ -157,7 +166,7 @@ export function CrafterSelectorDialog({
               <div className="flex min-h-0 flex-col gap-4">
                 <div className="flex min-h-0 flex-col gap-3">
                   <Select value={sortMode} onValueChange={(value) => setSortMode(value as CrafterSortMode)}>
-                    <SelectTrigger aria-label="Sort items" className="h-11 min-w-[11rem] rounded-xl">
+                    <SelectTrigger size="lg" aria-label="Sort items" className="h-11 min-w-[11rem] rounded-xl">
                       <SelectValue placeholder="Sort items" />
                     </SelectTrigger>
                     <SelectContent position="popper">
@@ -181,8 +190,8 @@ export function CrafterSelectorDialog({
                   </div>
                 </div>
 
-                <div className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
-                  {visibleOptions.map((item) => {
+                <div ref={optionsListRef} className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
+                  {renderedOptions.map((item) => {
                     const isSelected = draftItemId === item.id;
                     const itemPreview = getItemPreviewData(item);
                     const isPlaceholder = item.id === CRAFTER_RARITY_PLACEHOLDER_ID;
@@ -240,6 +249,15 @@ export function CrafterSelectorDialog({
                       </button>
                     );
                   })}
+
+                  {hasMore ? (
+                    <div
+                      ref={sentinelRef}
+                      data-testid="crafter-selector-infinite-scroll-sentinel"
+                      className="h-1 w-full"
+                      aria-hidden="true"
+                    />
+                  ) : null}
 
                   {visibleOptions.length === 0 ? (
                     <div className="rounded-2xl border border-dashed px-4 py-8 text-center text-sm text-muted-foreground">

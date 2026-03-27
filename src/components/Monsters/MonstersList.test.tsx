@@ -159,6 +159,20 @@ describe('MonstersList Component', () => {
     expect(screen.getAllByText('Yes').length).toBeGreaterThan(0);
   });
 
+  it('renders drops as a quick toggle instead of a combobox filter', async () => {
+    const user = userEvent.setup();
+
+    render(<MonstersList monsters={mockMonsters} />, { wrapper });
+
+    await screen.findByText('Orc');
+    await user.click(screen.getByRole('button', { name: /more filters/i }));
+
+    const dialog = await screen.findByRole('dialog');
+    expect(within(dialog).getByText('Quick Toggles')).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: /has drops/i })).toBeInTheDocument();
+    expect(within(dialog).queryByRole('combobox', { name: /drops/i })).not.toBeInTheDocument();
+  });
+
   it('shows a location-labeled variant switcher and updates details when switching', async () => {
     const user = userEvent.setup();
     render(<MonstersList />, { wrapper });

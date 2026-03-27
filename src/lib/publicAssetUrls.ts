@@ -19,6 +19,12 @@ function slugifyName(name: string) {
 }
 
 function toPublicImageUrl(relativePath: string) {
+  const trimmed = relativePath.trim();
+
+  if (trimmed.startsWith('/images/')) {
+    return trimmed;
+  }
+
   return `/images/${normalizeAssetPath(relativePath)}`;
 }
 

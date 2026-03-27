@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CatalogPageLayout, type CatalogFilterDefinition, type CatalogTableColumn } from './CatalogPageLayout';
 import { Card, CardContent } from './ui/card';
 
@@ -72,7 +72,76 @@ const tableColumns: CatalogTableColumn<Entry>[] = [
   { key: 'type', header: 'Type', cell: (entry) => entry.type },
 ];
 
-function ControlledCatalogHarness() {
+const paginatedEntries: Entry[] = Array.from({ length: 60 }, (_, index) => ({
+  id: `entry-${index}`,
+  name: `${index < 30 ? 'Alpha Crop' : 'Beta Weapon'} ${String(index).padStart(2, '0')}`,
+  type: index < 30 ? 'Crop' : 'Weapon',
+  region: index % 2 === 0 ? 'Selphia Plains' : 'Selphia',
+  tags: index % 3 === 0 ? ['farm', 'spring'] : ['forge'],
+  featured: index % 5 === 0,
+}));
+
+class MockIntersectionObserver implements IntersectionObserver {
+  static instances: MockIntersectionObserver[] = [];
+  readonly root: Element | Document | null;
+  readonly rootMargin: string;
+  readonly thresholds: ReadonlyArray<number>;
+  private readonly callback: IntersectionObserverCallback;
+  private readonly observedElements = new Set<Element>();
+
+  constructor(callback: IntersectionObserverCallback, options: IntersectionObserverInit = {}) {
+    this.callback = callback;
+    this.root = options.root ?? null;
+    this.rootMargin = options.rootMargin ?? '';
+    this.thresholds = Array.isArray(options.threshold) ? options.threshold : [options.threshold ?? 0];
+    MockIntersectionObserver.instances.push(this);
+  }
+
+  disconnect() {
+    this.observedElements.clear();
+  }
+
+  observe(element: Element) {
+    this.observedElements.add(element);
+  }
+
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+
+  unobserve(element: Element) {
+    this.observedElements.delete(element);
+  }
+
+  static trigger(element: Element, isIntersecting = true) {
+    for (const observer of MockIntersectionObserver.instances) {
+      if (!observer.observedElements.has(element)) {
+        continue;
+      }
+
+      observer.callback(
+        [
+          {
+            boundingClientRect: element.getBoundingClientRect(),
+            intersectionRatio: isIntersecting ? 1 : 0,
+            intersectionRect: isIntersecting ? element.getBoundingClientRect() : new DOMRectReadOnly(),
+            isIntersecting,
+            rootBounds: null,
+            target: element,
+            time: Date.now(),
+          } satisfies IntersectionObserverEntry,
+        ],
+        observer,
+      );
+    }
+  }
+
+  static reset() {
+    MockIntersectionObserver.instances = [];
+  }
+}
+
+function ControlledCatalogHarness({ data = entries }: { data?: Entry[] }) {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [viewMode, setViewMode] = React.useState<'cards' | 'table'>('cards');
   const [sortValue, setSortValue] = React.useState('name-asc');
@@ -80,7 +149,7 @@ function ControlledCatalogHarness() {
 
   return (
     <CatalogPageLayout<Entry>
-      data={entries}
+      data={data}
       title="Items"
       searchKey="name"
       searchTerm={searchTerm}
@@ -110,6 +179,15 @@ function ControlledCatalogHarness() {
 }
 
 describe('CatalogPageLayout', () => {
+  beforeEach(() => {
+    MockIntersectionObserver.reset();
+    vi.stubGlobal('IntersectionObserver', MockIntersectionObserver);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it('switches between cards and table views using controlled state', async () => {
     const user = userEvent.setup();
 
@@ -165,6 +243,9 @@ describe('CatalogPageLayout', () => {
     expect(searchInput.compareDocumentPosition(sortControl) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(sortControl.compareDocumentPosition(moreFiltersButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(moreFiltersButton.compareDocumentPosition(cardsButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(searchInput).toHaveClass('h-11');
+    expect(sortControl).toHaveClass('h-11');
+    expect(moreFiltersButton).toHaveClass('h-11');
     expect(screen.queryByRole('combobox', { name: /type/i })).not.toBeInTheDocument();
   });
 
@@ -205,6 +286,10 @@ describe('CatalogPageLayout', () => {
     const featuredToggle = within(dialog).getByRole('button', { name: /featured only/i });
     const typeCombobox = within(dialog).getByRole('combobox', { name: /type/i });
 
+    expect(within(dialog).getByText('Quick Toggles')).toBeInTheDocument();
+    expect(within(dialog).getByText('Detailed Filters')).toBeInTheDocument();
+    expect(featuredToggle).toHaveClass('rounded-full');
+    expect(featuredToggle).not.toHaveClass('w-full');
     expect(featuredToggle.compareDocumentPosition(typeCombobox) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
@@ -231,6 +316,43 @@ describe('CatalogPageLayout', () => {
     expect(screen.getByRole('button', { name: /remove filter featured: featured only/i })).toBeInTheDocument();
     expect(screen.getByText('Turnip')).toBeInTheDocument();
     expect(screen.queryByText('Broadsword')).not.toBeInTheDocument();
+  });
+
+  it('does not emit filter changes when applying an unchanged multi-select draft', async () => {
+    const user = userEvent.setup();
+    const onFilterValueChange = vi.fn();
+
+    render(
+      <CatalogPageLayout<Entry>
+        data={entries}
+        title="Items"
+        searchKey="name"
+        searchTerm=""
+        onSearchTermChange={vi.fn()}
+        viewMode="cards"
+        onViewModeChange={vi.fn()}
+        sortValue="name-asc"
+        onSortValueChange={vi.fn()}
+        sortOptions={sortOptions}
+        filters={filters}
+        filterValues={{ tags: ['farm', 'spring'] }}
+        onFilterValueChange={onFilterValueChange}
+        tableColumns={tableColumns}
+        getItemKey={(entry) => entry.id}
+        renderCard={(entry, onOpen) => (
+          <button type="button" onClick={onOpen}>
+            {entry.name}
+          </button>
+        )}
+        onOpenItem={vi.fn()}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: /more filters/i }));
+    const dialog = await screen.findByRole('dialog');
+    await user.click(within(dialog).getByRole('button', { name: /apply filters/i }));
+
+    expect(onFilterValueChange).not.toHaveBeenCalled();
   });
 
   it('clears active and draft drawer filters from the footer action while keeping the drawer open', async () => {
@@ -343,5 +465,63 @@ describe('CatalogPageLayout', () => {
     expect(screen.getByText('Turnip')).toBeInTheDocument();
     expect(screen.getByText('Broadsword')).toBeInTheDocument();
     expect(screen.getByText('Pink Turnip')).toBeInTheDocument();
+  });
+
+  it('reveals additional card results when the infinite scroll sentinel intersects', () => {
+    render(<ControlledCatalogHarness data={paginatedEntries} />);
+
+    expect(screen.getByRole('button', { name: 'Alpha Crop 00' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Alpha Crop 23' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Alpha Crop 24' })).not.toBeInTheDocument();
+
+    const sentinel = screen.getByTestId('catalog-infinite-scroll-sentinel');
+    act(() => {
+      MockIntersectionObserver.trigger(sentinel);
+    });
+
+    expect(screen.getByRole('button', { name: 'Alpha Crop 24' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Alpha Crop 29' })).toBeInTheDocument();
+  });
+
+  it('resets the revealed card count when filters change', async () => {
+    const user = userEvent.setup();
+
+    render(<ControlledCatalogHarness data={paginatedEntries} />);
+
+    const sentinel = screen.getByTestId('catalog-infinite-scroll-sentinel');
+    act(() => {
+      MockIntersectionObserver.trigger(sentinel);
+    });
+
+    expect(screen.getByRole('button', { name: 'Alpha Crop 24' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /more filters/i }));
+    const dialog = await screen.findByRole('dialog');
+    const typeCombobox = within(dialog).getByRole('combobox', { name: /type/i });
+    await user.click(typeCombobox);
+    await user.type(typeCombobox, 'Crop');
+    await user.click(await screen.findByRole('option', { name: 'Crop' }));
+    await user.click(within(dialog).getByRole('button', { name: /apply filters/i }));
+
+    expect(screen.getByRole('button', { name: 'Alpha Crop 23' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Alpha Crop 24' })).not.toBeInTheDocument();
+  });
+
+  it('resets the revealed result window when switching from cards to table mode', async () => {
+    const user = userEvent.setup();
+
+    render(<ControlledCatalogHarness data={paginatedEntries} />);
+
+    const sentinel = screen.getByTestId('catalog-infinite-scroll-sentinel');
+    act(() => {
+      MockIntersectionObserver.trigger(sentinel);
+    });
+    expect(screen.getByRole('button', { name: 'Alpha Crop 24' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Table' }));
+
+    expect(screen.getByRole('table')).toBeInTheDocument();
+    expect(screen.getByText('Beta Weapon 39')).toBeInTheDocument();
+    expect(screen.queryByText('Beta Weapon 40')).not.toBeInTheDocument();
   });
 });

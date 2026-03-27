@@ -581,6 +581,20 @@ describe('CrafterView', () => {
     expect(within(resumeCardElement).queryByText(/^iron$/i)).not.toBeInTheDocument();
   });
 
+  it('keeps crafter selector images on the public images path for backend-enriched items', async () => {
+    const user = userEvent.setup();
+
+    render(<CrafterHarness />);
+
+    await user.click(screen.getByRole('tab', { name: /weapon/i }));
+    await user.click(screen.getByRole('button', { name: /base/i }));
+
+    const dialog = await screen.findByRole('dialog', { name: /select base/i });
+    const previewIcon = within(dialog).getByAltText(/broadsword icon/i);
+
+    expect(previewIcon).toHaveAttribute('src', '/images/items/broadsword.png');
+  });
+
   it('rounds final stats to integers while keeping geometry precision in the final stats panel', async () => {
     const customCrafterData = structuredClone(crafterData);
     customCrafterData.stats.weapon['item-broadsword'] = equipmentPayload({

@@ -153,6 +153,7 @@ function CharactersCatalog({
       key: 'battle',
       label: 'Battle Data',
       placement: 'advanced',
+      control: 'boolean-toggle',
       options: [{ label: 'Has battle data', value: 'yes' }],
       predicate: (character, value) => value !== 'yes' || Boolean(character.battle),
     },

@@ -8,6 +8,12 @@ describe('resolveItemImage', () => {
     expect(image).toBe('/images/items/10-fold-steel.png');
   });
 
+  it('keeps already-public item asset paths intact', () => {
+    const image = resolveItemImage(undefined, '/images/items/10-fold-steel.png');
+
+    expect(image).toBe('/images/items/10-fold-steel.png');
+  });
+
   it('resolves explicit item asset paths', () => {
     const image = resolveItemImage(undefined, 'items/10-fold-steel.png');
 

@@ -54,6 +54,63 @@ test.describe('app smoke', () => {
     await page.goto('/crafter');
     await expect(page.getByRole('heading', { name: /interactive crafter/i })).toBeVisible({ timeout: 30_000 });
   });
+
+  test('keeps the items toolbar controls aligned on desktop @smoke', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'Alignment check is desktop-specific.');
+
+    await preparePage(page);
+    await page.goto('/items');
+    await expect(page.getByRole('heading', { name: /items database/i })).toBeVisible({ timeout: 30_000 });
+
+    const search = page.getByRole('textbox', { name: /search/i });
+    const sort = page.getByRole('combobox', { name: /sort/i });
+    const moreFilters = page.getByRole('button', { name: /more filters/i });
+
+    const [searchBox, sortBox, moreFiltersBox] = await Promise.all([
+      search.boundingBox(),
+      sort.boundingBox(),
+      moreFilters.boundingBox(),
+    ]);
+
+    expect(searchBox).not.toBeNull();
+    expect(sortBox).not.toBeNull();
+    expect(moreFiltersBox).not.toBeNull();
+    expect(Math.abs((searchBox?.height ?? 0) - (sortBox?.height ?? 0))).toBeLessThanOrEqual(1);
+    expect(Math.abs((sortBox?.height ?? 0) - (moreFiltersBox?.height ?? 0))).toBeLessThanOrEqual(1);
+    expect(Math.abs((sortBox?.y ?? 0) - (moreFiltersBox?.y ?? 0))).toBeLessThanOrEqual(1);
+  });
+
+  test('reveals more filtered item results while scrolling the catalog @smoke', async ({ page }) => {
+    await preparePage(page);
+    await page.goto('/items');
+    await expect(page.getByRole('heading', { name: /items database/i })).toBeVisible({ timeout: 30_000 });
+
+    const search = page.getByRole('textbox', { name: /search/i });
+    await search.fill('a');
+
+    await expect(page.getByText('Apple Tree Seeds', { exact: true })).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText('Aquamarine Rod', { exact: true })).not.toBeVisible();
+
+    const sentinel = page.getByTestId('catalog-infinite-scroll-sentinel');
+    await expect(sentinel).toBeAttached({ timeout: 30_000 });
+    await sentinel.scrollIntoViewIfNeeded();
+
+    await expect(page.getByText('Aquamarine Rod', { exact: true })).toBeVisible({ timeout: 30_000 });
+  });
+
+  test('keeps crafter selector item images on the public images path @smoke', async ({ page }) => {
+    await preparePage(page);
+    await page.goto('/crafter?view=advanced');
+    await expect(page.getByRole('heading', { name: /interactive crafter/i })).toBeVisible({ timeout: 30_000 });
+
+    await page.getByRole('tab', { name: /weapon/i }).click();
+    await page.getByRole('button', { name: /^base$/i }).click();
+    const dialog = page.getByRole('dialog', { name: /select base/i });
+    await expect(dialog).toBeVisible({ timeout: 30_000 });
+
+    await dialog.getByRole('searchbox', { name: /search items/i }).fill('Broad');
+    await expect(dialog.getByAltText(/broadsword icon/i).first()).toHaveAttribute('src', '/images/items/broadsword.png');
+  });
 });
 
 test.describe('app visual baselines', () => {
@@ -138,7 +195,7 @@ test.describe('app visual baselines', () => {
     await expect(dialog).toBeVisible({ timeout: 30_000 });
     await expect(dialog.getByRole('combobox', { name: /sort items/i })).toBeVisible();
     await expect(dialog.getByRole('button', { name: /rarity \+15/i })).toBeVisible();
-    await expect(dialog.getByRole('button', { name: /turnip heaven/i })).toBeVisible();
+    await expect(dialog.getByTestId('crafter-selector-infinite-scroll-sentinel')).toBeAttached();
     await waitForLoadedImages(dialog, 6);
 
     await expect(dialog).toHaveScreenshot('crafter-selector-sort-dark.png', { timeout: 30_000 });
@@ -238,6 +295,7 @@ test.describe('app visual baselines', () => {
     await preparePage(page, 'light');
     await page.goto('/monsters');
     await expect(page.getByRole('heading', { name: /monsters compendium/i })).toBeVisible({ timeout: 30_000 });
+    await page.getByRole('textbox', { name: /search/i }).fill('Octo');
     await page.getByText('Octopirate', { exact: true }).first().click();
     await expect(page.getByRole('dialog')).toBeVisible();
     await expect(page).toHaveScreenshot('monsters-drawer-desktop-light.png', { fullPage: true, timeout: 30_000 });

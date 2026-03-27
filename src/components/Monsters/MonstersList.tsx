@@ -138,6 +138,7 @@ function MonstersCatalog({
       key: 'drops',
       label: 'Drops',
       placement: 'advanced',
+      control: 'boolean-toggle',
       options: [{ label: 'Has drops', value: 'yes' }],
       predicate: (group, value) => value !== 'yes' || group.variants.some((monster) => monster.drops.length > 0),
     },

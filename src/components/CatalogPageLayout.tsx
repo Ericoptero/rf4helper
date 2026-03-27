@@ -1,12 +1,15 @@
 import React, { useMemo } from 'react';
-import { Filter, Search, Table2, LayoutGrid, X } from 'lucide-react';
+import { Filter, LayoutGrid, Search, Table2, X } from 'lucide-react';
+
 import { CatalogFilterCombobox } from './CatalogFilterCombobox';
+import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
-import { Button } from './ui/button';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from './ui/sheet';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from './ui/sheet';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
+import { useIncrementalReveal } from '@/hooks/useIncrementalReveal';
 import { cn } from '@/lib/utils';
 
 export type SortOption<T> = {
@@ -125,6 +128,7 @@ export function CatalogPageLayout<T>({
 }: CatalogPageLayoutProps<T>) {
   const [filtersSheetOpen, setFiltersSheetOpen] = React.useState(false);
   const [draftFilterValues, setDraftFilterValues] = React.useState<Record<string, CatalogFilterValue>>({});
+  const viewportRef = React.useRef<HTMLDivElement | null>(null);
 
   const orderedFilters = useMemo(() => {
     return [...(filters ?? [])].sort((left, right) => {
@@ -191,8 +195,16 @@ export function CatalogPageLayout<T>({
     return result;
   }, [data, disableClientFiltering, filterValues, orderedFilters, searchKey, searchTerm, sortOptions, sortValue]);
 
-  const resolvedTotalCount = totalCount ?? data.length;
+  const quickToggleFilters = useMemo(
+    () => orderedFilters.filter((definition) => definition.control === 'boolean-toggle'),
+    [orderedFilters],
+  );
+  const detailedFilters = useMemo(
+    () => orderedFilters.filter((definition) => definition.control !== 'boolean-toggle'),
+    [orderedFilters],
+  );
 
+  const resolvedTotalCount = totalCount ?? data.length;
   const appliedFilterChips = useMemo(() => {
     return orderedFilters.flatMap((definition) => {
       const values = getFilterValueList(filterValues?.[definition.key]);
@@ -206,6 +218,17 @@ export function CatalogPageLayout<T>({
       }));
     });
   }, [filterValues, orderedFilters]);
+
+  const { hasMore, sentinelRef, visibleCount } = useIncrementalReveal<HTMLElement>({
+    itemCount: filteredAndSortedData.length,
+    batchSize: viewMode === 'table' ? 40 : 24,
+    resetKeys: [data, filterValues, filteredAndSortedData.length, searchTerm, sortValue, viewMode],
+    rootRef: viewportRef,
+  });
+  const visibleItems = filteredAndSortedData.slice(0, visibleCount);
+  const quickToggleValues = quickToggleFilters.flatMap((definition) =>
+    draftFilterValues[definition.key] ? [definition.key] : [],
+  );
 
   const commitFilterValues = (nextValues: Record<string, CatalogFilterValue>) => {
     for (const definition of orderedFilters) {
@@ -276,9 +299,9 @@ export function CatalogPageLayout<T>({
       </div>
 
       <div className="rounded-3xl border bg-card/90 p-4 shadow-sm">
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
           {searchKey ? (
-            <div className="relative w-full sm:flex-1 sm:basis-72">
+            <div className="relative min-w-0 flex-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 aria-label="Search"
@@ -302,7 +325,7 @@ export function CatalogPageLayout<T>({
 
           {sortOptions && sortOptions.length > 0 ? (
             <Select value={sortValue} onValueChange={onSortValueChange}>
-              <SelectTrigger className="h-11 w-full rounded-xl bg-card sm:w-[220px]" aria-label="Sort">
+              <SelectTrigger size="lg" className="h-11 w-full rounded-xl bg-card lg:w-[220px]" aria-label="Sort">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
               <SelectContent>
@@ -319,7 +342,7 @@ export function CatalogPageLayout<T>({
             <Button
               type="button"
               variant="outline"
-              className="h-11 rounded-xl"
+              className="h-11 rounded-xl lg:min-w-[9.75rem]"
               onClick={() => setFiltersSheetOpen(true)}
             >
               <Filter className="mr-2 h-4 w-4" />
@@ -327,11 +350,12 @@ export function CatalogPageLayout<T>({
             </Button>
           ) : null}
 
-          <div className="inline-flex items-center rounded-xl border bg-card p-1">
+          <div className="inline-flex h-11 items-center rounded-xl border bg-card p-1">
             <Button
               type="button"
               variant={viewMode === 'cards' ? 'default' : 'ghost'}
-              size="sm"
+              size="default"
+              className="h-9 rounded-lg px-3"
               data-state={viewMode === 'cards' ? 'on' : 'off'}
               onClick={() => onViewModeChange?.('cards')}
             >
@@ -341,7 +365,8 @@ export function CatalogPageLayout<T>({
             <Button
               type="button"
               variant={viewMode === 'table' ? 'default' : 'ghost'}
-              size="sm"
+              size="default"
+              className="h-9 rounded-lg px-3"
               data-state={viewMode === 'table' ? 'on' : 'off'}
               onClick={() => onViewModeChange?.('table')}
             >
@@ -349,9 +374,8 @@ export function CatalogPageLayout<T>({
               Table
             </Button>
           </div>
-
-          {extraControls}
         </div>
+        {extraControls ? <div className="mt-3">{extraControls}</div> : null}
       </div>
 
       {appliedFilterChips.length > 0 ? (
@@ -374,7 +398,7 @@ export function CatalogPageLayout<T>({
       ) : null}
 
       <div className="min-w-0 rounded-3xl border bg-card/90 p-4 shadow-sm">
-        <ScrollArea className="h-[calc(100vh-15rem)] min-h-[28rem] pr-2">
+        <ScrollArea className="h-[calc(100vh-15rem)] min-h-[28rem] pr-2" viewportRef={viewportRef}>
           {viewMode === 'table' && tableColumns && tableColumns.length > 0 ? (
             <Table>
               <TableHeader>
@@ -385,7 +409,7 @@ export function CatalogPageLayout<T>({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAndSortedData.map((item) => (
+                {visibleItems.map((item) => (
                   <TableRow
                     key={getItemKey(item)}
                     className="cursor-pointer"
@@ -398,15 +422,28 @@ export function CatalogPageLayout<T>({
                     ))}
                   </TableRow>
                 ))}
+                {hasMore ? (
+                  <TableRow ref={sentinelRef as React.Ref<HTMLTableRowElement>} data-testid="catalog-infinite-scroll-sentinel" aria-hidden="true">
+                    <TableCell colSpan={tableColumns.length} className="h-1 p-0" />
+                  </TableRow>
+                ) : null}
               </TableBody>
             </Table>
           ) : (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
-              {filteredAndSortedData.map((item) => (
+              {visibleItems.map((item) => (
                 <div key={getItemKey(item)} className={cn('min-w-0')}>
                   {renderCard(item, () => onOpenItem(item))}
                 </div>
               ))}
+              {hasMore ? (
+                <div
+                  ref={sentinelRef as React.Ref<HTMLDivElement>}
+                  data-testid="catalog-infinite-scroll-sentinel"
+                  className="col-span-full h-1 w-full"
+                  aria-hidden="true"
+                />
+              ) : null}
             </div>
           )}
 
@@ -430,41 +467,67 @@ export function CatalogPageLayout<T>({
           </div>
           <ScrollArea className="min-h-0 flex-1">
             <div className="space-y-5 px-6 pb-28 pt-6">
-              {orderedFilters.map((definition) => (
-                definition.control === 'boolean-toggle' ? (
-                  <div key={definition.key} className="space-y-2">
-                    <div className="text-sm font-medium text-foreground">{definition.label}</div>
-                    <Button
-                      type="button"
-                      variant={draftFilterValues[definition.key] ? 'default' : 'outline'}
-                      className="h-11 w-full justify-start rounded-xl"
-                      onClick={() =>
-                        setDraftFilterValues((previous) => ({
-                          ...previous,
-                          [definition.key]: previous[definition.key] ? undefined : definition.options[0]?.value,
-                        }))
-                      }
-                    >
-                      {definition.options[0]?.label ?? definition.label}
-                    </Button>
+              {quickToggleFilters.length > 0 ? (
+                <section className="space-y-3">
+                  <div className="space-y-1">
+                    <h3 className="text-sm font-semibold text-foreground">Quick Toggles</h3>
+                    <p className="text-xs text-muted-foreground">Fast binary filters for the current list.</p>
                   </div>
-                ) : (
-                  <CatalogFilterCombobox
-                    key={definition.key}
-                    label={definition.label}
-                    options={definition.options}
-                    multiple={definition.selectionMode === 'multiple'}
-                    allLabel={definition.allLabel}
-                    value={draftFilterValues[definition.key]}
-                    onValueChange={(value) =>
+                  <ToggleGroup
+                    type="multiple"
+                    value={quickToggleValues}
+                    onValueChange={(values) => {
+                      const selectedKeys = new Set(values);
                       setDraftFilterValues((previous) => ({
                         ...previous,
-                        [definition.key]: normalizeFilterValue(value),
-                      }))
-                    }
-                  />
-                )
-              ))}
+                        ...Object.fromEntries(
+                          quickToggleFilters.map((definition) => [
+                            definition.key,
+                            selectedKeys.has(definition.key) ? (definition.options[0]?.value ?? 'yes') : undefined,
+                          ]),
+                        ),
+                      }));
+                    }}
+                  >
+                    {quickToggleFilters.map((definition) => (
+                      <ToggleGroupItem
+                        key={definition.key}
+                        value={definition.key}
+                        aria-label={definition.options[0]?.label ?? definition.label}
+                      >
+                        {definition.options[0]?.label ?? definition.label}
+                      </ToggleGroupItem>
+                    ))}
+                  </ToggleGroup>
+                </section>
+              ) : null}
+
+              {detailedFilters.length > 0 ? (
+                <section className="space-y-4">
+                  <div className="space-y-1">
+                    <h3 className="text-sm font-semibold text-foreground">Detailed Filters</h3>
+                    <p className="text-xs text-muted-foreground">Refine the results with categories and multi-select options.</p>
+                  </div>
+                  <div className="space-y-5">
+                    {detailedFilters.map((definition) => (
+                      <CatalogFilterCombobox
+                        key={definition.key}
+                        label={definition.label}
+                        options={definition.options}
+                        multiple={definition.selectionMode === 'multiple'}
+                        allLabel={definition.allLabel}
+                        value={draftFilterValues[definition.key]}
+                        onValueChange={(value) =>
+                          setDraftFilterValues((previous) => ({
+                            ...previous,
+                            [definition.key]: normalizeFilterValue(value),
+                          }))
+                        }
+                      />
+                    ))}
+                  </div>
+                </section>
+              ) : null}
             </div>
           </ScrollArea>
           <div className="border-t bg-background/95 px-6 py-4 backdrop-blur">
