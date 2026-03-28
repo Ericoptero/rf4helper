@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { useState, type ReactNode } from 'react';
 import { CrafterView } from './CrafterView';
+import { deserializeCrafterBuild } from '@/lib/crafter';
 import type { CrafterData, CrafterSlotConfig, Item } from '@/lib/schemas';
 
 vi.mock('@tanstack/react-router', () => ({
@@ -17,7 +18,7 @@ const items: Record<string, Item> = {
     category: 'shortSword',
     image: '/images/items/broadsword.png',
     rarityPoints: 15,
-    craft: [{ recipeId: 'broadsword#1', stationType: 'Forging', station: 'Short Sword', level: 1, ingredients: ['item-iron'] }],
+    craft: [{ recipeId: 'broadsword#1', stationType: 'Forging', station: 'Short Sword', level: 1, ingredients: ['item-minerals'] }],
     stats: { atk: 5 },
   },
   'item-claymore': {
@@ -37,7 +38,7 @@ const items: Record<string, Item> = {
     category: 'shortSword',
     image: '/images/items/cutlass.png',
     rarityPoints: 8,
-    craft: [{ recipeId: 'cutlass#3', stationType: 'Forging', station: 'Short Sword', level: 6, ingredients: ['item-iron'] }],
+    craft: [{ recipeId: 'cutlass#3', stationType: 'Forging', station: 'Short Sword', level: 6, ingredients: ['item-minerals'] }],
     stats: { atk: 8 },
   },
   'item-heaven-asunder': {
@@ -129,6 +130,13 @@ const items: Record<string, Item> = {
     rarityPoints: 1,
     stats: {},
   },
+  'item-minerals': {
+    id: 'item-minerals',
+    name: 'Minerals',
+    type: 'Category',
+    image: '/images/items/minerals.png',
+    groupMembers: ['item-iron', 'item-silver'],
+  },
   'item-silver': {
     id: 'item-silver',
     name: 'Silver',
@@ -150,6 +158,7 @@ const items: Record<string, Item> = {
     name: 'Turnip Heaven',
     type: 'Dish',
     image: '/images/items/turnip-heaven.png',
+    rarityPoints: 15,
     craft: [{ recipeId: 'turnip-heaven#96', stationType: 'Cooking', station: 'No Tool', level: 96, ingredients: ['item-turnip'] }],
     stats: { hp: 5000, rp: 1000, str: 90, vit: 80, int: 50 },
   },
@@ -252,87 +261,57 @@ const crafterData: CrafterData = {
     equipment: {
       weapon: {
         'item-broadsword': {
-          itemName: 'Broadsword',
           station: 'Short Sword',
-          materials: ['item-iron', null, null, null, null, null],
-          materialNames: ['Iron', null, null, null, null, null],
-          rarity: 1,
+          materials: ['item-minerals'],
         },
         'item-claymore': {
-          itemName: 'Claymore',
           station: 'Long Sword',
-          materials: ['item-iron', null, null, null, null, null],
-          materialNames: ['Iron', null, null, null, null, null],
-          rarity: 1,
+          materials: ['item-iron'],
         },
         'item-cutlass': {
-          itemName: 'Cutlass',
           station: 'Short Sword',
-          materials: ['item-iron', null, null, null, null, null],
-          materialNames: ['Iron', null, null, null, null, null],
-          rarity: 1,
+          materials: ['item-minerals'],
         },
         'item-heaven-asunder': {
-          itemName: 'Heaven Asunder',
           station: 'Long Sword',
-          materials: ['item-silver', 'item-iron', null, null, null, null],
-          materialNames: ['Silver', 'Iron', null, null, null, null],
-          rarity: 66,
+          materials: ['item-silver', 'item-iron'],
         },
       },
       armor: {
         'item-royal-garter': {
-          itemName: 'Royal Garter',
           station: 'Armor',
-          materials: ['item-iron', null, null, null, null, null],
-          materialNames: ['Iron', null, null, null, null, null],
-          rarity: 1,
+          materials: ['item-iron'],
         },
       },
       headgear: {
         'item-feathered-hat': {
-          itemName: 'Feathered Hat',
           station: 'Headgear',
-          materials: ['item-iron', null, null, null, null, null],
-          materialNames: ['Iron', null, null, null, null, null],
-          rarity: 1,
+          materials: ['item-iron'],
         },
       },
       shield: {
         'item-rune-shield': {
-          itemName: 'Rune Shield',
           station: 'Shield',
-          materials: ['item-iron', null, null, null, null, null],
-          materialNames: ['Iron', null, null, null, null, null],
-          rarity: 1,
+          materials: ['item-iron'],
         },
       },
       accessory: {
         'item-strange-pendant': {
-          itemName: 'Strange Pendant',
           station: 'Accessory',
-          materials: ['item-iron', null, null, null, null, null],
-          materialNames: ['Iron', null, null, null, null, null],
-          rarity: 1,
+          materials: ['item-iron'],
         },
       },
       shoes: {
         'item-heavy-boots': {
-          itemName: 'Heavy Boots',
           station: 'Shoes',
-          materials: ['item-iron', null, null, null, null, null],
-          materialNames: ['Iron', null, null, null, null, null],
-          rarity: 1,
+          materials: ['item-iron'],
         },
       },
     },
     food: {
       'item-glitter-sashimi': {
-        itemName: 'Glitter Sashimi',
         station: 'Knife',
-        materials: ['item-iron', null, null, null, null, null],
-        materialNames: ['Iron', null, null, null, null, null],
-        rarity: 1,
+        materials: ['item-iron'],
       },
     },
   },
@@ -388,7 +367,8 @@ const crafterData: CrafterData = {
       'item-iron': equipmentPayload({ itemName: 'Iron', rarity: 1 }),
       'item-silver': equipmentPayload({ itemName: 'Silver', rarity: 2 }),
       'item-light-ore': equipmentPayload({ itemName: 'Light Ore', rarity: 13 }),
-      'item-turnip-heaven': equipmentPayload({ itemName: 'Turnip Heaven', rarity: 0 }),
+      'item-turnip-heaven': equipmentPayload({ itemName: 'Turnip Heaven', rarity: 15 }),
+      'item-minerals': equipmentPayload({ itemName: 'Minerals', rarity: 0 }),
       'item-shade-stone': equipmentPayload({ itemName: 'Shade Stone', stats: { atk: 1 }, rarity: 3 }),
       'item-firewyrm-scale': equipmentPayload({
         itemName: 'Firewyrm Scale',
@@ -400,6 +380,7 @@ const crafterData: CrafterData = {
     armor: {
       'item-iron': equipmentPayload({ itemName: 'Iron', rarity: 1 }),
       'item-silver': equipmentPayload({ itemName: 'Silver', rarity: 2 }),
+      'item-minerals': equipmentPayload({ itemName: 'Minerals', rarity: 0 }),
       'item-shade-stone': equipmentPayload({ itemName: 'Shade Stone', stats: { atk: 1 }, rarity: 3 }),
       'item-firewyrm-scale': equipmentPayload({
         itemName: 'Firewyrm Scale',
@@ -641,7 +622,7 @@ describe('CrafterView', () => {
     expect(screen.queryByText(/10\.4%/i)).not.toBeInTheDocument();
   });
 
-  it('applies selector choices with Enter, keeps sort above search, and persists appearance ids, derived base ids, and slider levels', async () => {
+  it('focuses the selector search, keeps the sort control full width, and persists compressed appearance and recipe level changes', async () => {
     const user = userEvent.setup();
     const onSerializedBuildChange = vi.fn();
 
@@ -653,7 +634,10 @@ describe('CrafterView', () => {
     const dialog = await screen.findByRole('dialog', { name: /select base/i });
     const sortControl = within(dialog).getByRole('combobox', { name: /sort items/i });
     const search = within(dialog).getByRole('searchbox', { name: /search items/i });
+    expect(search).toHaveFocus();
+    expect(search).toHaveAttribute('tabindex', '0');
     expect(Boolean(sortControl.compareDocumentPosition(search) & Node.DOCUMENT_POSITION_FOLLOWING)).toBe(true);
+    expect(sortControl.className).toContain('w-full');
     await user.clear(search);
     await user.type(search, 'Broad');
     await user.click(within(dialog).getByRole('button', { name: /broadsword/i }));
@@ -661,58 +645,29 @@ describe('CrafterView', () => {
 
     expect(screen.getAllByText(/broadsword/i).length).toBeGreaterThan(0);
     expect(onSerializedBuildChange).toHaveBeenCalled();
-    expect(onSerializedBuildChange.mock.lastCall?.[0]).toContain('"appearanceId":"item-broadsword"');
-    expect(onSerializedBuildChange.mock.lastCall?.[0]).not.toContain('"baseId":"item-broadsword"');
+    expect(onSerializedBuildChange.mock.lastCall?.[0]).not.toContain('"appearanceId"');
+    expect(deserializeCrafterBuild(onSerializedBuildChange.mock.lastCall?.[0], crafterData).weapon.appearanceId).toBe('item-broadsword');
 
-    await user.click(screen.getByRole('button', { name: /iron/i }));
+    await user.click(screen.getByRole('button', { name: /minerals/i }));
     const recipeDialog = await screen.findByRole('dialog', { name: /select recipe 1/i });
     const levelSlider = within(recipeDialog).getByRole('slider', { name: /item level/i });
     expect(levelSlider).toHaveAttribute('aria-valuenow', '10');
+    expect(within(recipeDialog).getByText(/this recipe slot accepts any item from the minerals group/i)).toBeInTheDocument();
 
     levelSlider.focus();
     fireEvent.keyDown(levelSlider, { key: 'ArrowLeft' });
     fireEvent.keyDown(levelSlider, { key: 'ArrowLeft' });
     expect(levelSlider).toHaveAttribute('aria-valuenow', '8');
-    await user.click(within(dialog).getByRole('button', { name: /apply/i }));
+    await user.click(within(recipeDialog).getByRole('button', { name: /apply/i }));
 
-    await user.click(screen.getByRole('button', { name: /iron/i }));
+    expect(deserializeCrafterBuild(onSerializedBuildChange.mock.lastCall?.[0], crafterData).weapon.recipe[0]?.level).toBe(8);
+
+    await user.click(screen.getByRole('button', { name: /minerals/i }));
     const reopenedDialog = await screen.findByRole('dialog', { name: /select recipe 1/i });
     expect(within(reopenedDialog).getByRole('slider', { name: /item level/i })).toHaveAttribute('aria-valuenow', '8');
   });
 
-  it('derives Actual Base from the single recipe craft item and clears the previous one when a new craft item is selected', async () => {
-    const user = userEvent.setup();
-    const onSerializedBuildChange = vi.fn();
-
-    render(<CrafterHarness onSerializedBuildChange={onSerializedBuildChange} />);
-
-    await user.click(screen.getByRole('tab', { name: /weapon/i }));
-    await user.click(screen.getByRole('button', { name: /base/i }));
-    await chooseItemFromSelector(user, 'Broad', 'Broadsword');
-
-    await user.click(screen.getByRole('button', { name: /recipe 2/i }));
-    await chooseItemFromSelector(user, 'Cut', 'Cutlass');
-
-    const resumeCard = screen.getByText(/^resume$/i).closest('[data-slot="card"]') as HTMLElement;
-    const baseHeading = within(resumeCard).getByText(/^base$/i);
-    const actualBaseHeading = within(resumeCard).getByText(/^actual base$/i);
-    const recipeHeading = within(resumeCard).getByText(/^recipe$/i);
-    expect(Boolean(baseHeading.compareDocumentPosition(actualBaseHeading) & Node.DOCUMENT_POSITION_FOLLOWING)).toBe(true);
-    expect(Boolean(actualBaseHeading.compareDocumentPosition(recipeHeading) & Node.DOCUMENT_POSITION_FOLLOWING)).toBe(true);
-    expect(within(resumeCard).queryByText(/no recipe data/i)).not.toBeInTheDocument();
-    expect(within(resumeCard).getAllByText(/cutlass/i).length).toBeGreaterThanOrEqual(2);
-    expect(onSerializedBuildChange.mock.lastCall?.[0]).toContain('"appearanceId":"item-broadsword"');
-    expect(onSerializedBuildChange.mock.lastCall?.[0]).toContain('"baseId":"item-cutlass"');
-
-    await user.click(screen.getByRole('button', { name: /recipe 3/i }));
-    await chooseItemFromSelector(user, 'Broad', 'Broadsword');
-
-    expect(screen.getByRole('button', { name: /^recipe 2$/i })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /cutlass/i })).not.toBeInTheDocument();
-    expect(onSerializedBuildChange.mock.lastCall?.[0]).toContain('"baseId":"item-broadsword"');
-  });
-
-  it('shows sort controls with direct and inverse modes while keeping the rarity placeholder pinned and Turnip Heaven selectable', async () => {
+  it('keeps recipe ingredients hydrated from the merged item recipes and restricts category slots to their group members', async () => {
     const user = userEvent.setup();
 
     render(<CrafterHarness />);
@@ -721,13 +676,50 @@ describe('CrafterView', () => {
     await user.click(screen.getByRole('button', { name: /base/i }));
     await chooseItemFromSelector(user, 'Broad', 'Broadsword');
 
-    await user.click(screen.getByRole('button', { name: /recipe 2/i }));
-    const dialog = await screen.findByRole('dialog', { name: /select recipe 2/i });
+    expect(screen.getByRole('button', { name: /minerals/i })).toBeInTheDocument();
 
-    expect(within(dialog).getByRole('button', { name: /rarity \+15/i })).toBeInTheDocument();
-    expect(within(dialog).getByRole('combobox', { name: /sort items/i })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /minerals/i }));
+
+    const dialog = await screen.findByRole('dialog', { name: /select recipe 1/i });
+    expect(within(dialog).getByText(/choose material/i)).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: /iron/i })).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: /silver/i })).toBeInTheDocument();
+    expect(within(dialog).queryByRole('button', { name: /firewyrm scale/i })).not.toBeInTheDocument();
+
+    const search = within(dialog).getByRole('searchbox', { name: /search items/i });
+    await user.clear(search);
+    await user.type(search, 'Silver');
+    await user.click(within(dialog).getByRole('button', { name: /silver/i }));
+    await user.click(within(dialog).getByRole('button', { name: /apply/i }));
+
+    expect(screen.getByRole('button', { name: /silver/i })).toBeInTheDocument();
+  });
+
+  it('keeps fixed recipe slots level-only while leaving upgrade slots fully selectable with the placeholder pinned', async () => {
+    const user = userEvent.setup();
+
+    render(<CrafterHarness />);
+
+    await user.click(screen.getByRole('tab', { name: /weapon/i }));
+    await user.click(screen.getByRole('button', { name: /base/i }));
+    await chooseItemFromSelector(user, 'Heav', 'Heaven Asunder');
+
+    await user.click(screen.getByRole('button', { name: /silver/i }));
+    const fixedDialog = await screen.findByRole('dialog', { name: /select recipe 1/i });
+
+    expect(within(fixedDialog).getByText(/this recipe ingredient is fixed\. you can only adjust its level\./i)).toBeInTheDocument();
+    expect(within(fixedDialog).getByText(/level only/i)).toBeInTheDocument();
+    expect(within(fixedDialog).queryByRole('button', { name: /firewyrm scale/i })).not.toBeInTheDocument();
+    expect(within(fixedDialog).getByRole('button', { name: /silver/i })).toBeInTheDocument();
+    expect(within(fixedDialog).queryByRole('button', { name: /clear slot/i })).not.toBeInTheDocument();
+    await user.click(within(fixedDialog).getByRole('button', { name: /cancel/i }));
+
+    await user.click(screen.getByRole('button', { name: /upgrade 1/i }));
+    const dialog = await screen.findByRole('dialog', { name: /select upgrade 1/i });
 
     const sortControl = within(dialog).getByRole('combobox', { name: /sort items/i });
+    expect(within(dialog).getByRole('button', { name: /rarity \+15/i })).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: /turnip heaven/i })).toBeInTheDocument();
     await user.click(sortControl);
     await user.click(screen.getByRole('option', { name: /name \(z-a\)/i }));
     expect(within(dialog).getAllByRole('button')[0]).toHaveAccessibleName(/rarity \+15/i);
@@ -735,29 +727,6 @@ describe('CrafterView', () => {
     await user.click(sortControl);
     await user.click(screen.getByRole('option', { name: /rarity \(low-high\)/i }));
     expect(within(dialog).getByRole('button', { name: /turnip heaven/i })).toBeInTheDocument();
-  });
-
-  it('lets Light Ore unlock a cross-class Actual Base on weapon recipes only', async () => {
-    const user = userEvent.setup();
-
-    render(<CrafterHarness />);
-
-    await user.click(screen.getByRole('tab', { name: /weapon/i }));
-    await user.click(screen.getByRole('button', { name: /base/i }));
-    await chooseItemFromSelector(user, 'Broad', 'Broadsword');
-
-    await user.click(screen.getByRole('button', { name: /recipe 2/i }));
-    await chooseItemFromSelector(user, 'Clay', 'Claymore');
-
-    let resumeCard = screen.getByText(/^resume$/i).closest('[data-slot="card"]') as HTMLElement;
-    expect(within(resumeCard).getByText(/no actual base selected/i)).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: /recipe 3/i }));
-    await chooseItemFromSelector(user, 'Light', 'Light Ore');
-
-    resumeCard = screen.getByText(/^resume$/i).closest('[data-slot="card"]') as HTMLElement;
-    expect(within(resumeCard).getByText(/actual base/i)).toBeInTheDocument();
-    expect(within(resumeCard).getAllByText(/claymore/i).length).toBeGreaterThan(0);
   });
 
   it('shows hover tooltips for filled crafter slots without changing the click-to-edit flow', async () => {

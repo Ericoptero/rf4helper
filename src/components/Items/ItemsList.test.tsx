@@ -158,11 +158,56 @@ const mockItems: Record<string, MockItem> = {
       },
     ],
   },
+  'item-battle-broth': {
+    id: 'item-battle-broth',
+    name: 'Battle Broth',
+    type: 'Dish',
+    buy: 1200,
+    sell: 300,
+    usedInRecipes: [],
+    stats: {
+      hp: 500,
+      atk: 10,
+    },
+    healing: {
+      hpPercent: 25,
+      rpPercent: 10,
+    },
+    statMultipliers: {
+      str: 15,
+      rpMax: 5,
+    },
+    combat: {
+      weaponClass: 'Short Sword',
+      attackType: 'Short Sword',
+      element: 'Fire',
+      damageType: 'Physical',
+      geometry: {
+        depth: 1.2,
+        length: 2.5,
+        width: 0.8,
+      },
+    },
+  },
 };
 
 const server = setupServer(
   http.get('http://localhost:3000/data/items.json', () => {
     return HttpResponse.json(mockItems);
+  }),
+  http.get('http://localhost:3000/api/details/item/:itemId', ({ params }) => {
+    const itemId = params.itemId as string;
+    const item = mockItems[itemId];
+
+    if (!item) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return HttpResponse.json({
+      type: 'item',
+      item,
+      items: mockItems,
+    });
   })
 );
 
@@ -368,10 +413,14 @@ describe('ItemsList Component', () => {
     render(<ItemsList />, { wrapper });
 
     await user.click(await screen.findByText('Broadsword'));
+    const dialog = await screen.findByRole('dialog');
 
-    expect(await screen.findByText('Crafted From')).toBeInTheDocument();
-    expect(screen.getByText('Forging')).toBeInTheDocument();
-    expect(screen.getAllByText('Minerals').length).toBeGreaterThan(0);
+    expect(within(dialog).getByText('Crafted From')).toBeInTheDocument();
+    expect(within(dialog).getByText('Forging')).toBeInTheDocument();
+    expect(within(dialog).getAllByText('Minerals').length).toBeGreaterThan(0);
+    expect(within(dialog).getByTestId('crafted-from-grid')).toBeInTheDocument();
+    expect(within(dialog).getAllByTestId('crafted-from-slot')).toHaveLength(6);
+    expect(within(dialog).getAllByText(/empty slot/i).length).toBeGreaterThanOrEqual(1);
   });
 
   it('shows generic recipe reverse links on category items', async () => {
@@ -420,6 +469,32 @@ describe('ItemsList Component', () => {
     expect(await screen.findByText('Additional Effects')).toBeInTheDocument();
     expect(screen.getByText(/Fire resistance \+25%/i)).toBeInTheDocument();
     expect(screen.queryByText('Stats')).not.toBeInTheDocument();
+  });
+
+  it('renders healing, stat multipliers, and combat details when the item exposes them', async () => {
+    const user = userEvent.setup();
+
+    render(<ItemsList />, { wrapper });
+
+    await user.click(await screen.findByText('Battle Broth'));
+
+    expect(await screen.findByText('Healing')).toBeInTheDocument();
+    expect(screen.getByText('HP%')).toBeInTheDocument();
+    expect(screen.getByText('+25%')).toBeInTheDocument();
+    expect(screen.getByText('RP%')).toBeInTheDocument();
+    expect(screen.getByText('+10%')).toBeInTheDocument();
+
+    expect(screen.getByText('Stat Multipliers')).toBeInTheDocument();
+    expect(screen.getByText('STR')).toBeInTheDocument();
+    expect(screen.getByText('RP MAX')).toBeInTheDocument();
+
+    expect(screen.getByText('Combat Profile')).toBeInTheDocument();
+    expect(screen.getByText('Weapon Class')).toBeInTheDocument();
+    expect(screen.getAllByText('Short Sword').length).toBeGreaterThan(0);
+    expect(screen.getByText('Element')).toBeInTheDocument();
+    expect(screen.getByText('Fire')).toBeInTheDocument();
+    expect(screen.getByText('Geometry')).toBeInTheDocument();
+    expect(screen.getByText(/Length/i)).toBeInTheDocument();
   });
 
   it('renders the item drawer full width on mobile with a column hero layout', async () => {

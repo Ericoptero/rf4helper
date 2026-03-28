@@ -8,6 +8,8 @@ import {
   Footprints,
   Gem,
   Heart,
+  Layers3,
+  Lock,
   Moon,
   Mountain,
   Package,
@@ -39,6 +41,7 @@ import {
   serializeCrafterBuild,
   type CrafterBuildState,
 } from '@/lib/crafter';
+import { itemMatchesCrafterSlot } from '@/lib/crafterData';
 import { resolveItemImage } from '@/lib/itemImages';
 import type { CrafterData, CrafterMaterialSelection, CrafterSlotConfig, CrafterSlotKey, Item } from '@/lib/schemas';
 import { cn } from '@/lib/utils';
@@ -53,6 +56,7 @@ type CrafterViewProps = {
 type CrafterTab = 'dashboard' | CrafterSlotKey | 'cooking';
 type CrafterEditorSlot = CrafterSlotKey | 'food';
 type CrafterNodeType = 'base' | 'recipe' | 'inherit' | 'upgrade' | 'foodBase';
+type CrafterNodeInteractionMode = 'free' | 'fixed' | 'category';
 
 type CrafterSelectedNode = {
   slot: CrafterEditorSlot;
@@ -74,6 +78,20 @@ type CrafterGridNode = {
   tier: number;
   emptyLabel: string;
   meta?: string;
+  interactionMode?: CrafterNodeInteractionMode;
+  interactionLabel?: string;
+  categoryLabel?: string;
+};
+
+type CrafterNodeBehavior = {
+  mode: CrafterNodeInteractionMode;
+  options: Item[];
+  canEditItem: boolean;
+  canEditLevel: boolean;
+  canClear: boolean;
+  helperLabel?: string;
+  callout?: string;
+  categoryLabel?: string;
 };
 
 type CrafterGridSection = {
@@ -157,15 +175,26 @@ function padSelections(selections: CrafterMaterialSelection[] | undefined, count
 function getRecipeSelections(
   current: CrafterMaterialSelection[] | undefined,
   count: number,
-  defaults?: (string | null)[],
+  defaults?: string[],
 ) {
   const padded = padSelections(current, count);
   return padded.map((selection, index) => {
     const rawItemId = selection.itemId;
+    const defaultItemId = defaults?.[index] ?? undefined;
+    const hasExplicitOverride = selection.itemId != null || selection.level !== 1;
     const itemId = rawItemId === '' ? undefined : rawItemId ?? defaults?.[index] ?? undefined;
     return {
       itemId,
-      level: rawItemId && rawItemId !== '' ? selection.level : rawItemId === '' ? 1 : defaults?.[index] ? 10 : selection.level,
+      level:
+        rawItemId && rawItemId !== ''
+          ? selection.level
+          : rawItemId === ''
+            ? 1
+            : defaultItemId
+              ? hasExplicitOverride
+                ? selection.level
+                : 10
+              : selection.level,
     };
   });
 }
@@ -190,13 +219,7 @@ function getFoodRecipeDefaults(baseId: string | undefined, crafterData: CrafterD
 
 function getSlotOptions(items: Record<string, Item>, slotConfig: CrafterSlotConfig) {
   return Object.values(items)
-    .filter((item) =>
-      item.craft?.some(
-        (craft) =>
-          craft.stationType === slotConfig.stationType &&
-          (slotConfig.stations.length === 0 || slotConfig.stations.includes(craft.station ?? '')),
-      ),
-    )
+    .filter((item) => itemMatchesCrafterSlot(item, slotConfig))
     .sort((left, right) => left.name.localeCompare(right.name));
 }
 
@@ -224,14 +247,7 @@ function matchesSlotCraftCandidate(
   slotConfig: CrafterSlotConfig,
 ) {
   if (!itemId || itemId === CRAFTER_RARITY_PLACEHOLDER_ID) return false;
-  const item = items[itemId];
-  return Boolean(
-    item?.craft?.some(
-      (craft) =>
-        craft.stationType === slotConfig.stationType &&
-        (slotConfig.stations.length === 0 || slotConfig.stations.includes(craft.station ?? '')),
-    ),
-  );
+  return itemMatchesCrafterSlot(items[itemId], slotConfig);
 }
 
 function formatStatLabel(stat: string) {
@@ -555,6 +571,8 @@ function CrafterItemSlot({
 }) {
   const accessibleName = node.item ? (node.itemName ?? node.item.name ?? node.label) : node.label;
   const imageSrc = resolveCrafterItemImage(node.item);
+  const isFixedSlot = node.interactionMode === 'fixed';
+  const isCategorySlot = node.interactionMode === 'category';
 
   const slotButton = (
     <button
@@ -562,8 +580,10 @@ function CrafterItemSlot({
       aria-label={accessibleName}
       onClick={onClick}
       className={cn(
-        'group relative flex flex-col items-center justify-center rounded-xl border-2 bg-card/80 transition-all',
+        'group relative flex flex-col items-center justify-center rounded-xl border-2 bg-card/80 px-2 pb-2 pt-3 transition-all',
         SLOT_SIZE_CLASSES[size],
+        isCategorySlot && 'border-dashed border-primary/40 bg-primary/5 hover:border-primary',
+        isFixedSlot && 'border-solid border-primary/25 bg-primary/5 hover:border-primary/50',
         node.item
           ? 'border-solid border-border hover:border-primary hover:shadow-md'
           : 'border-dashed border-muted-foreground/30 bg-muted/50 hover:border-primary hover:bg-muted',
@@ -600,6 +620,20 @@ function CrafterItemSlot({
       ) : (
         <span className="mt-1 text-[10px] text-muted-foreground">{node.label}</span>
       )}
+
+      {node.interactionLabel ? (
+        <span
+          className={cn(
+            'mt-1 inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em]',
+            isCategorySlot
+              ? 'border-primary/30 bg-primary/10 text-primary'
+              : 'border-border bg-background/80 text-muted-foreground',
+          )}
+        >
+          {isCategorySlot ? <Layers3 className="h-2.5 w-2.5" /> : <Lock className="h-2.5 w-2.5" />}
+          {node.interactionLabel}
+        </span>
+      ) : null}
     </button>
   );
 
@@ -920,10 +954,102 @@ function resolveEffectiveSelection(
   defaultItemId: string | null | undefined,
 ) {
   const rawItemId = rawSelection?.itemId;
+  const hasExplicitOverride = rawSelection?.itemId != null || (rawSelection?.level ?? 1) !== 1;
   const itemId = rawItemId === '' ? undefined : rawItemId ?? defaultItemId ?? undefined;
   return {
     itemId,
-    level: rawItemId && rawItemId !== '' ? rawSelection!.level : rawItemId === '' ? 1 : itemId ? 10 : (rawSelection?.level ?? 1),
+    level:
+      rawItemId && rawItemId !== ''
+        ? rawSelection!.level
+        : rawItemId === ''
+          ? 1
+          : defaultItemId
+            ? hasExplicitOverride
+              ? rawSelection?.level ?? 10
+              : 10
+            : rawSelection?.level ?? 1,
+  };
+}
+
+function getRecipeDefaultItemIdForNode(
+  node: CrafterSelectedNode | CrafterGridNode,
+  build: CrafterBuildState,
+  crafterData: CrafterData,
+) {
+  if (node.type !== 'recipe' || node.index == null) return undefined;
+  if (node.slot === 'food') {
+    return getFoodRecipeDefaults(build.food.baseId, crafterData)?.[node.index];
+  }
+
+  return getEquipmentRecipeDefaults(node.slot, build[node.slot].appearanceId, crafterData)?.[node.index];
+}
+
+function resolveNodeBehavior(
+  node: CrafterSelectedNode | CrafterGridNode,
+  build: CrafterBuildState,
+  slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>,
+  items: Record<string, Item>,
+  crafterData: CrafterData,
+): CrafterNodeBehavior {
+  if (node.type === 'recipe') {
+    const defaultItemId = getRecipeDefaultItemIdForNode(node, build, crafterData);
+    const defaultItem = getCrafterDisplayItem(defaultItemId, items);
+
+    if (defaultItem?.type === 'Category' && defaultItem.groupMembers && defaultItem.groupMembers.length > 0) {
+      return {
+        mode: 'category',
+        options: defaultItem.groupMembers
+          .map((itemId) => items[itemId])
+          .filter((item): item is Item => Boolean(item))
+          .sort((left, right) => left.name.localeCompare(right.name)),
+        canEditItem: true,
+        canEditLevel: true,
+        canClear: false,
+        helperLabel: 'Choose material',
+        callout: `This recipe slot accepts any item from the ${defaultItem.name} group.`,
+        categoryLabel: defaultItem.name,
+      };
+    }
+
+    if (defaultItem) {
+      return {
+        mode: 'fixed',
+        options: [defaultItem],
+        canEditItem: false,
+        canEditLevel: true,
+        canClear: false,
+        helperLabel: 'Level only',
+        callout: 'This recipe ingredient is fixed. You can only adjust its level.',
+      };
+    }
+  }
+
+  if (node.slot === 'food') {
+    return {
+      mode: 'free',
+      options: node.type === 'foodBase' ? getFoodOptions(items) : getMaterialOptions(items),
+      canEditItem: true,
+      canEditLevel: node.type !== 'foodBase',
+      canClear: true,
+    };
+  }
+
+  if (node.type === 'base') {
+    return {
+      mode: 'free',
+      options: getSlotOptions(items, slotConfigByKey[node.slot]),
+      canEditItem: true,
+      canEditLevel: false,
+      canClear: true,
+    };
+  }
+
+  return {
+    mode: 'free',
+    options: [CRAFTER_RARITY_PLACEHOLDER_ITEM, ...getMaterialOptions(items)],
+    canEditItem: true,
+    canEditLevel: true,
+    canClear: true,
   };
 }
 
@@ -958,15 +1084,12 @@ function getEditableSelection(
 
 function getSelectedNodeOptions(
   node: CrafterSelectedNode,
+  build: CrafterBuildState,
+  crafterData: CrafterData,
   slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>,
   items: Record<string, Item>,
 ) {
-  if (node.slot === 'food') {
-    return node.type === 'foodBase' ? getFoodOptions(items) : getMaterialOptions(items);
-  }
-
-  if (node.type === 'base') return getSlotOptions(items, slotConfigByKey[node.slot]);
-  return [CRAFTER_RARITY_PLACEHOLDER_ITEM, ...getMaterialOptions(items)];
+  return resolveNodeBehavior(node, build, slotConfigByKey, items, crafterData).options;
 }
 
 function updateNodeInBuild(
@@ -994,9 +1117,15 @@ function updateNodeInBuild(
         next.food.recipe[node.index],
         defaultItemId,
       );
-      const nextItemId = hasItemIdUpdate
-        ? updates.itemId ?? (defaultItemId ? '' : undefined)
-        : currentSelection.itemId;
+      const behavior = resolveNodeBehavior(node, next, slotConfigByKey, items, crafterData);
+      const nextItemId = (() => {
+        if (!hasItemIdUpdate) return currentSelection.itemId;
+        if (!behavior.canEditItem) return currentSelection.itemId ?? defaultItemId;
+        if (behavior.mode === 'category') {
+          return behavior.options.some((option) => option.id === updates.itemId) ? updates.itemId : currentSelection.itemId;
+        }
+        return updates.itemId ?? (defaultItemId ? '' : undefined);
+      })();
       next.food.recipe[node.index] = {
         ...next.food.recipe[node.index],
         itemId: nextItemId,
@@ -1029,9 +1158,15 @@ function updateNodeInBuild(
       slot.recipe[node.index],
       defaultItemId,
     );
-    const nextItemId = hasItemIdUpdate
-      ? updates.itemId ?? (defaultItemId ? '' : undefined)
-      : currentSelection.itemId;
+    const behavior = resolveNodeBehavior(node, next, slotConfigByKey, items, crafterData);
+    const nextItemId = (() => {
+      if (!hasItemIdUpdate) return currentSelection.itemId;
+      if (!behavior.canEditItem) return currentSelection.itemId ?? defaultItemId;
+      if (behavior.mode === 'category') {
+        return behavior.options.some((option) => option.id === updates.itemId) ? updates.itemId : currentSelection.itemId;
+      }
+      return updates.itemId ?? (defaultItemId ? '' : undefined);
+    })();
     slot.recipe[node.index] = {
       ...slot.recipe[node.index],
       itemId: nextItemId,
@@ -1145,6 +1280,8 @@ function buildGridSectionsForSlot({
         gridClassName: 'grid-cols-3 justify-start',
         nodes: recipeSelections.map((selection, index) => {
           const item = selection.itemId ? items[selection.itemId] : undefined;
+          const defaultItem = getCrafterDisplayItem(getFoodRecipeDefaults(build.food.baseId, crafterData)?.[index], items);
+          const isCategorySlot = defaultItem?.type === 'Category' && Boolean(defaultItem.groupMembers?.length);
           return {
             id: `food-recipe-${index}`,
             slot: 'food' as const,
@@ -1159,6 +1296,9 @@ function buildGridSectionsForSlot({
             tier: 0,
             emptyLabel: `Recipe ${index + 1}`,
             meta: 'Recipe slot',
+            interactionMode: isCategorySlot ? 'category' : defaultItem ? 'fixed' : 'free',
+            interactionLabel: isCategorySlot ? 'Choose material' : defaultItem ? 'Level only' : undefined,
+            categoryLabel: isCategorySlot ? defaultItem?.name : undefined,
           };
         }),
       },
@@ -1201,6 +1341,11 @@ function buildGridSectionsForSlot({
       gridClassName: 'grid-cols-3 justify-start',
       nodes: recipeSelections.map((selection, index) => {
         const item = getCrafterDisplayItem(selection.itemId, items);
+        const defaultItem = getCrafterDisplayItem(
+          getEquipmentRecipeDefaults(activeSlot, slot.appearanceId, crafterData)?.[index],
+          items,
+        );
+        const isCategorySlot = defaultItem?.type === 'Category' && Boolean(defaultItem.groupMembers?.length);
         return {
           id: `${activeSlot}-recipe-${index}`,
           slot: activeSlot,
@@ -1215,6 +1360,9 @@ function buildGridSectionsForSlot({
           tier: 0,
           emptyLabel: `Recipe ${index + 1}`,
           meta: 'Recipe slot',
+          interactionMode: isCategorySlot ? 'category' : defaultItem ? 'fixed' : 'free',
+          interactionLabel: isCategorySlot ? 'Choose material' : defaultItem ? 'Level only' : undefined,
+          categoryLabel: isCategorySlot ? defaultItem?.name : undefined,
         };
       }),
     },
@@ -1398,7 +1546,7 @@ export function CrafterView({
         upgrades: next.shoes.upgrades,
       },
     };
-    onSerializedBuildChange(serializeCrafterBuild(serializedBuildState));
+    onSerializedBuildChange(serializeCrafterBuild(serializedBuildState, crafterData));
   };
 
   const resetBuild = () => {
@@ -1423,9 +1571,12 @@ export function CrafterView({
   const selectedGridNode = selectedNode
     ? gridNodes.find((node) => node.slot === selectedNode.slot && node.type === selectedNode.type && node.index === selectedNode.index)
     : undefined;
-  const editorOptions = selectedNode ? getSelectedNodeOptions(selectedNode, slotConfigByKey, items) : [];
+  const selectedNodeBehavior = selectedNode
+    ? resolveNodeBehavior(selectedNode, build, slotConfigByKey, items, crafterData)
+    : undefined;
+  const editorOptions = selectedNode ? getSelectedNodeOptions(selectedNode, build, crafterData, slotConfigByKey, items) : [];
   const selectedEditableValue = selectedNode ? getEditableSelection(build, selectedNode, crafterData) : undefined;
-  const canEditLevel = selectedNode ? !['base', 'foodBase'].includes(selectedNode.type) : false;
+  const canEditLevel = selectedNodeBehavior?.canEditLevel ?? false;
 
   const summaryStats = activeTab === 'dashboard'
     ? calculation.totalStats
@@ -1943,8 +2094,13 @@ export function CrafterView({
         selectedItemId={selectedEditableValue?.itemId}
         selectedLevel={selectedEditableValue?.level ?? 1}
         canEditLevel={canEditLevel}
+        canClear={selectedNodeBehavior?.canClear ?? true}
         options={editorOptions}
         getItemPreviewData={(item) => getNodePreviewData(selectedNode ?? selectedGridNode, item, item?.id, crafterData)}
+        interactionMode={selectedNodeBehavior?.mode}
+        interactionLabel={selectedNodeBehavior?.helperLabel}
+        interactionCallout={selectedNodeBehavior?.callout}
+        categoryLabel={selectedNodeBehavior?.categoryLabel}
         onOpenChange={(open) => !open && setSelectedNode(null)}
         onClear={() => {
           if (!selectedNode) return;

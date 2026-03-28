@@ -37,6 +37,26 @@ const ItemStatsSchema = z.object({
   knock: z.number().optional(),
 }).strict();
 
+const ItemHealingSchema = z.object({
+  hpPercent: z.number().optional(),
+  rpPercent: z.number().optional(),
+}).strict();
+
+const ItemCombatSchema = z.object({
+  weaponClass: z.string().nullable().optional(),
+  attackType: z.string().nullable().optional(),
+  element: z.string().nullable().optional(),
+  damageType: z.string().nullable().optional(),
+  geometry: z
+    .object({
+      depth: z.number().optional(),
+      length: z.number().optional(),
+      width: z.number().optional(),
+    })
+    .strict()
+    .optional(),
+}).strict();
+
 export const ItemSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -77,7 +97,11 @@ export const ItemSchema = z.object({
     )
     .optional(),
   stats: ItemStatsSchema.optional(),
+  healing: ItemHealingSchema.optional(),
+  statMultipliers: ItemStatsSchema.optional(),
+  combat: ItemCombatSchema.optional(),
   effects: z.array(ItemEffectSchema).optional(),
+  crafter: z.lazy(() => ItemCrafterDataSchema).optional(),
 });
 
 export type Item = z.infer<typeof ItemSchema>;
@@ -542,11 +566,8 @@ const CrafterFoodPayloadSchema = z.object({
 export type CrafterFoodPayload = z.infer<typeof CrafterFoodPayloadSchema>;
 
 const CrafterRecipeDefinitionSchema = z.object({
-  itemName: z.string(),
   station: z.string(),
-  materials: z.array(z.string().nullable()).default([]),
-  materialNames: z.array(z.string().nullable()).default([]),
-  rarity: z.number().int().min(0).default(0),
+  materials: z.array(z.string()).default([]),
 });
 export type CrafterRecipeDefinition = z.infer<typeof CrafterRecipeDefinitionSchema>;
 
@@ -573,6 +594,35 @@ const CrafterStaffBaseSchema = z.object({
 });
 export type CrafterStaffBase = z.infer<typeof CrafterStaffBaseSchema>;
 
+const ItemCrafterDataSchema = z.object({
+  equipment: z
+    .object({
+      weapon: CrafterEquipmentPayloadSchema.omit({ itemName: true }).optional(),
+      armor: CrafterEquipmentPayloadSchema.omit({ itemName: true }).optional(),
+    })
+    .strict()
+    .optional(),
+  foodBase: CrafterFoodPayloadSchema.omit({ itemName: true }).optional(),
+  material: z
+    .object({
+      weapon: CrafterEquipmentPayloadSchema.omit({ itemName: true }).optional(),
+      armor: CrafterEquipmentPayloadSchema.omit({ itemName: true }).optional(),
+      food: CrafterFoodPayloadSchema.omit({ itemName: true }).optional(),
+    })
+    .strict()
+    .optional(),
+  specialMaterialRule: CrafterMaterialRuleSchema.omit({ itemId: true }).optional(),
+  bonusEffect: CrafterBonusEffectSchema.omit({ itemName: true }).optional(),
+  staff: z
+    .object({
+      chargeAttack: CrafterStaffChargeAttackSchema.omit({ itemName: true }).optional(),
+      base: CrafterStaffBaseSchema.omit({ itemName: true }).optional(),
+    })
+    .strict()
+    .optional(),
+}).strict();
+export type ItemCrafterData = z.infer<typeof ItemCrafterDataSchema>;
+
 const CrafterFixtureSchema = z.object({
   build: CrafterDefaultsSchema,
   expected: z.object({
@@ -587,6 +637,26 @@ const CrafterFixtureSchema = z.object({
   }),
 });
 export type CrafterFixture = z.infer<typeof CrafterFixtureSchema>;
+
+export const CrafterConfigSchema = z.object({
+  schemaVersion: z.number().int().min(1).default(1),
+  slotConfigs: z.array(CrafterSlotConfigSchema),
+  defaults: CrafterDefaultsSchema,
+  weaponClassByStation: z.record(z.string(), z.string()).default({}),
+  shieldCoverageByWeaponClass: z.record(z.string(), z.enum(['full', 'partial', 'none'])).default({}),
+  starterWeaponByClass: z.record(z.string(), z.string().nullable()).default({}),
+  chargeAttackByWeaponClass: z.record(z.string(), z.string()).default({}),
+  staffChargeByCrystalId: z.record(z.string(), z.string()).default({}),
+  levelBonusTiers: z.array(CrafterTierSchema).default([]),
+  rarityBonusTiers: z.array(CrafterTierSchema).default([]),
+  foodOverrides: z.record(z.string(), CrafterFoodOverrideSchema).default({}),
+  fixtures: z
+    .object({
+      workbookSample: CrafterFixtureSchema.optional(),
+    })
+    .default({}),
+});
+export type CrafterConfig = z.infer<typeof CrafterConfigSchema>;
 
 export const CrafterDataSchema = z.object({
   schemaVersion: z.number().int().min(1).default(1),

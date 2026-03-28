@@ -7,7 +7,7 @@ import {
   ChestSchema,
   CharacterSchema,
   CropsDataSchema,
-  CrafterDataSchema,
+  CrafterConfigSchema,
   FestivalSchema,
   FishSchema,
   ItemSchema,
@@ -31,6 +31,7 @@ import {
   type SkillsData,
   type Trophy,
 } from '@/lib/schemas';
+import { buildCrafterData } from '@/lib/crafterData';
 import { resolveItemImageUrl } from '@/lib/publicAssetUrls';
 
 const DataFileMetadataSchema = z.object({
@@ -140,6 +141,11 @@ export const getTrophiesData = cache(async (): Promise<Record<string, Trophy[]>>
   return z.record(z.string(), z.array(TrophySchema)).parse(await readJsonFile('trophies.json'));
 });
 
+export const getCrafterConfigData = cache(async () => {
+  return CrafterConfigSchema.parse(await readJsonFile('crafter.json'));
+});
+
 export const getCrafterData = cache(async (): Promise<CrafterData> => {
-  return CrafterDataSchema.parse(await readJsonFile('crafter.json'));
+  const [items, crafterConfig] = await Promise.all([getItemsData(), getCrafterConfigData()]);
+  return buildCrafterData(items, crafterConfig);
 });

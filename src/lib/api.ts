@@ -1,5 +1,6 @@
-import { ItemSchema, CharacterSchema, MonsterSchema, ChestSchema, FestivalSchema, CropsDataSchema, FishSchema, OrderSchema, RequestSchema, RuneAbilitySchema, SkillsDataSchema, TrophySchema, CrafterDataSchema } from './schemas';
+import { ItemSchema, CharacterSchema, MonsterSchema, ChestSchema, FestivalSchema, CropsDataSchema, FishSchema, OrderSchema, RequestSchema, RuneAbilitySchema, SkillsDataSchema, TrophySchema, CrafterConfigSchema } from './schemas';
 import type { Item, Character, Monster, Chest, Festival, CropsData, Fish, Order, RequestItem, RuneAbility, SkillsData, Trophy, CrafterData } from './schemas';
+import { buildCrafterData } from './crafterData';
 import { resolveItemImage } from './itemImages';
 /// <reference types="node" />
 import { z } from 'zod';
@@ -127,8 +128,13 @@ export const fetchTrophies = async (): Promise<Record<string, Trophy[]>> => {
 };
 
 export const fetchCrafterData = async (): Promise<CrafterData> => {
+  const itemsPromise = fetchItems();
   const url = `${BASE_URL}/data/crafter.json`;
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Failed to fetch crafter data from ${url}`);
-  return CrafterDataSchema.parse(await response.json());
+  const [items, crafterConfig] = await Promise.all([
+    itemsPromise,
+    response.json().then((payload) => CrafterConfigSchema.parse(payload)),
+  ]);
+  return buildCrafterData(items, crafterConfig);
 };

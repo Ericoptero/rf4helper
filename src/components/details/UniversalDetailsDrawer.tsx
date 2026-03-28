@@ -16,8 +16,8 @@ import {
   Wheat,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { resolveCharacterImage } from '@/lib/characterImages';
 import { resolveFishImage } from '@/lib/fishImages';
 import { resolveMonsterImageUrl } from '@/lib/publicAssetUrls';
@@ -33,9 +33,9 @@ import { getSemanticBadgeClass } from './semanticBadges';
 
 const itemStatLabels: Record<string, string> = {
   hp: 'HP',
-  hpMax: 'Max HP',
+  hpMax: 'HP MAX',
   rp: 'RP',
-  rpMax: 'Max RP',
+  rpMax: 'RP MAX',
   atk: 'ATK',
   def: 'DEF',
   matk: 'M.ATK',
@@ -143,6 +143,18 @@ function formatDropRates(dropRates: number[]) {
   return dropRates.map((rate) => `${rate}%`).join(', ');
 }
 
+function formatSignedPercent(value: number) {
+  return `${value > 0 ? '+' : ''}${formatNumber(value)}%`;
+}
+
+function formatCombatLabel(value: string) {
+  return value
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .split(' ')
+    .map(capitalize)
+    .join(' ');
+}
+
 function getLinkedItemDisplay(items: Record<string, Item> | undefined, itemId: string) {
   const linkedItem = items?.[itemId];
 
@@ -152,10 +164,78 @@ function getLinkedItemDisplay(items: Record<string, Item> | undefined, itemId: s
   };
 }
 
+function CraftedFromRecipeGrid({
+  ingredients,
+  items,
+}: {
+  ingredients: string[];
+  items?: Record<string, Item>;
+}) {
+  const slots = Array.from({ length: 6 }, (_, index) => ingredients[index] ?? null);
+
+  return (
+    <TooltipProvider delayDuration={120}>
+      <div data-testid="crafted-from-grid" className="grid grid-cols-3 gap-3">
+        {slots.map((ingredientId, index) => {
+          const linkedItem = ingredientId ? getLinkedItemDisplay(items, ingredientId) : undefined;
+
+          return (
+            <Tooltip key={`${ingredientId ?? 'empty'}-${index}`}>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  data-testid="crafted-from-slot"
+                  className="flex aspect-square min-h-20 flex-col items-center justify-center rounded-2xl border bg-background/70 p-2 text-center transition-colors hover:border-primary/40"
+                >
+                  {linkedItem?.imageSrc ? (
+                    <img src={linkedItem.imageSrc} alt={`${linkedItem.label} image`} className="h-9 w-9 object-contain" />
+                  ) : (
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-muted text-muted-foreground">
+                      <Box className="h-4 w-4" />
+                    </div>
+                  )}
+                  <span className="mt-2 line-clamp-2 text-[11px] font-medium leading-tight">
+                    {linkedItem?.label ?? 'Empty slot'}
+                  </span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent
+                side="top"
+                sideOffset={8}
+                collisionPadding={16}
+                arrowClassName="fill-popover"
+                className="max-w-xs rounded-xl border border-border bg-popover px-3 py-3 text-popover-foreground shadow-lg"
+              >
+                {linkedItem ? (
+                  <div className="space-y-1">
+                    <div className="font-semibold">{linkedItem.label}</div>
+                    <div className="text-xs text-muted-foreground">{formatName(ingredientId!)}</div>
+                  </div>
+                ) : (
+                  <div className="text-xs text-muted-foreground">Empty slot</div>
+                )}
+              </TooltipContent>
+            </Tooltip>
+          );
+        })}
+      </div>
+    </TooltipProvider>
+  );
+}
+
 function ItemDetailsContent({ item, items }: { item: Item; items?: Record<string, Item> }) {
   const stats = Object.entries(item.stats ?? {}).filter(([, value]) => value !== 0);
   const effects = item.effects ?? [];
   const crafts = item.craft ?? item.craftedFrom ?? [];
+  const healingEntries = Object.entries(item.healing ?? {}).filter(([, value]) => value !== 0);
+  const statMultiplierEntries = Object.entries(item.statMultipliers ?? {}).filter(([, value]) => value !== 0);
+  const combatEntries = [
+    ['Weapon Class', item.combat?.weaponClass],
+    ['Attack Type', item.combat?.attackType],
+    ['Element', item.combat?.element],
+    ['Damage Type', item.combat?.damageType],
+  ].filter(([, value]) => value);
+  const geometryEntries = Object.entries(item.combat?.geometry ?? {}).filter(([, value]) => value !== 0);
 
   return (
     <div className="space-y-6">
@@ -238,30 +318,80 @@ function ItemDetailsContent({ item, items }: { item: Item; items?: Record<string
         </DetailSection>
       ) : null}
 
+      {healingEntries.length > 0 ? (
+        <DetailSection title="Healing" icon={<Heart className="h-4 w-4 text-rose-300" />}>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {healingEntries.map(([key, value]) => (
+              <div key={key} className="flex items-center justify-between rounded-xl border bg-muted/30 px-4 py-3">
+                <span className="text-sm text-muted-foreground">{key === 'hpPercent' ? 'HP%' : 'RP%'}</span>
+                <span className="font-semibold">{formatSignedPercent(value as number)}</span>
+              </div>
+            ))}
+          </div>
+        </DetailSection>
+      ) : null}
+
+      {statMultiplierEntries.length > 0 ? (
+        <DetailSection title="Stat Multipliers" icon={<Sparkles className="h-4 w-4 text-amber-300" />}>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {statMultiplierEntries.map(([stat, value]) => (
+              <div key={stat} className="flex items-center justify-between rounded-xl border bg-muted/30 px-4 py-3">
+                <span className="text-sm text-muted-foreground">{itemStatLabels[stat] ?? stat.toUpperCase()}</span>
+                <span className="font-semibold">{formatSignedPercent(value as number)}</span>
+              </div>
+            ))}
+          </div>
+        </DetailSection>
+      ) : null}
+
+      {combatEntries.length > 0 || geometryEntries.length > 0 ? (
+        <DetailSection title="Combat Profile" icon={<Sword className="h-4 w-4 text-amber-300" />}>
+          <div className="space-y-4">
+            {combatEntries.length > 0 ? (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {combatEntries.map(([label, value]) => (
+                  <div key={label} className="flex items-center justify-between rounded-xl border bg-muted/30 px-4 py-3">
+                    <span className="text-sm text-muted-foreground">{label}</span>
+                    <span className="font-semibold">{formatCombatLabel(value as string)}</span>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+            {geometryEntries.length > 0 ? (
+              <div className="space-y-3">
+                <h4 className="text-sm font-semibold">Geometry</h4>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {geometryEntries.map(([key, value]) => (
+                    <div key={key} className="flex items-center justify-between rounded-xl border bg-muted/30 px-4 py-3">
+                      <span className="text-sm text-muted-foreground">{capitalize(key)}</span>
+                      <span className="font-semibold">{formatNumber(value)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </DetailSection>
+      ) : null}
+
       {crafts.length > 0 ? (
         <DetailSection title="Crafted From" icon={<Hammer className="h-4 w-4 text-blue-300" />}>
           <div className="space-y-3">
             {crafts.map((craft, index) => (
               <div key={`${craft.stationType}-${index}`} className="rounded-xl border bg-muted/30 p-4">
-                <div className="mb-3 flex items-center justify-between gap-3 border-b pb-2">
-                  <span className="font-semibold">{craft.station ?? craft.stationType}</span>
-                  <Badge variant="outline" className={getSemanticBadgeClass('neutral')}>
-                    Lv. {craft.level}
-                  </Badge>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {craft.ingredients.map((ingredient, ingredientIndex) => {
-                    const linkedItem = getLinkedItemDisplay(items, ingredient);
-                    return (
-                    <LinkedEntityToken
-                      key={`${ingredient}-${ingredientIndex}`}
-                      reference={{ type: 'item', id: ingredient }}
-                      label={linkedItem.label}
-                      imageSrc={linkedItem.imageSrc}
-                      icon={<Hammer className="h-3.5 w-3.5" />}
-                    />
-                    );
-                  })}
+                <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_13.5rem] lg:items-start">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between gap-3 border-b pb-2">
+                      <span className="font-semibold">{craft.station ?? craft.stationType}</span>
+                      <Badge variant="outline" className={getSemanticBadgeClass('neutral')}>
+                        Lv. {craft.level}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Recipe ingredients are shown in the same 3x2 crafter layout for quick inspection.
+                    </p>
+                  </div>
+                  <CraftedFromRecipeGrid ingredients={craft.ingredients} items={items} />
                 </div>
               </div>
             ))}
@@ -843,15 +973,12 @@ function MapDetailsContent({ region }: { region: ReturnType<typeof buildMapRegio
               </div>
               <div className="space-y-3 p-4">
                 {chests.map((chest) => (
-                  <div key={chest.id} className="flex items-start gap-3">
-                    <Checkbox id={chest.id} className="mt-1" />
-                    <label htmlFor={chest.id} className="cursor-pointer text-sm leading-none">
-                      <div className="flex items-center gap-2">
-                        <Box className="h-4 w-4 text-amber-300" />
-                        <span>{chest.itemName || 'Unknown Item'}</span>
-                      </div>
-                      {chest.notes ? <p className="ml-6 mt-1 text-sm text-muted-foreground italic">{`(${chest.notes})`}</p> : null}
-                    </label>
+                  <div key={chest.id} className="rounded-xl border bg-muted/30 p-3 text-sm">
+                    <div className="flex items-center gap-2 font-medium">
+                      <Box className="h-4 w-4 text-amber-300" />
+                      <span>{chest.itemName || 'Unknown Item'}</span>
+                    </div>
+                    {chest.notes ? <p className="mt-2 text-sm text-muted-foreground italic">{`(${chest.notes})`}</p> : null}
                   </div>
                 ))}
               </div>

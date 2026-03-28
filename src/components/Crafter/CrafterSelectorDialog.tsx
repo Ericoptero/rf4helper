@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Check, Search, Sparkles, Trash2 } from 'lucide-react';
+import { Check, Layers3, Lock, Search, Sparkles, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -42,8 +42,13 @@ type CrafterSelectorDialogProps = {
   selectedItemId?: string;
   selectedLevel?: number;
   canEditLevel: boolean;
+  canClear?: boolean;
   options: Item[];
   getItemPreviewData: (item?: Item) => CrafterItemPreviewData;
+  interactionMode?: 'free' | 'fixed' | 'category';
+  interactionLabel?: string;
+  interactionCallout?: string;
+  categoryLabel?: string;
   onOpenChange: (open: boolean) => void;
   onApply: (updates: { itemId?: string; level: number }) => void;
   onClear: () => void;
@@ -59,8 +64,13 @@ export function CrafterSelectorDialog({
   selectedItemId,
   selectedLevel = 1,
   canEditLevel,
+  canClear = true,
   options,
   getItemPreviewData,
+  interactionMode = 'free',
+  interactionLabel,
+  interactionCallout,
+  categoryLabel,
   onOpenChange,
   onApply,
   onClear,
@@ -70,6 +80,7 @@ export function CrafterSelectorDialog({
   const [draftLevel, setDraftLevel] = React.useState(selectedLevel);
   const [sortMode, setSortMode] = React.useState<CrafterSortMode>('name-asc');
   const optionsListRef = React.useRef<HTMLDivElement | null>(null);
+  const searchInputRef = React.useRef<HTMLInputElement | null>(null);
 
   React.useEffect(() => {
     if (!open) return;
@@ -78,6 +89,14 @@ export function CrafterSelectorDialog({
     setDraftLevel(selectedLevel);
     setSortMode('name-asc');
   }, [open, selectedItemId, selectedLevel]);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const frame = requestAnimationFrame(() => {
+      searchInputRef.current?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [open]);
 
   const visibleOptions = React.useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -134,7 +153,14 @@ export function CrafterSelectorDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="h-[85vh] max-h-[85vh] gap-0 overflow-hidden p-0" showCloseButton={false}>
+      <DialogContent
+        className="h-[85vh] max-h-[85vh] gap-0 overflow-hidden p-0"
+        showCloseButton={false}
+        onOpenAutoFocus={(event) => {
+          event.preventDefault();
+          searchInputRef.current?.focus();
+        }}
+      >
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
@@ -164,9 +190,9 @@ export function CrafterSelectorDialog({
           <div className="min-h-0 flex-1 overflow-hidden px-6 py-5">
             <div className="grid h-full min-h-0 gap-5 lg:grid-cols-[minmax(0,1fr)_260px]">
               <div className="flex min-h-0 flex-col gap-4">
-                <div className="flex min-h-0 flex-col gap-3">
+                <div className="grid min-h-0 gap-3">
                   <Select value={sortMode} onValueChange={(value) => setSortMode(value as CrafterSortMode)}>
-                    <SelectTrigger size="lg" aria-label="Sort items" className="h-11 min-w-[11rem] rounded-xl">
+                    <SelectTrigger size="lg" aria-label="Sort items" className="h-11 w-full rounded-xl">
                       <SelectValue placeholder="Sort items" />
                     </SelectTrigger>
                     <SelectContent position="popper">
@@ -180,9 +206,11 @@ export function CrafterSelectorDialog({
                   <div className="relative min-w-0 flex-1">
                     <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
+                      ref={searchInputRef}
                       type="search"
                       aria-label="Search items"
                       placeholder="Search items"
+                      tabIndex={0}
                       value={query}
                       onChange={(event) => setQuery(event.target.value)}
                       className="h-11 rounded-xl pl-9"
@@ -269,6 +297,24 @@ export function CrafterSelectorDialog({
 
               <div className="min-h-0 rounded-3xl border bg-muted/30">
                 <div className="h-full min-h-0 space-y-4 overflow-y-auto p-4">
+                  {interactionMode !== 'free' ? (
+                    <div
+                      className={cn(
+                        'rounded-2xl border px-3 py-3 text-sm',
+                        interactionMode === 'category' ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border bg-background/80 text-muted-foreground',
+                      )}
+                    >
+                      <div className="flex items-center gap-2 font-semibold">
+                        {interactionMode === 'category' ? <Layers3 className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
+                        <span>{interactionLabel ?? (interactionMode === 'category' ? 'Choose material' : 'Level only')}</span>
+                      </div>
+                      {interactionCallout ? <p className="mt-2 leading-5">{interactionCallout}</p> : null}
+                      {interactionMode === 'category' && categoryLabel ? (
+                        <p className="mt-1 text-xs uppercase tracking-[0.14em]">{categoryLabel}</p>
+                      ) : null}
+                    </div>
+                  ) : null}
+
                   <div>
                     <div className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Selected Item</div>
                     <div className="mt-2 text-lg font-semibold">{previewItem?.name ?? 'Empty slot'}</div>
@@ -377,17 +423,19 @@ export function CrafterSelectorDialog({
           </div>
 
           <DialogFooter className="shrink-0 bg-background">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                onClear();
-                onOpenChange(false);
-              }}
-            >
-              <Trash2 className="mr-1.5 h-4 w-4" />
-              Clear Slot
-            </Button>
+            {canClear ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  onClear();
+                  onOpenChange(false);
+                }}
+              >
+                <Trash2 className="mr-1.5 h-4 w-4" />
+                Clear Slot
+              </Button>
+            ) : null}
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>

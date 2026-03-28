@@ -1,3 +1,4 @@
+import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
 import type {
   CrafterBonusSummary,
   CrafterData,
@@ -13,6 +14,7 @@ import type {
   CrafterWarning,
   Item,
 } from './schemas';
+import { itemMatchesCrafterSlot } from './crafterData';
 
 export type CrafterBuildState = CrafterDefaults;
 
@@ -117,6 +119,34 @@ export type CrafterCalculation = {
   };
   allEffects: string[];
   craftSteps: string[];
+};
+
+type CompactSelection = {
+  i?: string;
+  l?: number;
+};
+
+type CompactEquipmentSlot = {
+  a?: string;
+  r?: Record<string, CompactSelection>;
+  h?: Record<string, CompactSelection>;
+  u?: Record<string, CompactSelection>;
+};
+
+type CompactFoodSlot = {
+  b?: string;
+  r?: Record<string, CompactSelection>;
+};
+
+type CompactCrafterBuild = {
+  v: 2;
+  weapon?: CompactEquipmentSlot;
+  armor?: CompactEquipmentSlot;
+  headgear?: CompactEquipmentSlot;
+  shield?: CompactEquipmentSlot;
+  accessory?: CompactEquipmentSlot;
+  shoes?: CompactEquipmentSlot;
+  food?: CompactFoodSlot;
 };
 
 type StaffChargeState = {
@@ -301,6 +331,10 @@ function padSelections(
   return Array.from({ length: count }, (_, index) => cloneSelection(selections?.[index]));
 }
 
+function hasExplicitSelection(selection: CrafterMaterialSelection | undefined) {
+  return selection?.itemId != null || (selection?.level ?? 1) !== 1;
+}
+
 function getAppearanceId(slotKey: CrafterSlotKey, build: CrafterBuildState) {
   return build[slotKey].appearanceId;
 }
@@ -321,17 +355,76 @@ function getFoodRecipeDefinition(baseId: string | undefined, data: CrafterData) 
 
 function applyDefaultRecipeSelections(
   current: CrafterMaterialSelection[] | undefined,
-  defaults: (string | null)[] | undefined,
+  defaults: string[] | undefined,
   slotCount: number,
 ): CrafterMaterialSelection[] {
   const padded = padSelections(current, slotCount);
   return padded.map((selection, index) => {
     const rawItemId = selection.itemId;
+    const defaultItemId = defaults?.[index] ?? undefined;
+    const hasExplicitOverride = hasExplicitSelection(selection);
+
     return {
-      itemId: rawItemId === '' ? undefined : rawItemId ?? defaults?.[index] ?? undefined,
-      level: rawItemId && rawItemId !== '' ? selection.level : rawItemId === '' ? 1 : defaults?.[index] ? 10 : selection.level,
+      itemId: rawItemId === '' ? undefined : rawItemId ?? defaultItemId,
+      level:
+        rawItemId && rawItemId !== ''
+          ? normalizeMaterialLevel(selection.level)
+          : rawItemId === ''
+            ? 1
+            : defaultItemId
+              ? hasExplicitOverride
+                ? normalizeMaterialLevel(selection.level)
+                : 10
+              : normalizeMaterialLevel(selection.level),
     };
   });
+}
+
+function compactSelection(selection: CrafterMaterialSelection | undefined) {
+  if (!selection || !hasExplicitSelection(selection)) return undefined;
+
+  const entry: CompactSelection = {};
+  if (selection.itemId !== undefined) {
+    entry.i = selection.itemId;
+  }
+  const defaultLevel = selection.itemId ? 10 : 1;
+  if (normalizeMaterialLevel(selection.level) !== defaultLevel) {
+    entry.l = normalizeMaterialLevel(selection.level);
+  }
+  return entry;
+}
+
+function expandSelection(selection: CompactSelection | undefined) {
+  if (!selection) return undefined;
+  return {
+    itemId: selection.i,
+    level: normalizeMaterialLevel(selection.l ?? (selection.i ? 10 : 1)),
+  } satisfies CrafterMaterialSelection;
+}
+
+function compactSelectionList(selections: CrafterMaterialSelection[] | undefined) {
+  const entries = Object.fromEntries(
+    (selections ?? [])
+      .map((selection, index) => [String(index), compactSelection(selection)] as const)
+      .filter(([, entry]) => Boolean(entry)),
+  ) as Record<string, CompactSelection>;
+  return Object.keys(entries).length > 0 ? entries : undefined;
+}
+
+function expandSelectionList(
+  compactSelections: Record<string, CompactSelection> | undefined,
+  count: number,
+) {
+  const next = padSelections(undefined, count);
+  if (!compactSelections) return next;
+
+  for (const [index, entry] of Object.entries(compactSelections)) {
+    const parsedIndex = Number(index);
+    if (!Number.isInteger(parsedIndex) || parsedIndex < 0 || parsedIndex >= count) continue;
+    next[parsedIndex] = expandSelection(entry) ?? next[parsedIndex];
+  }
+
+  return next;
 }
 
 export function createDefaultCrafterBuild(data: CrafterData): CrafterBuildState {
@@ -360,42 +453,29 @@ export function deserializeCrafterBuild(
   if (!serialized) return fallback;
 
   try {
-    let parsed: Partial<CrafterBuildState> | undefined;
-    let candidate = serialized;
-    for (let attempt = 0; attempt < 3 && !parsed; attempt += 1) {
-      try {
-        parsed = JSON.parse(candidate) as Partial<CrafterBuildState>;
-      } catch {
-        candidate = decodeURIComponent(candidate);
-      }
-    }
-    if (!parsed) return fallback;
-
-    const merged = structuredClone(fallback);
     const slotConfigByKey = getSlotConfigByKey(data);
-    const rawParsed = parsed as Record<string, unknown>;
+    const decompressed = decompressFromEncodedURIComponent(serialized);
+    if (!decompressed) return fallback;
+
+    const parsed = JSON.parse(decompressed) as CompactCrafterBuild;
+    if (parsed.v !== 2) return fallback;
+    const merged = structuredClone(fallback);
 
     for (const slotKey of SLOT_KEYS) {
       const slotConfig = slotConfigByKey[slotKey];
-      const incoming = parsed[slotKey] as
-        | (Partial<CrafterBuildState[CrafterSlotKey]> & { appearanceId?: string })
-        | undefined;
+      const incoming = parsed[slotKey];
       if (!incoming) continue;
 
-      merged[slotKey].appearanceId = incoming.appearanceId ?? incoming.baseId ?? merged[slotKey].appearanceId;
-      merged[slotKey].baseId = incoming.appearanceId ? incoming.baseId ?? merged[slotKey].baseId : undefined;
-
-      merged[slotKey].recipe = padSelections(incoming.recipe, slotConfig.recipeSlots);
-      merged[slotKey].inherits = padSelections(incoming.inherits, slotConfig.inheritSlots);
-      merged[slotKey].upgrades = padSelections(incoming.upgrades, slotConfig.upgradeSlots);
+      merged[slotKey].appearanceId = incoming.a;
+      merged[slotKey].baseId = undefined;
+      merged[slotKey].recipe = expandSelectionList(incoming.r, slotConfig.recipeSlots);
+      merged[slotKey].inherits = expandSelectionList(incoming.h, slotConfig.inheritSlots);
+      merged[slotKey].upgrades = expandSelectionList(incoming.u, slotConfig.upgradeSlots);
     }
 
     if (parsed.food) {
-      const incomingFood = rawParsed.food as
-        | (Partial<CrafterBuildState['food']> & { ingredients?: CrafterMaterialSelection[] })
-        | undefined;
-      merged.food.baseId = parsed.food.baseId ?? merged.food.baseId;
-      merged.food.recipe = padSelections(incomingFood?.recipe ?? incomingFood?.ingredients, 6);
+      merged.food.baseId = parsed.food.b;
+      merged.food.recipe = expandSelectionList(parsed.food.r, 6);
     }
 
     return merged;
@@ -404,8 +484,38 @@ export function deserializeCrafterBuild(
   }
 }
 
-export function serializeCrafterBuild(build: CrafterBuildState): string {
-  return JSON.stringify(build);
+export function serializeCrafterBuild(build: CrafterBuildState, data: CrafterData): string {
+  const slotConfigByKey = getSlotConfigByKey(data);
+  const compact: CompactCrafterBuild = { v: 2 };
+
+  for (const slotKey of SLOT_KEYS) {
+    const slotConfig = slotConfigByKey[slotKey];
+    const slot = build[slotKey];
+    const compactSlot: CompactEquipmentSlot = {
+      a: slot.appearanceId,
+      r: compactSelectionList(slot.recipe?.slice(0, slotConfig.recipeSlots)),
+      h: compactSelectionList(slot.inherits?.slice(0, slotConfig.inheritSlots)),
+      u: compactSelectionList(slot.upgrades?.slice(0, slotConfig.upgradeSlots)),
+    };
+
+    if (compactSlot.a || compactSlot.r || compactSlot.h || compactSlot.u) {
+      compact[slotKey] = compactSlot;
+    }
+  }
+
+  const compactFood: CompactFoodSlot = {
+    b: build.food.baseId,
+    r: compactSelectionList(build.food.recipe?.slice(0, 6)),
+  };
+  if (compactFood.b || compactFood.r) {
+    compact.food = compactFood;
+  }
+
+  if (Object.keys(compact).length === 1) {
+    return '';
+  }
+
+  return compressToEncodedURIComponent(JSON.stringify(compact));
 }
 
 function getTier(value: number, tiers: CrafterData['levelBonusTiers']): CrafterBonusSummary {
@@ -486,7 +596,6 @@ function getMaterialRarity(
 ) {
   if (!itemId) return 0;
   if (isCrafterRarityPlaceholder(itemId)) return 15;
-  if (itemId === 'item-turnip-heaven') return 0;
   return getMaterialPayload(slotKey, itemId, data)?.rarity ?? 0;
 }
 
@@ -494,13 +603,7 @@ function matchesSlotCraft(
   item: Item | undefined,
   slotConfig: CrafterSlotConfig,
 ) {
-  return Boolean(
-    item?.craft?.some(
-      (craft) =>
-        craft.stationType === slotConfig.stationType &&
-        (slotConfig.stations.length === 0 || slotConfig.stations.includes(craft.station ?? '')),
-    ),
-  );
+  return itemMatchesCrafterSlot(item, slotConfig);
 }
 
 function getDerivedRecipeBase(

@@ -37,7 +37,6 @@ const successCases = [
   ['rune abilities', fetchRuneAbilities, 'runeAbilities.json'],
   ['skills', fetchSkills, 'skills.json'],
   ['trophies', fetchTrophies, 'trophies.json'],
-  ['crafter', fetchCrafterData, 'crafter.json'],
 ] as const;
 
 afterEach(() => {
@@ -97,6 +96,29 @@ describe('typed API fetchers', () => {
     ]);
   });
 
+  it('builds crafter runtime data from items and crafter config', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => readPublicJson('items.json'),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => readPublicJson('crafter.json'),
+      });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    const result = await fetchCrafterData();
+
+    expect(result.slotConfigs.find((slot) => slot.key === 'weapon')?.label).toBe('Weapon');
+    expect(result.specialMaterialRules.length).toBeGreaterThan(0);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock.mock.calls[0]?.[0]).toContain('/data/items.json');
+    expect(fetchMock.mock.calls[1]?.[0]).toContain('/data/crafter.json');
+  });
+
   it.each(successCases)('throws when %s fetching fails', async (_label, fetcher, fileName) => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
       ok: false,
@@ -104,5 +126,22 @@ describe('typed API fetchers', () => {
     }));
 
     await expect(fetcher()).rejects.toThrow(`/data/${fileName}`);
+  });
+
+  it('throws when crafter fetching fails', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => readPublicJson('items.json'),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({}),
+      });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(fetchCrafterData()).rejects.toThrow('/data/crafter.json');
   });
 });

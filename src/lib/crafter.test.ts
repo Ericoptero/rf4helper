@@ -8,8 +8,10 @@ import {
   CRAFTER_RARITY_PLACEHOLDER_ID,
   createDefaultCrafterBuild,
   deserializeCrafterBuild,
+  serializeCrafterBuild,
 } from './crafter';
-import { CrafterDataSchema, ItemSchema, type CrafterData, type CrafterDefaults, type Item } from './schemas';
+import { buildCrafterData } from './crafterData';
+import { CrafterConfigSchema, ItemSchema, type CrafterConfig, type CrafterDefaults, type Item } from './schemas';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = path.resolve(dirname, '../../public/data');
@@ -17,9 +19,10 @@ const dataDir = path.resolve(dirname, '../../public/data');
 const items = z
   .record(z.string(), ItemSchema)
   .parse(JSON.parse(readFileSync(path.join(dataDir, 'items.json'), 'utf8'))) as Record<string, Item>;
-const crafterData = CrafterDataSchema.parse(
+const crafterConfig = CrafterConfigSchema.parse(
   JSON.parse(readFileSync(path.join(dataDir, 'crafter.json'), 'utf8')),
-) as CrafterData;
+) as CrafterConfig;
+const crafterData = buildCrafterData(items, crafterConfig);
 
 function selection(itemId: string, level = 10) {
   return { itemId, level };
@@ -43,39 +46,30 @@ describe('crafter engine parity', () => {
     expect(build.food.recipe.every((slot) => slot.itemId == null && slot.level === 1)).toBe(true);
   });
 
-  it('migrates legacy serialized builds into appearance-driven slots and seeded recipes', () => {
-    const result = calculateCrafterBuild(
-      deserializeCrafterBuild(
-      JSON.stringify({
-        weapon: {
-          baseId: 'item-broadsword',
-          recipe: [{ itemId: 'item-claymore', level: 8 }],
-          upgrades: [{ itemId: 'item-firewyrm-scale', level: 10 }],
-        },
-        accessory: {
-          appearanceId: 'item-strange-pendant',
-        },
-        food: {
-          baseId: 'item-glitter-sashimi',
-          ingredients: [{ itemId: 'item-golden-turnip', level: 8 }],
-        },
-      }),
-        crafterData,
-      ),
-      items,
-      crafterData,
-    );
+  it('round-trips compressed builds and rejects the retired raw JSON format', () => {
+    const build = createDefaultCrafterBuild(crafterData);
+    build.weapon.appearanceId = 'item-broadsword';
+    build.weapon.recipe[0] = selection('item-minerals', 8);
+    build.weapon.upgrades[0] = selection('item-firewyrm-scale');
+    build.accessory.appearanceId = 'item-strange-pendant';
+    build.food.baseId = 'item-glitter-sashimi';
+    build.food.recipe[0] = selection('item-golden-turnip', 8);
 
-    expect(result.build.weapon.appearanceId).toBe('item-broadsword');
-    expect(result.build.weapon.baseId).toBeUndefined();
-    expect(result.build.weapon.recipe[0]?.itemId).toBe('item-claymore');
-    expect(result.build.weapon.recipe).toHaveLength(6);
-    expect(result.build.weapon.upgrades[0]?.itemId).toBe('item-firewyrm-scale');
-    expect(result.build.accessory.appearanceId).toBe('item-strange-pendant');
-    expect(result.build.accessory.baseId).toBeUndefined();
-    expect(result.build.food.baseId).toBe('item-glitter-sashimi');
-    expect(result.build.food.recipe[0]?.itemId).toBe('item-golden-turnip');
-    expect(result.build.food.recipe[0]?.level).toBe(8);
+    const serialized = serializeCrafterBuild(build, crafterData);
+    const restored = deserializeCrafterBuild(serialized, crafterData);
+    const rejectedLegacy = deserializeCrafterBuild(JSON.stringify(build), crafterData);
+
+    expect(serialized).not.toContain('{');
+    expect(serialized).not.toContain('"appearanceId"');
+    expect(restored.weapon.appearanceId).toBe('item-broadsword');
+    expect(restored.weapon.recipe[0]?.itemId).toBe('item-minerals');
+    expect(restored.weapon.recipe[0]?.level).toBe(8);
+    expect(restored.weapon.upgrades[0]?.itemId).toBe('item-firewyrm-scale');
+    expect(restored.accessory.appearanceId).toBe('item-strange-pendant');
+    expect(restored.food.baseId).toBe('item-glitter-sashimi');
+    expect(restored.food.recipe[0]?.itemId).toBe('item-golden-turnip');
+    expect(restored.food.recipe[0]?.level).toBe(8);
+    expect(rejectedLegacy).toEqual(createDefaultCrafterBuild(crafterData));
   });
 
   it('keeps the workbook sample structurally valid under the restored appearance/base model', () => {
@@ -503,10 +497,10 @@ describe('crafter engine parity', () => {
     expect(result.build.weapon.baseId).toBe('item-broadsword');
     expect(result.slotResults.weapon.appearanceName).toBe('Broadsword');
     expect(result.slotResults.weapon.baseName).toBe('Broadsword');
-    expect(result.slotResults.weapon.recipeIngredients).toContain('Turnip Heaven');
+    expect(result.slotResults.weapon.recipeIngredients).toEqual(['Broadsword']);
   });
 
-  it('removes the rarity 15 shortcut from Turnip Heaven and keeps it as a normal selectable item', () => {
+  it('keeps Turnip Heaven as a normal selectable item with its real rarity', () => {
     const build = createDefaultCrafterBuild(crafterData);
     build.weapon.appearanceId = 'item-broadsword';
     build.weapon.recipe[0] = selection('item-broadsword');
@@ -519,7 +513,7 @@ describe('crafter engine parity', () => {
 
     expect(turnipContribution).toBeDefined();
     expect(turnipContribution?.itemName).toBe('Turnip Heaven');
-    expect(turnipContribution?.rarity ?? 0).toBe(0);
+    expect(turnipContribution?.rarity ?? 0).toBe(15);
   });
 
   it('adds a visible placeholder that contributes exactly 15 rarity and no other effects', () => {

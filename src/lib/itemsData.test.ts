@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import type { Item } from './schemas';
+import { CrafterConfigSchema, type Item } from './schemas';
 
 type NormalizedEffect =
   | { type: 'cure'; targets: string[] }
@@ -16,6 +16,9 @@ type NormalizedItem = Item & {
 const items = JSON.parse(
   readFileSync(resolve(process.cwd(), 'public/data/items.json'), 'utf8')
 ) as Record<string, NormalizedItem>;
+const crafterConfig = CrafterConfigSchema.parse(
+  JSON.parse(readFileSync(resolve(process.cwd(), 'public/data/crafter.json'), 'utf8'))
+);
 
 function sortStrings(values: Iterable<string>) {
   return [...values].sort((a, b) => a.localeCompare(b));
@@ -246,5 +249,41 @@ describe('items.json recipe normalization', () => {
         expect(disallowedKeys.has(key), `${itemId} still uses legacy stats key ${key}`).toBe(false);
       }
     }
+  });
+
+  it('promotes crafter-facing item metadata into items.json', () => {
+    expect(items['item-broadsword']?.combat).toMatchObject({
+      weaponClass: 'Short Sword',
+      attackType: 'Short Sword',
+      damageType: 'Physical',
+      element: 'None',
+    });
+
+    expect(items['item-glitter-sashimi']?.healing?.hpPercent).toBeCloseTo(160.9863, 4);
+    expect(items['item-glitter-sashimi']?.statMultipliers?.str).toBeCloseTo(17.9932, 4);
+    expect(items['item-object-x']?.crafter?.specialMaterialRule?.behavior).toBe('invert');
+    expect(items['item-fire-crystal']?.crafter?.staff?.chargeAttack?.lv1).toBe('Fire Spread Lv1');
+  });
+
+  it('keeps dual-role crafter overrides on items that have more than one equipment identity', () => {
+    expect(items['item-gloves']?.stats).toEqual({
+      atk: 40,
+      def: 42,
+      diz: 2,
+      stun: 30,
+    });
+    expect(items['item-gloves']?.crafter?.equipment?.weapon?.stats?.atk).toBe(172);
+  });
+
+  it('stores only global crafter config in crafter.json', () => {
+    expect(crafterConfig.slotConfigs.length).toBeGreaterThan(0);
+    expect(crafterConfig.defaults.weapon.recipe).toEqual([]);
+    expect('recipes' in crafterConfig).toBe(false);
+    expect('stats' in crafterConfig).toBe(false);
+    expect('materials' in crafterConfig).toBe(false);
+    expect('food' in crafterConfig).toBe(false);
+    expect('bonusEffects' in crafterConfig).toBe(false);
+    expect('staff' in crafterConfig).toBe(false);
+    expect('specialMaterialRules' in crafterConfig).toBe(false);
   });
 });

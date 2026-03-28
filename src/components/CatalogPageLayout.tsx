@@ -400,56 +400,62 @@ export function CatalogPageLayout<T>({
       <div className="min-w-0 rounded-3xl border bg-card/90 p-4 shadow-sm">
         <ScrollArea className="h-[calc(100vh-15rem)] min-h-[28rem] pr-2" viewportRef={viewportRef}>
           {viewMode === 'table' && tableColumns && tableColumns.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  {tableColumns.map((column) => (
-                    <TableHead key={column.key}>{column.header}</TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {visibleItems.map((item) => (
-                  <TableRow
-                    key={getItemKey(item)}
-                    className="cursor-pointer"
-                    onClick={() => onOpenItem(item)}
-                  >
+            <div className="px-3 py-3">
+              <Table>
+                <TableHeader>
+                  <TableRow>
                     {tableColumns.map((column) => (
-                      <TableCell key={column.key} className={column.className}>
-                        {column.cell(item)}
-                      </TableCell>
+                      <TableHead key={column.key}>{column.header}</TableHead>
                     ))}
                   </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {visibleItems.map((item) => (
+                    <TableRow
+                      key={getItemKey(item)}
+                      className="cursor-pointer"
+                      onClick={() => onOpenItem(item)}
+                    >
+                      {tableColumns.map((column) => (
+                        <TableCell key={column.key} className={column.className}>
+                          {column.cell(item)}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                  {hasMore ? (
+                    <TableRow ref={sentinelRef as React.Ref<HTMLTableRowElement>} data-testid="catalog-infinite-scroll-sentinel" aria-hidden="true">
+                      <TableCell colSpan={tableColumns.length} className="h-1 p-0" />
+                    </TableRow>
+                  ) : null}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div className="px-3 py-3">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
+                {visibleItems.map((item) => (
+                  <div key={getItemKey(item)} className={cn('min-w-0')}>
+                    {renderCard(item, () => onOpenItem(item))}
+                  </div>
                 ))}
                 {hasMore ? (
-                  <TableRow ref={sentinelRef as React.Ref<HTMLTableRowElement>} data-testid="catalog-infinite-scroll-sentinel" aria-hidden="true">
-                    <TableCell colSpan={tableColumns.length} className="h-1 p-0" />
-                  </TableRow>
+                  <div
+                    ref={sentinelRef as React.Ref<HTMLDivElement>}
+                    data-testid="catalog-infinite-scroll-sentinel"
+                    className="col-span-full h-1 w-full"
+                    aria-hidden="true"
+                  />
                 ) : null}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
-              {visibleItems.map((item) => (
-                <div key={getItemKey(item)} className={cn('min-w-0')}>
-                  {renderCard(item, () => onOpenItem(item))}
-                </div>
-              ))}
-              {hasMore ? (
-                <div
-                  ref={sentinelRef as React.Ref<HTMLDivElement>}
-                  data-testid="catalog-infinite-scroll-sentinel"
-                  className="col-span-full h-1 w-full"
-                  aria-hidden="true"
-                />
-              ) : null}
+              </div>
             </div>
           )}
 
           {filteredAndSortedData.length === 0 ? (
-            <div className="rounded-2xl border border-dashed px-6 py-20 text-center text-muted-foreground">
-              {emptyState}
+            <div className="px-3 py-3">
+              <div className="rounded-2xl border border-dashed px-6 py-20 text-center text-muted-foreground">
+                {emptyState}
+              </div>
             </div>
           ) : null}
         </ScrollArea>

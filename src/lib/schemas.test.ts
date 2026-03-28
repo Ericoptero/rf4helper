@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  CrafterConfigSchema,
   ItemSchema,
   RecipeSchema,
   CharacterSchema,
@@ -71,6 +72,85 @@ describe('Zod Schemas', () => {
       expect(result.success).toBe(true);
     });
 
+    it('parses crafter-enriched item fields', () => {
+      const validItem = {
+        id: 'item-training-hammer',
+        name: 'Training Hammer',
+        type: 'Forge',
+        stats: {
+          atk: 20,
+          crit: 10,
+        },
+        effects: [
+          { type: 'resistance', target: 'fire', value: 25 },
+          { type: 'inflict', target: 'poison', trigger: 'attack', chance: 30 },
+        ],
+        healing: {
+          hpPercent: 160.9863,
+          rpPercent: 25,
+        },
+        statMultipliers: {
+          str: 17.9932,
+          rpMax: 4.9805,
+        },
+        combat: {
+          weaponClass: 'Axe/Hammer',
+          attackType: 'Hammer',
+          element: 'None',
+          damageType: 'Physical',
+          geometry: {
+            depth: 1.5,
+            length: 2.5,
+            width: 1,
+          },
+        },
+        crafter: {
+          equipment: {
+            weapon: {
+              stats: {
+                atk: 172,
+              },
+            },
+          },
+          material: {
+            weapon: {
+              rarity: 7,
+            },
+            armor: {
+              rarity: 3,
+            },
+            food: {
+              status: {
+                overwrite: 1,
+              },
+            },
+          },
+          specialMaterialRule: {
+            behavior: 'lightOre',
+          },
+          bonusEffect: {
+            kind: 'accessory',
+          },
+          staff: {
+            chargeAttack: {
+              lv1: 'Fire Spread Lv1',
+              lv2: 'Fire Spread Lv2',
+              lv3: 'Fire Spread Lv3',
+              speed: 1,
+              rarity: 7,
+            },
+            base: {
+              itemLevel: 2,
+              maxCharge: 1,
+            },
+          },
+        },
+      };
+
+      const result = ItemSchema.safeParse(validItem);
+      expect(result.success).toBe(true);
+    });
+
     it('fails when stats contain unsupported legacy keys', () => {
       const invalidItem = {
         id: 'item-bad',
@@ -103,6 +183,50 @@ describe('Zod Schemas', () => {
         ingredients: ['item-iron'],
       };
       const result = RecipeSchema.safeParse(validRecipe);
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe('CrafterConfigSchema', () => {
+    it('parses the reduced crafter config without item-specific tables', () => {
+      const result = CrafterConfigSchema.safeParse({
+        schemaVersion: 2,
+        slotConfigs: [
+          {
+            key: 'weapon',
+            label: 'Weapon',
+            stationType: 'Forging',
+            stations: ['Short Sword', 'Axe/Hammer'],
+            supportsAppearance: false,
+            supportsBaseSelection: true,
+            recipeSlots: 6,
+            inheritSlots: 3,
+            upgradeSlots: 9,
+            carrierId: null,
+            levelBonusTargets: ['atk', 'matk'],
+            rarityBonusTarget: 'weapon',
+          },
+        ],
+        defaults: {
+          weapon: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+          armor: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+          headgear: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+          shield: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+          accessory: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+          shoes: { appearanceId: undefined, baseId: undefined, recipe: [], inherits: [], upgrades: [] },
+          food: { baseId: undefined, recipe: [] },
+        },
+        weaponClassByStation: { 'Axe/Hammer': 'Axe/Hammer' },
+        shieldCoverageByWeaponClass: { 'Axe/Hammer': 'none' },
+        starterWeaponByClass: { 'Axe/Hammer': 'item-training-hammer' },
+        chargeAttackByWeaponClass: {},
+        staffChargeByCrystalId: {},
+        levelBonusTiers: [],
+        rarityBonusTiers: [],
+        foodOverrides: {},
+        fixtures: {},
+      });
+
       expect(result.success).toBe(true);
     });
   });
