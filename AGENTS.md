@@ -22,6 +22,7 @@ The app is constructed with the latest modern bleeding-edge tooling and heavily 
 
 - **Testing Tools**: Unit Testing integration handles all components and queries utilizing `Vitest`, `React Testing Library`, and `Mock Service Worker (MSW)`.
 - **Constraint**: No component, hook, or utility goes live before its corresponding test suite is passing in the `jsdom` environment.
+- **Post-Change Validation**: After any repository changes, always run `npm run ci` and fix failures until it passes. Once `npm run ci` is green and fix any reported issues until it completes cleanly.
 
 ## Folder Directory Mapping
 1. `src/hooks/queries.ts` → TanStack Query hooks for all 12 data types with `staleTime: Infinity`.

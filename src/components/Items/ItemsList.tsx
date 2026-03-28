@@ -12,6 +12,7 @@ import {
 import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/DetailDrawerContext';
 import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
+import { hasDisplayEffects } from '@/lib/itemPresentation';
 import type { Item } from '@/lib/schemas';
 import type { CatalogOption } from '@/server/catalogQueries';
 
@@ -179,7 +180,7 @@ function ItemsCatalog({
       label: 'Effects',
       control: 'boolean-toggle',
       options: [{ label: 'Has effects', value: 'yes' }],
-      predicate: (item, value) => value !== 'yes' || Boolean(item.effects?.length),
+      predicate: (item, value) => value !== 'yes' || hasDisplayEffects(item),
     },
   ];
 

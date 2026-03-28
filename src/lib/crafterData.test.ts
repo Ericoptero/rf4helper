@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { buildCrafterData } from './crafterData';
 import type { CrafterConfig, Item } from './schemas';
 
-function materialPayload(overrides: Partial<NonNullable<NonNullable<Item['crafter']>['material']>['weapon']> = {}) {
+function equipmentPayload(
+  overrides: Partial<NonNullable<NonNullable<Item['crafter']>['equipment']>['weapon']> = {},
+) {
   return {
     stats: {},
     weaponClass: undefined,
@@ -13,7 +15,6 @@ function materialPayload(overrides: Partial<NonNullable<NonNullable<Item['crafte
     resistances: {},
     statusAttacks: {},
     geometry: {},
-    rarity: 0,
     bonusType: undefined,
     bonusType2: undefined,
     ...overrides,
@@ -170,8 +171,8 @@ const items: Record<string, Item> = {
     rarityPoints: 1,
     crafter: {
       material: {
-        weapon: materialPayload({ rarity: 1 }),
-        armor: materialPayload({ rarity: 1 }),
+        weapon: equipmentPayload(),
+        armor: equipmentPayload(),
       },
     },
   },
@@ -182,8 +183,8 @@ const items: Record<string, Item> = {
     rarityPoints: 2,
     crafter: {
       material: {
-        weapon: materialPayload({ rarity: 2 }),
-        armor: materialPayload({ rarity: 2 }),
+        weapon: equipmentPayload(),
+        armor: equipmentPayload(),
       },
     },
   },
@@ -191,6 +192,7 @@ const items: Record<string, Item> = {
     id: 'item-training-sword',
     name: 'Training Sword',
     type: 'Forge',
+    rarityPoints: 4,
     buy: 100,
     sell: 10,
     craft: [
@@ -202,18 +204,16 @@ const items: Record<string, Item> = {
         ingredients: ['item-minerals'],
       },
     ],
-    stats: {
-      atk: 8,
-    },
-    combat: {
-      weaponClass: 'Short Sword',
-      attackType: 'Short Sword',
-      element: 'None',
-      damageType: 'Physical',
-      geometry: {
-        depth: 1,
-        length: 1.5,
-        width: 0.8,
+    crafter: {
+      equipment: {
+        weapon: equipmentPayload({
+          stats: { atk: 8 },
+          weaponClass: 'Short Sword',
+          attackType: 'Short Sword',
+          element: 'None',
+          damageType: 'Physical',
+          geometry: { depth: 1, length: 1.5, width: 0.8 },
+        }),
       },
     },
   },
@@ -221,6 +221,7 @@ const items: Record<string, Item> = {
     id: 'item-training-hammer',
     name: 'Training Hammer',
     type: 'Forge',
+    rarityPoints: 5,
     buy: 100,
     sell: 10,
     craft: [
@@ -232,23 +233,28 @@ const items: Record<string, Item> = {
         ingredients: ['item-iron'],
       },
     ],
-    stats: {
-      atk: 20,
-      crit: 10,
-    },
-    effects: [
-      { type: 'resistance', target: 'fire', value: 25 },
-      { type: 'inflict', target: 'poison', trigger: 'attack', chance: 30 },
-    ],
-    combat: {
-      weaponClass: 'Axe/Hammer',
-      attackType: 'Hammer',
-      element: 'None',
-      damageType: 'Physical',
-      geometry: {
-        depth: 1.5,
-        length: 2.5,
-        width: 1,
+    crafter: {
+      equipment: {
+        weapon: equipmentPayload({
+          stats: {
+            atk: 20,
+            crit: 0.1,
+          },
+          resistances: {
+            fire: 0.25,
+          },
+          statusAttacks: {
+            psn: 0.3,
+          },
+          attackType: 'Hammer',
+          damageType: 'Physical',
+          element: 'None',
+          geometry: {
+            depth: 1.5,
+            length: 2.5,
+            width: 1,
+          },
+        }),
       },
     },
   },
@@ -274,18 +280,17 @@ const items: Record<string, Item> = {
         ingredients: ['item-pink-turnip'],
       },
     ],
-    stats: {
-      hp: 250,
-      rp: 100,
-      str: 5,
-      vit: 3,
-      int: 5,
+    crafter: {
+      foodBase: foodPayload({
+        additive: { hp: 250, rp: 100, str: 5, vit: 3, int: 5 },
+      }),
     },
   },
   'item-glitter-sashimi': {
     id: 'item-glitter-sashimi',
     name: 'Glitter Sashimi',
     type: 'Dish',
+    rarityPoints: 15,
     buy: 100,
     sell: 10,
     craft: [
@@ -297,20 +302,29 @@ const items: Record<string, Item> = {
         ingredients: ['item-glitter-snapper'],
       },
     ],
-    stats: {
-      hp: 5000,
-      rp: 1000,
-      str: 150,
+    crafter: {
+      foodBase: foodPayload({
+        additive: { hp: 5000, rp: 1000, str: 150 },
+        multipliers: { hp: 1.609863, str: 0.179932 },
+        resistances: { light: 0.5 },
+        lightRes: 0.5,
+      }),
     },
-    healing: {
-      hpPercent: 160.9863,
+  },
+  'item-roundoff': {
+    id: 'item-roundoff',
+    name: 'Roundoff',
+    type: 'Medicine',
+    rarityPoints: 2,
+    crafter: {
+      material: {
+        food: foodPayload({
+          additive: { hp: 300 },
+          resistances: { seal: 0.5 },
+          status: { status: 2, parHeal: 1 },
+        }),
+      },
     },
-    statMultipliers: {
-      str: 17.9932,
-    },
-    effects: [
-      { type: 'resistance', target: 'light', value: 50 },
-    ],
   },
   'item-fire-crystal': {
     id: 'item-fire-crystal',
@@ -318,18 +332,11 @@ const items: Record<string, Item> = {
     type: 'Material',
     buy: 100,
     sell: 10,
-    stats: {
-      atk: 5,
-    },
+    rarityPoints: 7,
     crafter: {
       material: {
-        weapon: materialPayload({ rarity: 7 }),
-        armor: materialPayload({ rarity: 7 }),
-        food: foodPayload({
-          status: {
-            overwrite: 1,
-          },
-        }),
+        weapon: equipmentPayload({ stats: { matk: 10 } }),
+        armor: equipmentPayload({ stats: { matk: 10 } }),
       },
       staff: {
         chargeAttack: {
@@ -337,7 +344,6 @@ const items: Record<string, Item> = {
           lv2: 'Fire Spread Lv2',
           lv3: 'Fire Spread Lv3',
           speed: 1,
-          rarity: 7,
         },
       },
     },
@@ -345,13 +351,17 @@ const items: Record<string, Item> = {
   'item-object-x': {
     id: 'item-object-x',
     name: 'Object X',
-    type: 'Potion',
-    buy: 100,
-    sell: 10,
-    effects: [
-      { type: 'inflict', target: 'poison', trigger: 'consume' },
-    ],
+    type: 'Special',
+    rarityPoints: 5,
     crafter: {
+      material: {
+        weapon: equipmentPayload(),
+        armor: equipmentPayload(),
+        food: foodPayload({
+          multipliers: { rp: -0.5 },
+          status: { status: 4032 },
+        }),
+      },
       specialMaterialRule: {
         behavior: 'invert',
       },
@@ -382,6 +392,7 @@ const items: Record<string, Item> = {
     id: 'item-gloves',
     name: 'Gloves',
     type: 'Forge',
+    rarityPoints: 9,
     buy: 100,
     sell: 10,
     craft: [
@@ -400,15 +411,17 @@ const items: Record<string, Item> = {
         ingredients: ['item-quality-cloth'],
       },
     ],
-    stats: {
-      atk: 40,
-      def: 42,
-      diz: 2,
-      stun: 30,
-    },
     crafter: {
       equipment: {
-        weapon: materialPayload({
+        armor: equipmentPayload({
+          stats: {
+            atk: 40,
+            def: 42,
+            diz: 2,
+            stun: 0.3,
+          },
+        }),
+        weapon: equipmentPayload({
           stats: {
             atk: 172,
             vit: 20,
@@ -451,7 +464,7 @@ describe('buildCrafterData', () => {
     });
   });
 
-  it('converts canonical item fields back into crafter runtime payloads', () => {
+  it('uses item.crafter payloads as the runtime source for equipment and food data', () => {
     const result = buildCrafterData(items, crafterConfig);
 
     expect(result.stats.weapon['item-training-hammer']?.stats.atk).toBe(20);
@@ -471,11 +484,25 @@ describe('buildCrafterData', () => {
     expect(result.food.baseStats['item-glitter-sashimi']?.resistances.light).toBeCloseTo(0.5, 6);
   });
 
-  it('preserves crafter-specific item payloads and special rules inside the resolved runtime data', () => {
+  it('injects rarityPoints into runtime crafter payloads instead of reading nested rarity fields', () => {
     const result = buildCrafterData(items, crafterConfig);
 
+    expect(result.stats.weapon['item-training-sword']?.rarity).toBe(4);
+    expect(result.materials.weapon['item-iron']?.rarity).toBe(1);
+    expect(result.materials.weapon['item-silver']?.rarity).toBe(2);
     expect(result.materials.weapon['item-fire-crystal']?.rarity).toBe(7);
-    expect(result.staff.chargeAttacks['item-fire-crystal']?.lv1).toBe('Fire Spread Lv1');
+    expect(result.staff.chargeAttacks['item-fire-crystal']?.rarity).toBe(7);
+  });
+
+  it('preserves crafter-specific payloads, raw food status, and special rules inside the resolved runtime data', () => {
+    const result = buildCrafterData(items, crafterConfig);
+
+    expect(result.materials.food['item-roundoff']).toMatchObject({
+      additive: { hp: 300 },
+      resistances: { seal: 0.5 },
+      status: { status: 2, parHeal: 1 },
+    });
+    expect(result.materials.food['item-object-x']?.status).toEqual({ status: 4032 });
     expect(result.specialMaterialRules).toEqual([{ itemId: 'item-object-x', behavior: 'invert' }]);
     expect(result.bonusEffects['item-happy-ring']).toEqual({ itemName: 'Happy Ring', kind: 'accessory' });
   });

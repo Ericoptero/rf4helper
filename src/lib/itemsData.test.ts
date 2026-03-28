@@ -214,31 +214,52 @@ describe('items.json recipe normalization', () => {
     expect(craftRecipeCount).toBe(631);
   });
 
-  it('normalizes source-backed numeric stats and non-flat effects into one structure', () => {
-    expect(items['item-broadsword']?.stats).toEqual({
-      atk: 5,
-      diz: 6,
+  it('stores workbook-backed display payloads under crafter instead of duplicating them at the top level', () => {
+    expect(items['item-broadsword']?.stats).toBeUndefined();
+    expect(items['item-broadsword']?.combat).toBeUndefined();
+    expect(items['item-broadsword']?.effects).toBeUndefined();
+    expect(items['item-broadsword']?.crafter?.equipment?.weapon).toMatchObject({
+      stats: {
+        atk: 5,
+        diz: 6,
+      },
+      weaponClass: 'Short Sword',
+      attackType: 'Short Sword',
+      damageType: 'Physical',
+      element: 'None',
     });
 
-    expect(items['item-magic-shield']?.stats).toEqual({
-      def: 84,
-      mdef: 78,
-      int: 5,
+    expect(items['item-magic-shield']?.stats).toBeUndefined();
+    expect(items['item-magic-shield']?.effects).toBeUndefined();
+    expect(items['item-magic-shield']?.crafter?.equipment?.armor).toMatchObject({
+      stats: {
+        def: 84,
+        mdef: 78,
+        int: 5,
+      },
+      resistances: {
+        seal: 1,
+      },
     });
-    expect(items['item-magic-shield']?.effects).toEqual([
-      { type: 'resistance', target: 'seal', value: 100 },
-    ]);
 
-    expect(items['item-roundoff']?.stats).toEqual({
-      hp: 300,
+    expect(items['item-roundoff']?.stats).toBeUndefined();
+    expect(items['item-roundoff']?.effects).toBeUndefined();
+    expect(items['item-roundoff']?.crafter?.material?.food).toMatchObject({
+      additive: {
+        hp: 300,
+      },
+      resistances: {
+        seal: 0.5,
+      },
+      status: {
+        status: 2,
+        parHeal: 1,
+      },
     });
-    expect(items['item-roundoff']?.effects).toEqual([
-      { type: 'cure', targets: ['seal'] },
-    ]);
 
-    expect(items['item-poison-blade']?.effects).toEqual(
-      expect.arrayContaining([{ type: 'inflict', target: 'poison', trigger: 'attack', chance: 25 }])
-    );
+    expect(items['item-poison-blade']?.crafter?.equipment?.weapon?.statusAttacks).toMatchObject({
+      psn: 0.25,
+    });
   });
 
   it('does not keep ambiguous legacy stats keys on normalized items', () => {
@@ -251,28 +272,51 @@ describe('items.json recipe normalization', () => {
     }
   });
 
-  it('promotes crafter-facing item metadata into items.json', () => {
-    expect(items['item-broadsword']?.combat).toMatchObject({
-      weaponClass: 'Short Sword',
-      attackType: 'Short Sword',
-      damageType: 'Physical',
-      element: 'None',
+  it('keeps food, special material, and staff data under crafter while preserving raw workbook food status', () => {
+    expect(items['item-glitter-sashimi']?.healing).toBeUndefined();
+    expect(items['item-glitter-sashimi']?.statMultipliers).toBeUndefined();
+    expect(items['item-glitter-sashimi']?.crafter?.foodBase).toMatchObject({
+      additive: {
+        hp: 5000,
+        rp: 1000,
+        str: 150,
+      },
+      multipliers: {
+        hp: 1.609863,
+        str: 0.179932,
+      },
+      resistances: {
+        light: 0.5,
+      },
+      lightRes: 0.5,
     });
-
-    expect(items['item-glitter-sashimi']?.healing?.hpPercent).toBeCloseTo(160.9863, 4);
-    expect(items['item-glitter-sashimi']?.statMultipliers?.str).toBeCloseTo(17.9932, 4);
+    expect(items['item-broadsword']?.crafter?.material?.food?.status).toEqual({
+      status: 4000,
+      overwrite: 1,
+    });
     expect(items['item-object-x']?.crafter?.specialMaterialRule?.behavior).toBe('invert');
     expect(items['item-fire-crystal']?.crafter?.staff?.chargeAttack?.lv1).toBe('Fire Spread Lv1');
   });
 
   it('keeps dual-role crafter overrides on items that have more than one equipment identity', () => {
-    expect(items['item-gloves']?.stats).toEqual({
-      atk: 40,
-      def: 42,
-      diz: 2,
-      stun: 30,
-    });
+    expect(items['item-gloves']?.stats).toBeUndefined();
+    expect(items['item-gloves']?.crafter?.equipment?.armor?.stats?.atk).toBe(40);
+    expect(items['item-gloves']?.crafter?.equipment?.armor?.stats?.def).toBe(42);
+    expect(items['item-gloves']?.crafter?.equipment?.armor?.stats?.diz).toBe(2);
+    expect(items['item-gloves']?.crafter?.equipment?.armor?.stats?.stun).toBeCloseTo(0.2998046875, 6);
     expect(items['item-gloves']?.crafter?.equipment?.weapon?.stats?.atk).toBe(172);
+  });
+
+  it('keeps rarityPoints as the only persisted rarity field', () => {
+    expect(items['item-broadsword']?.rarityPoints).toBe(15);
+    expect(items['item-broadsword']?.crafter?.equipment?.weapon?.rarity).toBeUndefined();
+    expect(items['item-fire-crystal']?.rarityPoints).toBe(7);
+    expect(items['item-fire-crystal']?.crafter?.material?.weapon?.rarity).toBeUndefined();
+    expect(items['item-fire-crystal']?.crafter?.staff?.chargeAttack?.rarity).toBeUndefined();
+    expect(items['item-dark-crystal']?.rarityPoints).toBe(4);
+    expect(items['item-plant-stem']?.rarityPoints).toBe(5);
+    expect(items['item-lumber']?.rarityPoints).toBe(1);
+    expect(items['item-material-stone']?.rarityPoints).toBe(1);
   });
 
   it('stores only global crafter config in crafter.json', () => {

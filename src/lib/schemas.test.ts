@@ -114,10 +114,8 @@ describe('Zod Schemas', () => {
           },
           material: {
             weapon: {
-              rarity: 7,
             },
             armor: {
-              rarity: 3,
             },
             food: {
               status: {
@@ -137,7 +135,6 @@ describe('Zod Schemas', () => {
               lv2: 'Fire Spread Lv2',
               lv3: 'Fire Spread Lv3',
               speed: 1,
-              rarity: 7,
             },
             base: {
               itemLevel: 2,

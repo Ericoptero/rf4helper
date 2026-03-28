@@ -548,7 +548,7 @@ const CrafterEquipmentPayloadSchema = z.object({
   attackType: NullableOptionalStringSchema,
   element: NullableOptionalStringSchema,
   damageType: NullableOptionalStringSchema,
-  rarity: z.number().int().min(0).default(0),
+  rarity: z.number().int().min(0).optional(),
   bonusType: NullableOptionalStringSchema,
   bonusType2: NullableOptionalStringSchema,
 });
@@ -583,7 +583,7 @@ const CrafterStaffChargeAttackSchema = z.object({
   lv2: NullableOptionalStringSchema,
   lv3: NullableOptionalStringSchema,
   speed: z.number().optional(),
-  rarity: z.number().int().min(0).default(0),
+  rarity: z.number().int().min(0).optional(),
 });
 export type CrafterStaffChargeAttack = z.infer<typeof CrafterStaffChargeAttackSchema>;
 

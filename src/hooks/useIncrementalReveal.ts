@@ -17,9 +17,13 @@ export function useIncrementalReveal<TElement extends Element = HTMLDivElement>(
   rootRef,
   disabled = false,
 }: UseIncrementalRevealOptions) {
-  const sentinelRef = React.useRef<TElement | null>(null);
+  const [sentinelElement, setSentinelElement] = React.useState<TElement | null>(null);
   const [visibleCount, setVisibleCount] = React.useState(() => Math.min(itemCount, batchSize));
   const resetSignature = React.useMemo(() => JSON.stringify(resetKeys), [resetKeys]);
+
+  const sentinelRef = React.useCallback((node: TElement | null) => {
+    setSentinelElement(node);
+  }, []);
 
   React.useEffect(() => {
     setVisibleCount(Math.min(itemCount, batchSize));
@@ -40,9 +44,7 @@ export function useIncrementalReveal<TElement extends Element = HTMLDivElement>(
       return undefined;
     }
 
-    const sentinel = sentinelRef.current;
-
-    if (!sentinel) {
+    if (!sentinelElement) {
       return undefined;
     }
 
@@ -59,10 +61,10 @@ export function useIncrementalReveal<TElement extends Element = HTMLDivElement>(
       },
     );
 
-    observer.observe(sentinel);
+    observer.observe(sentinelElement);
 
     return () => observer.disconnect();
-  }, [disabled, itemCount, loadMore, rootRef, visibleCount]);
+  }, [disabled, itemCount, loadMore, rootRef, sentinelElement, visibleCount]);
 
   return {
     hasMore: visibleCount < itemCount,

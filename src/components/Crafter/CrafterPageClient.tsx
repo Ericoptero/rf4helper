@@ -4,6 +4,7 @@ import * as React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { CrafterView } from '@/components/Crafter/CrafterView';
+import { deserializeCrafterBuild, serializeCrafterBuild } from '@/lib/crafter';
 import type { CrafterSearchParams } from '@/server/catalogQueries';
 import type { CrafterData, Item } from '@/lib/schemas';
 
@@ -18,6 +19,12 @@ function buildHref(pathname: string, search: Record<string, string | undefined>)
   return queryString ? `${pathname}?${queryString}` : pathname;
 }
 
+function normalizePersistedBuild(serializedBuild: string | undefined, crafterData: CrafterData) {
+  if (!serializedBuild) return undefined;
+  const normalizedBuild = deserializeCrafterBuild(serializedBuild, crafterData);
+  return serializeCrafterBuild(normalizedBuild, crafterData) || undefined;
+}
+
 export function CrafterPageClient({
   items,
   crafterData,
@@ -30,20 +37,44 @@ export function CrafterPageClient({
   const router = useRouter();
   const pathname = usePathname();
   const [resolvedBuild, setResolvedBuild] = React.useState(search.build);
+  const latestRouterRef = React.useRef(router);
+  const latestSearchRef = React.useRef(search);
+
+  React.useEffect(() => {
+    latestRouterRef.current = router;
+  }, [router]);
+
+  React.useEffect(() => {
+    latestSearchRef.current = search;
+  }, [search]);
+
+  const replaceRouteBuild = React.useCallback(
+    (build: string | undefined) => {
+      latestRouterRef.current.replace(buildHref(pathname, { ...latestSearchRef.current, build }), { scroll: false });
+    },
+    [pathname],
+  );
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const storedBuild = window.localStorage.getItem(CRAFTER_BUILD_STORAGE_KEY) ?? undefined;
     const nextBuild = search.build || storedBuild || undefined;
-    setResolvedBuild(nextBuild);
+    const normalizedBuild = normalizePersistedBuild(nextBuild, crafterData);
+    setResolvedBuild(normalizedBuild);
 
-    if (!search.build && storedBuild) {
+    if (normalizedBuild) {
+      window.localStorage.setItem(CRAFTER_BUILD_STORAGE_KEY, normalizedBuild);
+    } else {
+      window.localStorage.removeItem(CRAFTER_BUILD_STORAGE_KEY);
+    }
+
+    if (search.build !== normalizedBuild) {
       React.startTransition(() => {
-        router.replace(buildHref(pathname, { ...search, build: storedBuild }), { scroll: false });
+        replaceRouteBuild(normalizedBuild);
       });
     }
-  }, [pathname, router, search]);
+  }, [crafterData, replaceRouteBuild, search.build, search.view]);
 
   const handleSerializedBuildChange = React.useCallback(
     (build: string) => {
@@ -58,10 +89,10 @@ export function CrafterPageClient({
       }
 
       React.startTransition(() => {
-        router.replace(buildHref(pathname, { ...search, build: build || undefined }), { scroll: false });
+        replaceRouteBuild(build || undefined);
       });
     },
-    [pathname, router, search],
+    [replaceRouteBuild],
   );
 
   return (

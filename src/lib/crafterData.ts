@@ -3,190 +3,33 @@ import {
   type CrafterConfig,
   type CrafterData,
   type CrafterEquipmentPayload,
-  type CrafterFoodPayload,
   type CrafterSlotConfig,
   type Item,
+  type CrafterFoodPayload,
+  type CrafterStaffChargeAttack,
 } from './schemas';
+import { resolveCrafterRuntimeRarity } from './crafterRarity';
 
-const FRACTIONAL_STAT_KEYS = new Set(['crit', 'drain', 'knock', 'stun']);
-
-const RESISTANCE_TARGET_TO_KEY = {
-  fire: 'fire',
-  water: 'water',
-  earth: 'earth',
-  wind: 'wind',
-  light: 'light',
-  dark: 'dark',
-  love: 'love',
-  dizzy: 'diz',
-  crit: 'crit',
-  drain: 'drain',
-  knock: 'knock',
-  poison: 'psn',
-  seal: 'seal',
-  paralysis: 'par',
-  sleep: 'slp',
-  fatigue: 'ftg',
-  sickness: 'sick',
-  faint: 'fnt',
-} as const;
-
-const STATUS_TARGET_TO_KEY = {
-  poison: 'psn',
-  seal: 'seal',
-  paralysis: 'par',
-  sleep: 'slp',
-  fatigue: 'ftg',
-  sickness: 'sick',
-  faint: 'faint',
-} as const;
-
-function mapValues<T extends Record<string, number | undefined>>(
-  value: T | undefined,
-  transform: (entry: number, key: string) => number,
-) {
-  if (!value) return {};
-  const entries = Object.entries(value)
-    .filter(([, entry]) => entry != null)
-    .map(([key, entry]) => [key, transform(entry as number, key)]);
-  return Object.fromEntries(entries);
+function resolveCrafterRarity(item: Item, payload?: { rarity?: number }) {
+  return resolveCrafterRuntimeRarity(item, payload);
 }
 
-function mergeNumberRecords<T extends Record<string, number | undefined>>(
-  preferred: T | undefined,
-  fallback: T | undefined,
-) {
+function addItemNameWithRarity(
+  item: Item,
+  payload: Omit<CrafterEquipmentPayload, 'itemName'> | undefined,
+): CrafterEquipmentPayload | undefined {
+  if (!payload) return undefined;
   return {
-    ...(fallback ?? {}),
-    ...(preferred ?? {}),
-  } as T;
-}
-
-function hasData(value: object | undefined) {
-  return Boolean(value && Object.keys(value).length > 0);
-}
-
-function convertStatValueToCrafter(key: string, value: number) {
-  return FRACTIONAL_STAT_KEYS.has(key) ? value / 100 : value;
-}
-
-function convertHumanStatsToCrafter(stats: Item['stats'] | Item['statMultipliers'] | undefined) {
-  return mapValues(stats ?? {}, (value, key) => convertStatValueToCrafter(key, value)) as NonNullable<
-    Item['stats']
-  >;
-}
-
-function convertHumanStatMultipliersToCrafter(stats: Item['statMultipliers'] | undefined) {
-  return mapValues(stats ?? {}, (value) => value / 100) as NonNullable<Item['statMultipliers']>;
-}
-
-function convertHumanPercentToCrafter(value: number | undefined) {
-  if (value == null) return undefined;
-  return value / 100;
-}
-
-function buildResistancesFromEffects(effects: Item['effects'] | undefined) {
-  const entries: Array<readonly [string, number]> = [];
-
-  for (const effect of effects ?? []) {
-    if (effect.type !== 'resistance') continue;
-    const key = RESISTANCE_TARGET_TO_KEY[effect.target as keyof typeof RESISTANCE_TARGET_TO_KEY];
-    if (!key) continue;
-    entries.push([key, effect.value / 100] as const);
-  }
-
-  return Object.fromEntries(entries);
-}
-
-function buildStatusAttacksFromEffects(
-  effects: Item['effects'] | undefined,
-  trigger: 'attack' | 'consume',
-) {
-  const entries: Array<readonly [string, number]> = [];
-
-  for (const effect of effects ?? []) {
-    if (effect.type !== 'inflict' || effect.trigger !== trigger || effect.chance == null) continue;
-    const key = STATUS_TARGET_TO_KEY[effect.target as keyof typeof STATUS_TARGET_TO_KEY];
-    if (!key) continue;
-    entries.push([key, effect.chance / 100] as const);
-  }
-
-  return Object.fromEntries(entries);
-}
-
-function buildFoodMultipliers(item: Item) {
-  const multipliers = convertHumanStatMultipliersToCrafter(item.statMultipliers);
-  const hp = convertHumanPercentToCrafter(item.healing?.hpPercent);
-  const rp = convertHumanPercentToCrafter(item.healing?.rpPercent);
-
-  if (hp != null) {
-    multipliers.hp = hp;
-  }
-
-  if (rp != null) {
-    multipliers.rp = rp;
-  }
-
-  return multipliers;
-}
-
-function buildDerivedEquipmentPayload(item: Item): Omit<CrafterEquipmentPayload, 'itemName'> | undefined {
-  const stats = convertHumanStatsToCrafter(item.stats);
-  const resistances = buildResistancesFromEffects(item.effects);
-  const statusAttacks = buildStatusAttacksFromEffects(item.effects, 'attack');
-  const geometry = item.combat?.geometry ?? {};
-  const rarity = item.rarityPoints ?? 0;
-
-  if (
-    !hasData(stats) &&
-    !hasData(resistances) &&
-    !hasData(statusAttacks) &&
-    !hasData(geometry) &&
-    item.combat?.weaponClass == null &&
-    item.combat?.attackType == null &&
-    item.combat?.element == null &&
-    item.combat?.damageType == null &&
-    rarity === 0
-  ) {
-    return undefined;
-  }
-
-  return {
-    weaponClass: item.combat?.weaponClass ?? undefined,
-    stats,
-    resistances,
-    statusAttacks,
-    geometry,
-    attackType: item.combat?.attackType ?? undefined,
-    element: item.combat?.element ?? undefined,
-    damageType: item.combat?.damageType ?? undefined,
-    rarity,
-    bonusType: undefined,
-    bonusType2: undefined,
+    ...payload,
+    itemName: item.name,
+    rarity: resolveCrafterRarity(item, payload),
   };
 }
 
-function buildDerivedFoodPayload(item: Item): Omit<CrafterFoodPayload, 'itemName'> | undefined {
-  const additive = convertHumanStatsToCrafter(item.stats);
-  const multipliers = buildFoodMultipliers(item);
-  const resistances = buildResistancesFromEffects(item.effects);
-  const statusAttacks = buildStatusAttacksFromEffects(item.effects, 'consume');
-
-  if (!hasData(additive) && !hasData(multipliers) && !hasData(resistances) && !hasData(statusAttacks)) {
-    return undefined;
-  }
-
-  return {
-    additive,
-    multipliers,
-    resistances,
-    statusAttacks,
-    status: undefined,
-    lightRes: undefined,
-  };
-}
-
-function addItemName<T extends object>(itemName: string, payload: T | undefined): (T & { itemName: string }) | undefined {
+function addItemNameToFood(
+  itemName: string,
+  payload: Omit<CrafterFoodPayload, 'itemName'> | undefined,
+): CrafterFoodPayload | undefined {
   if (!payload) return undefined;
   return {
     ...payload,
@@ -194,19 +37,16 @@ function addItemName<T extends object>(itemName: string, payload: T | undefined)
   };
 }
 
-function mergeFoodPayload(
-  preferred: Omit<CrafterFoodPayload, 'itemName'> | undefined,
-  fallback: Omit<CrafterFoodPayload, 'itemName'> | undefined,
-) {
-  if (!preferred && !fallback) return undefined;
+function addItemNameToStaffCharge(
+  item: Item,
+  payload: Omit<CrafterStaffChargeAttack, 'itemName'> | undefined,
+): CrafterStaffChargeAttack | undefined {
+  if (!payload) return undefined;
   return {
-    additive: mergeNumberRecords(preferred?.additive, fallback?.additive),
-    multipliers: mergeNumberRecords(preferred?.multipliers, fallback?.multipliers),
-    resistances: mergeNumberRecords(preferred?.resistances, fallback?.resistances),
-    statusAttacks: mergeNumberRecords(preferred?.statusAttacks, fallback?.statusAttacks),
-    status: fallback?.status,
-    lightRes: fallback?.lightRes,
-  } satisfies Omit<CrafterFoodPayload, 'itemName'>;
+    ...payload,
+    itemName: item.name,
+    rarity: resolveCrafterRarity(item, payload),
+  };
 }
 
 function hasWeaponRole(item: Item, slotConfigs: CrafterConfig['slotConfigs']) {
@@ -311,13 +151,11 @@ export function buildCrafterData(items: Record<string, Item>, crafterConfig: Cra
   const specialMaterialRules: CrafterData['specialMaterialRules'] = [];
 
   for (const [itemId, item] of Object.entries(items)) {
-    const derivedEquipmentPayload = buildDerivedEquipmentPayload(item);
-    const derivedFoodPayload = buildDerivedFoodPayload(item);
     const hasWeaponEquipmentRole = hasWeaponRole(item, crafterConfig.slotConfigs);
     const hasArmorEquipmentRole = hasArmorRole(item, crafterConfig.slotConfigs);
 
     if (hasWeaponEquipmentRole) {
-      const payload = addItemName(item.name, item.crafter?.equipment?.weapon ?? derivedEquipmentPayload);
+      const payload = addItemNameWithRarity(item, item.crafter?.equipment?.weapon);
 
       if (payload) {
         stats.weapon[itemId] = payload;
@@ -325,31 +163,29 @@ export function buildCrafterData(items: Record<string, Item>, crafterConfig: Cra
     }
 
     if (hasArmorEquipmentRole) {
-      const payload = addItemName(item.name, item.crafter?.equipment?.armor ?? derivedEquipmentPayload);
+      const payload = addItemNameWithRarity(item, item.crafter?.equipment?.armor);
 
       if (payload) {
         stats.armor[itemId] = payload;
       }
     }
 
-    const resolvedFoodBasePayload = hasFoodRole(item)
-      ? addItemName(item.name, mergeFoodPayload(derivedFoodPayload, item.crafter?.foodBase))
-      : undefined;
+    const resolvedFoodBasePayload = hasFoodRole(item) ? addItemNameToFood(item.name, item.crafter?.foodBase) : undefined;
     if (resolvedFoodBasePayload) {
       food.baseStats[itemId] = resolvedFoodBasePayload;
     }
 
-    const materialWeaponPayload = addItemName(item.name, item.crafter?.material?.weapon);
+    const materialWeaponPayload = addItemNameWithRarity(item, item.crafter?.material?.weapon);
     if (materialWeaponPayload) {
       materials.weapon[itemId] = materialWeaponPayload;
     }
 
-    const materialArmorPayload = addItemName(item.name, item.crafter?.material?.armor);
+    const materialArmorPayload = addItemNameWithRarity(item, item.crafter?.material?.armor);
     if (materialArmorPayload) {
       materials.armor[itemId] = materialArmorPayload;
     }
 
-    const materialFoodPayload = addItemName(item.name, item.crafter?.material?.food);
+    const materialFoodPayload = addItemNameToFood(item.name, item.crafter?.material?.food);
     if (materialFoodPayload) {
       materials.food[itemId] = materialFoodPayload;
     }
@@ -369,10 +205,10 @@ export function buildCrafterData(items: Record<string, Item>, crafterConfig: Cra
     }
 
     if (item.crafter?.staff?.chargeAttack) {
-      staff.chargeAttacks[itemId] = {
-        itemName: item.name,
-        ...item.crafter.staff.chargeAttack,
-      };
+      const payload = addItemNameToStaffCharge(item, item.crafter.staff.chargeAttack);
+      if (payload) {
+        staff.chargeAttacks[itemId] = payload;
+      }
     }
 
     if (item.crafter?.staff?.base) {

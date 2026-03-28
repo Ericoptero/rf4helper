@@ -153,6 +153,14 @@ const items: Record<string, Item> = {
     rarityPoints: 13,
     stats: {},
   },
+  'item-object-x': {
+    id: 'item-object-x',
+    name: 'Object X',
+    type: 'Chemistry',
+    image: '/images/items/object-x.png',
+    rarityPoints: 0,
+    stats: {},
+  },
   'item-turnip-heaven': {
     id: 'item-turnip-heaven',
     name: 'Turnip Heaven',
@@ -367,6 +375,7 @@ const crafterData: CrafterData = {
       'item-iron': equipmentPayload({ itemName: 'Iron', rarity: 1 }),
       'item-silver': equipmentPayload({ itemName: 'Silver', rarity: 2 }),
       'item-light-ore': equipmentPayload({ itemName: 'Light Ore', rarity: 13 }),
+      'item-object-x': equipmentPayload({ itemName: 'Object X', rarity: 0 }),
       'item-turnip-heaven': equipmentPayload({ itemName: 'Turnip Heaven', rarity: 15 }),
       'item-minerals': equipmentPayload({ itemName: 'Minerals', rarity: 0 }),
       'item-shade-stone': equipmentPayload({ itemName: 'Shade Stone', stats: { atk: 1 }, rarity: 3 }),
@@ -380,6 +389,7 @@ const crafterData: CrafterData = {
     armor: {
       'item-iron': equipmentPayload({ itemName: 'Iron', rarity: 1 }),
       'item-silver': equipmentPayload({ itemName: 'Silver', rarity: 2 }),
+      'item-object-x': equipmentPayload({ itemName: 'Object X', rarity: 0 }),
       'item-minerals': equipmentPayload({ itemName: 'Minerals', rarity: 0 }),
       'item-shade-stone': equipmentPayload({ itemName: 'Shade Stone', stats: { atk: 1 }, rarity: 3 }),
       'item-firewyrm-scale': equipmentPayload({
@@ -562,6 +572,51 @@ describe('CrafterView', () => {
     expect(within(resumeCardElement).queryByText(/^iron$/i)).not.toBeInTheDocument();
   });
 
+  it('keeps legacy preview percent stats in top-level item stats from double-scaling in the selector dialog', async () => {
+    const legacyItems: Record<string, Item> = {
+      ...items,
+      'item-legacy-crit-blade': {
+        id: 'item-legacy-crit-blade',
+        name: 'Legacy Crit Blade',
+        type: 'Forge',
+        category: 'shortSword',
+        image: '/images/items/broadsword.png',
+        rarityPoints: 7,
+        craft: [{ recipeId: 'legacy-crit-blade#1', stationType: 'Forging', station: 'Short Sword', level: 15, ingredients: ['item-iron'] }],
+        stats: { atk: 30, crit: 10 },
+      },
+    };
+    const legacyCrafterData = structuredClone(crafterData);
+
+    function LegacyHarness() {
+      const [serializedBuild, setSerializedBuild] = useState<string>();
+
+      return (
+        <CrafterView
+          items={legacyItems}
+          crafterData={legacyCrafterData}
+          serializedBuild={serializedBuild}
+          onSerializedBuildChange={setSerializedBuild}
+        />
+      );
+    }
+
+    const user = userEvent.setup();
+    render(<LegacyHarness />);
+
+    await user.click(screen.getByRole('tab', { name: /weapon/i }));
+    await user.click(screen.getByRole('button', { name: /base/i }));
+
+    const dialog = await screen.findByRole('dialog', { name: /select base/i });
+    const search = within(dialog).getByRole('searchbox', { name: /search items/i });
+    await user.clear(search);
+    await user.type(search, 'Legacy');
+    await user.click(within(dialog).getByRole('button', { name: /legacy crit blade/i }));
+
+    expect(within(dialog).getAllByText(/crit \+10%/i).length).toBeGreaterThan(0);
+    expect(within(dialog).queryByText(/crit \+1,?000%/i)).not.toBeInTheDocument();
+  });
+
   it('keeps crafter selector images on the public images path for backend-enriched items', async () => {
     const user = userEvent.setup();
 
@@ -620,6 +675,102 @@ describe('CrafterView', () => {
     expect(screen.getByText(/width \+0\.65/i)).toBeInTheDocument();
     expect(screen.queryByText(/\+1,234\.6$/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/10\.4%/i)).not.toBeInTheDocument();
+  });
+
+  it('renders raw crafter payload percent stats in selector previews without extra scaling', async () => {
+    const customCrafterData = structuredClone(crafterData);
+    customCrafterData.stats.weapon['item-broadsword'] = equipmentPayload({
+      itemName: 'Broadsword',
+      weaponClass: 'Short Sword',
+      stats: { atk: 5, crit: 0.098 },
+    });
+
+    function CustomHarness() {
+      const [serializedBuild, setSerializedBuild] = useState<string>();
+
+      return (
+        <CrafterView
+          items={items}
+          crafterData={customCrafterData}
+          serializedBuild={serializedBuild}
+          onSerializedBuildChange={setSerializedBuild}
+        />
+      );
+    }
+
+    const user = userEvent.setup();
+    render(<CustomHarness />);
+
+    await user.click(screen.getByRole('tab', { name: /weapon/i }));
+    await user.click(screen.getByRole('button', { name: /base/i }));
+
+    const dialog = await screen.findByRole('dialog', { name: /select base/i });
+    const search = within(dialog).getByRole('searchbox', { name: /search items/i });
+    await user.clear(search);
+    await user.type(search, 'Broad');
+    await user.click(within(dialog).getByRole('button', { name: /broadsword/i }));
+
+    expect(within(dialog).getAllByText(/crit \+9\.8%/i).length).toBeGreaterThan(0);
+    expect(within(dialog).queryByText(/crit \+980%/i)).not.toBeInTheDocument();
+  });
+
+  it('restores selector stat tags for items that only expose derived display stats in the current slot', async () => {
+    const derivedItems: Record<string, Item> = {
+      ...items,
+      'item-derived-display-blade': {
+        id: 'item-derived-display-blade',
+        name: 'Derived Display Blade',
+        type: 'Forge',
+        category: 'shortSword',
+        image: '/images/items/broadsword.png',
+        rarityPoints: 12,
+        craft: [{ recipeId: 'derived-display-blade#1', stationType: 'Forging', station: 'Short Sword', level: 40, ingredients: ['item-iron'] }],
+        crafter: {
+          equipment: {
+            weapon: {
+              stats: { atk: 88, crit: 0.1 },
+              weaponClass: 'Short Sword',
+              attackType: 'Short Sword',
+              element: 'None',
+              damageType: 'Physical',
+              resistances: {},
+              statusAttacks: {},
+              geometry: {},
+              bonusType: undefined,
+              bonusType2: undefined,
+            },
+          },
+        },
+      },
+    };
+    const user = userEvent.setup();
+
+    function DerivedHarness() {
+      const [serializedBuild, setSerializedBuild] = useState<string>();
+
+      return (
+        <CrafterView
+          items={derivedItems}
+          crafterData={crafterData}
+          serializedBuild={serializedBuild}
+          onSerializedBuildChange={setSerializedBuild}
+        />
+      );
+    }
+
+    render(<DerivedHarness />);
+
+    await user.click(screen.getByRole('tab', { name: /weapon/i }));
+    await user.click(screen.getByRole('button', { name: /upgrade 1/i }));
+
+    const dialog = await screen.findByRole('dialog', { name: /select upgrade 1/i });
+    const search = within(dialog).getByRole('searchbox', { name: /search items/i });
+    await user.clear(search);
+    await user.type(search, 'Derived');
+    await user.click(within(dialog).getByRole('button', { name: /derived display blade/i }));
+
+    expect(within(dialog).getAllByText(/atk \+88/i).length).toBeGreaterThan(0);
+    expect(within(dialog).getAllByText(/crit \+10%/i).length).toBeGreaterThan(0);
   });
 
   it('focuses the selector search, keeps the sort control full width, and persists compressed appearance and recipe level changes', async () => {
@@ -693,6 +844,149 @@ describe('CrafterView', () => {
     await user.click(within(dialog).getByRole('button', { name: /apply/i }));
 
     expect(screen.getByRole('button', { name: /silver/i })).toBeInTheDocument();
+  });
+
+  it('keeps empty equipment recipe slots freely editable with the rarity placeholder pinned once a base is selected', async () => {
+    const user = userEvent.setup();
+
+    render(<CrafterHarness />);
+
+    await user.click(screen.getByRole('tab', { name: /weapon/i }));
+    await user.click(screen.getByRole('button', { name: /base/i }));
+    await chooseItemFromSelector(user, 'Broad', 'Broadsword');
+
+    await user.click(screen.getByRole('button', { name: /recipe 6/i }));
+
+    const dialog = await screen.findByRole('dialog', { name: /select recipe 6/i });
+    const allButtons = within(dialog).getAllByRole('button');
+
+    expect(within(dialog).queryByText(/choose material/i)).not.toBeInTheDocument();
+    expect(within(dialog).queryByText(/level only/i)).not.toBeInTheDocument();
+    expect(within(dialog).queryByText(/recipe unavailable/i)).not.toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: /clear slot/i })).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: /rarity \+15/i })).toBeInTheDocument();
+    expect(allButtons[0]).toHaveAccessibleName(/rarity \+15/i);
+    expect(within(dialog).getByRole('button', { name: /object x/i })).toBeInTheDocument();
+
+    await user.click(within(dialog).getByRole('button', { name: /rarity \+15/i }));
+    await user.click(within(dialog).getByRole('button', { name: /apply/i }));
+
+    const recipeSlotButton = screen.getByRole('button', { name: /rarity \+15/i });
+    expect(recipeSlotButton.querySelector('.lucide-star')).not.toBeNull();
+    expect(within(recipeSlotButton).queryByRole('img', { name: /rarity \+15 icon/i })).not.toBeInTheDocument();
+  });
+
+  it('does not fall back to the free material picker for unresolved recipe slots', async () => {
+    const user = userEvent.setup();
+
+    render(<CrafterHarness />);
+
+    await user.click(screen.getByRole('tab', { name: /weapon/i }));
+    await user.click(screen.getByRole('button', { name: /recipe 1/i }));
+
+    const dialog = await screen.findByRole('dialog', { name: /select recipe 1/i });
+
+    expect(within(dialog).getAllByText(/select a base item first/i).length).toBeGreaterThan(0);
+    expect(within(dialog).queryByRole('button', { name: /heavy boots/i })).not.toBeInTheDocument();
+    expect(within(dialog).queryByRole('button', { name: /firewyrm scale/i })).not.toBeInTheDocument();
+    expect(within(dialog).queryByRole('button', { name: /rarity \+15/i })).not.toBeInTheDocument();
+    expect(within(dialog).queryByText(/no items found\./i)).not.toBeInTheDocument();
+  });
+
+  it('shows effective slot rarity in selector lists, keeping equipment base choices at zero and upgrade materials at their real values', async () => {
+    const user = userEvent.setup();
+
+    render(<CrafterHarness />);
+
+    await user.click(screen.getByRole('tab', { name: /weapon/i }));
+    await user.click(screen.getByRole('button', { name: /base/i }));
+
+    const baseDialog = await screen.findByRole('dialog', { name: /select base/i });
+    const baseSortControl = within(baseDialog).getByRole('combobox', { name: /sort items/i });
+    const broadswordButton = within(baseDialog).getByRole('button', { name: /broadsword/i });
+    const heavenAsunderButton = within(baseDialog).getByRole('button', { name: /heaven asunder/i });
+
+    expect(within(broadswordButton).getByText(/rarity 0/i)).toBeInTheDocument();
+    expect(within(heavenAsunderButton).getByText(/rarity 0/i)).toBeInTheDocument();
+
+    await user.click(baseSortControl);
+    await user.click(screen.getByRole('option', { name: /rarity \(high-low\)/i }));
+
+    const sortedBroadswordButton = within(baseDialog).getByRole('button', { name: /broadsword/i });
+    const sortedHeavenAsunderButton = within(baseDialog).getByRole('button', { name: /heaven asunder/i });
+    expect(Boolean(sortedBroadswordButton.compareDocumentPosition(sortedHeavenAsunderButton) & Node.DOCUMENT_POSITION_FOLLOWING)).toBe(true);
+
+    await user.click(within(baseDialog).getByRole('button', { name: /cancel/i }));
+
+    await user.click(screen.getByRole('button', { name: /upgrade 1/i }));
+    const upgradeDialog = await screen.findByRole('dialog', { name: /select upgrade 1/i });
+    const placeholderButton = within(upgradeDialog).getByRole('button', { name: /rarity \+15/i });
+    const firewyrmButton = within(upgradeDialog).getByRole('button', { name: /firewyrm scale/i });
+
+    expect(within(placeholderButton).getByText(/rarity 15/i)).toBeInTheDocument();
+    expect(placeholderButton.querySelector('.lucide-star')).not.toBeNull();
+    expect(within(placeholderButton).getAllByText(/rarity \+15/i).length).toBeGreaterThan(0);
+    expect(within(firewyrmButton).getByText(/rarity 9/i)).toBeInTheDocument();
+
+    await user.click(placeholderButton);
+
+    expect(within(upgradeDialog).getByText(/^selected item$/i)).toBeInTheDocument();
+    expect(within(upgradeDialog).getAllByText(/rarity \+15/i).length).toBeGreaterThan(0);
+    const selectedItemPreview = within(upgradeDialog).getByText(/^selected item$/i).closest('div')?.parentElement;
+    expect(selectedItemPreview?.querySelector('.lucide-star')).not.toBeNull();
+  });
+
+  it('shows derived-base recipe candidates as rarity zero in recipe slot dialogs', async () => {
+    const user = userEvent.setup();
+
+    render(<CrafterHarness />);
+
+    await user.click(screen.getByRole('tab', { name: /weapon/i }));
+    await user.click(screen.getByRole('button', { name: /base/i }));
+    await chooseItemFromSelector(user, 'Broad', 'Broadsword');
+
+    await user.click(screen.getByRole('button', { name: /recipe 6/i }));
+
+    const recipeDialog = await screen.findByRole('dialog', { name: /select recipe 6/i });
+    const broadswordButton = within(recipeDialog).getByRole('button', { name: /broadsword/i });
+
+    expect(within(broadswordButton).getByText(/rarity 0/i)).toBeInTheDocument();
+  });
+
+  it('shows a recipe-specific unresolved state instead of the generic empty results message', async () => {
+    const user = userEvent.setup();
+    const brokenCrafterData = structuredClone(crafterData);
+    brokenCrafterData.recipes.equipment.weapon['item-broadsword'] = {
+      station: 'Short Sword',
+      materials: ['item-missing-default'],
+    };
+
+    function BrokenHarness() {
+      const [serializedBuild, setSerializedBuild] = useState<string>();
+
+      return (
+        <CrafterView
+          items={items}
+          crafterData={brokenCrafterData}
+          serializedBuild={serializedBuild}
+          onSerializedBuildChange={setSerializedBuild}
+        />
+      );
+    }
+
+    render(<BrokenHarness />);
+
+    await user.click(screen.getByRole('tab', { name: /weapon/i }));
+    await user.click(screen.getByRole('button', { name: /base/i }));
+    await chooseItemFromSelector(user, 'Broad', 'Broadsword');
+
+    await user.click(screen.getByRole('button', { name: /recipe 1/i }));
+
+    const dialog = await screen.findByRole('dialog', { name: /select recipe 1/i });
+
+    expect(within(dialog).getAllByText(/this recipe could not be resolved for the selected base/i).length).toBeGreaterThan(0);
+    expect(within(dialog).queryByText(/no items found\./i)).not.toBeInTheDocument();
+    expect(within(dialog).queryByRole('button', { name: /iron/i })).not.toBeInTheDocument();
   });
 
   it('keeps fixed recipe slots level-only while leaving upgrade slots fully selectable with the placeholder pinned', async () => {
@@ -777,8 +1071,6 @@ describe('CrafterView', () => {
     await chooseItemFromSelector(user, 'Glitter', 'Glitter Sashimi');
     const dishSelectionCard = screen.getByText(/dish selection/i).closest('[data-slot="card"]') as HTMLElement;
     expect(within(dishSelectionCard).getByRole('button', { name: /iron/i })).toBeInTheDocument();
-    await user.click(within(dishSelectionCard).getByRole('button', { name: /recipe 2/i }));
-    await chooseItemFromSelector(user, 'Silver', 'Silver');
 
     expect(screen.getByText(/^healing$/i)).toBeInTheDocument();
     expect(screen.getByText(/^HP$/i)).toBeInTheDocument();
@@ -787,6 +1079,25 @@ describe('CrafterView', () => {
     expect(screen.getByText(/^RP%$/i)).toBeInTheDocument();
     expect(screen.getByText(/elem res/i)).toBeInTheDocument();
     expect(screen.getByText(/status attack/i)).toBeInTheDocument();
+  });
+
+  it('unlocks cooking recipe slots as free pickers when a base dish is selected but no fixed ingredient resolves', async () => {
+    const user = userEvent.setup();
+
+    render(<CrafterHarness />);
+
+    await user.click(screen.getByRole('tab', { name: /cooking/i }));
+    await user.click(screen.getByRole('button', { name: /base food/i }));
+    await chooseItemFromSelector(user, 'Glitter', 'Glitter Sashimi');
+
+    await user.click(screen.getByRole('button', { name: /recipe 6/i }));
+
+    const dialog = await screen.findByRole('dialog', { name: /select recipe 6/i });
+
+    expect(within(dialog).queryByText(/recipe unavailable/i)).not.toBeInTheDocument();
+    expect(within(dialog).queryByText(/this recipe could not be resolved for the selected base/i)).not.toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: /clear slot/i })).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: /rarity \+15/i })).toBeInTheDocument();
   });
 
   it('resets the current build without affecting the available crafter tabs', async () => {

@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { buildMapRegions, type MapRegionRecord } from '@/lib/mapFishingRelations';
 import { buildMonsterGroups, isMonsterActuallyTameable, type MonsterGroup } from '@/lib/monsterGroups';
+import { hasDisplayEffects } from '@/lib/itemPresentation';
 import type { Character, Chest, Fish, Item, Monster } from '@/lib/schemas';
 
 type SearchParamRecord = Record<string, string | string[] | undefined>;
@@ -321,7 +322,7 @@ export function buildItemsCatalogData(
   }
 
   if (search.effects === 'yes') {
-    results = results.filter((item) => Boolean(item.effects?.length));
+    results = results.filter((item) => hasDisplayEffects(item));
   }
 
   return {

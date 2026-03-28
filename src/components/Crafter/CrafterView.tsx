@@ -41,8 +41,10 @@ import {
   serializeCrafterBuild,
   type CrafterBuildState,
 } from '@/lib/crafter';
+import { CRAFTER_RARITY_PLACEHOLDER_VALUE, getCrafterSelectableRarity, getEffectiveCrafterNodeRarity } from '@/lib/crafterRarity';
 import { itemMatchesCrafterSlot } from '@/lib/crafterData';
 import { resolveItemImage } from '@/lib/itemImages';
+import { getDisplayEffects, getDisplayStats, hasDisplayEffects, type DisplayEffect } from '@/lib/itemPresentation';
 import type { CrafterData, CrafterMaterialSelection, CrafterSlotConfig, CrafterSlotKey, Item } from '@/lib/schemas';
 import { cn } from '@/lib/utils';
 
@@ -92,6 +94,8 @@ type CrafterNodeBehavior = {
   helperLabel?: string;
   callout?: string;
   categoryLabel?: string;
+  emptyStateTitle?: string;
+  emptyStateDescription?: string;
 };
 
 type CrafterGridSection = {
@@ -217,6 +221,23 @@ function getFoodRecipeDefaults(baseId: string | undefined, crafterData: CrafterD
   return crafterData.recipes.food[baseId]?.materials;
 }
 
+function getEquipmentRecipeSourceItemId(
+  slotKey: CrafterSlotKey,
+  build: CrafterBuildState,
+  crafterData: CrafterData,
+) {
+  const slot = build[slotKey];
+  const candidates = [slot.appearanceId, slot.baseId].filter((value): value is string => Boolean(value));
+
+  for (const candidate of candidates) {
+    if (getEquipmentRecipeDefaults(slotKey, candidate, crafterData)?.length) {
+      return candidate;
+    }
+  }
+
+  return candidates[0];
+}
+
 function getSlotOptions(items: Record<string, Item>, slotConfig: CrafterSlotConfig) {
   return Object.values(items)
     .filter((item) => itemMatchesCrafterSlot(item, slotConfig))
@@ -231,8 +252,31 @@ function getFoodOptions(items: Record<string, Item>) {
 
 function getMaterialOptions(items: Record<string, Item>) {
   return Object.values(items)
-    .filter((item) => Boolean(item.stats) || Boolean(item.effects?.length) || item.rarityPoints != null || Boolean(item.craft?.length))
+    .filter((item) =>
+      Boolean(item.crafter?.material?.weapon)
+      || Boolean(item.crafter?.material?.armor)
+      || Boolean(item.crafter?.material?.food)
+      || hasDisplayEffects(item)
+      || Boolean(getDisplayStats(item))
+      || item.rarityPoints != null
+      || Boolean(item.craft?.length),
+    )
     .sort((left, right) => left.name.localeCompare(right.name));
+}
+
+function getAnyItemOptions(items: Record<string, Item>) {
+  const uniqueItems = new Map<string, Item>();
+
+  uniqueItems.set(CRAFTER_RARITY_PLACEHOLDER_ITEM.id, CRAFTER_RARITY_PLACEHOLDER_ITEM);
+  Object.values(items)
+    .sort((left, right) => left.name.localeCompare(right.name))
+    .forEach((item) => {
+      if (!uniqueItems.has(item.id)) {
+        uniqueItems.set(item.id, item);
+      }
+    });
+
+  return [...uniqueItems.values()];
 }
 
 function getCrafterDisplayItem(itemId: string | undefined, items: Record<string, Item>) {
@@ -276,6 +320,32 @@ function formatFinalPercentValue(value: number) {
 
 function isPercentDisplayStatKey(stat: string): stat is (typeof PERCENT_STAT_DISPLAY_KEYS)[number] {
   return (PERCENT_STAT_DISPLAY_KEYS as readonly string[]).includes(stat);
+}
+
+function normalizeLegacyPreviewStats(stats: Item['stats'] | undefined) {
+  if (!stats) return undefined;
+
+  const normalizedEntries = Object.entries(stats)
+    .filter(([, value]) => value != null && value !== 0)
+    .map(([key, value]) => [key, isPercentDisplayStatKey(key) ? (value as number) / 100 : value]);
+
+  return normalizedEntries.length > 0 ? Object.fromEntries(normalizedEntries) : undefined;
+}
+
+function resolvePreviewStats(
+  payloadStats: Partial<NonNullable<Item['stats']>> | undefined,
+  item: Item | undefined,
+) {
+  if (payloadStats && Object.keys(payloadStats).length > 0) {
+    return payloadStats;
+  }
+
+  const legacyStats = normalizeLegacyPreviewStats(item?.stats);
+  if (legacyStats) {
+    return legacyStats;
+  }
+
+  return normalizeLegacyPreviewStats(item ? getDisplayStats(item) : undefined);
 }
 
 function BonusProgressBar({
@@ -348,6 +418,9 @@ function getItemTypeIcon(type: string) {
 }
 
 function getSlotIcon(node: CrafterGridNode) {
+  if (node.item?.id === CRAFTER_RARITY_PLACEHOLDER_ID) {
+    return 'star';
+  }
   if (node.item) {
     return getItemTypeIcon(node.item.type);
   }
@@ -381,6 +454,8 @@ function CrafterSlotIcon({ node, className }: { node: CrafterGridNode; className
       return <Footprints className={className} />;
     case 'sparkles':
       return <Sparkles className={className} />;
+    case 'star':
+      return <Star className={className} />;
     case 'package':
       return <Package className={className} />;
     default:
@@ -409,7 +484,11 @@ function getRarityBadgeClasses(rarity: number) {
   return 'border-border bg-muted text-muted-foreground';
 }
 
-function formatItemEffect(effect: NonNullable<Item['effects']>[number]) {
+function formatItemEffect(effect: DisplayEffect) {
+  if (effect.type === 'label') {
+    return effect.label;
+  }
+
   switch (effect.type) {
     case 'cure':
       return `Cures ${effect.targets.join(', ')}`;
@@ -476,6 +555,7 @@ function formatSignedFinalCrafterStatValue(stat: string, value: number) {
 
 function resolveCrafterItemImage(item?: Item) {
   if (!item) return undefined;
+  if (item.id === CRAFTER_RARITY_PLACEHOLDER_ID) return undefined;
   return resolveItemImage(item.name, item.image) ?? item.image;
 }
 
@@ -489,32 +569,74 @@ function getMaterialPayloadForSlot(slotKey: CrafterSlotKey, itemId: string | und
   return slotKey === 'weapon' ? crafterData.materials.weapon[itemId] : crafterData.materials.armor[itemId];
 }
 
+function getNodePayload(
+  node: CrafterSelectedNode | CrafterGridNode | undefined,
+  itemId: string | undefined,
+  crafterData: CrafterData,
+) {
+  if (!node || !itemId) return undefined;
+  if (node.slot === 'food') {
+    return node.type === 'foodBase'
+      ? crafterData.food.baseStats[itemId]
+      : crafterData.materials.food[itemId];
+  }
+  return node.type === 'base'
+    ? getEquipmentPayloadForSlot(node.slot, itemId, crafterData)
+    : getMaterialPayloadForSlot(node.slot, itemId, crafterData);
+}
+
+function getNodeEffectiveRarity(
+  node: CrafterSelectedNode | CrafterGridNode | undefined,
+  item: Item | undefined,
+  itemId: string | undefined,
+  crafterData: CrafterData,
+) {
+  const payload = getNodePayload(node, itemId, crafterData);
+  const payloadRarity = payload && 'rarity' in payload ? payload.rarity : undefined;
+
+  if (!node) {
+    return getCrafterSelectableRarity({
+      slot: 'food',
+      type: 'foodBase',
+      item,
+      itemId,
+      rarity: payloadRarity,
+    });
+  }
+
+  if (node.type === 'recipe' && node.slot !== 'food') {
+    const slotConfig = crafterData.slotConfigs.find((slotConfig) => slotConfig.key === node.slot);
+    if (slotConfig && itemMatchesCrafterSlot(item, slotConfig)) {
+      return 0;
+    }
+  }
+
+  return getEffectiveCrafterNodeRarity({
+    slot: node.slot,
+    type: node.type,
+    item,
+    itemId,
+    rarity: payloadRarity,
+  });
+}
+
 function getNodePreviewData(
   node: CrafterSelectedNode | CrafterGridNode | undefined,
   item: Item | undefined,
   itemId: string | undefined,
   crafterData: CrafterData,
 ): CrafterItemPreviewData {
-  const payload = (() => {
-    if (!node || !itemId) return undefined;
-    if (node.slot === 'food') {
-      return node.type === 'foodBase'
-        ? crafterData.food.baseStats[itemId]
-        : crafterData.materials.food[itemId];
-    }
-    return node.type === 'base'
-      ? getEquipmentPayloadForSlot(node.slot, itemId, crafterData)
-      : getMaterialPayloadForSlot(node.slot, itemId, crafterData);
-  })();
+  const payload = getNodePayload(node, itemId, crafterData);
   const payloadStats =
     payload && 'additive' in payload
       ? payload.additive
       : payload?.stats;
   const payloadGeometry = payload && 'geometry' in payload ? payload.geometry : undefined;
   const payloadResistances = payload?.resistances;
+  const previewStats = resolvePreviewStats(payloadStats, item);
 
   const stats = STAT_DISPLAY_ORDER
-    .map((key) => [key, Number(payloadStats?.[key] ?? item?.stats?.[key] ?? 0)] as const)
+    .map((key) => [key, Number(previewStats?.[key] ?? 0)] as const)
     .filter(([, value]) => value !== 0)
     .map(([key, value]) => `${formatStatLabel(key)} ${formatSignedCrafterStatValue(key, value)}`);
   const statusAttacks = STATUS_ATTACK_DISPLAY_ORDER
@@ -540,19 +662,17 @@ function getNodePreviewData(
     buildResistanceGroup('Reaction Res', REACTION_RESISTANCE_ORDER),
     buildResistanceGroup('Status Res', STATUS_RESISTANCE_ORDER),
   ].filter((group) => group.values.length > 0);
-  const effects = item?.effects?.map(formatItemEffect) ?? [];
+  const effects = item ? getDisplayEffects(item).map(formatItemEffect) : [];
+  const placeholderStats = itemId === CRAFTER_RARITY_PLACEHOLDER_ID ? [`Rarity +${CRAFTER_RARITY_PLACEHOLDER_VALUE}`] : [];
 
   return {
     imageSrc: resolveCrafterItemImage(item),
-    stats,
+    stats: [...placeholderStats, ...stats],
     statusAttacks,
     others,
     resistanceGroups,
     effects,
-    rarity:
-      (payload && 'rarity' in payload ? payload.rarity : undefined)
-      ?? item?.rarityPoints
-      ?? (itemId === CRAFTER_RARITY_PLACEHOLDER_ID ? 15 : 0),
+    rarity: getNodeEffectiveRarity(node, item, itemId, crafterData),
   };
 }
 
@@ -981,7 +1101,11 @@ function getRecipeDefaultItemIdForNode(
     return getFoodRecipeDefaults(build.food.baseId, crafterData)?.[node.index];
   }
 
-  return getEquipmentRecipeDefaults(node.slot, build[node.slot].appearanceId, crafterData)?.[node.index];
+  return getEquipmentRecipeDefaults(
+    node.slot,
+    getEquipmentRecipeSourceItemId(node.slot, build, crafterData),
+    crafterData,
+  )?.[node.index];
 }
 
 function resolveNodeBehavior(
@@ -992,6 +1116,9 @@ function resolveNodeBehavior(
   crafterData: CrafterData,
 ): CrafterNodeBehavior {
   if (node.type === 'recipe') {
+    const recipeSourceItemId = node.slot === 'food'
+      ? build.food.baseId
+      : getEquipmentRecipeSourceItemId(node.slot, build, crafterData);
     const defaultItemId = getRecipeDefaultItemIdForNode(node, build, crafterData);
     const defaultItem = getCrafterDisplayItem(defaultItemId, items);
 
@@ -1008,6 +1135,7 @@ function resolveNodeBehavior(
         helperLabel: 'Choose material',
         callout: `This recipe slot accepts any item from the ${defaultItem.name} group.`,
         categoryLabel: defaultItem.name,
+        emptyStateTitle: 'No items found.',
       };
     }
 
@@ -1020,8 +1148,45 @@ function resolveNodeBehavior(
         canClear: false,
         helperLabel: 'Level only',
         callout: 'This recipe ingredient is fixed. You can only adjust its level.',
+        emptyStateTitle: 'No items found.',
       };
     }
+
+    if (defaultItemId) {
+      return {
+        mode: 'fixed',
+        options: [],
+        canEditItem: false,
+        canEditLevel: false,
+        canClear: false,
+        helperLabel: 'Recipe unavailable',
+        callout: 'This recipe could not be resolved for the selected base.',
+        emptyStateTitle: 'Recipe unavailable',
+        emptyStateDescription: 'This recipe could not be resolved for the selected base.',
+      };
+    }
+
+    if (recipeSourceItemId) {
+      return {
+        mode: 'free',
+        options: node.slot === 'food' ? [CRAFTER_RARITY_PLACEHOLDER_ITEM, ...getMaterialOptions(items)] : getAnyItemOptions(items),
+        canEditItem: true,
+        canEditLevel: true,
+        canClear: true,
+      };
+    }
+
+    return {
+      mode: 'fixed',
+      options: [],
+      canEditItem: false,
+      canEditLevel: false,
+      canClear: false,
+      helperLabel: 'Recipe locked',
+      callout: 'Select a base item first to unlock this recipe slot.',
+      emptyStateTitle: 'Recipe locked',
+      emptyStateDescription: 'Select a base item first to unlock this recipe slot.',
+    };
   }
 
   if (node.slot === 'food') {
@@ -1246,6 +1411,13 @@ function buildGridSectionsForSlot({
   slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>;
   calculation: ReturnType<typeof calculateCrafterBuild>;
 }): CrafterGridSection[] {
+  const resolveGridNodeRarity = (
+    slot: CrafterEditorSlot,
+    type: CrafterNodeType,
+    item: Item | undefined,
+    itemId: string | undefined,
+  ) => getNodeEffectiveRarity({ slot, type }, item, itemId, crafterData);
+
   if (activeSlot === 'food') {
     const baseItem = build.food.baseId ? items[build.food.baseId] : undefined;
     const recipeSelections = getRecipeSelections(
@@ -1268,7 +1440,7 @@ function buildGridSectionsForSlot({
           itemId: baseItem?.id,
           itemName: baseItem?.name,
           level: 1,
-          rarity: baseItem?.rarityPoints ?? 0,
+          rarity: resolveGridNodeRarity('food', 'foodBase', baseItem, baseItem?.id),
           tier: 0,
           emptyLabel: 'Base Food',
           meta: 'Select a food recipe',
@@ -1292,7 +1464,7 @@ function buildGridSectionsForSlot({
             itemId: selection.itemId,
             itemName: item?.name,
             level: selection.level,
-            rarity: item?.rarityPoints ?? 0,
+            rarity: resolveGridNodeRarity('food', 'recipe', item, selection.itemId),
             tier: 0,
             emptyLabel: `Recipe ${index + 1}`,
             meta: 'Recipe slot',
@@ -1308,10 +1480,11 @@ function buildGridSectionsForSlot({
   const slotConfig = slotConfigByKey[activeSlot];
   const slot = build[activeSlot];
   const appearanceItem = getCrafterDisplayItem(slot.appearanceId, items);
+  const recipeSourceItemId = getEquipmentRecipeSourceItemId(activeSlot, build, crafterData);
   const recipeSelections = getRecipeSelections(
     slot.recipe,
     slotConfig.recipeSlots,
-    getEquipmentRecipeDefaults(activeSlot, slot.appearanceId, crafterData),
+    getEquipmentRecipeDefaults(activeSlot, recipeSourceItemId, crafterData),
   );
   const actualBaseItem = getCrafterDisplayItem(slot.baseId, items);
   const slotResult = calculation.slotResults[activeSlot];
@@ -1329,7 +1502,7 @@ function buildGridSectionsForSlot({
         itemId: appearanceItem?.id,
         itemName: appearanceItem?.name,
         level: slotResult.itemLevel || 1,
-        rarity: appearanceItem?.rarityPoints ?? 0,
+        rarity: resolveGridNodeRarity(activeSlot, 'base', appearanceItem, appearanceItem?.id),
         tier: slotResult.tier,
         emptyLabel: 'Base',
         meta: actualBaseItem?.name ? `Actual Base: ${actualBaseItem.name}` : 'Select the crafted appearance item',
@@ -1342,7 +1515,7 @@ function buildGridSectionsForSlot({
       nodes: recipeSelections.map((selection, index) => {
         const item = getCrafterDisplayItem(selection.itemId, items);
         const defaultItem = getCrafterDisplayItem(
-          getEquipmentRecipeDefaults(activeSlot, slot.appearanceId, crafterData)?.[index],
+          getEquipmentRecipeDefaults(activeSlot, recipeSourceItemId, crafterData)?.[index],
           items,
         );
         const isCategorySlot = defaultItem?.type === 'Category' && Boolean(defaultItem.groupMembers?.length);
@@ -1356,7 +1529,7 @@ function buildGridSectionsForSlot({
           itemId: selection.itemId,
           itemName: item?.name,
           level: selection.level,
-          rarity: item?.rarityPoints ?? 0,
+          rarity: resolveGridNodeRarity(activeSlot, 'recipe', item, selection.itemId),
           tier: 0,
           emptyLabel: `Recipe ${index + 1}`,
           meta: 'Recipe slot',
@@ -1382,7 +1555,7 @@ function buildGridSectionsForSlot({
           itemId: selection.itemId,
           itemName: item?.name,
           level: selection.level,
-          rarity: item?.rarityPoints ?? 0,
+          rarity: resolveGridNodeRarity(activeSlot, 'inherit', item, selection.itemId),
           tier: 0,
           emptyLabel: `Inheritance ${index + 1}`,
           meta: 'Inheritance slot',
@@ -1405,7 +1578,7 @@ function buildGridSectionsForSlot({
           itemId: selection.itemId,
           itemName: item?.name,
           level: selection.level,
-          rarity: item?.rarityPoints ?? 0,
+          rarity: resolveGridNodeRarity(activeSlot, 'upgrade', item, selection.itemId),
           tier: 0,
           emptyLabel: `Upgrade ${index + 1}`,
           meta: 'Upgrade slot',
@@ -1440,7 +1613,7 @@ function renderDashboardCards(
           itemId: item?.id,
           itemName: slotResult.appearanceName ?? item?.name ?? slotResult.label,
           level: slotResult.itemLevel || 1,
-          rarity: item?.rarityPoints ?? 0,
+          rarity: getNodeEffectiveRarity({ slot: slotKey, type: 'base' }, item, item?.id, crafterData),
           tier: slotResult.tier,
           emptyLabel: slotResult.label,
           meta: slotResult.baseName ? `Actual Base: ${slotResult.baseName}` : item?.name ? 'Base item selected' : 'Empty slot',
@@ -1466,7 +1639,7 @@ function renderDashboardCards(
         itemId: foodItem?.id,
         itemName: foodItem?.name ?? 'Cooking',
         level: calculation.foodSummary.finalLevel || 1,
-        rarity: foodItem?.rarityPoints ?? 0,
+        rarity: getNodeEffectiveRarity({ slot: 'food', type: 'foodBase' }, foodItem, foodItem?.id, crafterData),
         tier: 0,
         emptyLabel: 'Cooking',
         meta: 'Food bonuses and recipe ingredients',
@@ -1942,8 +2115,14 @@ export function CrafterView({
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                        {activePreviewItem ? (
-                          <img src={resolveCrafterItemImage(activePreviewItem)} alt={`${activePrimaryPreviewName} icon`} className="h-9 w-9 object-contain" />
+                        {activePreviewItem && resolveCrafterItemImage(activePreviewItem) ? (
+                          <img
+                            src={resolveCrafterItemImage(activePreviewItem)}
+                            alt={`${activePrimaryPreviewName} icon`}
+                            className="h-9 w-9 object-contain"
+                          />
+                        ) : activePreviewItem?.id === CRAFTER_RARITY_PLACEHOLDER_ID ? (
+                          <Star className="h-6 w-6 fill-current text-amber-600 dark:text-amber-300" />
                         ) : (
                           <Sparkles className="h-6 w-6 text-primary" />
                         )}
@@ -2101,6 +2280,8 @@ export function CrafterView({
         interactionLabel={selectedNodeBehavior?.helperLabel}
         interactionCallout={selectedNodeBehavior?.callout}
         categoryLabel={selectedNodeBehavior?.categoryLabel}
+        emptyStateTitle={selectedNodeBehavior?.emptyStateTitle}
+        emptyStateDescription={selectedNodeBehavior?.emptyStateDescription}
         onOpenChange={(open) => !open && setSelectedNode(null)}
         onClear={() => {
           if (!selectedNode) return;

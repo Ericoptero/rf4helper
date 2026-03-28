@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Check, Layers3, Lock, Search, Sparkles, Trash2 } from 'lucide-react';
+import { Check, Layers3, Lock, Search, Star, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -31,7 +31,7 @@ export type CrafterItemPreviewData = {
   others: string[];
   resistanceGroups: Array<{ title: string; values: string[] }>;
   effects: string[];
-  rarity?: number;
+  rarity: number;
 };
 
 type CrafterSelectorDialogProps = {
@@ -49,6 +49,8 @@ type CrafterSelectorDialogProps = {
   interactionLabel?: string;
   interactionCallout?: string;
   categoryLabel?: string;
+  emptyStateTitle?: string;
+  emptyStateDescription?: string;
   onOpenChange: (open: boolean) => void;
   onApply: (updates: { itemId?: string; level: number }) => void;
   onClear: () => void;
@@ -71,6 +73,8 @@ export function CrafterSelectorDialog({
   interactionLabel,
   interactionCallout,
   categoryLabel,
+  emptyStateTitle,
+  emptyStateDescription,
   onOpenChange,
   onApply,
   onClear,
@@ -105,14 +109,19 @@ export function CrafterSelectorDialog({
       if (!normalizedQuery) return true;
       return item.name.toLowerCase().includes(normalizedQuery) || item.type.toLowerCase().includes(normalizedQuery);
     });
+    const toEntry = (item: Item) => {
+      const preview = getItemPreviewData(item);
+      return {
+        item,
+        preview,
+        rarity: preview.rarity ?? 0,
+      };
+    };
 
-    const pinned = filtered.filter((item) => item.id === CRAFTER_RARITY_PLACEHOLDER_ID);
+    const pinned = filtered.filter((item) => item.id === CRAFTER_RARITY_PLACEHOLDER_ID).map(toEntry);
     const sortable = filtered
       .filter((item) => item.id !== CRAFTER_RARITY_PLACEHOLDER_ID)
-      .map((item) => ({
-        item,
-        rarity: item.rarityPoints ?? getItemPreviewData(item).rarity ?? 0,
-      }))
+      .map(toEntry)
       .sort((left, right) => {
         switch (sortMode) {
           case 'name-desc':
@@ -125,8 +134,7 @@ export function CrafterSelectorDialog({
           default:
             return left.item.name.localeCompare(right.item.name);
         }
-      })
-      .map(({ item }) => item);
+      });
 
     return [...pinned, ...sortable];
   }, [getItemPreviewData, options, query, sortMode]);
@@ -138,6 +146,7 @@ export function CrafterSelectorDialog({
   const { hasMore, sentinelRef, visibleCount } = useIncrementalReveal<HTMLDivElement>({
     itemCount: visibleOptions.length,
     batchSize: 24,
+    disabled: !open,
     resetKeys: [open, query, sortMode, title, selectedItemId, visibleOptions],
     rootRef: optionsListRef,
   });
@@ -219,9 +228,8 @@ export function CrafterSelectorDialog({
                 </div>
 
                 <div ref={optionsListRef} className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
-                  {renderedOptions.map((item) => {
+                  {renderedOptions.map(({ item, preview: itemPreview, rarity }) => {
                     const isSelected = draftItemId === item.id;
-                    const itemPreview = getItemPreviewData(item);
                     const isPlaceholder = item.id === CRAFTER_RARITY_PLACEHOLDER_ID;
 
                     return (
@@ -241,7 +249,9 @@ export function CrafterSelectorDialog({
                         )}
                       >
                         <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                          {itemPreview.imageSrc ? (
+                          {isPlaceholder ? (
+                            <Star className="h-4 w-4 fill-current text-amber-600 dark:text-amber-300" />
+                          ) : (
                             <img
                               src={itemPreview.imageSrc}
                               alt={`${item.name} icon`}
@@ -249,8 +259,6 @@ export function CrafterSelectorDialog({
                               loading="eager"
                               decoding="sync"
                             />
-                          ) : (
-                            <Sparkles className="h-4 w-4" />
                           )}
                         </div>
                         <div className="min-w-0 flex-1 space-y-1">
@@ -266,6 +274,10 @@ export function CrafterSelectorDialog({
                             {isSelected ? <Check className="h-4 w-4 shrink-0 text-primary" /> : null}
                           </div>
                           <div className="text-xs text-muted-foreground">{item.type}</div>
+                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <Star className={cn('h-3.5 w-3.5', isPlaceholder && 'text-amber-600 dark:text-amber-300')} />
+                            <span>Rarity {rarity}</span>
+                          </div>
                           {itemPreview.stats.length > 0 ? (
                             <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
                               {itemPreview.stats.slice(0, 3).map((entry) => (
@@ -289,7 +301,10 @@ export function CrafterSelectorDialog({
 
                   {visibleOptions.length === 0 ? (
                     <div className="rounded-2xl border border-dashed px-4 py-8 text-center text-sm text-muted-foreground">
-                      No items found.
+                      <div className="font-medium text-foreground">
+                        {emptyStateTitle ?? 'No items found.'}
+                      </div>
+                      {emptyStateDescription ? <div className="mt-1">{emptyStateDescription}</div> : null}
                     </div>
                   ) : null}
                 </div>
@@ -319,10 +334,23 @@ export function CrafterSelectorDialog({
                     <div className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Selected Item</div>
                     <div className="mt-2 text-lg font-semibold">{previewItem?.name ?? 'Empty slot'}</div>
                     <div className="text-sm text-muted-foreground">{previewItem?.type ?? 'Choose an item to preview its summary.'}</div>
+                    {previewItem ? (
+                      <div className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+                        <Star
+                          className={cn(
+                            'h-4 w-4',
+                            previewItem.id === CRAFTER_RARITY_PLACEHOLDER_ID && 'fill-current text-amber-600 dark:text-amber-300',
+                          )}
+                        />
+                        <span>Rarity {previewData.rarity}</span>
+                      </div>
+                    ) : null}
                   </div>
 
                   <div className="flex h-20 items-center justify-center rounded-2xl border bg-background/70">
-                    {previewData.imageSrc ? (
+                    {previewItem?.id === CRAFTER_RARITY_PLACEHOLDER_ID || !previewData.imageSrc ? (
+                      <Star className="h-6 w-6 fill-current text-amber-600 dark:text-amber-300" />
+                    ) : (
                       <img
                         src={previewData.imageSrc}
                         alt={`${previewItem?.name ?? 'Selected item'} icon`}
@@ -330,8 +358,6 @@ export function CrafterSelectorDialog({
                         loading="eager"
                         decoding="sync"
                       />
-                    ) : (
-                      <Sparkles className="h-6 w-6 text-primary" />
                     )}
                   </div>
 

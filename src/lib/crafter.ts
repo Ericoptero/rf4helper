@@ -1,4 +1,4 @@
-import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
+import LZString from 'lz-string';
 import type {
   CrafterBonusSummary,
   CrafterData,
@@ -15,6 +15,16 @@ import type {
   Item,
 } from './schemas';
 import { itemMatchesCrafterSlot } from './crafterData';
+import {
+  CRAFTER_RARITY_PLACEHOLDER_NAME,
+  CRAFTER_RARITY_PLACEHOLDER_VALUE,
+  isCrafterRarityPlaceholder,
+  shouldCountForRarityBonus,
+} from './crafterRarity';
+
+export { CRAFTER_RARITY_PLACEHOLDER_ID, CRAFTER_RARITY_PLACEHOLDER_NAME } from './crafterRarity';
+
+const { compressToEncodedURIComponent, decompressFromEncodedURIComponent } = LZString;
 
 export type CrafterBuildState = CrafterDefaults;
 
@@ -207,12 +217,19 @@ const COOKING_CAPPED_STAT_KEYS = ['crit'] as const;
 const DASHBOARD_STATUS_RES_BASELINE_KEYS = ['psn', 'seal', 'par', 'slp', 'ftg', 'sick', 'fnt'] as const;
 const DASHBOARD_STATUS_RES_BASELINE_VALUE = 0.49;
 const SHIELD_PARTIAL_SCALING_STAT_KEYS = ['atk', 'matk', 'def', 'mdef', 'str', 'int', 'vit'] as const;
-export const CRAFTER_RARITY_PLACEHOLDER_ID = 'crafter-rarity-placeholder-15';
-export const CRAFTER_RARITY_PLACEHOLDER_NAME = 'Rarity +15';
-
-function isCrafterRarityPlaceholder(itemId: string | undefined) {
-  return itemId === CRAFTER_RARITY_PLACEHOLDER_ID;
-}
+const FOOD_OVERWRITE_BASE_PAYLOAD: CrafterFoodPayload = {
+  itemName: 'Overwrite',
+  additive: {},
+  multipliers: {
+    hp: -0.2,
+    rpMax: -0.1,
+    str: -0.1,
+    int: -0.1,
+    vit: -0.1,
+  },
+  resistances: {},
+  statusAttacks: {},
+};
 
 function cloneSelection(selection?: CrafterMaterialSelection): CrafterMaterialSelection {
   return {
@@ -353,6 +370,10 @@ function getFoodRecipeDefinition(baseId: string | undefined, data: CrafterData) 
   return data.recipes.food[baseId];
 }
 
+function foodIngredientTriggersOverwrite(payload: CrafterFoodPayload | undefined) {
+  return Boolean(payload?.status?.overwrite);
+}
+
 function applyDefaultRecipeSelections(
   current: CrafterMaterialSelection[] | undefined,
   defaults: string[] | undefined,
@@ -427,6 +448,81 @@ function expandSelectionList(
   return next;
 }
 
+function coerceLegacySelectionList(
+  selections: unknown,
+  count: number,
+) {
+  const next = padSelections(undefined, count);
+  if (!Array.isArray(selections)) return next;
+
+  for (let index = 0; index < Math.min(count, selections.length); index += 1) {
+    const selection = selections[index];
+    if (!selection || typeof selection !== 'object') continue;
+    const itemId = typeof (selection as { itemId?: unknown }).itemId === 'string'
+      ? (selection as { itemId?: string }).itemId
+      : undefined;
+    const level = typeof (selection as { level?: unknown }).level === 'number'
+      ? normalizeMaterialLevel((selection as { level: number }).level)
+      : itemId
+        ? 10
+        : 1;
+
+    next[index] = {
+      itemId,
+      level,
+    };
+  }
+
+  return next;
+}
+
+function tryDeserializeLegacyCrafterBuild(
+  serialized: string,
+  data: CrafterData,
+) {
+  if (!serialized.trim().startsWith('{')) return undefined;
+
+  const slotConfigByKey = getSlotConfigByKey(data);
+  let parsed: Partial<CrafterBuildState> | null;
+  try {
+    parsed = JSON.parse(serialized) as Partial<CrafterBuildState> | null;
+  } catch {
+    return undefined;
+  }
+  if (!parsed || typeof parsed !== 'object') return undefined;
+
+  const merged = structuredClone(createDefaultCrafterBuild(data));
+
+  for (const slotKey of SLOT_KEYS) {
+    const incoming = parsed[slotKey];
+    if (!incoming || typeof incoming !== 'object') continue;
+    const slotConfig = slotConfigByKey[slotKey];
+    const legacySlot = incoming as Partial<CrafterBuildState[typeof slotKey]>;
+
+    merged[slotKey].appearanceId =
+      typeof legacySlot.appearanceId === 'string'
+        ? legacySlot.appearanceId
+        : typeof legacySlot.baseId === 'string'
+          ? legacySlot.baseId
+          : undefined;
+    merged[slotKey].baseId = undefined;
+    merged[slotKey].recipe = coerceLegacySelectionList(legacySlot.recipe, slotConfig.recipeSlots);
+    merged[slotKey].inherits = coerceLegacySelectionList(legacySlot.inherits, slotConfig.inheritSlots);
+    merged[slotKey].upgrades = coerceLegacySelectionList(legacySlot.upgrades, slotConfig.upgradeSlots);
+  }
+
+  const legacyFood = parsed.food;
+  if (legacyFood && typeof legacyFood === 'object') {
+    merged.food.baseId = typeof legacyFood.baseId === 'string' ? legacyFood.baseId : undefined;
+    merged.food.recipe = coerceLegacySelectionList(
+      (legacyFood as Partial<CrafterBuildState['food']>).recipe,
+      6,
+    );
+  }
+
+  return merged;
+}
+
 export function createDefaultCrafterBuild(data: CrafterData): CrafterBuildState {
   const build = structuredClone(data.defaults) as CrafterBuildState;
   const slotConfigByKey = getSlotConfigByKey(data);
@@ -455,10 +551,14 @@ export function deserializeCrafterBuild(
   try {
     const slotConfigByKey = getSlotConfigByKey(data);
     const decompressed = decompressFromEncodedURIComponent(serialized);
-    if (!decompressed) return fallback;
+    if (!decompressed) {
+      return tryDeserializeLegacyCrafterBuild(serialized, data) ?? fallback;
+    }
 
     const parsed = JSON.parse(decompressed) as CompactCrafterBuild;
-    if (parsed.v !== 2) return fallback;
+    if (parsed.v !== 2) {
+      return tryDeserializeLegacyCrafterBuild(serialized, data) ?? fallback;
+    }
     const merged = structuredClone(fallback);
 
     for (const slotKey of SLOT_KEYS) {
@@ -480,7 +580,7 @@ export function deserializeCrafterBuild(
 
     return merged;
   } catch {
-    return fallback;
+    return tryDeserializeLegacyCrafterBuild(serialized, data) ?? fallback;
   }
 }
 
@@ -580,7 +680,7 @@ function getMaterialPayload(
       attackType: undefined,
       element: undefined,
       damageType: undefined,
-      rarity: 15,
+      rarity: CRAFTER_RARITY_PLACEHOLDER_VALUE,
       bonusType: undefined,
       bonusType2: undefined,
     };
@@ -595,7 +695,7 @@ function getMaterialRarity(
   data: CrafterData,
 ) {
   if (!itemId) return 0;
-  if (isCrafterRarityPlaceholder(itemId)) return 15;
+  if (isCrafterRarityPlaceholder(itemId)) return CRAFTER_RARITY_PLACEHOLDER_VALUE;
   return getMaterialPayload(slotKey, itemId, data)?.rarity ?? 0;
 }
 
@@ -946,19 +1046,22 @@ export function calculateCrafterBuild(
       .filter((name): name is string => Boolean(name));
 
     const baseLevel = baseId ? Math.min(10, 1 + selection.upgrades.filter((material) => Boolean(material.itemId)).length) : 0;
-    let levelValue = baseLevel;
+    let levelBonusValue = 0;
     let rarityValue = 0;
     for (const material of recipeSelections) {
       if (!material.itemId) continue;
       const rarity = getMaterialRarity(slotKey, material.itemId, data);
-      levelValue += normalizeMaterialLevel(material.level);
-      rarityValue += rarity;
+      const effectiveRarity = matchesSlotCraft(items[material.itemId], slotConfig) ? 0 : rarity;
+      levelBonusValue += normalizeMaterialLevel(material.level);
+      if (shouldCountForRarityBonus('recipe')) {
+        rarityValue += effectiveRarity;
+      }
       materialContributions.push({
         itemId: material.itemId,
         itemName: getItemName(material.itemId, items)!,
         source: 'recipe',
         level: normalizeMaterialLevel(material.level),
-        rarity,
+        rarity: effectiveRarity,
         behavior: specialRuleMap.get(material.itemId),
         stats: {},
         resistances: {},
@@ -989,7 +1092,9 @@ export function calculateCrafterBuild(
       const rarity = getMaterialRarity(slotKey, material.itemId, data);
 
       if (source === 'upgrade') {
-        levelValue += level;
+        levelBonusValue += level;
+      }
+      if (shouldCountForRarityBonus(source)) {
         rarityValue += rarity;
       }
 
@@ -1107,7 +1212,7 @@ export function calculateCrafterBuild(
 
     const baseWeaponClass = getWeaponClass(baseId, items, data);
 
-    const levelBonus = getTier(levelValue, data.levelBonusTiers);
+    const levelBonus = getTier(levelBonusValue, data.levelBonusTiers);
     const rarityBonus = getTier(rarityValue, data.rarityBonusTiers);
     applyLevelBonus(slotConfig, slotStats, levelBonus);
     addRarityBonus(slotConfig, slotStats, rarityBonus, baseWeaponClass);
@@ -1133,7 +1238,7 @@ export function calculateCrafterBuild(
           : getItemName(slotConfig.carrierId ?? undefined, items),
       recipeIngredients,
       itemLevel: baseLevel,
-      level: levelValue,
+      level: levelBonusValue,
       rarity: rarityValue,
       tier: rarityBonus.tier,
       levelTier: levelBonus.tier,
@@ -1184,7 +1289,13 @@ export function calculateCrafterBuild(
     actualFoodSelections.length === 0 ? 0 : Math.floor(foodTotalLevel / actualFoodSelections.length);
   const foodScale = actualFoodSelections.length === 0 ? 0 : (7 + foodFinalLevel) / 8;
   const foodBasePayload = getFoodBasePayload(build.food.baseId, data);
-  const scaledFoodBase = foodPayloadScale(foodBasePayload, foodScale);
+  const shouldOverwriteFoodBase = actualFoodSelections.some((selection) =>
+    foodIngredientTriggersOverwrite(getFoodIngredientPayload(selection.itemId, data)),
+  );
+  const scaledFoodBase = foodPayloadScale(
+    shouldOverwriteFoodBase ? FOOD_OVERWRITE_BASE_PAYLOAD : foodBasePayload,
+    foodScale,
+  );
   const foodAdditive = cloneStats(scaledFoodBase.additive);
   const foodMultipliers = cloneStats(scaledFoodBase.multipliers);
   const foodResistances = cloneResistances(scaledFoodBase.resistances);

@@ -24,6 +24,13 @@ import { resolveMonsterImageUrl } from '@/lib/publicAssetUrls';
 import { buildMapRegions } from '@/lib/mapFishingRelations';
 import { buildMonsterGroups, isMonsterActuallyTameable } from '@/lib/monsterGroups';
 import { capitalize, formatName, formatNumber } from '@/lib/formatters';
+import {
+  getDisplayCombat,
+  getDisplayEffects,
+  getDisplayFoodSummary,
+  getDisplayStats,
+  type DisplayEffect,
+} from '@/lib/itemPresentation';
 import type { Character, Crop, Festival, Fish, Item } from '@/lib/schemas';
 import type { DetailPayload } from '@/server/details';
 import { useDetailDrawer } from './DetailDrawerContext';
@@ -125,7 +132,11 @@ function formatEffectTarget(target: string) {
     .join(' ');
 }
 
-function formatEffectLabel(effect: NonNullable<Item['effects']>[number]) {
+function formatEffectLabel(effect: DisplayEffect) {
+  if (effect.type === 'label') {
+    return effect.label;
+  }
+
   if (effect.type === 'cure') {
     return `Cures ${effect.targets.map(formatEffectTarget).join(', ')}`;
   }
@@ -224,18 +235,22 @@ function CraftedFromRecipeGrid({
 }
 
 function ItemDetailsContent({ item, items }: { item: Item; items?: Record<string, Item> }) {
-  const stats = Object.entries(item.stats ?? {}).filter(([, value]) => value !== 0);
-  const effects = item.effects ?? [];
+  const displayStats = getDisplayStats(item);
+  const displayEffects = getDisplayEffects(item);
+  const displayFood = getDisplayFoodSummary(item);
+  const displayCombat = getDisplayCombat(item);
+  const stats = Object.entries(displayStats ?? {}).filter(([, value]) => value !== 0);
+  const effects = displayEffects ?? [];
   const crafts = item.craft ?? item.craftedFrom ?? [];
-  const healingEntries = Object.entries(item.healing ?? {}).filter(([, value]) => value !== 0);
-  const statMultiplierEntries = Object.entries(item.statMultipliers ?? {}).filter(([, value]) => value !== 0);
+  const healingEntries = Object.entries(displayFood?.healing ?? {}).filter(([, value]) => value !== 0);
+  const statMultiplierEntries = Object.entries(displayFood?.statMultipliers ?? {}).filter(([, value]) => value !== 0);
   const combatEntries = [
-    ['Weapon Class', item.combat?.weaponClass],
-    ['Attack Type', item.combat?.attackType],
-    ['Element', item.combat?.element],
-    ['Damage Type', item.combat?.damageType],
+    ['Weapon Class', displayCombat?.weaponClass],
+    ['Attack Type', displayCombat?.attackType],
+    ['Element', displayCombat?.element],
+    ['Damage Type', displayCombat?.damageType],
   ].filter(([, value]) => value);
-  const geometryEntries = Object.entries(item.combat?.geometry ?? {}).filter(([, value]) => value !== 0);
+  const geometryEntries = Object.entries(displayCombat?.geometry ?? {}).filter(([, value]) => value !== 0);
 
   return (
     <div className="space-y-6">
@@ -379,7 +394,7 @@ function ItemDetailsContent({ item, items }: { item: Item; items?: Record<string
           <div className="space-y-3">
             {crafts.map((craft, index) => (
               <div key={`${craft.stationType}-${index}`} className="rounded-xl border bg-muted/30 p-4">
-                <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_13.5rem] lg:items-start">
+                <div className="grid gap-4">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between gap-3 border-b pb-2">
                       <span className="font-semibold">{craft.station ?? craft.stationType}</span>
@@ -387,9 +402,6 @@ function ItemDetailsContent({ item, items }: { item: Item; items?: Record<string
                         Lv. {craft.level}
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      Recipe ingredients are shown in the same 3x2 crafter layout for quick inspection.
-                    </p>
                   </div>
                   <CraftedFromRecipeGrid ingredients={craft.ingredients} items={items} />
                 </div>

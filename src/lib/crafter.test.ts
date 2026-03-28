@@ -46,7 +46,7 @@ describe('crafter engine parity', () => {
     expect(build.food.recipe.every((slot) => slot.itemId == null && slot.level === 1)).toBe(true);
   });
 
-  it('round-trips compressed builds and rejects the retired raw JSON format', () => {
+  it('round-trips compressed builds and migrates the retired raw JSON format with baseId-only slots', () => {
     const build = createDefaultCrafterBuild(crafterData);
     build.weapon.appearanceId = 'item-broadsword';
     build.weapon.recipe[0] = selection('item-minerals', 8);
@@ -54,10 +54,23 @@ describe('crafter engine parity', () => {
     build.accessory.appearanceId = 'item-strange-pendant';
     build.food.baseId = 'item-glitter-sashimi';
     build.food.recipe[0] = selection('item-golden-turnip', 8);
+    const legacyRawBuild = JSON.stringify({
+      ...build,
+      weapon: {
+        ...build.weapon,
+        appearanceId: undefined,
+        baseId: 'item-broadsword',
+      },
+      accessory: {
+        ...build.accessory,
+        appearanceId: undefined,
+        baseId: 'item-strange-pendant',
+      },
+    });
 
     const serialized = serializeCrafterBuild(build, crafterData);
     const restored = deserializeCrafterBuild(serialized, crafterData);
-    const rejectedLegacy = deserializeCrafterBuild(JSON.stringify(build), crafterData);
+    const restoredLegacy = deserializeCrafterBuild(legacyRawBuild, crafterData);
 
     expect(serialized).not.toContain('{');
     expect(serialized).not.toContain('"appearanceId"');
@@ -69,7 +82,11 @@ describe('crafter engine parity', () => {
     expect(restored.food.baseId).toBe('item-glitter-sashimi');
     expect(restored.food.recipe[0]?.itemId).toBe('item-golden-turnip');
     expect(restored.food.recipe[0]?.level).toBe(8);
-    expect(rejectedLegacy).toEqual(createDefaultCrafterBuild(crafterData));
+    expect(restoredLegacy.weapon.appearanceId).toBe('item-broadsword');
+    expect(restoredLegacy.weapon.baseId).toBeUndefined();
+    expect(restoredLegacy.accessory.appearanceId).toBe('item-strange-pendant');
+    expect(restoredLegacy.accessory.baseId).toBeUndefined();
+    expect(restoredLegacy.food.baseId).toBe('item-glitter-sashimi');
   });
 
   it('keeps the workbook sample structurally valid under the restored appearance/base model', () => {
@@ -143,20 +160,21 @@ describe('crafter engine parity', () => {
     expect(result.geometry.length).toBe(4);
   });
 
-  it('derives the equipped base level from filled upgrades and applies it to the level bonus total', () => {
+  it('derives the equipped base level from filled upgrades without adding it to the level bonus total', () => {
     const build = createDefaultCrafterBuild(crafterData);
     build.weapon.appearanceId = 'item-broadsword';
     build.weapon.recipe[0] = selection('item-broadsword');
 
     const withoutUpgrades = calculateCrafterBuild(build, items, crafterData);
     expect(withoutUpgrades.slotResults.weapon.itemLevel).toBe(1);
+    expect(withoutUpgrades.slotResults.weapon.level).toBe(10);
 
     build.weapon.upgrades[0] = selection('item-firewyrm-scale');
     build.weapon.upgrades[1] = selection('item-firewyrm-scale');
 
     const twoUpgrades = calculateCrafterBuild(build, items, crafterData);
     expect(twoUpgrades.slotResults.weapon.itemLevel).toBe(3);
-    expect(twoUpgrades.slotResults.weapon.level).toBe(withoutUpgrades.slotResults.weapon.level + 22);
+    expect(twoUpgrades.slotResults.weapon.level).toBe(withoutUpgrades.slotResults.weapon.level + 20);
 
     for (let index = 2; index < 9; index += 1) {
       build.weapon.upgrades[index] = selection('item-firewyrm-scale');
@@ -164,6 +182,7 @@ describe('crafter engine parity', () => {
 
     const maxed = calculateCrafterBuild(build, items, crafterData);
     expect(maxed.slotResults.weapon.itemLevel).toBe(10);
+    expect(maxed.slotResults.weapon.level).toBe(100);
   });
 
   it('applies Object X inversion and repeated-upgrade halving using workbook ordering rules', () => {
@@ -341,6 +360,43 @@ describe('crafter engine parity', () => {
     expect(result.statusAttacks.faint).toBeCloseTo(1, 6);
   });
 
+  it('applies the workbook overwrite branch for food ingredients that set overwrite', () => {
+    const data = structuredClone(crafterData);
+    data.food.baseStats['item-glitter-sashimi'] = {
+      ...(data.food.baseStats['item-glitter-sashimi'] ?? { itemName: 'Glitter Sashimi', additive: {}, multipliers: {}, resistances: {}, statusAttacks: {} }),
+      additive: { hp: 5000, rp: 1000, str: 150 },
+      multipliers: { hp: 1.609863, rpMax: 0.5, str: 0.179932, int: 0.15, vit: 0.2 },
+      resistances: { light: 0.5 },
+      statusAttacks: { psn: 0.25 },
+    };
+    data.materials.food['item-broadsword'] = {
+      itemName: 'Broadsword',
+      additive: {},
+      multipliers: {},
+      resistances: {},
+      statusAttacks: {},
+      status: { status: 4000, overwrite: 1 },
+    };
+
+    const build = createDefaultCrafterBuild(data);
+    build.food.baseId = 'item-glitter-sashimi';
+    build.food.recipe[0] = selection('item-broadsword');
+
+    const result = calculateCrafterBuild(build, items, data);
+
+    expect(result.foodSummary.totalLevel).toBe(10);
+    expect(result.foodSummary.finalLevel).toBe(10);
+    expect(result.foodSummary.healing.hp).toBe(0);
+    expect(result.foodSummary.healing.hpPercent).toBeCloseTo(-0.425, 6);
+    expect(result.foodSummary.stats.additive.str ?? 0).toBe(0);
+    expect(result.foodSummary.stats.multipliers.rpMax).toBeCloseTo(-0.2125, 6);
+    expect(result.foodSummary.stats.multipliers.str).toBeCloseTo(-0.2125, 6);
+    expect(result.foodSummary.stats.multipliers.int).toBeCloseTo(-0.2125, 6);
+    expect(result.foodSummary.stats.multipliers.vit).toBeCloseTo(-0.2125, 6);
+    expect(result.foodSummary.resistances.light ?? 0).toBe(0);
+    expect(result.foodSummary.statusAttacks.psn ?? 0).toBe(0);
+  });
+
   it('adds the dashboard status-res baseline of 49% before capping without mutating slot resistances', () => {
     const data = structuredClone(crafterData);
     data.stats.armor['item-royal-garter'] = {
@@ -514,6 +570,62 @@ describe('crafter engine parity', () => {
     expect(turnipContribution).toBeDefined();
     expect(turnipContribution?.itemName).toBe('Turnip Heaven');
     expect(turnipContribution?.rarity ?? 0).toBe(15);
+  });
+
+  it('counts rarity from recipe and upgrades only, ignoring the equipped appearance item rarity', () => {
+    const data = structuredClone(crafterData);
+    data.recipes.equipment.weapon['item-broadsword'] = {
+      station: 'Short Sword',
+      materials: [],
+    };
+    data.recipes.equipment.weapon['item-heaven-asunder'] = {
+      station: 'Long Sword',
+      materials: [],
+    };
+
+    const lowRarityAppearance = createDefaultCrafterBuild(crafterData);
+    lowRarityAppearance.weapon.appearanceId = 'item-broadsword';
+    lowRarityAppearance.weapon.recipe[0] = selection('item-turnip-heaven');
+    lowRarityAppearance.weapon.recipe[1] = selection('item-silver');
+    for (let index = 2; index < lowRarityAppearance.weapon.recipe.length; index += 1) {
+      lowRarityAppearance.weapon.recipe[index] = { itemId: '', level: 1 };
+    }
+    lowRarityAppearance.weapon.upgrades[0] = selection('item-firewyrm-scale');
+
+    const highRarityAppearance = cloneBuild(lowRarityAppearance);
+    highRarityAppearance.weapon.appearanceId = 'item-heaven-asunder';
+
+    const lowAppearanceResult = calculateCrafterBuild(lowRarityAppearance, items, data);
+    const highAppearanceResult = calculateCrafterBuild(highRarityAppearance, items, data);
+
+    expect(lowAppearanceResult.slotResults.weapon.rarity).toBeGreaterThan(0);
+    expect(lowAppearanceResult.slotResults.weapon.rarityBonusSummary.value).toBe(lowAppearanceResult.slotResults.weapon.rarity);
+    expect(lowAppearanceResult.slotResults.weapon.rarityTier).toBeGreaterThanOrEqual(1);
+    expect(highAppearanceResult.slotResults.weapon.rarity).toBe(lowAppearanceResult.slotResults.weapon.rarity);
+    expect(highAppearanceResult.slotResults.weapon.rarityBonusSummary.value).toBe(
+      lowAppearanceResult.slotResults.weapon.rarityBonusSummary.value,
+    );
+    expect(highAppearanceResult.slotResults.weapon.rarityTier).toBe(lowAppearanceResult.slotResults.weapon.rarityTier);
+  });
+
+  it('excludes the derived base recipe item from rarity totals while keeping other recipe materials counted', () => {
+    const build = createDefaultCrafterBuild(crafterData);
+    build.weapon.appearanceId = 'item-broadsword';
+    build.weapon.recipe[0] = selection('item-broadsword');
+    build.weapon.recipe[1] = selection('item-turnip-heaven');
+
+    const result = calculateCrafterBuild(build, items, crafterData);
+    const derivedBaseContribution = result.slotResults.weapon.materialContributions.find(
+      (entry) => entry.source === 'recipe' && entry.itemId === 'item-broadsword',
+    );
+    const normalRecipeContribution = result.slotResults.weapon.materialContributions.find(
+      (entry) => entry.source === 'recipe' && entry.itemId === 'item-turnip-heaven',
+    );
+
+    expect(result.build.weapon.baseId).toBe('item-broadsword');
+    expect(derivedBaseContribution?.rarity).toBe(0);
+    expect(normalRecipeContribution?.rarity).toBe(15);
+    expect(result.slotResults.weapon.rarity).toBe(15);
   });
 
   it('adds a visible placeholder that contributes exactly 15 rarity and no other effects', () => {

@@ -123,12 +123,18 @@ describe('useIncrementalReveal', () => {
     expect(screen.getByTestId('has-more')).toHaveTextContent('false');
   });
 
-  it('does not start observing when disabled or when the sentinel is absent', () => {
+  it('does not start observing while disabled', () => {
     const { rerender } = render(<IncrementalRevealProbe itemCount={50} batchSize={24} disabled />);
 
     expect(MockIntersectionObserver.instances).toHaveLength(0);
 
-    rerender(<IncrementalRevealProbe itemCount={50} batchSize={24} renderSentinel={false} />);
+    rerender(<IncrementalRevealProbe itemCount={50} batchSize={24} disabled renderSentinel={false} />);
+
+    expect(MockIntersectionObserver.instances).toHaveLength(0);
+  });
+
+  it('does not start observing when the sentinel is absent', () => {
+    render(<IncrementalRevealProbe itemCount={50} batchSize={24} renderSentinel={false} />);
 
     expect(MockIntersectionObserver.instances).toHaveLength(0);
   });
@@ -147,5 +153,46 @@ describe('useIncrementalReveal', () => {
     rerender(<IncrementalRevealProbe itemCount={50} batchSize={24} resetKeys={['broadsword']} />);
 
     expect(screen.getByTestId('visible-count')).toHaveTextContent('24');
+  });
+
+  it('starts observing once a previously disabled reveal is enabled', () => {
+    const { rerender } = render(<IncrementalRevealProbe itemCount={50} batchSize={24} disabled />);
+
+    expect(MockIntersectionObserver.instances).toHaveLength(0);
+    expect(screen.getByTestId('visible-count')).toHaveTextContent('24');
+
+    rerender(<IncrementalRevealProbe itemCount={50} batchSize={24} disabled={false} />);
+
+    expect(MockIntersectionObserver.instances).toHaveLength(1);
+
+    const sentinel = screen.getByTestId('sentinel');
+
+    act(() => {
+      MockIntersectionObserver.trigger(sentinel);
+    });
+
+    expect(screen.getByTestId('visible-count')).toHaveTextContent('48');
+    expect(screen.getByTestId('has-more')).toHaveTextContent('true');
+  });
+
+  it('does not grow the visible count when an observer entry is not intersecting', () => {
+    render(<IncrementalRevealProbe itemCount={50} batchSize={24} />);
+
+    const sentinel = screen.getByTestId('sentinel');
+
+    act(() => {
+      MockIntersectionObserver.trigger(sentinel, false);
+    });
+
+    expect(screen.getByTestId('visible-count')).toHaveTextContent('24');
+    expect(screen.getByTestId('has-more')).toHaveTextContent('true');
+  });
+
+  it('does not start observing when all items are already visible in the first batch', () => {
+    render(<IncrementalRevealProbe itemCount={12} batchSize={24} />);
+
+    expect(screen.getByTestId('visible-count')).toHaveTextContent('12');
+    expect(screen.getByTestId('has-more')).toHaveTextContent('false');
+    expect(MockIntersectionObserver.instances).toHaveLength(0);
   });
 });
