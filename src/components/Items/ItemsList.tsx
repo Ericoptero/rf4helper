@@ -1,16 +1,17 @@
 import React from 'react';
 import { Box, Coins, Hammer, Star } from 'lucide-react';
-import { useItems } from '@/hooks/queries';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   CatalogPageLayout,
-  type CatalogFilterValue,
   type CatalogFilterDefinition,
+  type CatalogFilterValue,
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
 import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/DetailDrawerContext';
 import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
+import type { DetailEntityReference } from '@/components/details/detailTypes';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import { hasDisplayEffects } from '@/lib/itemPresentation';
 import type { Item } from '@/lib/schemas';
@@ -86,9 +87,9 @@ function ItemsCatalog({
   sortValue,
   onSortValueChange,
   filterValues,
-  onFilterValueChange,
+  onFilterValuesChange,
 }: {
-  itemsData?: Record<string, Item>;
+  itemsData: Item[];
   totalCount?: number;
   filterOptions?: {
     type: CatalogOption[];
@@ -104,18 +105,14 @@ function ItemsCatalog({
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
-  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
+  onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
 }) {
-  const { data: fetchedItems, isLoading } = useItems({ enabled: !itemsData });
   const { openRoot } = useDetailDrawer();
-
-  const items = itemsData ?? fetchedItems;
-  const list = Object.values(items || {});
-  const derivedTypes = Array.from(new Set(list.map((item) => item.type))).sort();
-  const derivedCategories = Array.from(new Set(list.map((item) => item.category).filter(Boolean) as string[])).sort();
-  const derivedRegions = Array.from(new Set(list.map((item) => item.region).filter(Boolean) as string[])).sort();
+  const derivedTypes = Array.from(new Set(itemsData.map((item) => item.type))).sort();
+  const derivedCategories = Array.from(new Set(itemsData.map((item) => item.category).filter(Boolean) as string[])).sort();
+  const derivedRegions = Array.from(new Set(itemsData.map((item) => item.region).filter(Boolean) as string[])).sort();
   const derivedRarityCategories = Array.from(
-    new Set(list.map((item) => item.rarityCategory).filter(Boolean) as string[]),
+    new Set(itemsData.map((item) => item.rarityCategory).filter(Boolean) as string[]),
   ).sort();
 
   const filters: CatalogFilterDefinition<Item>[] = [
@@ -204,7 +201,7 @@ function ItemsCatalog({
   return (
     <>
       <CatalogPageLayout<Item>
-        data={list}
+        data={itemsData}
         totalCount={totalCount}
         title="Items Database"
         searchKey="name"
@@ -217,10 +214,9 @@ function ItemsCatalog({
         sortOptions={sortOptions}
         filters={filters}
         filterValues={filterValues}
-        onFilterValueChange={onFilterValueChange}
+        onFilterValuesChange={onFilterValuesChange}
         tableColumns={tableColumns}
         getItemKey={(item) => item.id}
-        isLoading={!itemsData && isLoading}
         disableClientFiltering={serverDriven}
         renderCard={(item, onClick) => <ItemCard item={item} onClick={onClick} />}
         onOpenItem={(item) => openRoot({ type: 'item', id: item.id })}
@@ -235,8 +231,8 @@ export function ItemsList({
   totalCount,
   filterOptions,
   serverDriven = false,
-  detailValue,
-  onDetailValueChange,
+  detailReference,
+  onDetailReferenceChange,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -244,9 +240,9 @@ export function ItemsList({
   sortValue,
   onSortValueChange,
   filterValues,
-  onFilterValueChange,
+  onFilterValuesChange,
 }: {
-  items?: Record<string, Item>;
+  items: Item[];
   totalCount?: number;
   filterOptions?: {
     type: CatalogOption[];
@@ -255,8 +251,8 @@ export function ItemsList({
     rarity: CatalogOption[];
   };
   serverDriven?: boolean;
-  detailValue?: string;
-  onDetailValueChange?: (value?: string) => void;
+  detailReference?: DetailEntityReference | null;
+  onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -264,9 +260,9 @@ export function ItemsList({
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
-  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
-} = {}) {
-  const [internalDetailValue, setInternalDetailValue] = React.useState<string | undefined>();
+  onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+}) {
+  const [internalDetailReference, setInternalDetailReference] = React.useState<DetailEntityReference | null>(null);
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
   const [internalViewMode, setInternalViewMode] = React.useState<'cards' | 'table'>('cards');
   const [internalSortValue, setInternalSortValue] = React.useState('name-asc');
@@ -274,8 +270,8 @@ export function ItemsList({
 
   return (
     <DetailDrawerProvider
-      detailValue={detailValue ?? internalDetailValue}
-      onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
+      detailReference={detailReference ?? internalDetailReference}
+      onDetailReferenceChange={onDetailReferenceChange ?? setInternalDetailReference}
     >
       <ItemsCatalog
         itemsData={items}
@@ -289,7 +285,7 @@ export function ItemsList({
         sortValue={sortValue ?? internalSortValue}
         onSortValueChange={onSortValueChange ?? setInternalSortValue}
         filterValues={filterValues ?? internalFilterValues}
-        onFilterValueChange={onFilterValueChange ?? ((key, value) => setInternalFilterValues((previous) => ({ ...previous, [key]: value })))}
+        onFilterValuesChange={onFilterValuesChange ?? setInternalFilterValues}
       />
     </DetailDrawerProvider>
   );

@@ -26,6 +26,15 @@ function HistoryHarness() {
       >
         Open linked
       </button>
+      <button
+        type="button"
+        onClick={() => history.syncTo({ type: 'monster', id: 'monster-orc' })}
+      >
+        Sync to monster
+      </button>
+      <button type="button" onClick={() => history.syncTo(null)}>
+        Sync clear
+      </button>
       <button type="button" onClick={() => history.back()}>
         Back
       </button>
@@ -60,5 +69,22 @@ describe('useDetailDrawerHistory', () => {
     await user.click(screen.getByRole('button', { name: 'Close' }));
     expect(screen.getByTestId('current-entry')).toHaveTextContent('none');
     expect(screen.getByTestId('can-go-back')).toHaveTextContent('no');
+  });
+
+  it('can open a linked entry from an empty stack and sync external state', async () => {
+    const user = userEvent.setup();
+
+    render(<HistoryHarness />);
+
+    await user.click(screen.getByRole('button', { name: 'Open linked' }));
+    expect(screen.getByTestId('current-entry')).toHaveTextContent('character:char-forte');
+    expect(screen.getByTestId('can-go-back')).toHaveTextContent('no');
+
+    await user.click(screen.getByRole('button', { name: 'Sync to monster' }));
+    expect(screen.getByTestId('current-entry')).toHaveTextContent('monster:monster-orc');
+    expect(screen.getByTestId('can-go-back')).toHaveTextContent('no');
+
+    await user.click(screen.getByRole('button', { name: 'Sync clear' }));
+    expect(screen.getByTestId('current-entry')).toHaveTextContent('none');
   });
 });

@@ -1,14 +1,10 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 import { CrafterView } from './CrafterView';
 import { deserializeCrafterBuild } from '@/lib/crafter';
 import type { CrafterData, CrafterSlotConfig, Item } from '@/lib/schemas';
-
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({ children, ...props }: { children: ReactNode }) => <a {...props}>{children}</a>,
-}));
 
 const items: Record<string, Item> = {
   'item-broadsword': {

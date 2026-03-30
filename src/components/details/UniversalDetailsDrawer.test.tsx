@@ -2,8 +2,8 @@ import { render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DetailDrawerProvider } from './DetailDrawerContext';
-import { encodeDetailEntity } from './detailTypes';
 import { UniversalDetailsDrawer } from './UniversalDetailsDrawer';
+import { resetDetailPayloadCache } from './useDetailPayload';
 
 describe('UniversalDetailsDrawer', () => {
   beforeEach(() => {
@@ -38,14 +38,15 @@ describe('UniversalDetailsDrawer', () => {
   });
 
   afterEach(() => {
+    resetDetailPayloadCache();
     vi.unstubAllGlobals();
   });
 
   it('renders map chest details without interactive checkboxes', async () => {
     render(
       <DetailDrawerProvider
-        detailValue={encodeDetailEntity({ type: 'map', id: 'selphia-plains' })}
-        onDetailValueChange={() => undefined}
+        detailReference={{ type: 'map', id: 'selphia-plains' }}
+        onDetailReferenceChange={() => undefined}
       >
         <UniversalDetailsDrawer />
       </DetailDrawerProvider>,

@@ -1,18 +1,19 @@
 import React from 'react';
 import { Box, Fish, MapPin } from 'lucide-react';
-import { useChests, useFish } from '@/hooks/queries';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   CatalogPageLayout,
-  type CatalogFilterValue,
   type CatalogFilterDefinition,
+  type CatalogFilterValue,
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
 import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/DetailDrawerContext';
 import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
+import type { DetailEntityReference } from '@/components/details/detailTypes';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
-import { buildMapRegions, type MapRegionRecord } from '@/lib/mapFishingRelations';
+import type { MapRegionRecord } from '@/lib/mapFishingRelations';
 
 function MapCard({ region, onClick }: { region: MapRegionRecord; onClick: () => void }) {
   return (
@@ -46,9 +47,7 @@ function MapCard({ region, onClick }: { region: MapRegionRecord; onClick: () => 
 }
 
 function MapsCatalog({
-  regionsData,
-  chestsData,
-  fishData,
+  regions,
   totalCount,
   serverDriven = false,
   searchTerm,
@@ -58,11 +57,9 @@ function MapsCatalog({
   sortValue,
   onSortValueChange,
   filterValues,
-  onFilterValueChange,
+  onFilterValuesChange,
 }: {
-  regionsData?: MapRegionRecord[];
-  chestsData?: import('@/lib/schemas').Chest[];
-  fishData?: import('@/lib/schemas').Fish[];
+  regions: MapRegionRecord[];
   totalCount?: number;
   serverDriven?: boolean;
   searchTerm?: string;
@@ -72,22 +69,9 @@ function MapsCatalog({
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
-  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
+  onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
 }) {
-  const { data: fetchedChests, isLoading: chestsLoading } = useChests({
-    enabled: !regionsData && !chestsData,
-  });
-  const { data: fetchedFish, isLoading: fishLoading } = useFish({
-    enabled: !regionsData && !fishData,
-  });
   const { openRoot } = useDetailDrawer();
-  const chests = chestsData ?? fetchedChests;
-  const fish = fishData ?? fetchedFish;
-
-  const regions = React.useMemo(
-    () => regionsData ?? buildMapRegions(chests ?? [], fish ?? []),
-    [chests, fish, regionsData],
-  );
 
   const filters: CatalogFilterDefinition<MapRegionRecord>[] = [
     {
@@ -159,10 +143,9 @@ function MapsCatalog({
         sortOptions={sortOptions}
         filters={filters}
         filterValues={filterValues}
-        onFilterValueChange={onFilterValueChange}
+        onFilterValuesChange={onFilterValuesChange}
         tableColumns={tableColumns}
         getItemKey={(region) => region.id}
-        isLoading={(!chestsData && chestsLoading) || (!fishData && fishLoading)}
         disableClientFiltering={serverDriven}
         renderCard={(region, onClick) => <MapCard region={region} onClick={onClick} />}
         onOpenItem={(region) => openRoot({ type: 'map', id: region.id })}
@@ -174,12 +157,10 @@ function MapsCatalog({
 
 export function MapsList({
   regions,
-  chests,
-  fish,
   totalCount,
   serverDriven = false,
-  detailValue,
-  onDetailValueChange,
+  detailReference,
+  onDetailReferenceChange,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -187,15 +168,13 @@ export function MapsList({
   sortValue,
   onSortValueChange,
   filterValues,
-  onFilterValueChange,
+  onFilterValuesChange,
 }: {
-  regions?: MapRegionRecord[];
-  chests?: import('@/lib/schemas').Chest[];
-  fish?: import('@/lib/schemas').Fish[];
+  regions: MapRegionRecord[];
   totalCount?: number;
   serverDriven?: boolean;
-  detailValue?: string;
-  onDetailValueChange?: (value?: string) => void;
+  detailReference?: DetailEntityReference | null;
+  onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -203,9 +182,9 @@ export function MapsList({
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
-  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
-} = {}) {
-  const [internalDetailValue, setInternalDetailValue] = React.useState<string | undefined>();
+  onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+}) {
+  const [internalDetailReference, setInternalDetailReference] = React.useState<DetailEntityReference | null>(null);
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
   const [internalViewMode, setInternalViewMode] = React.useState<'cards' | 'table'>('cards');
   const [internalSortValue, setInternalSortValue] = React.useState('name-asc');
@@ -213,13 +192,11 @@ export function MapsList({
 
   return (
     <DetailDrawerProvider
-      detailValue={detailValue ?? internalDetailValue}
-      onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
+      detailReference={detailReference ?? internalDetailReference}
+      onDetailReferenceChange={onDetailReferenceChange ?? setInternalDetailReference}
     >
       <MapsCatalog
-        regionsData={regions}
-        chestsData={chests}
-        fishData={fish}
+        regions={regions}
         totalCount={totalCount}
         serverDriven={serverDriven}
         searchTerm={searchTerm ?? internalSearchTerm}
@@ -229,7 +206,7 @@ export function MapsList({
         sortValue={sortValue ?? internalSortValue}
         onSortValueChange={onSortValueChange ?? setInternalSortValue}
         filterValues={filterValues ?? internalFilterValues}
-        onFilterValueChange={onFilterValueChange ?? ((key, value) => setInternalFilterValues((previous) => ({ ...previous, [key]: value })))}
+        onFilterValuesChange={onFilterValuesChange ?? setInternalFilterValues}
       />
     </DetailDrawerProvider>
   );

@@ -161,9 +161,7 @@ function ControlledCatalogHarness({ data = entries }: { data?: Entry[] }) {
       sortOptions={sortOptions}
       filters={filters}
       filterValues={filterValues}
-      onFilterValueChange={(key, value) =>
-        setFilterValues((previous) => ({ ...previous, [key]: value }))
-      }
+      onFilterValuesChange={setFilterValues}
       tableColumns={tableColumns}
       getItemKey={(entry) => entry.id}
       renderCard={(entry, onOpen) => (
@@ -320,7 +318,7 @@ describe('CatalogPageLayout', () => {
 
   it('does not emit filter changes when applying an unchanged multi-select draft', async () => {
     const user = userEvent.setup();
-    const onFilterValueChange = vi.fn();
+    const onFilterValuesChange = vi.fn();
 
     render(
       <CatalogPageLayout<Entry>
@@ -336,7 +334,7 @@ describe('CatalogPageLayout', () => {
         sortOptions={sortOptions}
         filters={filters}
         filterValues={{ tags: ['farm', 'spring'] }}
-        onFilterValueChange={onFilterValueChange}
+        onFilterValuesChange={onFilterValuesChange}
         tableColumns={tableColumns}
         getItemKey={(entry) => entry.id}
         renderCard={(entry, onOpen) => (
@@ -352,7 +350,7 @@ describe('CatalogPageLayout', () => {
     const dialog = await screen.findByRole('dialog');
     await user.click(within(dialog).getByRole('button', { name: /apply filters/i }));
 
-    expect(onFilterValueChange).not.toHaveBeenCalled();
+    expect(onFilterValuesChange).not.toHaveBeenCalled();
   });
 
   it('clears active and draft drawer filters from the footer action while keeping the drawer open', async () => {
@@ -408,7 +406,7 @@ describe('CatalogPageLayout', () => {
           sortOptions={sortOptions}
           filters={filters}
           filterValues={{}}
-          onFilterValueChange={vi.fn()}
+          onFilterValuesChange={vi.fn()}
           tableColumns={tableColumns}
           getItemKey={(entry) => entry.id}
           renderCard={(entry, onOpen) => (
@@ -449,7 +447,7 @@ describe('CatalogPageLayout', () => {
         sortOptions={sortOptions}
         filters={filters}
         filterValues={{ featured: 'yes' }}
-        onFilterValueChange={vi.fn()}
+        onFilterValuesChange={vi.fn()}
         tableColumns={tableColumns}
         getItemKey={(entry) => entry.id}
         renderCard={(entry, onOpen) => (

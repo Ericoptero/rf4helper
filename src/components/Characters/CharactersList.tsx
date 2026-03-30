@@ -1,16 +1,17 @@
 import React from 'react';
 import { Smile } from 'lucide-react';
-import { useCharacters } from '@/hooks/queries';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   CatalogPageLayout,
-  type CatalogFilterValue,
   type CatalogFilterDefinition,
+  type CatalogFilterValue,
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
 import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/DetailDrawerContext';
 import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
+import type { DetailEntityReference } from '@/components/details/detailTypes';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import { resolveCharacterImage } from '@/lib/characterImages';
 import type { Character } from '@/lib/schemas';
@@ -93,9 +94,9 @@ function CharactersCatalog({
   sortValue,
   onSortValueChange,
   filterValues,
-  onFilterValueChange,
+  onFilterValuesChange,
 }: {
-  charactersData?: Record<string, Character>;
+  charactersData: Character[];
   totalCount?: number;
   filterOptions?: {
     category: CatalogOption[];
@@ -111,20 +112,16 @@ function CharactersCatalog({
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
-  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
+  onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
 }) {
-  const { data: fetchedCharacters, isLoading } = useCharacters({ enabled: !charactersData });
   const { openRoot } = useDetailDrawer();
-  const characters = charactersData ?? fetchedCharacters;
-  const list = Object.values(characters || {});
-
-  const categories = Array.from(new Set(list.map((character) => character.category))).sort();
-  const genders = Array.from(new Set(list.map((character) => character.gender).filter(Boolean) as string[])).sort();
+  const categories = Array.from(new Set(charactersData.map((character) => character.category))).sort();
+  const genders = Array.from(new Set(charactersData.map((character) => character.gender).filter(Boolean) as string[])).sort();
   const seasons = Array.from(
-    new Set(list.map((character) => character.birthday?.season).filter(Boolean) as string[]),
+    new Set(charactersData.map((character) => character.birthday?.season).filter(Boolean) as string[]),
   ).sort();
   const weaponTypes = Array.from(
-    new Set(list.map((character) => character.battle?.weaponType).filter(Boolean) as string[]),
+    new Set(charactersData.map((character) => character.battle?.weaponType).filter(Boolean) as string[]),
   ).sort();
 
   const filters: CatalogFilterDefinition<Character>[] = [
@@ -183,7 +180,7 @@ function CharactersCatalog({
   return (
     <>
       <CatalogPageLayout<Character>
-        data={list}
+        data={charactersData}
         totalCount={totalCount}
         title="Characters"
         searchKey="name"
@@ -196,10 +193,9 @@ function CharactersCatalog({
         sortOptions={sortOptions}
         filters={filters}
         filterValues={filterValues}
-        onFilterValueChange={onFilterValueChange}
+        onFilterValuesChange={onFilterValuesChange}
         tableColumns={tableColumns}
         getItemKey={(character) => character.id}
-        isLoading={!charactersData && isLoading}
         disableClientFiltering={serverDriven}
         renderCard={(character, onClick) => <CharacterCard character={character} onClick={onClick} />}
         onOpenItem={(character) => openRoot({ type: 'character', id: character.id })}
@@ -214,8 +210,8 @@ export function CharactersList({
   totalCount,
   filterOptions,
   serverDriven = false,
-  detailValue,
-  onDetailValueChange,
+  detailReference,
+  onDetailReferenceChange,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -223,9 +219,9 @@ export function CharactersList({
   sortValue,
   onSortValueChange,
   filterValues,
-  onFilterValueChange,
+  onFilterValuesChange,
 }: {
-  characters?: Record<string, Character>;
+  characters: Character[];
   totalCount?: number;
   filterOptions?: {
     category: CatalogOption[];
@@ -234,8 +230,8 @@ export function CharactersList({
     weaponType: CatalogOption[];
   };
   serverDriven?: boolean;
-  detailValue?: string;
-  onDetailValueChange?: (value?: string) => void;
+  detailReference?: DetailEntityReference | null;
+  onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -243,9 +239,9 @@ export function CharactersList({
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
-  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
-} = {}) {
-  const [internalDetailValue, setInternalDetailValue] = React.useState<string | undefined>();
+  onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+}) {
+  const [internalDetailReference, setInternalDetailReference] = React.useState<DetailEntityReference | null>(null);
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
   const [internalViewMode, setInternalViewMode] = React.useState<'cards' | 'table'>('cards');
   const [internalSortValue, setInternalSortValue] = React.useState('name-asc');
@@ -253,8 +249,8 @@ export function CharactersList({
 
   return (
     <DetailDrawerProvider
-      detailValue={detailValue ?? internalDetailValue}
-      onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
+      detailReference={detailReference ?? internalDetailReference}
+      onDetailReferenceChange={onDetailReferenceChange ?? setInternalDetailReference}
     >
       <CharactersCatalog
         charactersData={characters}
@@ -268,7 +264,7 @@ export function CharactersList({
         sortValue={sortValue ?? internalSortValue}
         onSortValueChange={onSortValueChange ?? setInternalSortValue}
         filterValues={filterValues ?? internalFilterValues}
-        onFilterValueChange={onFilterValueChange ?? ((key, value) => setInternalFilterValues((previous) => ({ ...previous, [key]: value })))}
+        onFilterValuesChange={onFilterValuesChange ?? setInternalFilterValues}
       />
     </DetailDrawerProvider>
   );

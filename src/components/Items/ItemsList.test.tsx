@@ -5,8 +5,6 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import type { Item } from '@/lib/schemas';
 import { ItemsList } from './ItemsList';
-import { createTestQueryClient } from '@/lib/test-utils';
-import { QueryClientProvider } from '@tanstack/react-query';
 
 type MockEffect =
   | { type: 'cure'; targets: string[] }
@@ -191,6 +189,8 @@ const mockItems: Record<string, MockItem> = {
   },
 };
 
+const mockItemList = Object.values(mockItems);
+
 const server = setupServer(
   http.get('http://localhost:3000/data/items.json', () => {
     return HttpResponse.json(mockItems);
@@ -215,21 +215,8 @@ beforeAll(() => server.listen());
 afterAll(() => server.close());
 
 describe('ItemsList Component', () => {
-  const wrapper = ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={createTestQueryClient()}>
-      {children}
-    </QueryClientProvider>
-  );
-
-  it('renders loading state initially', () => {
-    render(<ItemsList />, { wrapper });
-    expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
-  });
-
-  it('renders items after successful fetch', async () => {
-    render(<ItemsList />, { wrapper });
-
-    await screen.findAllByText('Bread');
+  it('renders items immediately from server-provided props', async () => {
+    render(<ItemsList items={mockItemList} />);
 
     expect(screen.getAllByText('Bread').length).toBeGreaterThan(0);
     expect(screen.getByText('Weapon Bread')).toBeInTheDocument();
@@ -243,9 +230,7 @@ describe('ItemsList Component', () => {
   });
 
   it('does not render alphabet controls', async () => {
-    render(<ItemsList />, { wrapper });
-
-    await screen.findAllByText('Bread');
+    render(<ItemsList items={mockItemList} />);
 
     expect(screen.queryByRole('button', { name: 'All' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'A' })).not.toBeInTheDocument();
@@ -255,9 +240,7 @@ describe('ItemsList Component', () => {
   it('combines search and drawer type filter', async () => {
     const user = userEvent.setup();
 
-    render(<ItemsList />, { wrapper });
-
-    await screen.findAllByText('Bread');
+    render(<ItemsList items={mockItemList} />);
 
     await user.type(screen.getByPlaceholderText(/search/i), 'a');
     await user.click(screen.getByRole('button', { name: /more filters/i }));
@@ -277,21 +260,20 @@ describe('ItemsList Component', () => {
   });
 
   it('renders item image on the card when available', async () => {
-    render(<ItemsList />, { wrapper });
+    render(<ItemsList items={mockItemList} />);
 
-    const breadImage = await screen.findByRole('img', { name: 'Bread image' });
-    expect(breadImage).toHaveAttribute('src');
-    expect(await screen.findByRole('img', { name: "Ambrosia's Thorns image" })).toHaveAttribute('src');
+    const flourImage = await screen.findByRole('img', { name: 'Flour image' });
+    expect(flourImage).toHaveAttribute('src');
+    expect(await screen.findByRole('img', { name: 'Toast image' })).toHaveAttribute('src');
   });
 
   it('supports controlled table mode sorting and server-friendly filter combinations', async () => {
     const { rerender } = render(
       <ItemsList
-        items={mockItems}
+        items={mockItemList}
         viewMode="table"
         sortValue="sell-desc"
       />,
-      { wrapper },
     );
 
     const rows = await screen.findAllByRole('row');
@@ -299,63 +281,55 @@ describe('ItemsList Component', () => {
     expect(within(rows[2]!).getAllByRole('cell')[0]).toHaveTextContent('Fire Resist Charm');
 
     rerender(
-      <QueryClientProvider client={createTestQueryClient()}>
-        <ItemsList
-          items={mockItems}
-          viewMode="table"
-          searchTerm="bread"
-          filterValues={{
-            category: 'foodandmedicinestrings',
-            region: 'selphia general store',
-            ship: 'yes',
-            rarity: 'food',
-          }}
-        />
-      </QueryClientProvider>,
+      <ItemsList
+        items={mockItemList}
+        viewMode="table"
+        searchTerm="bread"
+        filterValues={{
+          category: 'foodandmedicinestrings',
+          region: 'selphia general store',
+          ship: 'yes',
+          rarity: 'food',
+        }}
+      />,
     );
 
     expect(await screen.findByText('Bread')).toBeInTheDocument();
     expect(screen.queryByText('Weapon Bread')).not.toBeInTheDocument();
 
     rerender(
-      <QueryClientProvider client={createTestQueryClient()}>
-        <ItemsList
-          items={mockItems}
-          viewMode="table"
-          filterValues={{
-            type: 'bread',
-            buyable: 'yes',
-            sellable: 'yes',
-          }}
-        />
-      </QueryClientProvider>,
+      <ItemsList
+        items={mockItemList}
+        viewMode="table"
+        filterValues={{
+          type: 'bread',
+          buyable: 'yes',
+          sellable: 'yes',
+        }}
+      />,
     );
 
     expect(await screen.findByText('Weapon Bread+')).toBeInTheDocument();
     expect(screen.queryByText('Weapon Bread')).not.toBeInTheDocument();
 
     rerender(
-      <QueryClientProvider client={createTestQueryClient()}>
-        <ItemsList
-          items={mockItems}
-          viewMode="table"
-          searchTerm="sword"
-          filterValues={{ craft: 'yes' }}
-        />
-      </QueryClientProvider>,
+      <ItemsList
+        items={mockItemList}
+        viewMode="table"
+        searchTerm="sword"
+        filterValues={{ craft: 'yes' }}
+      />,
     );
 
     expect(await screen.findByText('Broadsword')).toBeInTheDocument();
     expect(screen.queryByText('Bread')).not.toBeInTheDocument();
 
     rerender(
-      <QueryClientProvider client={createTestQueryClient()}>
-        <ItemsList
-          items={mockItems}
-          viewMode="table"
-          filterValues={{ effects: 'yes' }}
-        />
-      </QueryClientProvider>,
+      <ItemsList
+        items={mockItemList}
+        viewMode="table"
+        filterValues={{ effects: 'yes' }}
+      />,
     );
 
     expect(await screen.findByText('Roundoff')).toBeInTheDocument();
@@ -365,7 +339,7 @@ describe('ItemsList Component', () => {
   it('shows the item image and all meaningful details in the sheet', async () => {
     const user = userEvent.setup();
 
-    render(<ItemsList />, { wrapper });
+    render(<ItemsList items={mockItemList} />);
 
     await user.click((await screen.findAllByText('Bread'))[0]);
     const dialog = await screen.findByRole('dialog');
@@ -395,7 +369,7 @@ describe('ItemsList Component', () => {
   it('hides optional detail sections when item data is missing', async () => {
     const user = userEvent.setup();
 
-    render(<ItemsList />, { wrapper });
+    render(<ItemsList items={mockItemList} />);
 
     await user.click(await screen.findByText("Ambrosia's Thorns"));
 
@@ -410,7 +384,7 @@ describe('ItemsList Component', () => {
   it('renders category ingredients in the crafted from section', async () => {
     const user = userEvent.setup();
 
-    render(<ItemsList />, { wrapper });
+    render(<ItemsList items={mockItemList} />);
 
     await user.click(await screen.findByText('Broadsword'));
     const dialog = await screen.findByRole('dialog');
@@ -426,7 +400,7 @@ describe('ItemsList Component', () => {
   it('shows generic recipe reverse links on category items', async () => {
     const user = userEvent.setup();
 
-    render(<ItemsList />, { wrapper });
+    render(<ItemsList items={mockItemList} />);
 
     await user.click(await screen.findByText('Minerals'));
 
@@ -437,7 +411,7 @@ describe('ItemsList Component', () => {
   it('renders group members for category items', async () => {
     const user = userEvent.setup();
 
-    render(<ItemsList />, { wrapper });
+    render(<ItemsList items={mockItemList} />);
 
     await user.click(await screen.findByText('Minerals'));
 
@@ -448,7 +422,7 @@ describe('ItemsList Component', () => {
   it('renders non-flat effects alongside normalized stats', async () => {
     const user = userEvent.setup();
 
-    render(<ItemsList />, { wrapper });
+    render(<ItemsList items={mockItemList} />);
 
     await user.click(await screen.findByText('Roundoff'));
 
@@ -462,7 +436,7 @@ describe('ItemsList Component', () => {
   it('renders effects without a stats section when the item has no stats', async () => {
     const user = userEvent.setup();
 
-    render(<ItemsList />, { wrapper });
+    render(<ItemsList items={mockItemList} />);
 
     await user.click(await screen.findByText('Fire Resist Charm'));
 
@@ -474,7 +448,7 @@ describe('ItemsList Component', () => {
   it('renders healing, stat multipliers, and combat details when the item exposes them', async () => {
     const user = userEvent.setup();
 
-    render(<ItemsList />, { wrapper });
+    render(<ItemsList items={mockItemList} />);
 
     await user.click(await screen.findByText('Battle Broth'));
 
@@ -500,7 +474,7 @@ describe('ItemsList Component', () => {
   it('renders the item drawer full width on mobile with a column hero layout', async () => {
     const user = userEvent.setup();
 
-    render(<ItemsList />, { wrapper });
+    render(<ItemsList items={mockItemList} />);
 
     await user.click((await screen.findAllByText('Bread'))[0]);
 

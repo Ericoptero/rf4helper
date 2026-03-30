@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 
 import './globals.css';
 
-import { AppProviders } from '@/components/AppProviders';
 import { AppShell } from '@/components/AppShell';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 export const metadata: Metadata = {
   title: 'Rune Factory 4 Helper',
@@ -21,9 +21,9 @@ export default function RootLayout({
         <script id="theme-bootstrap" src="/theme-bootstrap.js" />
       </head>
       <body>
-        <AppProviders>
+        <TooltipProvider>
           <AppShell>{children}</AppShell>
-        </AppProviders>
+        </TooltipProvider>
       </body>
     </html>
   );

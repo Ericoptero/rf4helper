@@ -1,12 +1,10 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import type { Monster } from '@/lib/schemas';
 import { MonstersList } from './MonstersList';
-import { createTestQueryClient } from '@/lib/test-utils';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { buildMonsterGroups } from '@/lib/monsterGroups';
 
 const mockMonsters: Record<string, Monster> = {
@@ -106,30 +104,17 @@ const server = setupServer(
 beforeAll(() => server.listen());
 afterAll(() => server.close());
 
+const mockMonsterGroups = buildMonsterGroups(Object.values(mockMonsters));
+
 describe('MonstersList Component', () => {
-  const wrapper = ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={createTestQueryClient()}>
-      {children}
-    </QueryClientProvider>
-  );
-
-  it('renders loading state initially', () => {
-    render(<MonstersList />, { wrapper });
-    expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
-  });
-
-  it('renders monsters after successful fetch', async () => {
-    render(<MonstersList />, { wrapper });
-
-    await screen.findByText('Orc');
+  it('renders monsters from server-provided groups', async () => {
+    render(<MonstersList monsters={mockMonsterGroups} />);
 
     expect(screen.getByText('Orc')).toBeInTheDocument();
   });
 
   it('renders grouped variants as one card with both locations', async () => {
-    render(<MonstersList />, { wrapper });
-
-    await screen.findByText('Octopirate');
+    render(<MonstersList monsters={mockMonsterGroups} />);
 
     expect(screen.getAllByText('Octopirate')).toHaveLength(1);
     expect(screen.getByText(/Field Dungeon \(Boss\)/i)).toBeInTheDocument();
@@ -140,11 +125,10 @@ describe('MonstersList Component', () => {
   it('supports controlled table mode sorting and server-driven filter combinations', async () => {
     const { rerender } = render(
       <MonstersList
-        monsters={mockMonsters}
+        monsters={mockMonsterGroups}
         viewMode="table"
         sortValue="level-desc"
       />,
-      { wrapper },
     );
 
     const rows = await screen.findAllByRole('row');
@@ -152,20 +136,18 @@ describe('MonstersList Component', () => {
     expect(within(rows[2]!).getAllByRole('cell')[0]).toHaveTextContent('Octopirate');
 
     rerender(
-      <QueryClientProvider client={createTestQueryClient()}>
-        <MonstersList
-          monsters={mockMonsters}
-          viewMode="table"
-          searchTerm="octo"
-          filterValues={{
-            tameable: 'yes',
-            boss: 'yes',
-            rideable: 'yes',
-            location: 'field dungeon (boss)',
-            drops: 'yes',
-          }}
-        />
-      </QueryClientProvider>,
+      <MonstersList
+        monsters={mockMonsterGroups}
+        viewMode="table"
+        searchTerm="octo"
+        filterValues={{
+          tameable: 'yes',
+          boss: 'yes',
+          rideable: 'yes',
+          location: 'field dungeon (boss)',
+          drops: 'yes',
+        }}
+      />,
     );
 
     expect(await screen.findByText('Octopirate')).toBeInTheDocument();
@@ -176,7 +158,7 @@ describe('MonstersList Component', () => {
   it('renders drops as a quick toggle instead of a combobox filter', async () => {
     const user = userEvent.setup();
 
-    render(<MonstersList monsters={mockMonsters} />, { wrapper });
+    render(<MonstersList monsters={mockMonsterGroups} />);
 
     await screen.findByText('Orc');
     await user.click(screen.getByRole('button', { name: /more filters/i }));
@@ -189,11 +171,7 @@ describe('MonstersList Component', () => {
 
   it('shows a location-labeled variant switcher and updates details when switching', async () => {
     const user = userEvent.setup();
-    render(<MonstersList />, { wrapper });
-
-    await waitFor(() => {
-      expect(screen.getByText('Octopirate')).toBeInTheDocument();
-    });
+    render(<MonstersList monsters={mockMonsterGroups} />);
 
     await user.click(screen.getByText('Octopirate'));
     const dialog = await screen.findByRole('dialog');
@@ -219,11 +197,7 @@ describe('MonstersList Component', () => {
 
   it('finds grouped cards by suffixed variant names', async () => {
     const user = userEvent.setup();
-    render(<MonstersList />, { wrapper });
-
-    await waitFor(() => {
-      expect(screen.getByText('Octopirate')).toBeInTheDocument();
-    });
+    render(<MonstersList monsters={mockMonsterGroups} />);
 
     await user.type(screen.getByPlaceholderText(/search/i), 'Octopirate 2');
 
@@ -233,7 +207,7 @@ describe('MonstersList Component', () => {
 
   it('does not show tameable badges or taming info for zero-befriend monsters', async () => {
     const user = userEvent.setup();
-    render(<MonstersList />, { wrapper });
+    render(<MonstersList monsters={mockMonsterGroups} />);
 
     await screen.findByText('Death Orc');
 
@@ -250,11 +224,7 @@ describe('MonstersList Component', () => {
 
   it('hides rideable info when rideability is unknown and renders readable resistance labels', async () => {
     const user = userEvent.setup();
-    render(<MonstersList />, { wrapper });
-
-    await waitFor(() => {
-      expect(screen.getByText('Death Orc')).toBeInTheDocument();
-    });
+    render(<MonstersList monsters={mockMonsterGroups} />);
 
     await user.click(screen.getByText('Octopirate'));
     const dialog = await screen.findByRole('dialog', { name: 'Octopirate' });
@@ -268,11 +238,7 @@ describe('MonstersList Component', () => {
 
   it('hides rideable and nickname sections when data is missing', async () => {
     const user = userEvent.setup();
-    render(<MonstersList />, { wrapper });
-
-    await waitFor(() => {
-      expect(screen.getByText('Orc')).toBeInTheDocument();
-    });
+    render(<MonstersList monsters={mockMonsterGroups} />);
 
     await user.click(screen.getByText('Orc'));
 
@@ -280,8 +246,13 @@ describe('MonstersList Component', () => {
     expect(screen.queryByRole('heading', { name: 'Nicknames' })).not.toBeInTheDocument();
   });
 
-  it('hydrates the monster drawer from detailValue without loading unrelated domain content', async () => {
-    render(<MonstersList detailValue="monster:monster-octopirate" />, { wrapper });
+  it('hydrates the monster drawer from a detail reference without loading unrelated domain content', async () => {
+    render(
+      <MonstersList
+        monsters={mockMonsterGroups}
+        detailReference={{ type: 'monster', id: 'monster-octopirate' }}
+      />,
+    );
 
     const dialog = await screen.findByRole('dialog', { name: 'Octopirate' });
 
@@ -293,7 +264,7 @@ describe('MonstersList Component', () => {
   it('renders the monster drawer full width on mobile with a column hero layout', async () => {
     const user = userEvent.setup();
 
-    render(<MonstersList />, { wrapper });
+    render(<MonstersList monsters={mockMonsterGroups} />);
 
     await screen.findByText('Octopirate');
     await user.click(screen.getByText('Octopirate'));

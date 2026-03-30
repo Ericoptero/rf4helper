@@ -32,11 +32,11 @@ import {
   type DisplayEffect,
 } from '@/lib/itemPresentation';
 import type { Character, Crop, Festival, Fish, Item } from '@/lib/schemas';
-import type { DetailPayload } from '@/server/details';
 import { useDetailDrawer } from './DetailDrawerContext';
 import { CatalogDetailsDrawerShell } from './CatalogDetailsDrawerShell';
 import { LinkedEntityToken } from './LinkedEntityToken';
 import { getSemanticBadgeClass } from './semanticBadges';
+import { useDetailPayload } from './useDetailPayload';
 
 const itemStatLabels: Record<string, string> = {
   hp: 'HP',
@@ -1061,49 +1061,7 @@ function CropDetailsContent({ crop }: { crop: Crop }) {
 
 export function UniversalDetailsDrawer() {
   const { current } = useDetailDrawer();
-  const [payload, setPayload] = React.useState<DetailPayload | null>(null);
-  const [status, setStatus] = React.useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
-
-  React.useEffect(() => {
-    if (!current) {
-      setPayload(null);
-      setStatus('idle');
-      return;
-    }
-
-    const detailReference = current;
-    const controller = new AbortController();
-
-    async function loadDetail() {
-      setStatus('loading');
-
-      try {
-        const response = await fetch(`/api/details/${detailReference.type}/${detailReference.id}`, {
-          signal: controller.signal,
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to load detail payload for ${detailReference.type}:${detailReference.id}`);
-        }
-
-        const nextPayload = (await response.json()) as DetailPayload;
-        setPayload(nextPayload);
-        setStatus('ready');
-      } catch (error) {
-        if (controller.signal.aborted) {
-          return;
-        }
-
-        setPayload(null);
-        setStatus('error');
-        console.error(error);
-      }
-    }
-
-    void loadDetail();
-
-    return () => controller.abort();
-  }, [current]);
+  const { payload, status } = useDetailPayload(current);
 
   const resolved = React.useMemo(() => {
     if (!current) {

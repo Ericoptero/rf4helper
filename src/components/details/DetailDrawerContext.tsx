@@ -1,5 +1,5 @@
 import React from 'react';
-import { decodeDetailEntity, encodeDetailEntity, type DetailEntityReference } from './detailTypes';
+import type { DetailEntityReference } from './detailTypes';
 import { useDetailDrawerHistory } from './useDetailDrawerHistory';
 
 type DetailDrawerContextValue = {
@@ -14,17 +14,16 @@ type DetailDrawerContextValue = {
 const DetailDrawerContext = React.createContext<DetailDrawerContextValue | null>(null);
 
 export function DetailDrawerProvider({
-  detailValue,
-  onDetailValueChange,
+  detailReference,
+  onDetailReferenceChange,
   children,
 }: {
-  detailValue?: string;
-  onDetailValueChange: (value?: string) => void;
+  detailReference?: DetailEntityReference | null;
+  onDetailReferenceChange: (reference: DetailEntityReference | null) => void;
   children: React.ReactNode;
 }) {
   const history = useDetailDrawerHistory();
   const internalNavigationRef = React.useRef(false);
-  const currentEncoded = history.current ? encodeDetailEntity(history.current) : undefined;
 
   React.useEffect(() => {
     if (internalNavigationRef.current) {
@@ -32,15 +31,15 @@ export function DetailDrawerProvider({
       return;
     }
 
-    const decoded = decodeDetailEntity(detailValue);
-    const encoded = decoded ? encodeDetailEntity(decoded) : undefined;
+    const current = history.current;
+    const next = detailReference ?? null;
 
-    if (encoded === currentEncoded) {
+    if (current?.type === next?.type && current?.id === next?.id) {
       return;
     }
 
-    history.syncTo(decoded);
-  }, [currentEncoded, detailValue, history]);
+    history.syncTo(next);
+  }, [detailReference, history]);
 
   const value: DetailDrawerContextValue = {
     current: history.current,
@@ -48,23 +47,23 @@ export function DetailDrawerProvider({
     openRoot: (entry) => {
       history.openRoot(entry);
       internalNavigationRef.current = true;
-      onDetailValueChange(encodeDetailEntity(entry));
+      onDetailReferenceChange(entry);
     },
     openLinked: (entry) => {
       history.openLinked(entry);
       internalNavigationRef.current = true;
-      onDetailValueChange(encodeDetailEntity(entry));
+      onDetailReferenceChange(entry);
     },
     back: () => {
       const previous = history.stack.at(-2) ?? null;
       history.back();
       internalNavigationRef.current = true;
-      onDetailValueChange(previous ? encodeDetailEntity(previous) : undefined);
+      onDetailReferenceChange(previous);
     },
     close: () => {
       history.close();
       internalNavigationRef.current = true;
-      onDetailValueChange(undefined);
+      onDetailReferenceChange(null);
     },
   };
 

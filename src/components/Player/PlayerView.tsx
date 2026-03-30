@@ -1,12 +1,5 @@
 'use client';
 
-import {
-  useOrders,
-  useRequests,
-  useRuneAbilities,
-  useSkills,
-  useTrophies,
-} from "@/hooks/queries";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -44,53 +37,18 @@ const SKILL_CATEGORY_LABELS: Record<keyof SkillsData, string> = {
 };
 
 export function PlayerView({
-  orders: ordersData,
-  requestsData: requestsProp,
-  runeAbilitiesData: runeAbilitiesProp,
-  skills: skillsProp,
-  trophiesData: trophiesProp,
+  orders,
+  requestsData,
+  runeAbilitiesData,
+  skills,
+  trophiesData,
 }: {
-  orders?: import('@/lib/schemas').Order[];
-  requestsData?: Record<string, import('@/lib/schemas').RequestItem[]>;
-  runeAbilitiesData?: Record<string, import('@/lib/schemas').RuneAbility[]>;
-  skills?: SkillsData;
-  trophiesData?: Record<string, import('@/lib/schemas').Trophy[]>;
-} = {}) {
-  const { data: fetchedOrders, isLoading: isLoadingOrders } = useOrders({
-    enabled: !ordersData,
-  });
-  const { data: fetchedRequestsData, isLoading: isLoadingReqs } = useRequests({
-    enabled: !requestsProp,
-  });
-  const { data: fetchedRuneAbilitiesData, isLoading: isLoadingRunes } =
-    useRuneAbilities({ enabled: !runeAbilitiesProp });
-  const { data: fetchedSkills, isLoading: isLoadingSkills } = useSkills({
-    enabled: !skillsProp,
-  });
-  const { data: fetchedTrophiesData, isLoading: isLoadingTrophies } = useTrophies({
-    enabled: !trophiesProp,
-  });
-
-  const orders = ordersData ?? fetchedOrders;
-  const requestsData = requestsProp ?? fetchedRequestsData;
-  const runeAbilitiesData = runeAbilitiesProp ?? fetchedRuneAbilitiesData;
-  const skills = skillsProp ?? fetchedSkills;
-  const trophiesData = trophiesProp ?? fetchedTrophiesData;
-
-  const isLoading =
-    (!ordersData && isLoadingOrders) ||
-    (!requestsProp && isLoadingReqs) ||
-    (!runeAbilitiesProp && isLoadingRunes) ||
-    (!skillsProp && isLoadingSkills) ||
-    (!trophiesProp && isLoadingTrophies);
-
-  if (isLoading) {
-    return (
-      <div className="p-8 text-center text-muted-foreground animate-pulse">
-        Loading player data...
-      </div>
-    );
-  }
+  orders: import('@/lib/schemas').Order[];
+  requestsData: Record<string, import('@/lib/schemas').RequestItem[]>;
+  runeAbilitiesData: Record<string, import('@/lib/schemas').RuneAbility[]>;
+  skills: SkillsData;
+  trophiesData: Record<string, import('@/lib/schemas').Trophy[]>;
+}) {
 
   // Flatten trophies
   const allTrophies = Object.values(trophiesData || {}).flat();

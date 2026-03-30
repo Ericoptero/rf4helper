@@ -7,6 +7,12 @@ import type { Character, Chest, Fish, Item, Monster } from '@/lib/schemas';
 
 type SearchParamRecord = Record<string, string | string[] | undefined>;
 
+const detailSearchSchemaShape = {
+  detail: z.string().trim().min(1).optional().catch(undefined),
+  detailType: z.string().trim().min(1).optional().catch(undefined),
+  detailId: z.string().trim().min(1).optional().catch(undefined),
+};
+
 const itemsSearchSchema = z.object({
   q: z.string().trim().min(1).optional().catch(undefined),
   view: z.enum(['cards', 'table']).optional().catch(undefined),
@@ -20,7 +26,7 @@ const itemsSearchSchema = z.object({
   rarity: z.string().trim().min(1).optional().catch(undefined),
   craft: z.string().trim().min(1).optional().catch(undefined),
   effects: z.string().trim().min(1).optional().catch(undefined),
-  detail: z.string().trim().min(1).optional().catch(undefined),
+  ...detailSearchSchemaShape,
 });
 
 export type ItemsSearchParams = z.infer<typeof itemsSearchSchema>;
@@ -50,7 +56,7 @@ const charactersSearchSchema = z.object({
   season: z.string().trim().min(1).optional().catch(undefined),
   battle: z.string().trim().min(1).optional().catch(undefined),
   weaponType: z.string().trim().min(1).optional().catch(undefined),
-  detail: z.string().trim().min(1).optional().catch(undefined),
+  ...detailSearchSchemaShape,
 });
 
 const monstersSearchSchema = z.object({
@@ -62,7 +68,7 @@ const monstersSearchSchema = z.object({
   rideable: z.string().trim().min(1).optional().catch(undefined),
   location: z.string().trim().min(1).optional().catch(undefined),
   drops: z.string().trim().min(1).optional().catch(undefined),
-  detail: z.string().trim().min(1).optional().catch(undefined),
+  ...detailSearchSchemaShape,
 });
 
 const fishingSearchSchema = z.object({
@@ -73,7 +79,7 @@ const fishingSearchSchema = z.object({
   region: z.string().trim().min(1).optional().catch(undefined),
   season: z.string().trim().min(1).optional().catch(undefined),
   hasMap: z.string().trim().min(1).optional().catch(undefined),
-  detail: z.string().trim().min(1).optional().catch(undefined),
+  ...detailSearchSchemaShape,
 });
 
 const mapsSearchSchema = z.object({
@@ -84,12 +90,12 @@ const mapsSearchSchema = z.object({
   hasNotes: z.string().trim().min(1).optional().catch(undefined),
   hasRecipe: z.string().trim().min(1).optional().catch(undefined),
   chestBand: z.string().trim().min(1).optional().catch(undefined),
-  detail: z.string().trim().min(1).optional().catch(undefined),
+  ...detailSearchSchemaShape,
 });
 
 const calendarSearchSchema = z.object({
   season: z.enum(['Spring', 'Summer', 'Fall', 'Winter']).optional().catch(undefined),
-  detail: z.string().trim().min(1).optional().catch(undefined),
+  ...detailSearchSchemaShape,
 });
 
 const crafterSearchSchema = z.object({
@@ -270,6 +276,8 @@ export function parseItemsSearchParams(searchParams: SearchParamRecord): ItemsSe
     craft: firstValue(searchParams.craft),
     effects: firstValue(searchParams.effects),
     detail: firstValue(searchParams.detail),
+    detailType: firstValue(searchParams.detailType),
+    detailId: firstValue(searchParams.detailId),
   });
 }
 

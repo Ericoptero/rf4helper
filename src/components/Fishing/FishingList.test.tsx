@@ -3,8 +3,6 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { FishingList } from './FishingList';
-import { createTestQueryClient } from '@/lib/test-utils';
-import { QueryClientProvider } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event';
 import type { Fish } from '@/lib/schemas';
 
@@ -37,19 +35,8 @@ beforeAll(() => server.listen());
 afterAll(() => server.close());
 
 describe('FishingList Component', () => {
-  const wrapper = ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={createTestQueryClient()}>
-      {children}
-    </QueryClientProvider>
-  );
-
-  it('renders loading state initially', () => {
-    render(<FishingList />, { wrapper });
-    expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
-  });
-
   it('renders fish list and displays fish card data', async () => {
-    render(<FishingList />, { wrapper });
+    render(<FishingList fish={mockFish} />);
 
     await screen.findByText('Fishing Guide');
 
@@ -68,7 +55,7 @@ describe('FishingList Component', () => {
 
   it('displays fish details in a drawer when clicked', async () => {
     const user = userEvent.setup();
-    render(<FishingList />, { wrapper });
+    render(<FishingList fish={mockFish} />);
 
     await screen.findByText('Masu Trout');
 
@@ -86,7 +73,7 @@ describe('FishingList Component', () => {
 
   it('falls back gracefully when a fish has no image or locations', async () => {
     const user = userEvent.setup();
-    render(<FishingList />, { wrapper });
+    render(<FishingList fish={mockFish} />);
 
     await screen.findByText('Squid');
 
@@ -100,7 +87,7 @@ describe('FishingList Component', () => {
   it('can open the select dropdown for filters', async () => {
      // A simple test ensuring the shadow filters derived correctly
      const user = userEvent.setup();
-     render(<FishingList />, { wrapper });
+     render(<FishingList fish={mockFish} />);
  
      await screen.findByText('Fishing Guide');
      await user.click(screen.getByRole('button', { name: /more filters/i }));
@@ -122,7 +109,6 @@ describe('FishingList Component', () => {
         viewMode="table"
         sortValue="locations-desc"
       />,
-      { wrapper },
     );
 
     const rows = await screen.findAllByRole('row');
@@ -131,13 +117,11 @@ describe('FishingList Component', () => {
     expect(screen.getByText('Spring, Fall, Winter')).toBeInTheDocument();
 
     rerender(
-      <QueryClientProvider client={createTestQueryClient()}>
-        <FishingList
-          fish={mockFish}
-          viewMode="table"
-          sortValue="sell-desc"
-        />
-      </QueryClientProvider>,
+      <FishingList
+        fish={mockFish}
+        viewMode="table"
+        sortValue="sell-desc"
+      />,
     );
 
     const sellSortedRows = await screen.findAllByRole('row');
@@ -145,19 +129,17 @@ describe('FishingList Component', () => {
     expect(within(sellSortedRows[2]!).getAllByRole('cell')[0]).toHaveTextContent('Squid');
 
     rerender(
-      <QueryClientProvider client={createTestQueryClient()}>
-        <FishingList
-          fish={mockFish}
-          viewMode="table"
-          searchTerm="Masu"
-          filterValues={{
-            shadow: 'small',
-            region: 'Selphia',
-            season: 'Spring',
-            hasMap: 'yes',
-          }}
-        />
-      </QueryClientProvider>,
+      <FishingList
+        fish={mockFish}
+        viewMode="table"
+        searchTerm="Masu"
+        filterValues={{
+          shadow: 'small',
+          region: 'Selphia',
+          season: 'Spring',
+          hasMap: 'yes',
+        }}
+      />,
     );
 
     expect(await screen.findByText('Masu Trout')).toBeInTheDocument();
@@ -167,7 +149,7 @@ describe('FishingList Component', () => {
 
   it('applies filters through the internal uncontrolled state handlers', async () => {
     const user = userEvent.setup();
-    render(<FishingList />, { wrapper });
+    render(<FishingList fish={mockFish} />);
 
     await screen.findByText('Fishing Guide');
     await user.click(screen.getByRole('button', { name: /more filters/i }));

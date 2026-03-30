@@ -1,19 +1,20 @@
 import React from 'react';
 import { Coins, Fish as FishIcon, MapPin } from 'lucide-react';
-import { useFish } from '@/hooks/queries';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   CatalogPageLayout,
-  type CatalogFilterValue,
   type CatalogFilterDefinition,
+  type CatalogFilterValue,
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
 import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/DetailDrawerContext';
 import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
+import type { DetailEntityReference } from '@/components/details/detailTypes';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
-import type { Fish } from '@/lib/schemas';
 import { resolveFishImage } from '@/lib/fishImages';
+import type { Fish } from '@/lib/schemas';
 import type { CatalogOption } from '@/server/catalogQueries';
 
 const SEASON_ORDER = ['Spring', 'Summer', 'Fall', 'Winter'];
@@ -36,7 +37,7 @@ function FishCard({ fish, onClick }: { fish: Fish; onClick: () => void }) {
               {imageSrc ? <img src={imageSrc} alt={fish.name} className="h-10 w-10 object-contain" /> : <FishIcon className="h-6 w-6" />}
             </div>
             <div className="min-w-0">
-              <CardTitle className="text-lg leading-tight line-clamp-1">{fish.name}</CardTitle>
+              <CardTitle className="line-clamp-1 text-lg leading-tight">{fish.name}</CardTitle>
               {fish.shadow ? <Badge className={getSemanticBadgeClass('fish')}>{fish.shadow} Shadow</Badge> : null}
             </div>
           </div>
@@ -72,9 +73,9 @@ function FishingCatalog({
   sortValue,
   onSortValueChange,
   filterValues,
-  onFilterValueChange,
+  onFilterValuesChange,
 }: {
-  fishData?: Fish[];
+  fishData: Fish[];
   totalCount?: number;
   filterOptions?: {
     shadow: CatalogOption[];
@@ -89,18 +90,14 @@ function FishingCatalog({
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
-  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
+  onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
 }) {
-  const { data: fetchedFishList, isLoading } = useFish({ enabled: !fishData });
   const { openRoot } = useDetailDrawer();
-  const allFish = fishData ?? fetchedFishList ?? [];
 
-  const shadowOptions = Array.from(new Set(allFish.map((fish) => fish.shadow).filter(Boolean) as string[])).sort();
-  const regionOptions = Array.from(
-    new Set(allFish.flatMap((fish) => (fish.locations ?? []).map((location) => location.region))),
-  ).sort();
+  const shadowOptions = Array.from(new Set(fishData.map((fish) => fish.shadow).filter(Boolean) as string[])).sort();
+  const regionOptions = Array.from(new Set(fishData.flatMap((fish) => (fish.locations ?? []).map((location) => location.region)))).sort();
   const seasonOptions = Array.from(
-    new Set(allFish.flatMap((fish) => (fish.locations ?? []).flatMap((location) => location.seasons ?? []))),
+    new Set(fishData.flatMap((fish) => (fish.locations ?? []).flatMap((location) => location.seasons ?? []))),
   ).sort((a, b) => SEASON_ORDER.indexOf(a) - SEASON_ORDER.indexOf(b));
 
   const filters: CatalogFilterDefinition<Fish>[] = [
@@ -152,7 +149,7 @@ function FishingCatalog({
   return (
     <>
       <CatalogPageLayout<Fish>
-        data={allFish}
+        data={fishData}
         totalCount={totalCount}
         title="Fishing Guide"
         searchKey="name"
@@ -165,10 +162,9 @@ function FishingCatalog({
         sortOptions={sortOptions}
         filters={filters}
         filterValues={filterValues}
-        onFilterValueChange={onFilterValueChange}
+        onFilterValuesChange={onFilterValuesChange}
         tableColumns={tableColumns}
         getItemKey={(fish) => fish.id}
-        isLoading={!fishData && isLoading}
         disableClientFiltering={serverDriven}
         renderCard={(fish, onClick) => <FishCard fish={fish} onClick={onClick} />}
         onOpenItem={(fish) => openRoot({ type: 'fish', id: fish.id })}
@@ -183,8 +179,8 @@ export function FishingList({
   totalCount,
   filterOptions,
   serverDriven = false,
-  detailValue,
-  onDetailValueChange,
+  detailReference,
+  onDetailReferenceChange,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -192,9 +188,9 @@ export function FishingList({
   sortValue,
   onSortValueChange,
   filterValues,
-  onFilterValueChange,
+  onFilterValuesChange,
 }: {
-  fish?: Fish[];
+  fish: Fish[];
   totalCount?: number;
   filterOptions?: {
     shadow: CatalogOption[];
@@ -202,8 +198,8 @@ export function FishingList({
     season: CatalogOption[];
   };
   serverDriven?: boolean;
-  detailValue?: string;
-  onDetailValueChange?: (value?: string) => void;
+  detailReference?: DetailEntityReference | null;
+  onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -211,9 +207,9 @@ export function FishingList({
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
-  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
-} = {}) {
-  const [internalDetailValue, setInternalDetailValue] = React.useState<string | undefined>();
+  onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+}) {
+  const [internalDetailReference, setInternalDetailReference] = React.useState<DetailEntityReference | null>(null);
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
   const [internalViewMode, setInternalViewMode] = React.useState<'cards' | 'table'>('cards');
   const [internalSortValue, setInternalSortValue] = React.useState('name-asc');
@@ -221,8 +217,8 @@ export function FishingList({
 
   return (
     <DetailDrawerProvider
-      detailValue={detailValue ?? internalDetailValue}
-      onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
+      detailReference={detailReference ?? internalDetailReference}
+      onDetailReferenceChange={onDetailReferenceChange ?? setInternalDetailReference}
     >
       <FishingCatalog
         fishData={fish}
@@ -236,7 +232,7 @@ export function FishingList({
         sortValue={sortValue ?? internalSortValue}
         onSortValueChange={onSortValueChange ?? setInternalSortValue}
         filterValues={filterValues ?? internalFilterValues}
-        onFilterValueChange={onFilterValueChange ?? ((key, value) => setInternalFilterValues((previous) => ({ ...previous, [key]: value })))}
+        onFilterValuesChange={onFilterValuesChange ?? setInternalFilterValues}
       />
     </DetailDrawerProvider>
   );

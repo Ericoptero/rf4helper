@@ -12,6 +12,11 @@ const VALID_DETAIL_TYPES: DetailEntityType[] = [
   'crop',
 ];
 
+const DETAIL_HEADERS = {
+  'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+  'X-Content-Type-Options': 'nosniff',
+} as const;
+
 export async function GET(
   _request: Request,
   context: {
@@ -21,14 +26,14 @@ export async function GET(
   const { type, id } = await context.params;
 
   if (!VALID_DETAIL_TYPES.includes(type as DetailEntityType)) {
-    return Response.json({ message: 'Unknown detail type.' }, { status: 404 });
+    return Response.json({ message: 'Unknown detail type.' }, { status: 404, headers: DETAIL_HEADERS });
   }
 
   const payload = await getDetailPayload({ type: type as DetailEntityType, id });
 
   if (!payload) {
-    return Response.json({ message: 'Entity not found.' }, { status: 404 });
+    return Response.json({ message: 'Entity not found.' }, { status: 404, headers: DETAIL_HEADERS });
   }
 
-  return Response.json(payload);
+  return Response.json(payload, { headers: DETAIL_HEADERS });
 }

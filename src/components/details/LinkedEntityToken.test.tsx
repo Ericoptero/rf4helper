@@ -7,10 +7,10 @@ import { LinkedEntityToken } from './LinkedEntityToken';
 describe('LinkedEntityToken', () => {
   it('renders an item thumbnail when provided and still opens the linked detail', async () => {
     const user = userEvent.setup();
-    const onDetailValueChange = vi.fn();
+    const onDetailReferenceChange = vi.fn();
 
     render(
-      <DetailDrawerProvider onDetailValueChange={onDetailValueChange}>
+      <DetailDrawerProvider onDetailReferenceChange={onDetailReferenceChange}>
         <LinkedEntityToken
           reference={{ type: 'item', id: 'item-flour' }}
           label="Flour"
@@ -24,6 +24,6 @@ describe('LinkedEntityToken', () => {
 
     await user.click(screen.getByRole('button', { name: /flour/i }));
 
-    expect(onDetailValueChange).toHaveBeenCalledWith('item:item-flour');
+    expect(onDetailReferenceChange).toHaveBeenCalledWith({ type: 'item', id: 'item-flour' });
   });
 });

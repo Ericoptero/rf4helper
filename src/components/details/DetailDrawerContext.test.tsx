@@ -2,16 +2,17 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { DetailDrawerProvider, useDetailDrawer } from './DetailDrawerContext';
+import type { DetailEntityReference } from './detailTypes';
 
 function DrawerHarness({
-  detailValue,
-  onDetailValueChange,
+  detailReference,
+  onDetailReferenceChange,
 }: {
-  detailValue?: string;
-  onDetailValueChange: (value?: string) => void;
+  detailReference?: DetailEntityReference | null;
+  onDetailReferenceChange: (value: DetailEntityReference | null) => void;
 }) {
   return (
-    <DetailDrawerProvider detailValue={detailValue} onDetailValueChange={onDetailValueChange}>
+    <DetailDrawerProvider detailReference={detailReference} onDetailReferenceChange={onDetailReferenceChange}>
       <DrawerButtons />
     </DetailDrawerProvider>
   );
@@ -43,9 +44,9 @@ function DrawerButtons() {
 describe('DetailDrawerProvider', () => {
   it('keeps in-drawer navigation history while syncing the visible detail value', async () => {
     const user = userEvent.setup();
-    const updates: Array<string | undefined> = [];
+    const updates: Array<DetailEntityReference | null> = [];
 
-    render(<DrawerHarness onDetailValueChange={(value) => updates.push(value)} />);
+    render(<DrawerHarness onDetailReferenceChange={(value) => updates.push(value)} />);
 
     await user.click(screen.getByRole('button', { name: 'Open root' }));
     expect(screen.getByTestId('current')).toHaveTextContent('item:item-bread');
@@ -68,11 +69,15 @@ describe('DetailDrawerProvider', () => {
     expect(screen.getByTestId('back')).toHaveTextContent('no');
 
     expect(updates).toEqual([
-      'item:item-bread',
-      'item:item-flour',
-      'item:item-toast',
-      'item:item-flour',
-      'item:item-bread',
+      { type: 'item', id: 'item-bread' },
+      { type: 'item', id: 'item-flour' },
+      { type: 'item', id: 'item-toast' },
+      { type: 'item', id: 'item-flour' },
+      { type: 'item', id: 'item-bread' },
     ]);
+  });
+
+  it('throws when the drawer hook is used outside the provider', () => {
+    expect(() => render(<DrawerButtons />)).toThrow('useDetailDrawer must be used within DetailDrawerProvider');
   });
 });

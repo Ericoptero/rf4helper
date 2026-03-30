@@ -48,7 +48,7 @@ export interface CatalogPageLayoutProps<T> {
   onSortValueChange?: (value: string) => void;
   filters?: CatalogFilterDefinition<T>[];
   filterValues?: Record<string, CatalogFilterValue>;
-  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
+  onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
   renderCard: (item: T, onOpen: () => void) => React.ReactNode;
   tableColumns?: CatalogTableColumn<T>[];
   getItemKey: (item: T) => string;
@@ -112,7 +112,7 @@ export function CatalogPageLayout<T>({
   onSortValueChange,
   filters,
   filterValues,
-  onFilterValueChange,
+  onFilterValuesChange,
   renderCard,
   tableColumns,
   getItemKey,
@@ -218,11 +218,22 @@ export function CatalogPageLayout<T>({
       }));
     });
   }, [filterValues, orderedFilters]);
+  const revealResetToken = useMemo(
+    () =>
+      JSON.stringify({
+        filters: filterValues ?? {},
+        resultCount: filteredAndSortedData.length,
+        searchTerm,
+        sortValue,
+        viewMode,
+      }),
+    [filterValues, filteredAndSortedData.length, searchTerm, sortValue, viewMode],
+  );
 
   const { hasMore, sentinelRef, visibleCount } = useIncrementalReveal<HTMLElement>({
     itemCount: filteredAndSortedData.length,
     batchSize: viewMode === 'table' ? 40 : 24,
-    resetKeys: [data, filterValues, filteredAndSortedData.length, searchTerm, sortValue, viewMode],
+    resetKeys: [revealResetToken],
     rootRef: viewportRef,
   });
   const visibleItems = filteredAndSortedData.slice(0, visibleCount);
@@ -230,17 +241,26 @@ export function CatalogPageLayout<T>({
     draftFilterValues[definition.key] ? [definition.key] : [],
   );
 
+  const normalizeFilterRecord = React.useCallback(
+    (values: Record<string, CatalogFilterValue>) =>
+      Object.fromEntries(
+        orderedFilters.map((definition) => [definition.key, normalizeFilterValue(values[definition.key])]),
+      ),
+    [orderedFilters],
+  );
+
   const commitFilterValues = (nextValues: Record<string, CatalogFilterValue>) => {
-    for (const definition of orderedFilters) {
-      const nextValue = nextValues[definition.key];
+    const normalizedNextValues = normalizeFilterRecord(nextValues);
+    const hasChanges = orderedFilters.some((definition) => {
       const currentValue = filterValues?.[definition.key];
+      return !areFilterValuesEqual(currentValue, normalizedNextValues[definition.key]);
+    });
 
-      if (areFilterValuesEqual(currentValue, nextValue)) {
-        continue;
-      }
-
-      onFilterValueChange?.(definition.key, nextValue);
+    if (!hasChanges) {
+      return;
     }
+
+    onFilterValuesChange?.(normalizedNextValues);
   };
 
   const handleApplyFilters = () => {
@@ -258,8 +278,12 @@ export function CatalogPageLayout<T>({
     const currentValue = filterValues?.[filterKey];
     const currentValues = getFilterValueList(currentValue);
     const nextValues = currentValues.filter((entry) => entry !== value);
+    const nextFilterValues = {
+      ...normalizeFilterRecord(filterValues ?? {}),
+      [filterKey]: Array.isArray(currentValue) ? (nextValues.length > 0 ? nextValues : undefined) : undefined,
+    };
 
-    onFilterValueChange?.(filterKey, Array.isArray(currentValue) ? (nextValues.length > 0 ? nextValues : undefined) : undefined);
+    onFilterValuesChange?.(nextFilterValues);
   };
 
   if (isLoading) {

@@ -1,10 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { PlayerView } from './PlayerView';
-import { createTestQueryClient } from '@/lib/test-utils';
-import { QueryClientProvider } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event';
 import type { SkillsData } from '@/lib/schemas';
 
@@ -113,17 +111,6 @@ beforeAll(() => server.listen());
 afterAll(() => server.close());
 
 describe('PlayerView Component', () => {
-  const wrapper = ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={createTestQueryClient()}>
-      {children}
-    </QueryClientProvider>
-  );
-
-  it('renders loading state initially', () => {
-    render(<PlayerView />, { wrapper });
-    expect(screen.getByText(/loading player data.../i)).toBeInTheDocument();
-  });
-
   it('renders immediately from server-provided props without showing the loading state', () => {
     render(
       <PlayerView
@@ -133,20 +120,22 @@ describe('PlayerView Component', () => {
         skills={mockSkills}
         trophiesData={mockTrophies}
       />,
-      { wrapper },
     );
 
-    expect(screen.queryByText(/loading player data.../i)).not.toBeInTheDocument();
     expect(screen.getByText('Player Dashboard')).toBeInTheDocument();
     expect(screen.getByText('Test Order')).toBeInTheDocument();
   });
 
   it('renders orders tab default and data successfully', async () => {
-    render(<PlayerView />, { wrapper });
-
-    await waitFor(() => {
-      expect(screen.queryByText(/loading player data.../i)).not.toBeInTheDocument();
-    });
+    render(
+      <PlayerView
+        orders={mockOrders}
+        requestsData={mockRequests}
+        runeAbilitiesData={mockRuneAbilities}
+        skills={mockSkills}
+        trophiesData={mockTrophies}
+      />,
+    );
 
     // Check header
     expect(screen.getByText('Player Dashboard')).toBeInTheDocument();
@@ -161,11 +150,15 @@ describe('PlayerView Component', () => {
 
   it('switches tabs and renders corresponding data', async () => {
     const user = userEvent.setup();
-    render(<PlayerView />, { wrapper });
-
-    await waitFor(() => {
-      expect(screen.queryByText(/loading player data.../i)).not.toBeInTheDocument();
-    });
+    render(
+      <PlayerView
+        orders={mockOrders}
+        requestsData={mockRequests}
+        runeAbilitiesData={mockRuneAbilities}
+        skills={mockSkills}
+        trophiesData={mockTrophies}
+      />,
+    );
 
     // Test Requests Tab
     await user.click(screen.getByRole('tab', { name: /requests/i }));

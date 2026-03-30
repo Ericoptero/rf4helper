@@ -4,8 +4,6 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import type { Character } from '@/lib/schemas';
 import { CharactersList } from './CharactersList';
-import { createTestQueryClient } from '@/lib/test-utils';
-import { QueryClientProvider } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event';
 
 const mockCharacters: Record<string, Character> = {
@@ -52,6 +50,8 @@ const mockCharacters: Record<string, Character> = {
   }
 };
 
+const mockCharacterList = Object.values(mockCharacters);
+
 const server = setupServer(
   http.get('http://localhost:3000/data/items.json', () => {
     return HttpResponse.json({});
@@ -65,21 +65,8 @@ beforeAll(() => server.listen());
 afterAll(() => server.close());
 
 describe('CharactersList Component', () => {
-  const wrapper = ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={createTestQueryClient()}>
-      {children}
-    </QueryClientProvider>
-  );
-
-  it('renders loading state initially', () => {
-    render(<CharactersList />, { wrapper });
-    expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
-  });
-
-  it('renders characters after successful fetch', async () => {
-    render(<CharactersList />, { wrapper });
-
-    await screen.findByText('Forte');
+  it('renders characters immediately from server-provided props', async () => {
+    render(<CharactersList characters={mockCharacterList} />);
 
     expect(screen.getByText('Forte')).toBeInTheDocument();
     expect(screen.getAllByText('Bachelorettes').length).toBeGreaterThan(0);
@@ -130,14 +117,14 @@ describe('CharactersList Component', () => {
         },
       },
     } satisfies Record<string, Character>;
+    const controlledCharacterList = Object.values(controlledCharacters);
 
     const { rerender } = render(
       <CharactersList
-        characters={controlledCharacters}
+        characters={controlledCharacterList}
         viewMode="table"
         sortValue="birthday-asc"
       />,
-      { wrapper },
     );
 
     const rows = await screen.findAllByRole('row');
@@ -145,20 +132,18 @@ describe('CharactersList Component', () => {
     expect(within(rows[2]!).getAllByRole('cell')[0]).toHaveTextContent('Forte');
 
     rerender(
-      <QueryClientProvider client={createTestQueryClient()}>
-        <CharactersList
-          characters={controlledCharacters}
-          viewMode="table"
-          searchTerm="for"
-          filterValues={{
-            category: 'bachelorettes',
-            gender: 'female',
-            season: 'summer',
-            battle: 'yes',
-            weaponType: 'long sword',
-          }}
-        />
-      </QueryClientProvider>,
+      <CharactersList
+        characters={controlledCharacterList}
+        viewMode="table"
+        searchTerm="for"
+        filterValues={{
+          category: 'bachelorettes',
+          gender: 'female',
+          season: 'summer',
+          battle: 'yes',
+          weaponType: 'long sword',
+        }}
+      />,
     );
 
     expect(await screen.findByText('Forte')).toBeInTheDocument();
@@ -169,7 +154,7 @@ describe('CharactersList Component', () => {
   it('renders battle data as a quick toggle instead of a combobox filter', async () => {
     const user = userEvent.setup();
 
-    render(<CharactersList characters={mockCharacters} />, { wrapper });
+    render(<CharactersList characters={mockCharacterList} />);
 
     await screen.findByText('Forte');
     await user.click(screen.getByRole('button', { name: /more filters/i }));
@@ -183,7 +168,7 @@ describe('CharactersList Component', () => {
   it('renders full character details from the enriched dataset', async () => {
     const user = userEvent.setup();
 
-    render(<CharactersList />, { wrapper });
+    render(<CharactersList characters={mockCharacterList} />);
 
     await screen.findByText('Forte');
     await user.click(screen.getByText('Forte'));
@@ -231,7 +216,26 @@ describe('CharactersList Component', () => {
       })
     );
 
-    render(<CharactersList />, { wrapper });
+    render(<CharactersList characters={Object.values({
+      'char-eliza': {
+        id: 'char-eliza',
+        name: 'Eliza',
+        category: 'Other Characters',
+        icon: { sm: null, md: null },
+        portrait: null,
+        gender: null,
+        description: null,
+        birthday: null,
+        battle: null,
+        gifts: {
+          love: { items: [], categories: [] },
+          like: { items: [], categories: [] },
+          neutral: { items: [], categories: [] },
+          dislike: { items: [], categories: [] },
+          hate: { items: [], categories: [] },
+        },
+      },
+    })} />);
 
     await screen.findByText('Eliza');
     await user.click(screen.getByText('Eliza'));
@@ -250,7 +254,7 @@ describe('CharactersList Component', () => {
       }),
     );
 
-    render(<CharactersList />, { wrapper });
+    render(<CharactersList characters={mockCharacterList} />);
 
     await screen.findByText('Forte');
     await user.click(screen.getByText('Forte'));

@@ -1,14 +1,15 @@
 import React from 'react';
 import { Calendar as CalendarIcon, Sparkles, Wheat } from 'lucide-react';
-import { useCharacters, useCrops, useFestivals } from '@/hooks/queries';
+
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { resolveCharacterImage } from '@/lib/characterImages';
-import type { Character } from '@/lib/schemas';
+import type { Character, CropsData, Festival } from '@/lib/schemas';
 import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/DetailDrawerContext';
 import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
+import type { DetailEntityReference } from '@/components/details/detailTypes';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 
 const SEASONS = ['Spring', 'Summer', 'Fall', 'Winter'] as const;
@@ -17,7 +18,7 @@ function CharacterIcon({ character }: { character: Character }) {
   const iconSrc = resolveCharacterImage(character.icon.sm);
 
   if (iconSrc) {
-    return <img src={iconSrc} alt={`${character.name} icon`} className="h-6 w-6 rounded-full object-contain shrink-0" />;
+    return <img src={iconSrc} alt={`${character.name} icon`} className="h-6 w-6 shrink-0 rounded-full object-contain" />;
   }
 
   return (
@@ -34,36 +35,20 @@ function CalendarContent({
   season,
   onSeasonChange,
 }: {
-  festivalsData?: import('@/lib/schemas').Festival[];
-  cropsData?: import('@/lib/schemas').CropsData;
-  charactersData?: Record<string, Character>;
+  festivalsData: Festival[];
+  cropsData: CropsData;
+  charactersData: Record<string, Character>;
   season: string;
   onSeasonChange: (season: string) => void;
 }) {
-  const { data: fetchedFestivals, isLoading: festivalsLoading } = useFestivals({
-    enabled: !festivalsData,
-  });
-  const { data: fetchedCropsData, isLoading: cropsLoading } = useCrops({
-    enabled: !cropsData,
-  });
-  const { data: fetchedCharactersMap, isLoading: charactersLoading } = useCharacters({
-    enabled: !charactersData,
-  });
   const { openRoot } = useDetailDrawer();
-  const festivals = festivalsData ?? fetchedFestivals;
-  const resolvedCropsData = cropsData ?? fetchedCropsData;
-  const charactersMap = charactersData ?? fetchedCharactersMap;
 
-  const characters = React.useMemo(() => Object.values(charactersMap || {}), [charactersMap]);
-  const crops = React.useMemo(() => resolvedCropsData?.regularCrops || [], [resolvedCropsData]);
+  const characters = React.useMemo(() => Object.values(charactersData), [charactersData]);
+  const crops = React.useMemo(() => cropsData.regularCrops || [], [cropsData]);
 
-  const seasonFestivals = React.useMemo(() => (festivals || []).filter((festival) => festival.season === season), [festivals, season]);
+  const seasonFestivals = React.useMemo(() => festivalsData.filter((festival) => festival.season === season), [festivalsData, season]);
   const seasonBirthdays = React.useMemo(() => characters.filter((character) => character.birthday?.season === season), [characters, season]);
   const seasonGoodCrops = React.useMemo(() => crops.filter((crop) => crop.goodSeasons?.includes(season)), [crops, season]);
-
-  if ((!festivalsData && festivalsLoading) || (!cropsData && cropsLoading) || (!charactersData && charactersLoading)) {
-    return <div className="p-8 text-center animate-pulse text-muted-foreground">Loading calendar data...</div>;
-  }
 
   return (
     <>
@@ -183,7 +168,7 @@ function CalendarContent({
                           onClick={() => openRoot({ type: 'crop', id: crop.id })}
                           className="flex items-center justify-between rounded-lg border bg-card p-2 text-left transition-colors hover:border-green-500/50 hover:bg-green-50/50"
                         >
-                          <span className="font-medium text-sm">{crop.name}</span>
+                          <span className="text-sm font-medium">{crop.name}</span>
                           <span className="text-xs text-muted-foreground">{crop.growTime}d</span>
                         </button>
                       )) : (
@@ -241,24 +226,24 @@ export function CalendarView({
   characters,
   season,
   onSeasonChange,
-  detailValue,
-  onDetailValueChange,
+  detailReference,
+  onDetailReferenceChange,
 }: {
-  festivals?: import('@/lib/schemas').Festival[];
-  cropsData?: import('@/lib/schemas').CropsData;
-  characters?: Record<string, Character>;
+  festivals: Festival[];
+  cropsData: CropsData;
+  characters: Record<string, Character>;
   season?: string;
   onSeasonChange?: (season: string) => void;
-  detailValue?: string;
-  onDetailValueChange?: (value?: string) => void;
-} = {}) {
+  detailReference?: DetailEntityReference | null;
+  onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
+}) {
   const [internalSeason, setInternalSeason] = React.useState('Spring');
-  const [internalDetailValue, setInternalDetailValue] = React.useState<string | undefined>();
+  const [internalDetailReference, setInternalDetailReference] = React.useState<DetailEntityReference | null>(null);
 
   return (
     <DetailDrawerProvider
-      detailValue={detailValue ?? internalDetailValue}
-      onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
+      detailReference={detailReference ?? internalDetailReference}
+      onDetailReferenceChange={onDetailReferenceChange ?? setInternalDetailReference}
     >
       <CalendarContent
         festivalsData={festivals}

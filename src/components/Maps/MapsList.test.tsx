@@ -1,13 +1,11 @@
 import { render, screen, within } from '@testing-library/react';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import userEvent from '@testing-library/user-event';
 
 import type { MapRegionRecord } from '@/lib/mapFishingRelations';
 import type { Chest, Fish } from '@/lib/schemas';
-import { createTestQueryClient } from '@/lib/test-utils';
 import { MapsList } from './MapsList';
 
 const mockChests: Chest[] = [
@@ -84,24 +82,17 @@ describe('MapsList', () => {
   beforeAll(() => server.listen());
   afterAll(() => server.close());
 
-  const wrapper = ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={createTestQueryClient()}>
-      {children}
-    </QueryClientProvider>
-  );
-
   it('renders immediately from server-provided regions without showing a loading fallback', () => {
-    render(<MapsList regions={mockRegions} serverDriven />, { wrapper });
+    render(<MapsList regions={mockRegions} serverDriven />);
 
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     expect(screen.getByText('World Maps & Chests')).toBeInTheDocument();
     expect(screen.getByText('Selphia Plains')).toBeInTheDocument();
   });
 
-  it('renders loading state and then derives regions from fetched chests and fish', async () => {
-    render(<MapsList />, { wrapper });
+  it('renders regions from server-provided data', async () => {
+    render(<MapsList regions={mockRegions} />);
 
-    expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
     expect(await screen.findByText('World Maps & Chests')).toBeInTheDocument();
     expect(screen.getByText('Selphia Plains')).toBeInTheDocument();
     expect(screen.getByText('Obsidian Mansion')).toBeInTheDocument();
@@ -115,7 +106,6 @@ describe('MapsList', () => {
         sortValue="fishing-desc"
         filterValues={{ hasFishing: 'yes' }}
       />,
-      { wrapper },
     );
 
     const rows = screen.getAllByRole('row');
@@ -126,7 +116,7 @@ describe('MapsList', () => {
   it('applies uncontrolled filters through the drawer controls', async () => {
     const user = userEvent.setup();
 
-    render(<MapsList regions={mockRegions} />, { wrapper });
+    render(<MapsList regions={mockRegions} />);
 
     await user.click(screen.getByRole('button', { name: /more filters/i }));
 

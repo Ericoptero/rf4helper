@@ -1,18 +1,19 @@
 import React from 'react';
 import { Heart, MapPin, Shield, Sword } from 'lucide-react';
-import { useMonsters } from '@/hooks/queries';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   CatalogPageLayout,
-  type CatalogFilterValue,
   type CatalogFilterDefinition,
+  type CatalogFilterValue,
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
 import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/DetailDrawerContext';
 import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
+import type { DetailEntityReference } from '@/components/details/detailTypes';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
-import { buildMonsterGroups, isMonsterActuallyTameable, type MonsterGroup } from '@/lib/monsterGroups';
+import { isMonsterActuallyTameable, type MonsterGroup } from '@/lib/monsterGroups';
 import { resolveMonsterImageUrl } from '@/lib/publicAssetUrls';
 import type { CatalogOption } from '@/server/catalogQueries';
 
@@ -32,7 +33,7 @@ function MonsterCard({ group, onClick }: { group: MonsterGroup; onClick: () => v
               {imageSrc ? <img src={imageSrc} alt={group.displayName} className="h-10 w-10 object-contain" /> : <Sword className="h-6 w-6" />}
             </div>
             <div className="min-w-0">
-              <CardTitle className="text-lg leading-tight line-clamp-1">{group.displayName}</CardTitle>
+              <CardTitle className="line-clamp-1 text-lg leading-tight">{group.displayName}</CardTitle>
               {group.variants.some(isMonsterActuallyTameable) ? (
                 <Badge className={getSemanticBadgeClass('success')}>Tameable</Badge>
               ) : null}
@@ -71,7 +72,7 @@ function MonsterCard({ group, onClick }: { group: MonsterGroup; onClick: () => v
 }
 
 function MonstersCatalog({
-  monstersData,
+  monsterGroups,
   totalCount,
   filterOptions,
   serverDriven = false,
@@ -82,9 +83,9 @@ function MonstersCatalog({
   sortValue,
   onSortValueChange,
   filterValues,
-  onFilterValueChange,
+  onFilterValuesChange,
 }: {
-  monstersData?: Record<string, import('@/lib/schemas').Monster>;
+  monsterGroups: MonsterGroup[];
   totalCount?: number;
   filterOptions?: {
     location: CatalogOption[];
@@ -97,13 +98,10 @@ function MonstersCatalog({
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
-  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
+  onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
 }) {
-  const { data: fetchedMonsters, isLoading } = useMonsters({ enabled: !monstersData });
   const { openRoot } = useDetailDrawer();
-  const monsters = monstersData ?? fetchedMonsters;
-  const groups = React.useMemo(() => buildMonsterGroups(Object.values(monsters || {})), [monsters]);
-  const locations = Array.from(new Set(groups.flatMap((group) => group.locations))).sort();
+  const locations = Array.from(new Set(monsterGroups.flatMap((group) => group.locations))).sort();
 
   const filters: CatalogFilterDefinition<MonsterGroup>[] = [
     {
@@ -163,7 +161,7 @@ function MonstersCatalog({
   return (
     <>
       <CatalogPageLayout<MonsterGroup>
-        data={groups}
+        data={monsterGroups}
         totalCount={totalCount}
         title="Monsters Compendium"
         searchKey={(group) => group.searchText}
@@ -176,10 +174,9 @@ function MonstersCatalog({
         sortOptions={sortOptions}
         filters={filters}
         filterValues={filterValues}
-        onFilterValueChange={onFilterValueChange}
+        onFilterValuesChange={onFilterValuesChange}
         tableColumns={tableColumns}
         getItemKey={(group) => group.key}
-        isLoading={!monstersData && isLoading}
         disableClientFiltering={serverDriven}
         renderCard={(group, onClick) => <MonsterCard group={group} onClick={onClick} />}
         onOpenItem={(group) => openRoot({ type: 'monster', id: group.key })}
@@ -194,8 +191,8 @@ export function MonstersList({
   totalCount,
   filterOptions,
   serverDriven = false,
-  detailValue,
-  onDetailValueChange,
+  detailReference,
+  onDetailReferenceChange,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -203,16 +200,16 @@ export function MonstersList({
   sortValue,
   onSortValueChange,
   filterValues,
-  onFilterValueChange,
+  onFilterValuesChange,
 }: {
-  monsters?: Record<string, import('@/lib/schemas').Monster>;
+  monsters: MonsterGroup[];
   totalCount?: number;
   filterOptions?: {
     location: CatalogOption[];
   };
   serverDriven?: boolean;
-  detailValue?: string;
-  onDetailValueChange?: (value?: string) => void;
+  detailReference?: DetailEntityReference | null;
+  onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -220,9 +217,9 @@ export function MonstersList({
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
-  onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
-} = {}) {
-  const [internalDetailValue, setInternalDetailValue] = React.useState<string | undefined>();
+  onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+}) {
+  const [internalDetailReference, setInternalDetailReference] = React.useState<DetailEntityReference | null>(null);
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
   const [internalViewMode, setInternalViewMode] = React.useState<'cards' | 'table'>('cards');
   const [internalSortValue, setInternalSortValue] = React.useState('name-asc');
@@ -230,11 +227,11 @@ export function MonstersList({
 
   return (
     <DetailDrawerProvider
-      detailValue={detailValue ?? internalDetailValue}
-      onDetailValueChange={onDetailValueChange ?? setInternalDetailValue}
+      detailReference={detailReference ?? internalDetailReference}
+      onDetailReferenceChange={onDetailReferenceChange ?? setInternalDetailReference}
     >
       <MonstersCatalog
-        monstersData={monsters}
+        monsterGroups={monsters}
         totalCount={totalCount}
         filterOptions={filterOptions}
         serverDriven={serverDriven}
@@ -245,7 +242,7 @@ export function MonstersList({
         sortValue={sortValue ?? internalSortValue}
         onSortValueChange={onSortValueChange ?? setInternalSortValue}
         filterValues={filterValues ?? internalFilterValues}
-        onFilterValueChange={onFilterValueChange ?? ((key, value) => setInternalFilterValues((previous) => ({ ...previous, [key]: value })))}
+        onFilterValuesChange={onFilterValuesChange ?? setInternalFilterValues}
       />
     </DetailDrawerProvider>
   );

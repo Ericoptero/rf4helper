@@ -1656,8 +1656,14 @@ export function CrafterView({
   serializedBuild,
   onSerializedBuildChange,
 }: CrafterViewProps) {
-  const deserializedBuild = deserializeCrafterBuild(serializedBuild, crafterData);
-  const calculation = calculateCrafterBuild(deserializedBuild, items, crafterData);
+  const deserializedBuild = React.useMemo(
+    () => deserializeCrafterBuild(serializedBuild, crafterData),
+    [crafterData, serializedBuild],
+  );
+  const calculation = React.useMemo(
+    () => calculateCrafterBuild(deserializedBuild, items, crafterData),
+    [crafterData, deserializedBuild, items],
+  );
   const build = deserializedBuild;
   const slotConfigByKey = React.useMemo(
     () =>
