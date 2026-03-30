@@ -74,8 +74,12 @@ function MapsCatalog({
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 }) {
-  const { data: fetchedChests, isLoading: chestsLoading } = useChests();
-  const { data: fetchedFish, isLoading: fishLoading } = useFish();
+  const { data: fetchedChests, isLoading: chestsLoading } = useChests({
+    enabled: !regionsData && !chestsData,
+  });
+  const { data: fetchedFish, isLoading: fishLoading } = useFish({
+    enabled: !regionsData && !fishData,
+  });
   const { openRoot } = useDetailDrawer();
   const chests = chestsData ?? fetchedChests;
   const fish = fishData ?? fetchedFish;

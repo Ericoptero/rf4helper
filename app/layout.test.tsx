@@ -12,8 +12,7 @@ describe('RootLayout', () => {
     );
 
     expect(markup).toContain('id="theme-bootstrap"');
-    expect(markup).toContain('localStorage.getItem("rf4-theme")');
-    expect(markup).toContain('window.matchMedia("(prefers-color-scheme: dark)")');
+    expect(markup).toContain('src="/theme-bootstrap.js"');
     expect(markup.indexOf('id="theme-bootstrap"')).toBeLessThan(markup.indexOf('id="app-content"'));
   });
 });

@@ -9,6 +9,15 @@ describe('detail payloads', () => {
     expect(payload?.type).toBe('item');
     expect(payload && 'item' in payload ? payload.item.name : null).toBe('Iron');
     expect(payload && 'items' in payload ? payload.items['item-steel-edge']?.name : null).toBe('Steel Edge');
+    expect(payload && 'items' in payload ? payload.items['item-apple'] : undefined).toBeUndefined();
+  });
+
+  it('builds an item detail payload from craftedFrom recipes without the full catalog', async () => {
+    const payload = await getDetailPayload({ type: 'item', id: 'item-steel-sword-plus' });
+
+    expect(payload?.type).toBe('item');
+    expect(payload && 'items' in payload ? payload.items['item-steel-sword']?.name : null).toBe('Steel Sword');
+    expect(payload && 'items' in payload ? payload.items['item-apple'] : undefined).toBeUndefined();
   });
 
   it('builds a monster detail payload with the grouped monster record', async () => {
@@ -30,7 +39,8 @@ describe('detail payloads', () => {
 
     expect(payload?.type).toBe('character');
     expect(payload && 'character' in payload ? payload.character.name : null).toBe('Amber');
-    expect(payload && 'items' in payload ? Object.keys(payload.items).length > 0 : false).toBe(true);
+    expect(payload && 'items' in payload ? payload.items['item-emery-flower']?.name : null).toBe('Emery Flower');
+    expect(payload && 'items' in payload ? payload.items['item-iron'] : undefined).toBeUndefined();
   });
 
   it('builds a birthday detail payload', async () => {
@@ -38,6 +48,15 @@ describe('detail payloads', () => {
 
     expect(payload?.type).toBe('birthday');
     expect(payload && 'character' in payload ? payload.character.birthday?.season : null).toBe('Spring');
+    expect(payload && 'items' in payload).toBe(false);
+  });
+
+  it('builds a monster detail payload with only linked item references', async () => {
+    const payload = await getDetailPayload({ type: 'monster', id: 'monster-orc' });
+
+    expect(payload?.type).toBe('monster');
+    expect(payload && 'items' in payload ? payload.items['item-cheap-bracelet']?.name : null).toBe('Cheap Bracelet');
+    expect(payload && 'items' in payload ? payload.items['item-turnip'] : undefined).toBeUndefined();
   });
 
   it('builds a fish detail payload', async () => {
@@ -70,6 +89,18 @@ describe('detail payloads', () => {
 
   it('returns null for unknown ids', async () => {
     const payload = await getDetailPayload({ type: 'item', id: 'missing-item' });
+
+    expect(payload).toBeNull();
+  });
+
+  it('returns null for unknown characters', async () => {
+    const payload = await getDetailPayload({ type: 'character', id: 'missing-character' });
+
+    expect(payload).toBeNull();
+  });
+
+  it('returns null for unsupported detail types at the server boundary', async () => {
+    const payload = await getDetailPayload({ type: 'unknown' as never, id: 'mystery' });
 
     expect(payload).toBeNull();
   });

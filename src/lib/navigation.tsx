@@ -30,11 +30,16 @@ export const appNavSections: AppNavSection[] = [
       { to: '/items', label: 'Items', icon: Package },
       { to: '/characters', label: 'Characters', icon: Users },
       { to: '/monsters', label: 'Monsters', icon: Skull },
-      { to: '/crafter', label: 'Crafter', icon: Hammer },
       { to: '/fishing', label: 'Fishing', icon: Fish },
       { to: '/maps', label: 'Maps', icon: Map },
       { to: '/calendar', label: 'Calendar', icon: CalendarDays },
     ],
+  },
+  {
+    title: 'Simulator',
+    items: [
+      { to: '/crafter', label: 'Crafter', icon: Hammer },
+    ]
   },
   {
     title: 'Progress',

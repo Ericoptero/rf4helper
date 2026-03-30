@@ -11,7 +11,7 @@ import { itemMatchesCrafterSlot } from '../../src/lib/crafterData';
 import { CrafterConfigSchema, type Item } from '../../src/lib/schemas';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
-const dataDir = path.resolve(dirname, '../../public/data');
+const dataDir = path.resolve(dirname, '../../data');
 const CRAFTER_BUILD_STORAGE_KEY = 'rf4-helper:crafter-build:v2';
 const PERCENT_STAT_KEYS = new Set(['crit', 'knock', 'stun']);
 const STAT_LABELS: Record<string, string> = {

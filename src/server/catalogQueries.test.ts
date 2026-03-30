@@ -302,6 +302,18 @@ describe('catalog query parsing', () => {
     expect(parseCalendarSearchParams({ season: 'Invalid' })).toEqual({});
     expect(parseCrafterSearchParams({ build: '   ', view: '' })).toEqual({});
   });
+
+  it('sorts characters by season and then day for birthday ordering', () => {
+    const result = buildCharactersCatalogData(characters as never, {
+      sort: 'birthday-asc',
+    });
+
+    expect(result.results.map((character) => character.id)).toEqual([
+      'char-vishnal',
+      'char-clorica',
+      'char-forte',
+    ]);
+  });
 });
 
 describe('items catalog builder', () => {

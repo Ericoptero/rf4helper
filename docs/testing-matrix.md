@@ -27,6 +27,5 @@ Use playwright-cli when testing playwright.
 - `/crafter?view=advanced`
 
 ## Fast Local Workflow
-- Use `npm run check:changed` during active vibecoding.
 - Use `npm run ci` before merge or after any implementation slice that changes behavior.
 - Update visual baselines only after reviewing the rendered diff intentionally.

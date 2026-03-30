@@ -68,4 +68,21 @@ describe('AppShell', () => {
     expect(screen.getAllByRole('button', { name: /switch to light mode/i })).toHaveLength(2);
     expect(screen.getByRole('link', { name: /items/i })).toHaveAttribute('data-status', 'active');
   });
+
+  it('renders the branded Barrett logo in the shell header', () => {
+    render(
+      <AppShell>
+        <div>Catalog content</div>
+      </AppShell>,
+    );
+
+    const logos = screen.getAllByAltText('Barrett logo');
+
+    expect(logos).toHaveLength(2);
+    for (const logo of logos) {
+      expect(logo).toHaveAttribute('src', '/brand/barrett-logo.png');
+    }
+
+    expect(screen.queryAllByText('Rune Factory 4')).toHaveLength(0);
+  });
 });

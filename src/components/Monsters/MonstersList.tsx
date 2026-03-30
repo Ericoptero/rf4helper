@@ -99,7 +99,7 @@ function MonstersCatalog({
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 }) {
-  const { data: fetchedMonsters, isLoading } = useMonsters();
+  const { data: fetchedMonsters, isLoading } = useMonsters({ enabled: !monstersData });
   const { openRoot } = useDetailDrawer();
   const monsters = monstersData ?? fetchedMonsters;
   const groups = React.useMemo(() => buildMonsterGroups(Object.values(monsters || {})), [monsters]);

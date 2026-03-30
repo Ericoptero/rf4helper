@@ -113,7 +113,7 @@ function CharactersCatalog({
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 }) {
-  const { data: fetchedCharacters, isLoading } = useCharacters();
+  const { data: fetchedCharacters, isLoading } = useCharacters({ enabled: !charactersData });
   const { openRoot } = useDetailDrawer();
   const characters = charactersData ?? fetchedCharacters;
   const list = Object.values(characters || {});

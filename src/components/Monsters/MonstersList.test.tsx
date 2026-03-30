@@ -7,6 +7,7 @@ import type { Monster } from '@/lib/schemas';
 import { MonstersList } from './MonstersList';
 import { createTestQueryClient } from '@/lib/test-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { buildMonsterGroups } from '@/lib/monsterGroups';
 
 const mockMonsters: Record<string, Monster> = {
   'monster-octopirate': {
@@ -84,8 +85,21 @@ const mockMonsters: Record<string, Monster> = {
 };
 
 const server = setupServer(
-  http.get('http://localhost:3000/data/monsters.json', () => {
+  http.get('/data/monsters.json', () => {
     return HttpResponse.json(mockMonsters);
+  }),
+  http.get('/api/details/:type/:id', ({ params }) => {
+    if (params.type !== 'monster') {
+      return HttpResponse.json({ message: 'Unsupported type' }, { status: 404 });
+    }
+
+    const groups = buildMonsterGroups(Object.values(mockMonsters));
+    const id = String(params.id);
+    const group = groups.find((entry) => entry.key === id || entry.representative.id === id);
+
+    return group
+      ? HttpResponse.json({ type: 'monster', group, items: {} })
+      : HttpResponse.json({ message: 'Not found' }, { status: 404 });
   })
 );
 
@@ -182,9 +196,10 @@ describe('MonstersList Component', () => {
     });
 
     await user.click(screen.getByText('Octopirate'));
-    const dialog = await screen.findByRole('dialog', { name: 'Octopirate' });
+    const dialog = await screen.findByRole('dialog');
+    await within(dialog).findByText('Ammonite');
 
-    expect(screen.getAllByText('Octopirate').length).toBeGreaterThan(0);
+    expect(within(dialog).getAllByText('Octopirate').length).toBeGreaterThan(0);
     expect(dialog).toHaveTextContent('Ammonite');
     expect(dialog).toHaveTextContent('Nicknames');
     expect(screen.getByRole('heading', { name: 'Nicknames' })).toBeInTheDocument();

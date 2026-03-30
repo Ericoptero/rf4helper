@@ -1,5 +1,3 @@
-import { readFile } from 'node:fs/promises';
-import path from 'node:path';
 import { cache } from 'react';
 import { z } from 'zod';
 
@@ -33,6 +31,7 @@ import {
 } from '@/lib/schemas';
 import { buildCrafterData } from '@/lib/crafterData';
 import { resolveItemImageUrl } from '@/lib/publicAssetUrls';
+import { readJsonDataFile, type DataFileName } from './files';
 
 const DataFileMetadataSchema = z.object({
   path: z.string(),
@@ -48,14 +47,8 @@ const DataIndexSchema = z.object({
 
 export type DataIndex = z.infer<typeof DataIndexSchema>;
 
-function getDataPath(fileName: string) {
-  return path.resolve(process.cwd(), 'public', 'data', fileName);
-}
-
-async function readJsonFile(fileName: string) {
-  const filePath = getDataPath(fileName);
-  const fileContents = await readFile(filePath, 'utf8');
-  return JSON.parse(fileContents) as unknown;
+async function readJsonFile(fileName: DataFileName) {
+  return readJsonDataFile(fileName);
 }
 
 export const getDataIndex = cache(async (): Promise<DataIndex> => {

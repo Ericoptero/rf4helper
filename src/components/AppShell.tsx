@@ -96,6 +96,16 @@ function ThemeToggleButton({
   );
 }
 
+function BrandLogo({ mobile = false }: { mobile?: boolean }) {
+  return (
+    <img
+      src="/brand/barrett-logo.png"
+      alt="Barrett logo"
+      className={mobile ? 'h-10 w-auto shrink-0' : 'h-12 w-auto shrink-0'}
+    />
+  );
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? '/';
   const { theme, toggleTheme, isHydrated } = useTheme();
@@ -107,16 +117,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:h-dvh lg:w-64 lg:flex-col ${appSurfaceClassNames.sidebar}`}
         >
           <div className="flex items-center justify-between border-b px-4 py-4">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-sm font-black text-primary-foreground">
-                RF4
-              </div>
-              <div className="min-w-0">
-                <div className="truncate text-sm font-semibold">Rune Factory 4</div>
-                <div className="truncate text-xs text-muted-foreground">
-                  Enchanted Codex
-                </div>
-              </div>
+            <Link href="/" className="flex items-center">
+              <BrandLogo />
             </Link>
             <ThemeToggleButton
               theme={theme}
@@ -236,14 +238,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                   </SheetContent>
                 </Sheet>
 
-                <Link href="/" className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-xs font-black text-primary-foreground">
-                    RF4
-                  </div>
-                  <div>
-                    <div className="text-sm font-semibold">Rune Factory 4</div>
-                    <div className="text-xs text-muted-foreground">Enchanted Codex</div>
-                  </div>
+                <Link href="/" className="flex items-center">
+                  <BrandLogo mobile />
                 </Link>
               </div>
 

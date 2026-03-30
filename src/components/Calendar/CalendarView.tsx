@@ -40,9 +40,15 @@ function CalendarContent({
   season: string;
   onSeasonChange: (season: string) => void;
 }) {
-  const { data: fetchedFestivals, isLoading: festivalsLoading } = useFestivals();
-  const { data: fetchedCropsData, isLoading: cropsLoading } = useCrops();
-  const { data: fetchedCharactersMap, isLoading: charactersLoading } = useCharacters();
+  const { data: fetchedFestivals, isLoading: festivalsLoading } = useFestivals({
+    enabled: !festivalsData,
+  });
+  const { data: fetchedCropsData, isLoading: cropsLoading } = useCrops({
+    enabled: !cropsData,
+  });
+  const { data: fetchedCharactersMap, isLoading: charactersLoading } = useCharacters({
+    enabled: !charactersData,
+  });
   const { openRoot } = useDetailDrawer();
   const festivals = festivalsData ?? fetchedFestivals;
   const resolvedCropsData = cropsData ?? fetchedCropsData;
@@ -55,7 +61,7 @@ function CalendarContent({
   const seasonBirthdays = React.useMemo(() => characters.filter((character) => character.birthday?.season === season), [characters, season]);
   const seasonGoodCrops = React.useMemo(() => crops.filter((crop) => crop.goodSeasons?.includes(season)), [crops, season]);
 
-  if (festivalsLoading || cropsLoading || charactersLoading) {
+  if ((!festivalsData && festivalsLoading) || (!cropsData && cropsLoading) || (!charactersData && charactersLoading)) {
     return <div className="p-8 text-center animate-pulse text-muted-foreground">Loading calendar data...</div>;
   }
 

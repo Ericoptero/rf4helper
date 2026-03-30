@@ -7,7 +7,6 @@ import {
   Map,
   Package,
   Skull,
-  Sparkles,
   Users,
 } from 'lucide-react';
 
@@ -105,10 +104,6 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
       <section className={`${appSurfaceClassNames.shell} p-6`}>
-        <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-          <Sparkles className="h-3.5 w-3.5" />
-          Enchanted Codex
-        </div>
         <div className="mt-4 max-w-3xl">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
             Rune Factory 4 Helper

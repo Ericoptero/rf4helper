@@ -6,6 +6,7 @@ import { PlayerView } from './PlayerView';
 import { createTestQueryClient } from '@/lib/test-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event';
+import type { SkillsData } from '@/lib/schemas';
 
 const mockOrders = [
   { id: 'order-1', orderName: 'Test Order', category: 'Licenses', requirement: '100 Wood', rpCost: 50 },
@@ -28,7 +29,7 @@ const mockRuneAbilities = {
   ]
 };
 
-const mockSkills = {
+const mockSkills: SkillsData = {
   weapons: [
     {
       id: 'skill-short-sword',
@@ -121,6 +122,23 @@ describe('PlayerView Component', () => {
   it('renders loading state initially', () => {
     render(<PlayerView />, { wrapper });
     expect(screen.getByText(/loading player data.../i)).toBeInTheDocument();
+  });
+
+  it('renders immediately from server-provided props without showing the loading state', () => {
+    render(
+      <PlayerView
+        orders={mockOrders}
+        requestsData={mockRequests}
+        runeAbilitiesData={mockRuneAbilities}
+        skills={mockSkills}
+        trophiesData={mockTrophies}
+      />,
+      { wrapper },
+    );
+
+    expect(screen.queryByText(/loading player data.../i)).not.toBeInTheDocument();
+    expect(screen.getByText('Player Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('Test Order')).toBeInTheDocument();
   });
 
   it('renders orders tab default and data successfully', async () => {

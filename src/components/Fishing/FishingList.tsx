@@ -91,7 +91,7 @@ function FishingCatalog({
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 }) {
-  const { data: fetchedFishList, isLoading } = useFish();
+  const { data: fetchedFishList, isLoading } = useFish({ enabled: !fishData });
   const { openRoot } = useDetailDrawer();
   const allFish = fishData ?? fetchedFishList ?? [];
 

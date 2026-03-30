@@ -14,7 +14,7 @@ import { buildCrafterData } from './crafterData';
 import { CrafterConfigSchema, ItemSchema, type CrafterConfig, type CrafterDefaults, type Item } from './schemas';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
-const dataDir = path.resolve(dirname, '../../public/data');
+const dataDir = path.resolve(dirname, '../../data');
 
 const items = z
   .record(z.string(), ItemSchema)

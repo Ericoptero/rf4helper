@@ -19,8 +19,8 @@ import {
   fetchTrophies,
 } from './api';
 
-function readPublicJson<T>(fileName: string): T {
-  const filePath = path.resolve(process.cwd(), 'public', 'data', fileName);
+function readProjectJson<T>(fileName: string): T {
+  const filePath = path.resolve(process.cwd(), 'data', fileName);
   return JSON.parse(readFileSync(filePath, 'utf-8')) as T;
 }
 
@@ -45,7 +45,7 @@ afterEach(() => {
 
 describe('typed API fetchers', () => {
   it.each(successCases)('parses %s data successfully', async (_label, fetcher, fileName) => {
-    const payload = readPublicJson(fileName);
+    const payload = readProjectJson(fileName);
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => payload,
@@ -83,7 +83,7 @@ describe('typed API fetchers', () => {
   it('keeps only the valid request sections', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => readPublicJson('requests.json'),
+      json: async () => readProjectJson('requests.json'),
     }));
 
     const result = await fetchRequests();
@@ -101,11 +101,11 @@ describe('typed API fetchers', () => {
       .fn()
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => readPublicJson('items.json'),
+        json: async () => readProjectJson('items.json'),
       })
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => readPublicJson('crafter.json'),
+        json: async () => readProjectJson('crafter.json'),
       });
 
     vi.stubGlobal('fetch', fetchMock);
@@ -133,7 +133,7 @@ describe('typed API fetchers', () => {
       .fn()
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => readPublicJson('items.json'),
+        json: async () => readProjectJson('items.json'),
       })
       .mockResolvedValueOnce({
         ok: false,

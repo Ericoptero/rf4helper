@@ -64,6 +64,22 @@ describe('CalendarView Component', () => {
     expect(document.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
   });
 
+  it('renders immediately from server-provided props without falling back to client loading', () => {
+    render(
+      <CalendarView
+        festivals={mockFestivals}
+        cropsData={mockCrops}
+        characters={mockCharacters}
+        season="Spring"
+      />,
+      { wrapper },
+    );
+
+    expect(screen.queryByText(/loading calendar data.../i)).not.toBeInTheDocument();
+    expect(screen.getAllByText('Spring Harvest Festival').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Amber').length).toBeGreaterThan(0);
+  });
+
   it('renders spring season default with its events', async () => {
     render(<CalendarView />, { wrapper });
 

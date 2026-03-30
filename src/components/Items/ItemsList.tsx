@@ -106,7 +106,7 @@ function ItemsCatalog({
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValueChange?: (key: string, value: CatalogFilterValue) => void;
 }) {
-  const { data: fetchedItems, isLoading } = useItems();
+  const { data: fetchedItems, isLoading } = useItems({ enabled: !itemsData });
   const { openRoot } = useDetailDrawer();
 
   const items = itemsData ?? fetchedItems;

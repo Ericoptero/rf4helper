@@ -56,12 +56,20 @@ export function PlayerView({
   skills?: SkillsData;
   trophiesData?: Record<string, import('@/lib/schemas').Trophy[]>;
 } = {}) {
-  const { data: fetchedOrders, isLoading: isLoadingOrders } = useOrders();
-  const { data: fetchedRequestsData, isLoading: isLoadingReqs } = useRequests();
+  const { data: fetchedOrders, isLoading: isLoadingOrders } = useOrders({
+    enabled: !ordersData,
+  });
+  const { data: fetchedRequestsData, isLoading: isLoadingReqs } = useRequests({
+    enabled: !requestsProp,
+  });
   const { data: fetchedRuneAbilitiesData, isLoading: isLoadingRunes } =
-    useRuneAbilities();
-  const { data: fetchedSkills, isLoading: isLoadingSkills } = useSkills();
-  const { data: fetchedTrophiesData, isLoading: isLoadingTrophies } = useTrophies();
+    useRuneAbilities({ enabled: !runeAbilitiesProp });
+  const { data: fetchedSkills, isLoading: isLoadingSkills } = useSkills({
+    enabled: !skillsProp,
+  });
+  const { data: fetchedTrophiesData, isLoading: isLoadingTrophies } = useTrophies({
+    enabled: !trophiesProp,
+  });
 
   const orders = ordersData ?? fetchedOrders;
   const requestsData = requestsProp ?? fetchedRequestsData;
@@ -70,11 +78,11 @@ export function PlayerView({
   const trophiesData = trophiesProp ?? fetchedTrophiesData;
 
   const isLoading =
-    isLoadingOrders ||
-    isLoadingReqs ||
-    isLoadingRunes ||
-    isLoadingSkills ||
-    isLoadingTrophies;
+    (!ordersData && isLoadingOrders) ||
+    (!requestsProp && isLoadingReqs) ||
+    (!runeAbilitiesProp && isLoadingRunes) ||
+    (!skillsProp && isLoadingSkills) ||
+    (!trophiesProp && isLoadingTrophies);
 
   if (isLoading) {
     return (

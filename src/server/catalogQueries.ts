@@ -148,13 +148,33 @@ function buildOptions(values: string[]) {
     .map((value) => ({ label: value, value: value.toLowerCase() }));
 }
 
+const seasonSortOrder = ['spring', 'summer', 'fall', 'winter'] as const;
+
+function getSeasonSortValue(season: string | null | undefined) {
+  if (!season) {
+    return Number.MAX_SAFE_INTEGER;
+  }
+
+  const index = seasonSortOrder.indexOf(season.toLowerCase() as (typeof seasonSortOrder)[number]);
+  return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+}
+
 function applyCharactersSort(characters: Character[], sortValue: string | undefined) {
   const sortedCharacters = [...characters];
   const resolvedSort = sortValue ?? 'name-asc';
 
   switch (resolvedSort) {
     case 'birthday-asc':
-      sortedCharacters.sort((left, right) => (left.birthday?.day || 99) - (right.birthday?.day || 99));
+      sortedCharacters.sort((left, right) => {
+        const seasonDelta =
+          getSeasonSortValue(left.birthday?.season) - getSeasonSortValue(right.birthday?.season);
+
+        if (seasonDelta !== 0) {
+          return seasonDelta;
+        }
+
+        return (left.birthday?.day || 99) - (right.birthday?.day || 99);
+      });
       return sortedCharacters;
     case 'name-asc':
     default:

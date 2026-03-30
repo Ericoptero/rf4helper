@@ -1,0 +1,71 @@
+{
+  "version": "2.0.1",
+  "generatedAt": "2026-03-30T18:00:00.000Z",
+  "files": {
+    "characters": {
+      "path": "characters.json",
+      "count": 30,
+      "sizeKB": 59
+    },
+    "chests": {
+      "path": "chests.json",
+      "count": 181,
+      "sizeKB": 53
+    },
+    "crafter": {
+      "path": "crafter.json",
+      "count": 12,
+      "sizeKB": 21
+    },
+    "crops": {
+      "path": "crops.json",
+      "count": 7,
+      "sizeKB": 38
+    },
+    "festivals": {
+      "path": "festivals.json",
+      "count": 24,
+      "sizeKB": 13
+    },
+    "fishing": {
+      "path": "fishing.json",
+      "count": 32,
+      "sizeKB": 63
+    },
+    "items": {
+      "path": "items.json",
+      "count": 1092,
+      "sizeKB": 1230
+    },
+    "monsters": {
+      "path": "monsters.json",
+      "count": 205,
+      "sizeKB": 369
+    },
+    "orders": {
+      "path": "orders.json",
+      "count": 55,
+      "sizeKB": 9
+    },
+    "requests": {
+      "path": "requests.json",
+      "count": 6,
+      "sizeKB": 42
+    },
+    "runeAbilities": {
+      "path": "runeAbilities.json",
+      "count": 15,
+      "sizeKB": 17
+    },
+    "skills": {
+      "path": "skills.json",
+      "count": 7,
+      "sizeKB": 19
+    },
+    "trophies": {
+      "path": "trophies.json",
+      "count": 3,
+      "sizeKB": 14
+    }
+  }
+}

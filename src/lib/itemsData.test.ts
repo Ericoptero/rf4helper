@@ -14,10 +14,10 @@ type NormalizedItem = Item & {
 };
 
 const items = JSON.parse(
-  readFileSync(resolve(process.cwd(), 'public/data/items.json'), 'utf8')
+  readFileSync(resolve(process.cwd(), 'data/items.json'), 'utf8')
 ) as Record<string, NormalizedItem>;
 const crafterConfig = CrafterConfigSchema.parse(
-  JSON.parse(readFileSync(resolve(process.cwd(), 'public/data/crafter.json'), 'utf8'))
+  JSON.parse(readFileSync(resolve(process.cwd(), 'data/crafter.json'), 'utf8'))
 );
 
 function sortStrings(values: Iterable<string>) {
