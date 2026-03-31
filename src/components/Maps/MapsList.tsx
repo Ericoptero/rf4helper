@@ -118,6 +118,14 @@ function MapsCatalog({
     { label: 'Chests (High-Low)', value: 'chests-desc', sortFn: (a: MapRegionRecord, b: MapRegionRecord) => b.chests.length - a.chests.length },
     { label: 'Fishing (High-Low)', value: 'fishing-desc', sortFn: (a: MapRegionRecord, b: MapRegionRecord) => b.fishingLocations.length - a.fishingLocations.length },
   ];
+  const serverFilters = filters.map((filter) => ({
+    key: filter.key,
+    label: filter.label,
+    placement: filter.placement,
+    control: filter.control,
+    options: filter.options,
+  }));
+  const serverSortOptions = sortOptions.map((option) => ({ label: option.label, value: option.value }));
 
   const tableColumns: CatalogTableColumn<MapRegionRecord>[] = [
     { key: 'region', header: 'Region', cell: (region) => region.name },
@@ -133,22 +141,30 @@ function MapsCatalog({
         data={regions}
         totalCount={totalCount}
         title="World Maps & Chests"
-        searchKey="name"
         searchTerm={searchTerm}
         onSearchTermChange={onSearchTermChange}
         viewMode={viewMode}
         onViewModeChange={onViewModeChange}
         sortValue={sortValue}
         onSortValueChange={onSortValueChange}
-        sortOptions={sortOptions}
-        filters={filters}
         filterValues={filterValues}
         onFilterValuesChange={onFilterValuesChange}
         tableColumns={tableColumns}
         getItemKey={(region) => region.id}
-        disableClientFiltering={serverDriven}
         renderCard={(region, onClick) => <MapCard region={region} onClick={onClick} />}
         onOpenItem={(region) => openRoot({ type: 'map', id: region.id })}
+        {...(serverDriven
+          ? {
+              mode: 'server' as const,
+              sortOptions: serverSortOptions,
+              filters: serverFilters,
+            }
+          : {
+              mode: 'client' as const,
+              searchKey: 'name' as const,
+              sortOptions,
+              filters,
+            })}
       />
       <UniversalDetailsDrawer />
     </>

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   getCharactersData,
@@ -15,9 +15,15 @@ import {
   getRuneAbilitiesData,
   getSkillsData,
   getTrophiesData,
+  resetServerDataCachesForTests,
 } from './loaders';
+import * as dataFiles from './files';
 
 describe('server data loaders', () => {
+  beforeEach(() => {
+    resetServerDataCachesForTests();
+  });
+
   it('reads the index metadata from disk', async () => {
     const index = await getDataIndex();
 
@@ -73,5 +79,15 @@ describe('server data loaders', () => {
     expect(Object.values(runeAbilities).flat().length).toBeGreaterThan(0);
     expect(Object.keys(skills).length).toBeGreaterThan(0);
     expect(Object.values(trophies).flat().length).toBeGreaterThan(0);
+  });
+
+  it('reuses the singleton dataset cache between repeated item reads', async () => {
+    const readSpy = vi.spyOn(dataFiles, 'readJsonDataFile');
+
+    await getItemsData();
+    await getItemsData();
+
+    expect(readSpy).toHaveBeenCalledTimes(1);
+    expect(readSpy).toHaveBeenCalledWith('items.json');
   });
 });

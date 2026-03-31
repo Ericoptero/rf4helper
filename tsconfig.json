@@ -45,9 +45,6 @@
   ],
   "exclude": [
     "node_modules",
-    "dist",
-    "src/routes/**/*",
-    "src/main.tsx",
-    "src/routeTree.gen.ts"
+    "dist"
   ]
 }

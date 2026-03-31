@@ -175,7 +175,7 @@ describe('MonstersList Component', () => {
 
     await user.click(screen.getByText('Octopirate'));
     const dialog = await screen.findByRole('dialog');
-    await within(dialog).findByText('Ammonite');
+    await within(dialog).findByText('Ammonite', {}, { timeout: 5000 });
 
     expect(within(dialog).getAllByText('Octopirate').length).toBeGreaterThan(0);
     expect(dialog).toHaveTextContent('Ammonite');

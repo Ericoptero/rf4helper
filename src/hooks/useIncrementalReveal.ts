@@ -6,7 +6,7 @@ type UseIncrementalRevealOptions = {
   itemCount: number;
   batchSize: number;
   resetKeys?: readonly unknown[];
-  rootRef?: React.RefObject<Element | null>;
+  rootElement?: Element | null;
   disabled?: boolean;
 };
 
@@ -14,20 +14,25 @@ export function useIncrementalReveal<TElement extends Element = HTMLDivElement>(
   itemCount,
   batchSize,
   resetKeys = [],
-  rootRef,
+  rootElement,
   disabled = false,
 }: UseIncrementalRevealOptions) {
   const [sentinelElement, setSentinelElement] = React.useState<TElement | null>(null);
   const [visibleCount, setVisibleCount] = React.useState(() => Math.min(itemCount, batchSize));
   const resetSignature = React.useMemo(() => JSON.stringify(resetKeys), [resetKeys]);
+  const batchSizeRef = React.useRef(batchSize);
+
+  React.useEffect(() => {
+    batchSizeRef.current = batchSize;
+  }, [batchSize]);
 
   const sentinelRef = React.useCallback((node: TElement | null) => {
     setSentinelElement(node);
   }, []);
 
   React.useEffect(() => {
-    setVisibleCount(Math.min(itemCount, batchSize));
-  }, [batchSize, itemCount, resetSignature]);
+    setVisibleCount(Math.min(itemCount, batchSizeRef.current));
+  }, [itemCount, resetSignature]);
 
   const loadMore = React.useCallback(() => {
     setVisibleCount((current) => {
@@ -55,7 +60,7 @@ export function useIncrementalReveal<TElement extends Element = HTMLDivElement>(
         }
       },
       {
-        root: rootRef?.current ?? null,
+        root: rootElement ?? null,
         rootMargin: '160px 0px',
         threshold: 0.01,
       },
@@ -64,7 +69,7 @@ export function useIncrementalReveal<TElement extends Element = HTMLDivElement>(
     observer.observe(sentinelElement);
 
     return () => observer.disconnect();
-  }, [disabled, itemCount, loadMore, rootRef, sentinelElement, visibleCount]);
+  }, [disabled, itemCount, loadMore, rootElement, sentinelElement, visibleCount]);
 
   return {
     hasMore: visibleCount < itemCount,

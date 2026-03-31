@@ -12,13 +12,18 @@ import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 import { useIncrementalReveal } from '@/hooks/useIncrementalReveal';
 import { cn } from '@/lib/utils';
 
-export type SortOption<T> = {
+type CatalogSortOptionBase = {
   label: string;
   value: string;
+};
+
+export type SortOption<T> = CatalogSortOptionBase & {
   sortFn: (a: T, b: T) => number;
 };
 
-export type CatalogFilterDefinition<T> = {
+export type ServerSortOption = CatalogSortOptionBase;
+
+type CatalogFilterDefinitionBase = {
   key: string;
   label: string;
   placement?: 'primary' | 'advanced';
@@ -26,8 +31,13 @@ export type CatalogFilterDefinition<T> = {
   control?: 'combobox' | 'boolean-toggle';
   selectionMode?: 'single' | 'multiple';
   options: Array<{ label: string; value: string }>;
+};
+
+export type CatalogFilterDefinition<T> = CatalogFilterDefinitionBase & {
   predicate: (item: T, value: string) => boolean;
 };
+
+export type ServerCatalogFilterDefinition = CatalogFilterDefinitionBase;
 
 export type CatalogFilterValue = string | string[] | undefined;
 
@@ -38,15 +48,12 @@ export type CatalogTableColumn<T> = {
   cell: (item: T) => React.ReactNode;
 };
 
-export interface CatalogPageLayoutProps<T> {
+type CatalogPageLayoutSharedProps<T> = {
   data: T[];
   totalCount?: number;
   title: string;
-  searchKey?: keyof T | ((item: T) => string);
-  sortOptions?: SortOption<T>[];
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
-  filters?: CatalogFilterDefinition<T>[];
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
   renderCard: (item: T, onOpen: () => void) => React.ReactNode;
@@ -60,8 +67,25 @@ export interface CatalogPageLayoutProps<T> {
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   emptyState?: string;
-  disableClientFiltering?: boolean;
-}
+};
+
+type ClientCatalogPageLayoutProps<T> = CatalogPageLayoutSharedProps<T> & {
+  mode?: 'client';
+  searchKey?: keyof T | ((item: T) => string);
+  sortOptions?: SortOption<T>[];
+  filters?: CatalogFilterDefinition<T>[];
+};
+
+type ServerCatalogPageLayoutProps<T> = CatalogPageLayoutSharedProps<T> & {
+  mode: 'server';
+  searchKey?: never;
+  sortOptions?: ServerSortOption[];
+  filters?: ServerCatalogFilterDefinition[];
+};
+
+export type CatalogPageLayoutProps<T> =
+  | ClientCatalogPageLayoutProps<T>
+  | ServerCatalogPageLayoutProps<T>;
 
 function normalizeFilterValue(value: CatalogFilterValue) {
   if (Array.isArray(value)) {
@@ -106,11 +130,8 @@ export function CatalogPageLayout<T>({
   data,
   totalCount,
   title,
-  searchKey,
-  sortOptions,
   sortValue,
   onSortValueChange,
-  filters,
   filterValues,
   onFilterValuesChange,
   renderCard,
@@ -124,11 +145,19 @@ export function CatalogPageLayout<T>({
   viewMode = 'cards',
   onViewModeChange,
   emptyState = 'No results found.',
-  disableClientFiltering = false,
+  mode = 'client',
+  searchKey,
+  sortOptions,
+  filters,
 }: CatalogPageLayoutProps<T>) {
   const [filtersSheetOpen, setFiltersSheetOpen] = React.useState(false);
   const [draftFilterValues, setDraftFilterValues] = React.useState<Record<string, CatalogFilterValue>>({});
-  const viewportRef = React.useRef<HTMLDivElement | null>(null);
+  const [viewportElement, setViewportElement] = React.useState<HTMLDivElement | null>(null);
+  const viewportRef = React.useCallback((node: HTMLDivElement | null) => {
+    setViewportElement(node);
+  }, []);
+  const isServerMode = mode === 'server';
+  const hasSearchControl = isServerMode ? Boolean(onSearchTermChange || searchTerm) : Boolean(searchKey);
 
   const orderedFilters = useMemo(() => {
     return [...(filters ?? [])].sort((left, right) => {
@@ -160,11 +189,13 @@ export function CatalogPageLayout<T>({
   }, [filterValues, filtersSheetOpen, orderedFilters]);
 
   const filteredAndSortedData = useMemo(() => {
-    if (disableClientFiltering) {
+    if (isServerMode) {
       return data;
     }
 
     let result = [...data];
+    const clientFilters = orderedFilters as CatalogFilterDefinition<T>[];
+    const clientSortOptions = sortOptions as SortOption<T>[] | undefined;
 
     if (searchTerm && searchKey) {
       const lower = searchTerm.toLowerCase();
@@ -174,7 +205,7 @@ export function CatalogPageLayout<T>({
       });
     }
 
-    for (const definition of orderedFilters) {
+    for (const definition of clientFilters) {
       const activeValue = filterValues?.[definition.key];
       const activeValues = getFilterValueList(activeValue);
 
@@ -185,15 +216,15 @@ export function CatalogPageLayout<T>({
       result = result.filter((item) => activeValues.some((value) => definition.predicate(item, value)));
     }
 
-    if (sortValue && sortOptions) {
-      const activeSort = sortOptions.find((option) => option.value === sortValue);
+    if (sortValue && clientSortOptions) {
+      const activeSort = clientSortOptions.find((option) => option.value === sortValue);
       if (activeSort) {
         result.sort(activeSort.sortFn);
       }
     }
 
     return result;
-  }, [data, disableClientFiltering, filterValues, orderedFilters, searchKey, searchTerm, sortOptions, sortValue]);
+  }, [data, filterValues, isServerMode, orderedFilters, searchKey, searchTerm, sortOptions, sortValue]);
 
   const quickToggleFilters = useMemo(
     () => orderedFilters.filter((definition) => definition.control === 'boolean-toggle'),
@@ -225,16 +256,15 @@ export function CatalogPageLayout<T>({
         resultCount: filteredAndSortedData.length,
         searchTerm,
         sortValue,
-        viewMode,
       }),
-    [filterValues, filteredAndSortedData.length, searchTerm, sortValue, viewMode],
+    [filterValues, filteredAndSortedData.length, searchTerm, sortValue],
   );
 
   const { hasMore, sentinelRef, visibleCount } = useIncrementalReveal<HTMLElement>({
     itemCount: filteredAndSortedData.length,
     batchSize: viewMode === 'table' ? 40 : 24,
     resetKeys: [revealResetToken],
-    rootRef: viewportRef,
+    rootElement: viewportElement,
   });
   const visibleItems = filteredAndSortedData.slice(0, visibleCount);
   const quickToggleValues = quickToggleFilters.flatMap((definition) =>
@@ -324,7 +354,7 @@ export function CatalogPageLayout<T>({
 
       <div className="rounded-3xl border bg-card/90 p-4 shadow-sm">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
-          {searchKey ? (
+          {hasSearchControl ? (
             <div className="relative min-w-0 flex-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input

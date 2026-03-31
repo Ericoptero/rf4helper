@@ -167,6 +167,14 @@ function CharactersCatalog({
     { label: 'Name (A-Z)', value: 'name-asc', sortFn: (a: Character, b: Character) => a.name.localeCompare(b.name) },
     { label: 'Birthday', value: 'birthday-asc', sortFn: (a: Character, b: Character) => (a.birthday?.day || 99) - (b.birthday?.day || 99) },
   ];
+  const serverFilters = filters.map((filter) => ({
+    key: filter.key,
+    label: filter.label,
+    placement: filter.placement,
+    control: filter.control,
+    options: filter.options,
+  }));
+  const serverSortOptions = sortOptions.map((option) => ({ label: option.label, value: option.value }));
 
   const tableColumns: CatalogTableColumn<Character>[] = [
     { key: 'name', header: 'Name', cell: (character) => character.name },
@@ -183,22 +191,30 @@ function CharactersCatalog({
         data={charactersData}
         totalCount={totalCount}
         title="Characters"
-        searchKey="name"
         searchTerm={searchTerm}
         onSearchTermChange={onSearchTermChange}
         viewMode={viewMode}
         onViewModeChange={onViewModeChange}
         sortValue={sortValue}
         onSortValueChange={onSortValueChange}
-        sortOptions={sortOptions}
-        filters={filters}
         filterValues={filterValues}
         onFilterValuesChange={onFilterValuesChange}
         tableColumns={tableColumns}
         getItemKey={(character) => character.id}
-        disableClientFiltering={serverDriven}
         renderCard={(character, onClick) => <CharacterCard character={character} onClick={onClick} />}
         onOpenItem={(character) => openRoot({ type: 'character', id: character.id })}
+        {...(serverDriven
+          ? {
+              mode: 'server' as const,
+              sortOptions: serverSortOptions,
+              filters: serverFilters,
+            }
+          : {
+              mode: 'client' as const,
+              searchKey: 'name' as const,
+              sortOptions,
+              filters,
+            })}
       />
       <UniversalDetailsDrawer />
     </>

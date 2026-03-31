@@ -83,7 +83,7 @@ export function CrafterSelectorDialog({
   const [draftItemId, setDraftItemId] = React.useState<string | undefined>();
   const [draftLevel, setDraftLevel] = React.useState(selectedLevel);
   const [sortMode, setSortMode] = React.useState<CrafterSortMode>('name-asc');
-  const optionsListRef = React.useRef<HTMLDivElement | null>(null);
+  const [optionsListElement, setOptionsListElement] = React.useState<HTMLDivElement | null>(null);
   const searchInputRef = React.useRef<HTMLInputElement | null>(null);
 
   React.useEffect(() => {
@@ -148,7 +148,7 @@ export function CrafterSelectorDialog({
     batchSize: 24,
     disabled: !open,
     resetKeys: [open, query, sortMode, title, selectedItemId, visibleOptions],
-    rootRef: optionsListRef,
+    rootElement: optionsListElement,
   });
   const renderedOptions = visibleOptions.slice(0, visibleCount);
   const handleApply = () => {
@@ -227,7 +227,7 @@ export function CrafterSelectorDialog({
                   </div>
                 </div>
 
-                <div ref={optionsListRef} className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
+                <div ref={setOptionsListElement} className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
                   {renderedOptions.map(({ item, preview: itemPreview, rarity }) => {
                     const isSelected = draftItemId === item.id;
                     const isPlaceholder = item.id === CRAFTER_RARITY_PLACEHOLDER_ID;

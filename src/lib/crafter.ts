@@ -21,8 +21,24 @@ import {
   isCrafterRarityPlaceholder,
   shouldCountForRarityBonus,
 } from './crafterRarity';
+import {
+  applyDefaultRecipeSelections,
+  getFoodRecipeDefinition,
+  getRecipeDefinition,
+  getSlotConfigByKey,
+  normalizeMaterialLevel,
+  padSelections,
+} from './crafterRecipeSelections';
 
 export { CRAFTER_RARITY_PLACEHOLDER_ID, CRAFTER_RARITY_PLACEHOLDER_NAME } from './crafterRarity';
+export {
+  applyDefaultRecipeSelections,
+  getFoodRecipeDefinition,
+  getRecipeDefinition,
+  getSlotConfigByKey,
+  normalizeMaterialLevel,
+  padSelections,
+} from './crafterRecipeSelections';
 
 const { compressToEncodedURIComponent, decompressFromEncodedURIComponent } = LZString;
 
@@ -231,13 +247,6 @@ const FOOD_OVERWRITE_BASE_PAYLOAD: CrafterFoodPayload = {
   statusAttacks: {},
 };
 
-function cloneSelection(selection?: CrafterMaterialSelection): CrafterMaterialSelection {
-  return {
-    itemId: selection?.itemId,
-    level: selection?.level ?? (selection?.itemId ? 10 : 1),
-  };
-}
-
 function emptyStats(): CrafterStatBlock {
   return {};
 }
@@ -330,24 +339,6 @@ function scaleGeometry(source?: GeometryMap, scale = 1): GeometryMap {
   return next;
 }
 
-function normalizeMaterialLevel(level?: number) {
-  return Math.max(1, Math.min(10, level ?? 1));
-}
-
-function getSlotConfigByKey(data: CrafterData): Record<CrafterSlotKey, CrafterSlotConfig> {
-  return Object.fromEntries(data.slotConfigs.map((slot) => [slot.key, slot])) as Record<
-    CrafterSlotKey,
-    CrafterSlotConfig
-  >;
-}
-
-function padSelections(
-  selections: CrafterMaterialSelection[] | undefined,
-  count: number,
-): CrafterMaterialSelection[] {
-  return Array.from({ length: count }, (_, index) => cloneSelection(selections?.[index]));
-}
-
 function hasExplicitSelection(selection: CrafterMaterialSelection | undefined) {
   return selection?.itemId != null || (selection?.level ?? 1) !== 1;
 }
@@ -356,49 +347,8 @@ function getAppearanceId(slotKey: CrafterSlotKey, build: CrafterBuildState) {
   return build[slotKey].appearanceId;
 }
 
-function getRecipeDefinition(
-  slotKey: CrafterSlotKey,
-  itemId: string | undefined,
-  data: CrafterData,
-) {
-  if (!itemId) return undefined;
-  return data.recipes.equipment[slotKey]?.[itemId];
-}
-
-function getFoodRecipeDefinition(baseId: string | undefined, data: CrafterData) {
-  if (!baseId) return undefined;
-  return data.recipes.food[baseId];
-}
-
 function foodIngredientTriggersOverwrite(payload: CrafterFoodPayload | undefined) {
   return Boolean(payload?.status?.overwrite);
-}
-
-function applyDefaultRecipeSelections(
-  current: CrafterMaterialSelection[] | undefined,
-  defaults: string[] | undefined,
-  slotCount: number,
-): CrafterMaterialSelection[] {
-  const padded = padSelections(current, slotCount);
-  return padded.map((selection, index) => {
-    const rawItemId = selection.itemId;
-    const defaultItemId = defaults?.[index] ?? undefined;
-    const hasExplicitOverride = hasExplicitSelection(selection);
-
-    return {
-      itemId: rawItemId === '' ? undefined : rawItemId ?? defaultItemId,
-      level:
-        rawItemId && rawItemId !== ''
-          ? normalizeMaterialLevel(selection.level)
-          : rawItemId === ''
-            ? 1
-            : defaultItemId
-              ? hasExplicitOverride
-                ? normalizeMaterialLevel(selection.level)
-                : 10
-              : normalizeMaterialLevel(selection.level),
-    };
-  });
 }
 
 function compactSelection(selection: CrafterMaterialSelection | undefined) {

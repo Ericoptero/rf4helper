@@ -1,8 +1,16 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import * as mapFishingRelations from '@/lib/mapFishingRelations';
+import * as monsterGroups from '@/lib/monsterGroups';
+
+import { resetServerDataCachesForTests } from './data/loaders';
 import { getDetailPayload } from './details';
 
 describe('detail payloads', () => {
+  beforeEach(() => {
+    resetServerDataCachesForTests();
+  });
+
   it('builds an item detail payload with linked items data available', async () => {
     const payload = await getDetailPayload({ type: 'item', id: 'item-iron' });
 
@@ -103,5 +111,23 @@ describe('detail payloads', () => {
     const payload = await getDetailPayload({ type: 'unknown' as never, id: 'mystery' });
 
     expect(payload).toBeNull();
+  });
+
+  it('reuses cached monster groups across repeated monster detail requests', async () => {
+    const buildGroupsSpy = vi.spyOn(monsterGroups, 'buildMonsterGroups');
+
+    await getDetailPayload({ type: 'monster', id: 'monster-orc' });
+    await getDetailPayload({ type: 'monster', id: 'monster-orc' });
+
+    expect(buildGroupsSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('reuses cached map regions across repeated map detail requests', async () => {
+    const buildRegionsSpy = vi.spyOn(mapFishingRelations, 'buildMapRegions');
+
+    await getDetailPayload({ type: 'map', id: 'Selphia Plains' });
+    await getDetailPayload({ type: 'map', id: 'Selphia Plains' });
+
+    expect(buildRegionsSpy).toHaveBeenCalledTimes(1);
   });
 });

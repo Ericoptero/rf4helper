@@ -8,10 +8,45 @@ import { buildDetailApiPath, encodeDetailEntity, type DetailEntityReference } fr
 
 type DetailPayloadStatus = 'idle' | 'loading' | 'ready' | 'error';
 
+const DETAIL_PAYLOAD_CACHE_LIMIT = 100;
 const detailPayloadCache = new Map<string, DetailPayload>();
+
+function getCachedDetailPayload(cacheKey: string) {
+  const cachedPayload = detailPayloadCache.get(cacheKey);
+
+  if (!cachedPayload) {
+    return undefined;
+  }
+
+  detailPayloadCache.delete(cacheKey);
+  detailPayloadCache.set(cacheKey, cachedPayload);
+  return cachedPayload;
+}
+
+function setCachedDetailPayload(cacheKey: string, payload: DetailPayload) {
+  if (detailPayloadCache.has(cacheKey)) {
+    detailPayloadCache.delete(cacheKey);
+  }
+
+  detailPayloadCache.set(cacheKey, payload);
+
+  while (detailPayloadCache.size > DETAIL_PAYLOAD_CACHE_LIMIT) {
+    const oldestCacheKey = detailPayloadCache.keys().next().value;
+
+    if (!oldestCacheKey) {
+      break;
+    }
+
+    detailPayloadCache.delete(oldestCacheKey);
+  }
+}
 
 export function resetDetailPayloadCache() {
   detailPayloadCache.clear();
+}
+
+export function getDetailPayloadCacheSizeForTests() {
+  return detailPayloadCache.size;
 }
 
 export function useDetailPayload(reference: DetailEntityReference | null) {
@@ -27,7 +62,7 @@ export function useDetailPayload(reference: DetailEntityReference | null) {
 
     const activeReference = reference;
     const cacheKey = encodeDetailEntity(activeReference);
-    const cachedPayload = detailPayloadCache.get(cacheKey);
+    const cachedPayload = getCachedDetailPayload(cacheKey);
 
     if (cachedPayload) {
       setPayload(cachedPayload);
@@ -50,7 +85,7 @@ export function useDetailPayload(reference: DetailEntityReference | null) {
         }
 
         const nextPayload = (await response.json()) as DetailPayload;
-        detailPayloadCache.set(cacheKey, nextPayload);
+        setCachedDetailPayload(cacheKey, nextPayload);
         setPayload(nextPayload);
         setStatus('ready');
       } catch (error) {

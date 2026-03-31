@@ -1,4 +1,3 @@
-/// <reference types="vitest/config" />
 import { defineConfig } from "vite";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import babel from "@rolldown/plugin-babel";
@@ -16,17 +15,5 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-  },
-  test: {
-    environment: "jsdom",
-    environmentOptions: {
-      jsdom: {
-        url: "http://localhost:3000",
-      },
-    },
-    setupFiles: "./src/setupTests.ts",
-    globals: true,
-    exclude: ['tests/playwright/**', 'node_modules/**', 'dist/**'],
-    maxWorkers: 1,
   },
 });

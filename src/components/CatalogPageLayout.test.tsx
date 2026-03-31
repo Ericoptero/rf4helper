@@ -150,6 +150,7 @@ function ControlledCatalogHarness({ data = entries }: { data?: Entry[] }) {
   return (
     <CatalogPageLayout<Entry>
       data={data}
+      mode="client"
       title="Items"
       searchKey="name"
       searchTerm={searchTerm}
@@ -323,6 +324,7 @@ describe('CatalogPageLayout', () => {
     render(
       <CatalogPageLayout<Entry>
         data={entries}
+        mode="client"
         title="Items"
         searchKey="name"
         searchTerm=""
@@ -395,6 +397,7 @@ describe('CatalogPageLayout', () => {
       return (
         <CatalogPageLayout<Entry>
           data={entries}
+          mode="client"
           title="Items"
           searchKey="name"
           searchTerm={searchTerm}
@@ -432,20 +435,26 @@ describe('CatalogPageLayout', () => {
     expect(onOpenItem).toHaveBeenCalledWith(entries[1]);
   });
 
-  it('can skip client filtering when disableClientFiltering is enabled', () => {
+  it('skips client filtering in server mode without requiring a searchKey', () => {
     render(
       <CatalogPageLayout<Entry>
         data={entries}
+        mode="server"
         title="Items"
-        searchKey="name"
         searchTerm="turnip"
         onSearchTermChange={vi.fn()}
         viewMode="cards"
         onViewModeChange={vi.fn()}
         sortValue="name-asc"
         onSortValueChange={vi.fn()}
-        sortOptions={sortOptions}
-        filters={filters}
+        sortOptions={sortOptions.map((option) => ({ label: option.label, value: option.value }))}
+        filters={filters.map((filter) => ({
+          key: filter.key,
+          label: filter.label,
+          placement: filter.placement,
+          control: filter.control,
+          options: filter.options,
+        }))}
         filterValues={{ featured: 'yes' }}
         onFilterValuesChange={vi.fn()}
         tableColumns={tableColumns}
@@ -456,7 +465,6 @@ describe('CatalogPageLayout', () => {
           </button>
         )}
         onOpenItem={vi.fn()}
-        disableClientFiltering
       />,
     );
 
@@ -505,7 +513,7 @@ describe('CatalogPageLayout', () => {
     expect(screen.queryByRole('button', { name: 'Alpha Crop 24' })).not.toBeInTheDocument();
   });
 
-  it('resets the revealed result window when switching from cards to table mode', async () => {
+  it('keeps the revealed result window when switching from cards to table mode', async () => {
     const user = userEvent.setup();
 
     render(<ControlledCatalogHarness data={paginatedEntries} />);
@@ -520,6 +528,6 @@ describe('CatalogPageLayout', () => {
 
     expect(screen.getByRole('table')).toBeInTheDocument();
     expect(screen.getByText('Beta Weapon 39')).toBeInTheDocument();
-    expect(screen.queryByText('Beta Weapon 40')).not.toBeInTheDocument();
+    expect(screen.getByText('Beta Weapon 40')).toBeInTheDocument();
   });
 });

@@ -17,6 +17,23 @@ function normalizeSearchRecord(search: SearchRecord) {
   );
 }
 
+function areSearchRecordsEqual(left: SearchRecord, right: SearchRecord) {
+  const leftEntries = Object.entries(left);
+  const rightEntries = Object.entries(right);
+
+  if (leftEntries.length !== rightEntries.length) {
+    return false;
+  }
+
+  for (const [key, value] of leftEntries) {
+    if (right[key] !== value) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export function serializeRouteValue(value: string | string[] | undefined) {
   if (Array.isArray(value)) {
     return value.join(',') || undefined;
@@ -57,7 +74,7 @@ export function useCatalogRouteState<TSearch extends SearchRecord>({
       const normalizedCurrent = normalizeSearchRecord(search);
       const normalizedNext = normalizeSearchRecord(nextSearch);
 
-      if (JSON.stringify(normalizedCurrent) === JSON.stringify(normalizedNext)) {
+      if (areSearchRecordsEqual(normalizedCurrent, normalizedNext)) {
         return;
       }
 

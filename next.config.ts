@@ -1,22 +1,32 @@
 import type { NextConfig } from 'next';
 
+const contentSecurityPolicyValue = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "font-src 'self' data:",
+  "img-src 'self' data: blob:",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "connect-src 'self'",
+  "frame-ancestors 'none'",
+  "form-action 'self'",
+  "object-src 'none'",
+  'upgrade-insecure-requests',
+].join('; ');
+
 const securityHeaders = [
   {
-    key: 'Content-Security-Policy-Report-Only',
-    value: [
-      "default-src 'self'",
-      "base-uri 'self'",
-      "font-src 'self' data:",
-      "img-src 'self' data: blob:",
-      "script-src 'self'",
-      "style-src 'self' 'unsafe-inline'",
-      "connect-src 'self'",
-      "frame-ancestors 'none'",
-      "form-action 'self'",
-      "object-src 'none'",
-      'upgrade-insecure-requests',
-    ].join('; '),
+    key: 'Content-Security-Policy',
+    value: contentSecurityPolicyValue,
   },
+  ...(process.env.ENABLE_CSP_REPORT_ONLY === 'true'
+    ? [
+        {
+          key: 'Content-Security-Policy-Report-Only',
+          value: contentSecurityPolicyValue,
+        },
+      ]
+    : []),
   {
     key: 'Permissions-Policy',
     value: 'camera=(), geolocation=(), microphone=(), browsing-topics=()',
@@ -37,7 +47,7 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  allowedDevOrigins: ['192.168.100.57'],
+  ...(process.env.NODE_ENV === 'development' ? { allowedDevOrigins: ['192.168.100.57'] } : {}),
   async headers() {
     return [
       {

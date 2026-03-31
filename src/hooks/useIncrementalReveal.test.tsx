@@ -77,17 +77,17 @@ function IncrementalRevealProbe({
   resetKeys?: readonly unknown[];
   renderSentinel?: boolean;
 }) {
-  const rootRef = React.useRef<HTMLDivElement | null>(null);
+  const [rootElement, setRootElement] = React.useState<HTMLDivElement | null>(null);
   const { hasMore, sentinelRef, visibleCount } = useIncrementalReveal<HTMLDivElement>({
     itemCount,
     batchSize,
     disabled,
     resetKeys,
-    rootRef,
+    rootElement,
   });
 
   return (
-    <div ref={rootRef}>
+    <div ref={setRootElement}>
       <div data-testid="visible-count">{visibleCount}</div>
       <div data-testid="has-more">{String(hasMore)}</div>
       {renderSentinel ? <div ref={sentinelRef} data-testid="sentinel" /> : null}

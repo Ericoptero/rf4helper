@@ -1,9 +1,17 @@
 import { z } from 'zod';
 
-import { buildMapRegions, type MapRegionRecord } from '@/lib/mapFishingRelations';
-import { buildMonsterGroups, isMonsterActuallyTameable, type MonsterGroup } from '@/lib/monsterGroups';
+import type { MapRegionRecord } from '@/lib/mapFishingRelations';
+import { isMonsterActuallyTameable, type MonsterGroup } from '@/lib/monsterGroups';
 import { hasDisplayEffects } from '@/lib/itemPresentation';
 import type { Character, Chest, Fish, Item, Monster } from '@/lib/schemas';
+import {
+  getCharactersFilterOptionsForData,
+  getFishingFilterOptionsForData,
+  getItemsFilterOptionsForData,
+  getMapRegionsForData,
+  getMonsterGroupsForData,
+  getMonstersFilterOptionsForData,
+} from './data/derived';
 
 type SearchParamRecord = Record<string, string | string[] | undefined>;
 
@@ -146,12 +154,6 @@ export type MapsCatalogData = {
 
 function firstValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
-}
-
-function buildOptions(values: string[]) {
-  return Array.from(new Set(values))
-    .sort((left, right) => left.localeCompare(right))
-    .map((value) => ({ label: value, value: value.toLowerCase() }));
 }
 
 const seasonSortOrder = ['spring', 'summer', 'fall', 'winter'] as const;
@@ -310,6 +312,7 @@ export function buildItemsCatalogData(
   search: ItemsSearchParams,
 ): ItemsCatalogData {
   const sourceItems = Object.values(items);
+  const filterOptions = getItemsFilterOptionsForData(items);
   let results = [...sourceItems];
 
   if (search.q) {
@@ -356,24 +359,7 @@ export function buildItemsCatalogData(
   return {
     totalCount: sourceItems.length,
     results: applyItemsSort(results, search.sort),
-    filterOptions: {
-      type: buildOptions(sourceItems.map((item) => item.type)),
-      category: buildOptions(
-        sourceItems
-          .map((item) => item.category)
-          .filter((value): value is string => Boolean(value)),
-      ),
-      region: buildOptions(
-        sourceItems
-          .map((item) => item.region)
-          .filter((value): value is string => Boolean(value)),
-      ),
-      rarity: buildOptions(
-        sourceItems
-          .map((item) => item.rarityCategory)
-          .filter((value): value is string => Boolean(value)),
-      ),
-    },
+    filterOptions,
   };
 }
 
@@ -382,6 +368,7 @@ export function buildCharactersCatalogData(
   search: CharactersSearchParams,
 ): CharactersCatalogData {
   const sourceCharacters = Object.values(characters);
+  const filterOptions = getCharactersFilterOptionsForData(characters);
   let results = [...sourceCharacters];
 
   if (search.q) {
@@ -412,12 +399,7 @@ export function buildCharactersCatalogData(
   return {
     totalCount: sourceCharacters.length,
     results: applyCharactersSort(results, search.sort),
-    filterOptions: {
-      category: buildOptions(sourceCharacters.map((character) => character.category)),
-      gender: buildOptions(sourceCharacters.map((character) => character.gender).filter((value): value is string => Boolean(value))),
-      season: buildOptions(sourceCharacters.map((character) => character.birthday?.season).filter((value): value is string => Boolean(value))),
-      weaponType: buildOptions(sourceCharacters.map((character) => character.battle?.weaponType).filter((value): value is string => Boolean(value))),
-    },
+    filterOptions,
   };
 }
 
@@ -425,7 +407,8 @@ export function buildMonstersCatalogData(
   monsters: Record<string, Monster>,
   search: MonstersSearchParams,
 ): MonstersCatalogData {
-  const sourceGroups = buildMonsterGroups(Object.values(monsters));
+  const sourceGroups = getMonsterGroupsForData(monsters);
+  const filterOptions = getMonstersFilterOptionsForData(monsters);
   let results = [...sourceGroups];
 
   if (search.q) {
@@ -456,9 +439,7 @@ export function buildMonstersCatalogData(
   return {
     totalCount: sourceGroups.length,
     results: applyMonstersSort(results, search.sort),
-    filterOptions: {
-      location: buildOptions(sourceGroups.flatMap((group) => group.locations)),
-    },
+    filterOptions,
   };
 }
 
@@ -467,6 +448,7 @@ export function buildFishingCatalogData(
   search: FishingSearchParams,
 ): FishingCatalogData {
   const sourceFish = [...fish];
+  const filterOptions = getFishingFilterOptionsForData(fish);
   let results = [...sourceFish];
 
   if (search.q) {
@@ -493,11 +475,7 @@ export function buildFishingCatalogData(
   return {
     totalCount: sourceFish.length,
     results: applyFishingSort(results, search.sort),
-    filterOptions: {
-      shadow: buildOptions(sourceFish.map((entry) => entry.shadow).filter((value): value is string => Boolean(value))),
-      region: buildOptions(sourceFish.flatMap((entry) => (entry.locations ?? []).map((location) => location.region))),
-      season: buildOptions(sourceFish.flatMap((entry) => (entry.locations ?? []).flatMap((location) => location.seasons ?? []))),
-    },
+    filterOptions,
   };
 }
 
@@ -506,7 +484,7 @@ export function buildMapsCatalogData(
   fish: Fish[],
   search: MapsSearchParams,
 ): MapsCatalogData {
-  const sourceRegions = buildMapRegions(chests, fish);
+  const sourceRegions = getMapRegionsForData(chests, fish);
   let results = [...sourceRegions];
 
   if (search.q) {

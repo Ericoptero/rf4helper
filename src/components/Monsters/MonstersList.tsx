@@ -146,6 +146,14 @@ function MonstersCatalog({
     { label: 'Name (A-Z)', value: 'name-asc', sortFn: (a: MonsterGroup, b: MonsterGroup) => a.displayName.localeCompare(b.displayName) },
     { label: 'Base LV (High-Low)', value: 'level-desc', sortFn: (a: MonsterGroup, b: MonsterGroup) => (b.representative.stats.baseLevel || 0) - (a.representative.stats.baseLevel || 0) },
   ];
+  const serverFilters = filters.map((filter) => ({
+    key: filter.key,
+    label: filter.label,
+    placement: filter.placement,
+    control: filter.control,
+    options: filter.options,
+  }));
+  const serverSortOptions = sortOptions.map((option) => ({ label: option.label, value: option.value }));
 
   const tableColumns: CatalogTableColumn<MonsterGroup>[] = [
     { key: 'name', header: 'Name', cell: (group) => group.displayName },
@@ -164,22 +172,30 @@ function MonstersCatalog({
         data={monsterGroups}
         totalCount={totalCount}
         title="Monsters Compendium"
-        searchKey={(group) => group.searchText}
         searchTerm={searchTerm}
         onSearchTermChange={onSearchTermChange}
         viewMode={viewMode}
         onViewModeChange={onViewModeChange}
         sortValue={sortValue}
         onSortValueChange={onSortValueChange}
-        sortOptions={sortOptions}
-        filters={filters}
         filterValues={filterValues}
         onFilterValuesChange={onFilterValuesChange}
         tableColumns={tableColumns}
         getItemKey={(group) => group.key}
-        disableClientFiltering={serverDriven}
         renderCard={(group, onClick) => <MonsterCard group={group} onClick={onClick} />}
         onOpenItem={(group) => openRoot({ type: 'monster', id: group.key })}
+        {...(serverDriven
+          ? {
+              mode: 'server' as const,
+              sortOptions: serverSortOptions,
+              filters: serverFilters,
+            }
+          : {
+              mode: 'client' as const,
+              searchKey: (group: MonsterGroup) => group.searchText,
+              sortOptions,
+              filters,
+            })}
       />
       <UniversalDetailsDrawer />
     </>

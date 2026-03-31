@@ -1,7 +1,7 @@
 import { getDetailPayload } from '@/server/details';
 import type { DetailEntityType } from '@/components/details/detailTypes';
 
-const VALID_DETAIL_TYPES: DetailEntityType[] = [
+const VALID_DETAIL_TYPES = [
   'item',
   'character',
   'birthday',
@@ -10,7 +10,12 @@ const VALID_DETAIL_TYPES: DetailEntityType[] = [
   'map',
   'festival',
   'crop',
-];
+] as const satisfies readonly DetailEntityType[];
+const VALID_DETAIL_TYPE_SET = new Set<string>(VALID_DETAIL_TYPES);
+
+function isDetailEntityType(value: string): value is DetailEntityType {
+  return VALID_DETAIL_TYPE_SET.has(value);
+}
 
 const DETAIL_HEADERS = {
   'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
@@ -25,11 +30,11 @@ export async function GET(
 ) {
   const { type, id } = await context.params;
 
-  if (!VALID_DETAIL_TYPES.includes(type as DetailEntityType)) {
+  if (!isDetailEntityType(type)) {
     return Response.json({ message: 'Unknown detail type.' }, { status: 404, headers: DETAIL_HEADERS });
   }
 
-  const payload = await getDetailPayload({ type: type as DetailEntityType, id });
+  const payload = await getDetailPayload({ type, id });
 
   if (!payload) {
     return Response.json({ message: 'Entity not found.' }, { status: 404, headers: DETAIL_HEADERS });

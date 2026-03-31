@@ -136,6 +136,14 @@ function FishingCatalog({
     { label: 'Sell Price (High-Low)', value: 'sell-desc', sortFn: (a: Fish, b: Fish) => (b.sell || 0) - (a.sell || 0) },
     { label: 'Locations (High-Low)', value: 'locations-desc', sortFn: (a: Fish, b: Fish) => (b.locations?.length || 0) - (a.locations?.length || 0) },
   ];
+  const serverFilters = filters.map((filter) => ({
+    key: filter.key,
+    label: filter.label,
+    placement: filter.placement,
+    control: filter.control,
+    options: filter.options,
+  }));
+  const serverSortOptions = sortOptions.map((option) => ({ label: option.label, value: option.value }));
 
   const tableColumns: CatalogTableColumn<Fish>[] = [
     { key: 'name', header: 'Name', cell: (fish) => fish.name },
@@ -152,22 +160,30 @@ function FishingCatalog({
         data={fishData}
         totalCount={totalCount}
         title="Fishing Guide"
-        searchKey="name"
         searchTerm={searchTerm}
         onSearchTermChange={onSearchTermChange}
         viewMode={viewMode}
         onViewModeChange={onViewModeChange}
         sortValue={sortValue}
         onSortValueChange={onSortValueChange}
-        sortOptions={sortOptions}
-        filters={filters}
         filterValues={filterValues}
         onFilterValuesChange={onFilterValuesChange}
         tableColumns={tableColumns}
         getItemKey={(fish) => fish.id}
-        disableClientFiltering={serverDriven}
         renderCard={(fish, onClick) => <FishCard fish={fish} onClick={onClick} />}
         onOpenItem={(fish) => openRoot({ type: 'fish', id: fish.id })}
+        {...(serverDriven
+          ? {
+              mode: 'server' as const,
+              sortOptions: serverSortOptions,
+              filters: serverFilters,
+            }
+          : {
+              mode: 'client' as const,
+              searchKey: 'name' as const,
+              sortOptions,
+              filters,
+            })}
       />
       <UniversalDetailsDrawer />
     </>

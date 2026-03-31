@@ -1,5 +1,5 @@
-import { buildMapRegions } from '@/lib/mapFishingRelations';
-import { buildMonsterGroups } from '@/lib/monsterGroups';
+import type { MapRegionRecord } from '@/lib/mapFishingRelations';
+import type { MonsterGroup } from '@/lib/monsterGroups';
 import type {
   Character,
   Crop,
@@ -11,21 +11,21 @@ import type { DetailEntityReference } from '@/components/details/detailTypes';
 
 import {
   getCharactersData,
-  getChestsData,
   getCropsData,
   getFestivalsData,
   getFishData,
   getItemsData,
-  getMonstersData,
+  getMapRegions,
+  getMonsterGroups,
 } from './data/loaders';
 
 export type DetailPayload =
   | { type: 'item'; item: Item; items: Record<string, Item> }
   | { type: 'character'; character: Character; items: Record<string, Item> }
   | { type: 'birthday'; character: Character }
-  | { type: 'monster'; group: ReturnType<typeof buildMonsterGroups>[number]; items: Record<string, Item> }
+  | { type: 'monster'; group: MonsterGroup; items: Record<string, Item> }
   | { type: 'fish'; fish: Fish }
-  | { type: 'map'; region: ReturnType<typeof buildMapRegions>[number] }
+  | { type: 'map'; region: MapRegionRecord }
   | { type: 'festival'; festival: Festival }
   | { type: 'crop'; crop: Crop };
 
@@ -62,7 +62,7 @@ function getCharacterDetailItemIds(character: Character) {
   ];
 }
 
-function getMonsterDetailItemIds(group: ReturnType<typeof buildMonsterGroups>[number]) {
+function getMonsterDetailItemIds(group: MonsterGroup) {
   return group.variants.flatMap((variant) => [
     ...variant.drops.flatMap((drop) => (drop.id ? [drop.id] : [])),
     ...(variant.taming?.favorite?.flatMap((favorite) => (favorite.id ? [favorite.id] : [])) ?? []),
@@ -92,8 +92,7 @@ export async function getDetailPayload(
         : { type: 'birthday', character };
     }
     case 'monster': {
-      const [monsters, items] = await Promise.all([getMonstersData(), getItemsData()]);
-      const groups = buildMonsterGroups(Object.values(monsters));
+      const [groups, items] = await Promise.all([getMonsterGroups(), getItemsData()]);
       const group = groups.find((entry) => entry.key === reference.id || entry.representative.id === reference.id);
       return group ? { type: 'monster', group, items: pickItems(items, getMonsterDetailItemIds(group)) } : null;
     }
@@ -103,8 +102,7 @@ export async function getDetailPayload(
       return fishEntry ? { type: 'fish', fish: fishEntry } : null;
     }
     case 'map': {
-      const [chests, fish] = await Promise.all([getChestsData(), getFishData()]);
-      const regions = buildMapRegions(chests, fish);
+      const regions = await getMapRegions();
       const region = regions.find((entry) => entry.id === reference.id);
       return region ? { type: 'map', region } : null;
     }
