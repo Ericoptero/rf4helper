@@ -24,7 +24,6 @@ export function ItemsPageClient({
       items={catalog.results}
       totalCount={catalog.totalCount}
       filterOptions={catalog.filterOptions}
-      serverDriven
       searchTerm={draftSearchTerm}
       onSearchTermChange={setDraftSearchTerm}
       viewMode={normalizeCatalogViewMode(search.view)}

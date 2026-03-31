@@ -1,15 +1,16 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import LZString from 'lz-string';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import {
   calculateCrafterBuild,
-  CRAFTER_RARITY_PLACEHOLDER_ID,
   createDefaultCrafterBuild,
   deserializeCrafterBuild,
   serializeCrafterBuild,
 } from './crafter';
+import { CRAFTER_RARITY_PLACEHOLDER_ID } from './crafterRarity';
 import { buildCrafterData } from './crafterData';
 import { CrafterConfigSchema, ItemSchema, type CrafterConfig, type CrafterDefaults, type Item } from './schemas';
 
@@ -87,6 +88,25 @@ describe('crafter engine parity', () => {
     expect(restoredLegacy.accessory.appearanceId).toBe('item-strange-pendant');
     expect(restoredLegacy.accessory.baseId).toBeUndefined();
     expect(restoredLegacy.food.baseId).toBe('item-glitter-sashimi');
+  });
+
+  it('drops oversized build search params instead of attempting decompression', () => {
+    const restored = deserializeCrafterBuild('x'.repeat(2049), crafterData);
+
+    expect(restored).toEqual(createDefaultCrafterBuild(crafterData));
+  });
+
+  it('drops compressed payloads that expand beyond the decompression size cap', () => {
+    const oversizedCompressed = LZString.compressToEncodedURIComponent(
+      JSON.stringify({
+        v: 2,
+        padding: 'x'.repeat(11_000),
+      }),
+    );
+
+    const restored = deserializeCrafterBuild(oversizedCompressed, crafterData);
+
+    expect(restored).toEqual(createDefaultCrafterBuild(crafterData));
   });
 
   it('keeps the workbook sample structurally valid under the restored appearance/base model', () => {
@@ -645,6 +665,27 @@ describe('crafter engine parity', () => {
     expect(placeholderContribution?.resistances).toEqual({});
     expect(placeholderContribution?.statusAttacks).toEqual({});
     expect(placeholderContribution?.geometry).toEqual({});
+  });
+
+  it('reuses untouched slot results when recalculating from a previous normalized build', () => {
+    const build = createDefaultCrafterBuild(crafterData);
+    build.weapon.appearanceId = 'item-broadsword';
+    build.weapon.upgrades[0] = selection('item-firewyrm-scale');
+
+    const first = calculateCrafterBuild(build, items, crafterData);
+
+    const nextBuild = cloneBuild(build);
+    nextBuild.weapon.upgrades[1] = selection('item-firewyrm-scale');
+
+    const second = calculateCrafterBuild(nextBuild, items, crafterData, first);
+
+    expect(second.slotResults.weapon).not.toBe(first.slotResults.weapon);
+    expect(second.slotResults.armor).toBe(first.slotResults.armor);
+    expect(second.slotResults.headgear).toBe(first.slotResults.headgear);
+    expect(second.slotResults.shield).toBe(first.slotResults.shield);
+    expect(second.slotResults.accessory).toBe(first.slotResults.accessory);
+    expect(second.slotResults.shoes).toBe(first.slotResults.shoes);
+    expect(second.totalStats.atk).not.toBe(first.totalStats.atk);
   });
 
   it('allows cross-class weapon bases only when Light Ore is present in the recipe', () => {

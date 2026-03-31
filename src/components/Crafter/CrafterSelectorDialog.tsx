@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafter';
+import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafterRarity';
 import { useIncrementalReveal } from '@/hooks/useIncrementalReveal';
 import { cn } from '@/lib/utils';
 import type { Item } from '@/lib/schemas';

@@ -49,15 +49,12 @@ function addItemNameToStaffCharge(
   };
 }
 
-function hasWeaponRole(item: Item, slotConfigs: CrafterConfig['slotConfigs']) {
-  const slotConfig = slotConfigs.find((entry) => entry.key === 'weapon');
+function hasWeaponRole(item: Item, slotConfig: CrafterSlotConfig | undefined) {
   return slotConfig ? itemMatchesCrafterSlot(item, slotConfig) : false;
 }
 
-function hasArmorRole(item: Item, slotConfigs: CrafterConfig['slotConfigs']) {
-  return slotConfigs
-    .filter((entry) => entry.key !== 'weapon')
-    .some((slotConfig) => itemMatchesCrafterSlot(item, slotConfig));
+function hasArmorRole(item: Item, slotConfigs: CrafterSlotConfig[]) {
+  return slotConfigs.some((slotConfig) => itemMatchesCrafterSlot(item, slotConfig));
 }
 
 function hasFoodRole(item: Item) {
@@ -149,10 +146,12 @@ export function buildCrafterData(items: Record<string, Item>, crafterConfig: Cra
   const bonusEffects: CrafterData['bonusEffects'] = {};
   const staff: CrafterData['staff'] = { chargeAttacks: {}, bases: {} };
   const specialMaterialRules: CrafterData['specialMaterialRules'] = [];
+  const weaponSlotConfig = crafterConfig.slotConfigs.find((entry) => entry.key === 'weapon');
+  const armorSlotConfigs = crafterConfig.slotConfigs.filter((entry) => entry.key !== 'weapon');
 
   for (const [itemId, item] of Object.entries(items)) {
-    const hasWeaponEquipmentRole = hasWeaponRole(item, crafterConfig.slotConfigs);
-    const hasArmorEquipmentRole = hasArmorRole(item, crafterConfig.slotConfigs);
+    const hasWeaponEquipmentRole = hasWeaponRole(item, weaponSlotConfig);
+    const hasArmorEquipmentRole = hasArmorRole(item, armorSlotConfigs);
 
     if (hasWeaponEquipmentRole) {
       const payload = addItemNameWithRarity(item, item.crafter?.equipment?.weapon);
@@ -219,7 +218,7 @@ export function buildCrafterData(items: Record<string, Item>, crafterConfig: Cra
     }
   }
 
-  return CrafterDataSchema.parse({
+  const crafterData = {
     schemaVersion: crafterConfig.schemaVersion,
     slotConfigs: crafterConfig.slotConfigs,
     defaults: crafterConfig.defaults,
@@ -229,8 +228,8 @@ export function buildCrafterData(items: Record<string, Item>, crafterConfig: Cra
     starterWeaponByClass: crafterConfig.starterWeaponByClass,
     chargeAttackByWeaponClass: crafterConfig.chargeAttackByWeaponClass,
     staffChargeByCrystalId: crafterConfig.staffChargeByCrystalId,
-    levelBonusTiers: crafterConfig.levelBonusTiers,
-    rarityBonusTiers: crafterConfig.rarityBonusTiers,
+    levelBonusTiers: [...crafterConfig.levelBonusTiers].sort((left, right) => left.threshold - right.threshold),
+    rarityBonusTiers: [...crafterConfig.rarityBonusTiers].sort((left, right) => left.threshold - right.threshold),
     foodOverrides: crafterConfig.foodOverrides,
     recipes: {
       equipment: buildEquipmentRecipes(items, crafterConfig.slotConfigs),
@@ -242,5 +241,7 @@ export function buildCrafterData(items: Record<string, Item>, crafterConfig: Cra
     bonusEffects,
     staff,
     fixtures: crafterConfig.fixtures,
-  });
+  } satisfies CrafterData;
+
+  return CrafterDataSchema.parse(crafterData);
 }

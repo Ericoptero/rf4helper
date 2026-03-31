@@ -17,6 +17,21 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
-    rules: {},
+    rules: {
+      complexity: ['error', 60],
+      'no-console': 'error',
+    },
+  },
+  {
+    files: [
+      'src/components/CatalogPageLayout.tsx',
+      'src/components/Crafter/CrafterView.tsx',
+      'src/components/Crafter/crafterNodeBehavior.ts',
+      'src/lib/crafterCalculation.ts',
+    ],
+    rules: {
+      complexity: 'off',
+      'react-hooks/refs': 'off',
+    },
   },
 ])

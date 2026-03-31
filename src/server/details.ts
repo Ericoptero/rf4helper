@@ -10,13 +10,13 @@ import type {
 import type { DetailEntityReference } from '@/components/details/detailTypes';
 
 import {
+  getCropsById,
   getCharactersData,
-  getCropsData,
-  getFestivalsData,
-  getFishData,
+  getFestivalsById,
+  getFishById,
   getItemsData,
-  getMapRegions,
-  getMonsterGroups,
+  getMapRegionsById,
+  getMonsterGroupsByDetailId,
 } from './data/loaders';
 
 export type DetailPayload =
@@ -92,28 +92,24 @@ export async function getDetailPayload(
         : { type: 'birthday', character };
     }
     case 'monster': {
-      const [groups, items] = await Promise.all([getMonsterGroups(), getItemsData()]);
-      const group = groups.find((entry) => entry.key === reference.id || entry.representative.id === reference.id);
+      const [groupsById, items] = await Promise.all([getMonsterGroupsByDetailId(), getItemsData()]);
+      const group = groupsById.get(reference.id);
       return group ? { type: 'monster', group, items: pickItems(items, getMonsterDetailItemIds(group)) } : null;
     }
     case 'fish': {
-      const fish = await getFishData();
-      const fishEntry = fish.find((entry) => entry.id === reference.id);
+      const fishEntry = (await getFishById()).get(reference.id);
       return fishEntry ? { type: 'fish', fish: fishEntry } : null;
     }
     case 'map': {
-      const regions = await getMapRegions();
-      const region = regions.find((entry) => entry.id === reference.id);
+      const region = (await getMapRegionsById()).get(reference.id);
       return region ? { type: 'map', region } : null;
     }
     case 'festival': {
-      const festivals = await getFestivalsData();
-      const festival = festivals.find((entry) => entry.id === reference.id);
+      const festival = (await getFestivalsById()).get(reference.id);
       return festival ? { type: 'festival', festival } : null;
     }
     case 'crop': {
-      const crops = await getCropsData();
-      const crop = crops.regularCrops.find((entry) => entry.id === reference.id);
+      const crop = (await getCropsById()).get(reference.id);
       return crop ? { type: 'crop', crop } : null;
     }
     default:

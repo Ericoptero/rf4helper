@@ -21,7 +21,7 @@ export function formatName(id: string): string {
  */
 export function formatNumber(value: number | null | undefined): string {
   if (value == null) return '—';
-  return value.toLocaleString();
+  return value.toLocaleString('en');
 }
 
 /**

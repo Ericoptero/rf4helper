@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   CatalogPageLayout,
-  type CatalogFilterDefinition,
+  type ServerCatalogFilterDefinition,
   type CatalogFilterValue,
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
@@ -75,7 +75,6 @@ function MonstersCatalog({
   monsterGroups,
   totalCount,
   filterOptions,
-  serverDriven = false,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -90,7 +89,6 @@ function MonstersCatalog({
   filterOptions?: {
     location: CatalogOption[];
   };
-  serverDriven?: boolean;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -103,34 +101,30 @@ function MonstersCatalog({
   const { openRoot } = useDetailDrawer();
   const locations = Array.from(new Set(monsterGroups.flatMap((group) => group.locations))).sort();
 
-  const filters: CatalogFilterDefinition<MonsterGroup>[] = [
+  const filters: ServerCatalogFilterDefinition[] = [
     {
       key: 'tameable',
       label: 'Tameable',
       control: 'boolean-toggle',
       options: [{ label: 'Tameable', value: 'yes' }],
-      predicate: (group, value) => value !== 'yes' || group.variants.some(isMonsterActuallyTameable),
     },
     {
       key: 'boss',
       label: 'Boss',
       control: 'boolean-toggle',
       options: [{ label: 'Bosses', value: 'yes' }],
-      predicate: (group, value) => value !== 'yes' || group.variants.some((monster) => monster.location?.toLowerCase().includes('boss')),
     },
     {
       key: 'rideable',
       label: 'Rideable',
       control: 'boolean-toggle',
       options: [{ label: 'Rideable', value: 'yes' }],
-      predicate: (group, value) => value !== 'yes' || group.variants.some((monster) => Boolean(monster.taming?.isRideable)),
     },
     {
       key: 'location',
       label: 'Location',
       placement: 'advanced',
       options: filterOptions?.location ?? locations.map((location) => ({ label: location, value: location.toLowerCase() })),
-      predicate: (group, value) => group.locations.some((location) => location.toLowerCase() === value),
     },
     {
       key: 'drops',
@@ -138,22 +132,13 @@ function MonstersCatalog({
       placement: 'advanced',
       control: 'boolean-toggle',
       options: [{ label: 'Has drops', value: 'yes' }],
-      predicate: (group, value) => value !== 'yes' || group.variants.some((monster) => monster.drops.length > 0),
     },
   ];
 
-  const sortOptions = [
-    { label: 'Name (A-Z)', value: 'name-asc', sortFn: (a: MonsterGroup, b: MonsterGroup) => a.displayName.localeCompare(b.displayName) },
-    { label: 'Base LV (High-Low)', value: 'level-desc', sortFn: (a: MonsterGroup, b: MonsterGroup) => (b.representative.stats.baseLevel || 0) - (a.representative.stats.baseLevel || 0) },
+  const serverSortOptions = [
+    { label: 'Name (A-Z)', value: 'name-asc' },
+    { label: 'Base LV (High-Low)', value: 'level-desc' },
   ];
-  const serverFilters = filters.map((filter) => ({
-    key: filter.key,
-    label: filter.label,
-    placement: filter.placement,
-    control: filter.control,
-    options: filter.options,
-  }));
-  const serverSortOptions = sortOptions.map((option) => ({ label: option.label, value: option.value }));
 
   const tableColumns: CatalogTableColumn<MonsterGroup>[] = [
     { key: 'name', header: 'Name', cell: (group) => group.displayName },
@@ -184,18 +169,8 @@ function MonstersCatalog({
         getItemKey={(group) => group.key}
         renderCard={(group, onClick) => <MonsterCard group={group} onClick={onClick} />}
         onOpenItem={(group) => openRoot({ type: 'monster', id: group.key })}
-        {...(serverDriven
-          ? {
-              mode: 'server' as const,
-              sortOptions: serverSortOptions,
-              filters: serverFilters,
-            }
-          : {
-              mode: 'client' as const,
-              searchKey: (group: MonsterGroup) => group.searchText,
-              sortOptions,
-              filters,
-            })}
+        sortOptions={serverSortOptions}
+        filters={filters}
       />
       <UniversalDetailsDrawer />
     </>
@@ -206,7 +181,6 @@ export function MonstersList({
   monsters,
   totalCount,
   filterOptions,
-  serverDriven = false,
   detailReference,
   onDetailReferenceChange,
   searchTerm,
@@ -223,7 +197,6 @@ export function MonstersList({
   filterOptions?: {
     location: CatalogOption[];
   };
-  serverDriven?: boolean;
   detailReference?: DetailEntityReference | null;
   onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
@@ -250,7 +223,6 @@ export function MonstersList({
         monsterGroups={monsters}
         totalCount={totalCount}
         filterOptions={filterOptions}
-        serverDriven={serverDriven}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
         viewMode={viewMode ?? internalViewMode}

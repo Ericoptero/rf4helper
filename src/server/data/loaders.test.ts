@@ -1,15 +1,24 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  getCharactersCatalogFilterOptions,
   getCharactersData,
   getChestsData,
+  getCropsById,
   getCropsData,
   getCrafterData,
   getDataIndex,
+  getFestivalsById,
   getFestivalsData,
+  getFishById,
   getFishData,
+  getFishingCatalogFilterOptions,
+  getItemsCatalogFilterOptions,
   getItemsData,
+  getMapRegionsById,
+  getMonsterGroupsByDetailId,
   getMonstersData,
+  getMonstersCatalogFilterOptions,
   getOrdersData,
   getRequestsData,
   getRuneAbilitiesData,
@@ -89,5 +98,36 @@ describe('server data loaders', () => {
 
     expect(readSpy).toHaveBeenCalledTimes(1);
     expect(readSpy).toHaveBeenCalledWith('items.json');
+  });
+
+  it('builds reusable catalog filter option singletons', async () => {
+    const [itemsOptions, charactersOptions, monsterOptions, fishingOptions] = await Promise.all([
+      getItemsCatalogFilterOptions(),
+      getCharactersCatalogFilterOptions(),
+      getMonstersCatalogFilterOptions(),
+      getFishingCatalogFilterOptions(),
+    ]);
+
+    expect(itemsOptions.type.length).toBeGreaterThan(0);
+    expect(charactersOptions.category.length).toBeGreaterThan(0);
+    expect(monsterOptions.location.length).toBeGreaterThan(0);
+    expect(fishingOptions.region.length).toBeGreaterThan(0);
+  });
+
+  it('builds detail lookup maps keyed by entity id', async () => {
+    const [monsterGroupsById, fishById, mapRegionsById, festivalsById, cropsById] = await Promise.all([
+      getMonsterGroupsByDetailId(),
+      getFishById(),
+      getMapRegionsById(),
+      getFestivalsById(),
+      getCropsById(),
+    ]);
+
+    expect(monsterGroupsById.get('Orc')?.representative.id).toBe('monster-orc');
+    expect(monsterGroupsById.get('monster-orc')?.displayName).toBe('Orc');
+    expect(fishById.get('fish-squid')?.name).toBe('Squid');
+    expect(mapRegionsById.get('Selphia Plains')?.name).toBe('Selphia Plains');
+    expect(festivalsById.get('festival-cooking-contest')?.name).toBe('Cooking Contest');
+    expect(cropsById.get('crop-turnip')?.name).toBe('Turnip');
   });
 });

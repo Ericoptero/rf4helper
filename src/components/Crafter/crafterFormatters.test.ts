@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafter';
+import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafterRarity';
 import type { Item } from '@/lib/schemas';
 import {
   formatFinalPercentValue,

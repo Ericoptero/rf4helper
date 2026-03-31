@@ -1,12 +1,9 @@
 import type {
   CrafterData,
-  CrafterDefaults,
   CrafterMaterialSelection,
   CrafterSlotConfig,
   CrafterSlotKey,
 } from './schemas';
-
-export type CrafterBuildState = CrafterDefaults;
 
 function cloneSelection(selection?: CrafterMaterialSelection): CrafterMaterialSelection {
   return {

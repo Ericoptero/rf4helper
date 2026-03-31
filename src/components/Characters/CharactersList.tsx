@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   CatalogPageLayout,
-  type CatalogFilterDefinition,
+  type ServerCatalogFilterDefinition,
   type CatalogFilterValue,
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
@@ -83,10 +83,9 @@ function CharacterCard({ character, onClick }: { character: Character; onClick: 
 }
 
 function CharactersCatalog({
-  charactersData,
+  characters,
   totalCount,
   filterOptions,
-  serverDriven = false,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -96,7 +95,7 @@ function CharactersCatalog({
   filterValues,
   onFilterValuesChange,
 }: {
-  charactersData: Character[];
+  characters: Character[];
   totalCount?: number;
   filterOptions?: {
     category: CatalogOption[];
@@ -104,7 +103,6 @@ function CharactersCatalog({
     season: CatalogOption[];
     weaponType: CatalogOption[];
   };
-  serverDriven?: boolean;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -115,66 +113,53 @@ function CharactersCatalog({
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
 }) {
   const { openRoot } = useDetailDrawer();
-  const categories = Array.from(new Set(charactersData.map((character) => character.category))).sort();
-  const genders = Array.from(new Set(charactersData.map((character) => character.gender).filter(Boolean) as string[])).sort();
+  const categories = Array.from(new Set(characters.map((character) => character.category))).sort();
+  const genders = Array.from(new Set(characters.map((character) => character.gender).filter(Boolean) as string[])).sort();
   const seasons = Array.from(
-    new Set(charactersData.map((character) => character.birthday?.season).filter(Boolean) as string[]),
+    new Set(characters.map((character) => character.birthday?.season).filter(Boolean) as string[]),
   ).sort();
   const weaponTypes = Array.from(
-    new Set(charactersData.map((character) => character.battle?.weaponType).filter(Boolean) as string[]),
+    new Set(characters.map((character) => character.battle?.weaponType).filter(Boolean) as string[]),
   ).sort();
 
-  const filters: CatalogFilterDefinition<Character>[] = [
+  const filters: ServerCatalogFilterDefinition[] = [
     {
       key: 'category',
       label: 'Category',
       placement: 'primary',
       options: filterOptions?.category ?? categories.map((category) => ({ label: category, value: category.toLowerCase() })),
-      predicate: (character, value) => character.category.toLowerCase() === value,
     },
     {
       key: 'gender',
       label: 'Gender',
       placement: 'primary',
       options: filterOptions?.gender ?? genders.map((gender) => ({ label: gender, value: gender.toLowerCase() })),
-      predicate: (character, value) => character.gender?.toLowerCase() === value,
     },
     {
       key: 'season',
       label: 'Birthday Season',
       placement: 'advanced',
       options: filterOptions?.season ?? seasons.map((season) => ({ label: season, value: season.toLowerCase() })),
-      predicate: (character, value) => character.birthday?.season?.toLowerCase() === value,
     },
     {
-      key: 'battle',
-      label: 'Battle Data',
+      key: 'wedding',
+      label: 'Marriage Candidate',
       placement: 'advanced',
       control: 'boolean-toggle',
-      options: [{ label: 'Has battle data', value: 'yes' }],
-      predicate: (character, value) => value !== 'yes' || Boolean(character.battle),
+      options: [{ label: 'Marriage Candidate', value: 'yes' }],
     },
     {
       key: 'weaponType',
       label: 'Weapon Type',
       placement: 'advanced',
       options: filterOptions?.weaponType ?? weaponTypes.map((weaponType) => ({ label: weaponType, value: weaponType.toLowerCase() })),
-      predicate: (character, value) => character.battle?.weaponType?.toLowerCase() === value,
     },
   ];
 
-  const sortOptions = [
-    { label: 'Name (A-Z)', value: 'name-asc', sortFn: (a: Character, b: Character) => a.name.localeCompare(b.name) },
-    { label: 'Birthday', value: 'birthday-asc', sortFn: (a: Character, b: Character) => (a.birthday?.day || 99) - (b.birthday?.day || 99) },
+  const serverSortOptions = [
+    { label: 'Name (A-Z)', value: 'name-asc' },
+    { label: 'Birthday', value: 'birthday-asc' },
   ];
-  const serverFilters = filters.map((filter) => ({
-    key: filter.key,
-    label: filter.label,
-    placement: filter.placement,
-    control: filter.control,
-    options: filter.options,
-  }));
-  const serverSortOptions = sortOptions.map((option) => ({ label: option.label, value: option.value }));
 
   const tableColumns: CatalogTableColumn<Character>[] = [
     { key: 'name', header: 'Name', cell: (character) => character.name },
@@ -188,7 +173,7 @@ function CharactersCatalog({
   return (
     <>
       <CatalogPageLayout<Character>
-        data={charactersData}
+        data={characters}
         totalCount={totalCount}
         title="Characters"
         searchTerm={searchTerm}
@@ -203,18 +188,8 @@ function CharactersCatalog({
         getItemKey={(character) => character.id}
         renderCard={(character, onClick) => <CharacterCard character={character} onClick={onClick} />}
         onOpenItem={(character) => openRoot({ type: 'character', id: character.id })}
-        {...(serverDriven
-          ? {
-              mode: 'server' as const,
-              sortOptions: serverSortOptions,
-              filters: serverFilters,
-            }
-          : {
-              mode: 'client' as const,
-              searchKey: 'name' as const,
-              sortOptions,
-              filters,
-            })}
+        sortOptions={serverSortOptions}
+        filters={filters}
       />
       <UniversalDetailsDrawer />
     </>
@@ -225,7 +200,6 @@ export function CharactersList({
   characters,
   totalCount,
   filterOptions,
-  serverDriven = false,
   detailReference,
   onDetailReferenceChange,
   searchTerm,
@@ -245,7 +219,6 @@ export function CharactersList({
     season: CatalogOption[];
     weaponType: CatalogOption[];
   };
-  serverDriven?: boolean;
   detailReference?: DetailEntityReference | null;
   onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
@@ -269,10 +242,9 @@ export function CharactersList({
       onDetailReferenceChange={onDetailReferenceChange ?? setInternalDetailReference}
     >
       <CharactersCatalog
-        charactersData={characters}
+        characters={characters}
         totalCount={totalCount}
         filterOptions={filterOptions}
-        serverDriven={serverDriven}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
         viewMode={viewMode ?? internalViewMode}

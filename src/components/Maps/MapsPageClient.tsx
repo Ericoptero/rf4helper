@@ -23,7 +23,6 @@ export function MapsPageClient({
     <MapsList
       regions={catalog.results}
       totalCount={catalog.totalCount}
-      serverDriven
       searchTerm={draftSearchTerm}
       onSearchTermChange={setDraftSearchTerm}
       viewMode={normalizeCatalogViewMode(search.view)}

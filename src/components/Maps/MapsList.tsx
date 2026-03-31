@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   CatalogPageLayout,
-  type CatalogFilterDefinition,
+  type ServerCatalogFilterDefinition,
   type CatalogFilterValue,
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
@@ -49,7 +49,6 @@ function MapCard({ region, onClick }: { region: MapRegionRecord; onClick: () => 
 function MapsCatalog({
   regions,
   totalCount,
-  serverDriven = false,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -61,7 +60,6 @@ function MapsCatalog({
 }: {
   regions: MapRegionRecord[];
   totalCount?: number;
-  serverDriven?: boolean;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -73,59 +71,38 @@ function MapsCatalog({
 }) {
   const { openRoot } = useDetailDrawer();
 
-  const filters: CatalogFilterDefinition<MapRegionRecord>[] = [
+  const filters: ServerCatalogFilterDefinition[] = [
     {
-      key: 'hasFishing',
-      label: 'Fishing',
+      key: 'hasChests',
+      label: 'Chests',
       control: 'boolean-toggle',
-      options: [{ label: 'Has Fishing Locations', value: 'yes' }],
-      predicate: (region, value) => value !== 'yes' || region.fishingLocations.length > 0,
+      options: [{ label: 'Has Chests', value: 'yes' }],
     },
     {
       key: 'hasNotes',
       label: 'Notes',
       control: 'boolean-toggle',
       options: [{ label: 'Has Chest Notes', value: 'yes' }],
-      predicate: (region, value) => value !== 'yes' || region.chests.some((chest) => Boolean(chest.notes)),
     },
     {
       key: 'hasRecipe',
       label: 'Recipes',
       control: 'boolean-toggle',
       options: [{ label: 'Has Recipe Chest', value: 'yes' }],
-      predicate: (region, value) => value !== 'yes' || region.chests.some((chest) => Boolean(chest.recipe)),
     },
     {
-      key: 'chestBand',
-      label: 'Chest Count',
-      placement: 'advanced',
-      options: [
-        { label: '1 to 2 Chests', value: 'low' },
-        { label: '3 to 5 Chests', value: 'medium' },
-        { label: '6+ Chests', value: 'high' },
-      ],
-      predicate: (region, value) => {
-        if (value === 'low') return region.chests.length <= 2;
-        if (value === 'medium') return region.chests.length >= 3 && region.chests.length <= 5;
-        if (value === 'high') return region.chests.length >= 6;
-        return true;
-      },
+      key: 'hasFishing',
+      label: 'Fishing Location',
+      control: 'boolean-toggle',
+      options: [{ label: 'Has Fishing', value: 'yes' }],
     },
   ];
 
-  const sortOptions = [
-    { label: 'Name (A-Z)', value: 'name-asc', sortFn: (a: MapRegionRecord, b: MapRegionRecord) => a.name.localeCompare(b.name) },
-    { label: 'Chests (High-Low)', value: 'chests-desc', sortFn: (a: MapRegionRecord, b: MapRegionRecord) => b.chests.length - a.chests.length },
-    { label: 'Fishing (High-Low)', value: 'fishing-desc', sortFn: (a: MapRegionRecord, b: MapRegionRecord) => b.fishingLocations.length - a.fishingLocations.length },
+  const serverSortOptions = [
+    { label: 'Name (A-Z)', value: 'name-asc' },
+    { label: 'Most Chests', value: 'chests-desc' },
+    { label: 'Most Fishing Spots', value: 'fishing-desc' },
   ];
-  const serverFilters = filters.map((filter) => ({
-    key: filter.key,
-    label: filter.label,
-    placement: filter.placement,
-    control: filter.control,
-    options: filter.options,
-  }));
-  const serverSortOptions = sortOptions.map((option) => ({ label: option.label, value: option.value }));
 
   const tableColumns: CatalogTableColumn<MapRegionRecord>[] = [
     { key: 'region', header: 'Region', cell: (region) => region.name },
@@ -153,18 +130,8 @@ function MapsCatalog({
         getItemKey={(region) => region.id}
         renderCard={(region, onClick) => <MapCard region={region} onClick={onClick} />}
         onOpenItem={(region) => openRoot({ type: 'map', id: region.id })}
-        {...(serverDriven
-          ? {
-              mode: 'server' as const,
-              sortOptions: serverSortOptions,
-              filters: serverFilters,
-            }
-          : {
-              mode: 'client' as const,
-              searchKey: 'name' as const,
-              sortOptions,
-              filters,
-            })}
+        sortOptions={serverSortOptions}
+        filters={filters}
       />
       <UniversalDetailsDrawer />
     </>
@@ -174,7 +141,6 @@ function MapsCatalog({
 export function MapsList({
   regions,
   totalCount,
-  serverDriven = false,
   detailReference,
   onDetailReferenceChange,
   searchTerm,
@@ -188,7 +154,6 @@ export function MapsList({
 }: {
   regions: MapRegionRecord[];
   totalCount?: number;
-  serverDriven?: boolean;
   detailReference?: DetailEntityReference | null;
   onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
@@ -214,7 +179,6 @@ export function MapsList({
       <MapsCatalog
         regions={regions}
         totalCount={totalCount}
-        serverDriven={serverDriven}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
         viewMode={viewMode ?? internalViewMode}

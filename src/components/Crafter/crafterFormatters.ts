@@ -17,7 +17,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
-import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafter';
+import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafterRarity';
 import { resolveItemImage } from '@/lib/itemImages';
 import type { DisplayEffect } from '@/lib/itemPresentation';
 import type { Item } from '@/lib/schemas';

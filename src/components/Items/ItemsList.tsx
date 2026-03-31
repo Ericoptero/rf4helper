@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   CatalogPageLayout,
-  type CatalogFilterDefinition,
+  type ServerCatalogFilterDefinition,
   type CatalogFilterValue,
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
@@ -13,7 +13,7 @@ import { DetailDrawerProvider, useDetailDrawer } from '@/components/details/Deta
 import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
 import type { DetailEntityReference } from '@/components/details/detailTypes';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
-import { hasDisplayEffects } from '@/lib/itemPresentation';
+
 import type { Item } from '@/lib/schemas';
 import type { CatalogOption } from '@/server/catalogQueries';
 
@@ -76,10 +76,9 @@ function ItemCard({ item, onClick }: { item: Item; onClick: () => void }) {
 }
 
 function ItemsCatalog({
-  itemsData,
+  items,
   totalCount,
   filterOptions,
-  serverDriven = false,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -89,7 +88,7 @@ function ItemsCatalog({
   filterValues,
   onFilterValuesChange,
 }: {
-  itemsData: Item[];
+  items: Item[];
   totalCount?: number;
   filterOptions?: {
     type: CatalogOption[];
@@ -97,7 +96,6 @@ function ItemsCatalog({
     region: CatalogOption[];
     rarity: CatalogOption[];
   };
-  serverDriven?: boolean;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -108,93 +106,71 @@ function ItemsCatalog({
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
 }) {
   const { openRoot } = useDetailDrawer();
-  const derivedTypes = Array.from(new Set(itemsData.map((item) => item.type))).sort();
-  const derivedCategories = Array.from(new Set(itemsData.map((item) => item.category).filter(Boolean) as string[])).sort();
-  const derivedRegions = Array.from(new Set(itemsData.map((item) => item.region).filter(Boolean) as string[])).sort();
+  const derivedTypes = Array.from(new Set(items.map((item) => item.type))).sort();
+  const derivedCategories = Array.from(new Set(items.map((item) => item.category).filter(Boolean) as string[])).sort();
+  const derivedRegions = Array.from(new Set(items.map((item) => item.region).filter(Boolean) as string[])).sort();
   const derivedRarityCategories = Array.from(
-    new Set(itemsData.map((item) => item.rarityCategory).filter(Boolean) as string[]),
+    new Set(items.map((item) => item.rarityCategory).filter(Boolean) as string[]),
   ).sort();
 
-  const filters: CatalogFilterDefinition<Item>[] = [
+  const filters: ServerCatalogFilterDefinition[] = [
     {
       key: 'type',
       label: 'Type',
       placement: 'primary',
       options: filterOptions?.type ?? derivedTypes.map((type) => ({ label: type, value: type.toLowerCase() })),
-      predicate: (item, value) => item.type.toLowerCase() === value,
     },
     {
       key: 'category',
       label: 'Category',
       placement: 'advanced',
       options: filterOptions?.category ?? derivedCategories.map((category) => ({ label: category, value: category.toLowerCase() })),
-      predicate: (item, value) => item.category?.toLowerCase() === value,
     },
     {
       key: 'region',
       label: 'Region',
       placement: 'advanced',
       options: filterOptions?.region ?? derivedRegions.map((region) => ({ label: region, value: region.toLowerCase() })),
-      predicate: (item, value) => item.region?.toLowerCase() === value,
     },
     {
       key: 'ship',
       label: 'Shippable',
       control: 'boolean-toggle',
       options: [{ label: 'Shippable', value: 'yes' }],
-      predicate: (item, value) => value !== 'yes' || Boolean(item.shippable),
     },
     {
       key: 'buyable',
       label: 'Buyable',
       control: 'boolean-toggle',
       options: [{ label: 'Buyable', value: 'yes' }],
-      predicate: (item, value) => value !== 'yes' || (item.buy ?? 0) > 0,
     },
     {
       key: 'sellable',
       label: 'Sellable',
       control: 'boolean-toggle',
       options: [{ label: 'Sellable', value: 'yes' }],
-      predicate: (item, value) => value !== 'yes' || (item.sell ?? 0) > 0,
     },
     {
       key: 'rarity',
       label: 'Rarity',
       placement: 'advanced',
       options: filterOptions?.rarity ?? derivedRarityCategories.map((rarity) => ({ label: rarity, value: rarity.toLowerCase() })),
-      predicate: (item, value) => item.rarityCategory?.toLowerCase() === value,
     },
     {
-      key: 'craft',
-      label: 'Crafting',
+      key: 'hasRecipe',
+      label: 'Has Recipe',
+      placement: 'advanced',
       control: 'boolean-toggle',
-      options: [{ label: 'Has crafting data', value: 'yes' }],
-      predicate: (item, value) => value !== 'yes' || Boolean(item.craft?.length || item.craftedFrom?.length),
-    },
-    {
-      key: 'effects',
-      label: 'Effects',
-      control: 'boolean-toggle',
-      options: [{ label: 'Has effects', value: 'yes' }],
-      predicate: (item, value) => value !== 'yes' || hasDisplayEffects(item),
+      options: [{ label: 'Has recipe', value: 'yes' }],
     },
   ];
 
-  const sortOptions = [
-    { label: 'Name (A-Z)', value: 'name-asc', sortFn: (a: Item, b: Item) => a.name.localeCompare(b.name) },
-    { label: 'Name (Z-A)', value: 'name-desc', sortFn: (a: Item, b: Item) => b.name.localeCompare(a.name) },
-    { label: 'Buy Price (High-Low)', value: 'buy-desc', sortFn: (a: Item, b: Item) => (b.buy || 0) - (a.buy || 0) },
-    { label: 'Sell Price (High-Low)', value: 'sell-desc', sortFn: (a: Item, b: Item) => (b.sell || 0) - (a.sell || 0) },
+  const serverSortOptions = [
+    { label: 'Name (A-Z)', value: 'name-asc' },
+    { label: 'Name (Z-A)', value: 'name-desc' },
+    { label: 'Buy Price (High-Low)', value: 'buy-desc' },
+    { label: 'Sell Price (High-Low)', value: 'sell-desc' },
   ];
-  const serverFilters = filters.map((filter) => ({
-    key: filter.key,
-    label: filter.label,
-    placement: filter.placement,
-    control: filter.control,
-    options: filter.options,
-  }));
-  const serverSortOptions = sortOptions.map((option) => ({ label: option.label, value: option.value }));
 
   const tableColumns: CatalogTableColumn<Item>[] = [
     { key: 'name', header: 'Name', cell: (item) => item.name },
@@ -209,7 +185,7 @@ function ItemsCatalog({
   return (
     <>
       <CatalogPageLayout<Item>
-        data={itemsData}
+        data={items}
         totalCount={totalCount}
         title="Items Database"
         searchTerm={searchTerm}
@@ -224,18 +200,8 @@ function ItemsCatalog({
         getItemKey={(item) => item.id}
         renderCard={(item, onClick) => <ItemCard item={item} onClick={onClick} />}
         onOpenItem={(item) => openRoot({ type: 'item', id: item.id })}
-        {...(serverDriven
-          ? {
-              mode: 'server' as const,
-              sortOptions: serverSortOptions,
-              filters: serverFilters,
-            }
-          : {
-              mode: 'client' as const,
-              searchKey: 'name' as const,
-              sortOptions,
-              filters,
-            })}
+        sortOptions={serverSortOptions}
+        filters={filters}
       />
       <UniversalDetailsDrawer />
     </>
@@ -246,7 +212,6 @@ export function ItemsList({
   items,
   totalCount,
   filterOptions,
-  serverDriven = false,
   detailReference,
   onDetailReferenceChange,
   searchTerm,
@@ -266,7 +231,6 @@ export function ItemsList({
     region: CatalogOption[];
     rarity: CatalogOption[];
   };
-  serverDriven?: boolean;
   detailReference?: DetailEntityReference | null;
   onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
@@ -290,10 +254,9 @@ export function ItemsList({
       onDetailReferenceChange={onDetailReferenceChange ?? setInternalDetailReference}
     >
       <ItemsCatalog
-        itemsData={items}
+        items={items}
         totalCount={totalCount}
         filterOptions={filterOptions}
-        serverDriven={serverDriven}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
         viewMode={viewMode ?? internalViewMode}

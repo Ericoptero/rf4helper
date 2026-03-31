@@ -87,6 +87,23 @@ describe('useDetailPayload', () => {
     expect(result.current.payload).toBeNull();
   });
 
+  it('rejects malformed payloads before caching them', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(JSON.stringify({ type: 'map', region: { id: 'bad-region' } }), { status: 200 })),
+    );
+
+    const { result } = renderHook(() =>
+      useDetailPayload({ type: 'map', id: 'bad-region' }),
+    );
+
+    await waitFor(() => {
+      expect(result.current.status).toBe('error');
+    });
+
+    expect(getDetailPayloadCacheSizeForTests()).toBe(0);
+  });
+
   it('evicts the least-recently-used payload when the cache grows past the limit', async () => {
     const fetchSpy = vi.fn(async (input: RequestInfo | URL) => {
       const url = String(input);
@@ -123,21 +140,21 @@ describe('useDetailPayload', () => {
       expect(fetchSpy).toHaveBeenCalledTimes(1);
     });
 
-    for (let index = 1; index <= 100; index += 1) {
+    for (let index = 1; index <= 25; index += 1) {
       rerender({ reference: { type: 'map' as const, id: `region-${index}` } });
 
       await waitFor(() => {
-        expect(getDetailPayloadCacheSizeForTests()).toBeLessThanOrEqual(100);
+        expect(getDetailPayloadCacheSizeForTests()).toBeLessThanOrEqual(25);
       });
     }
 
-    expect(getDetailPayloadCacheSizeForTests()).toBe(100);
-    expect(fetchSpy).toHaveBeenCalledTimes(101);
+    expect(getDetailPayloadCacheSizeForTests()).toBe(25);
+    expect(fetchSpy).toHaveBeenCalledTimes(26);
 
     rerender({ reference: { type: 'map' as const, id: 'region-0' } });
 
     await waitFor(() => {
-      expect(fetchSpy).toHaveBeenCalledTimes(102);
+      expect(fetchSpy).toHaveBeenCalledTimes(27);
     });
   });
 });

@@ -60,6 +60,9 @@ export type DataIndex = z.infer<typeof DataIndexSchema>;
 
 const serverDataCacheResetters: Array<() => void> = [];
 
+// These loaders intentionally keep their last successful result in memory for the
+// lifetime of the current server process. The data is static build-time content, so
+// there is no runtime invalidation path outside of tests and process restarts.
 function createSingletonLoader<T>(loadData: () => Promise<T>) {
   let cachedPromise: Promise<T> | undefined;
 
@@ -191,6 +194,18 @@ export const getMonsterGroups = createSingletonLoader(async () => {
   return getMonsterGroupsForData(await getMonstersData());
 });
 
+export const getMonsterGroupsByDetailId = createSingletonLoader(async () => {
+  const groups = await getMonsterGroups();
+  const groupsById = new Map<string, (typeof groups)[number]>();
+
+  for (const group of groups) {
+    groupsById.set(group.key, group);
+    groupsById.set(group.representative.id, group);
+  }
+
+  return groupsById;
+});
+
 export const getMonstersCatalogFilterOptions = createSingletonLoader(
   async (): Promise<MonstersCatalogFilterOptions> => {
     return getMonstersFilterOptionsForData(await getMonstersData());
@@ -206,4 +221,20 @@ export const getFishingCatalogFilterOptions = createSingletonLoader(
 export const getMapRegions = createSingletonLoader(async () => {
   const [chests, fish] = await Promise.all([getChestsData(), getFishData()]);
   return getMapRegionsForData(chests, fish);
+});
+
+export const getFishById = createSingletonLoader(async () => {
+  return new Map((await getFishData()).map((entry) => [entry.id, entry]));
+});
+
+export const getMapRegionsById = createSingletonLoader(async () => {
+  return new Map((await getMapRegions()).map((entry) => [entry.id, entry]));
+});
+
+export const getFestivalsById = createSingletonLoader(async () => {
+  return new Map((await getFestivalsData()).map((entry) => [entry.id, entry]));
+});
+
+export const getCropsById = createSingletonLoader(async () => {
+  return new Map((await getCropsData()).regularCrops.map((entry) => [entry.id, entry]));
 });

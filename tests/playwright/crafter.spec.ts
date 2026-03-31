@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { expect, test, type Page } from '@playwright/test';
 import LZString from 'lz-string';
 
-import { calculateCrafterBuild } from '../../src/lib/crafter';
+import { calculateCrafterBuild, serializeCrafterBuild } from '../../src/lib/crafter';
 import { buildCrafterData } from '../../src/lib/crafterData';
 import { itemMatchesCrafterSlot } from '../../src/lib/crafterData';
 import { CrafterConfigSchema, type Item } from '../../src/lib/schemas';
@@ -13,6 +13,15 @@ import { CrafterConfigSchema, type Item } from '../../src/lib/schemas';
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = path.resolve(dirname, '../../data');
 const CRAFTER_BUILD_STORAGE_KEY = 'rf4-helper:crafter-build:v2';
+const DISABLE_MOTION_STYLES = `
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    caret-color: transparent !important;
+  }
+`;
 const PERCENT_STAT_KEYS = new Set(['crit', 'knock', 'stun']);
 const STAT_LABELS: Record<string, string> = {
   atk: 'ATK',
@@ -27,6 +36,30 @@ const STAT_LABELS: Record<string, string> = {
   knock: 'Knock',
   stun: 'Stun',
 };
+
+async function applyStableMotionStyles(page: Page) {
+  const nonce = await page.evaluate(() => {
+    const element = document.querySelector<HTMLElement>('script[nonce], style[nonce]');
+    return element?.nonce || element?.getAttribute('nonce') || null;
+  });
+
+  await page.evaluate(
+    ([content, nextNonce]) => {
+      if (document.getElementById('playwright-disable-motion')) {
+        return;
+      }
+
+      const style = document.createElement('style');
+      style.id = 'playwright-disable-motion';
+      if (nextNonce) {
+        style.setAttribute('nonce', nextNonce);
+      }
+      style.textContent = content;
+      document.head.appendChild(style);
+    },
+    [DISABLE_MOTION_STYLES, nonce] as const,
+  );
+}
 
 const items = JSON.parse(readFileSync(path.join(dataDir, 'items.json'), 'utf8')) as Record<string, Item>;
 const crafterConfig = CrafterConfigSchema.parse(JSON.parse(readFileSync(path.join(dataDir, 'crafter.json'), 'utf8')));
@@ -123,17 +156,7 @@ async function prepareCrafterPage(
   );
 
   await page.goto(route);
-  await page.addStyleTag({
-    content: `
-      *,
-      *::before,
-      *::after {
-        animation: none !important;
-        transition: none !important;
-        caret-color: transparent !important;
-      }
-    `,
-  });
+  await applyStableMotionStyles(page);
   await expect(page.getByRole('heading', { name: /interactive crafter/i })).toBeVisible({ timeout: 30_000 });
 }
 
@@ -176,7 +199,7 @@ function getWeaponUpgradeItemId(serializedBuild: string, index: number) {
 function createWorkbookBuildMissingLastWeaponUpgrade() {
   const build = structuredClone(workbookSample.build);
   build.weapon.upgrades[8] = { itemId: undefined, level: 1 };
-  return JSON.stringify(build);
+  return serializeCrafterBuild(calculateCrafterBuild(build, items, crafterData).build, crafterData);
 }
 
 async function chooseItemInOpenDialog(page: Page, query: string, itemName: string) {

@@ -33,16 +33,18 @@ export function decodeDetailEntity(value: string | undefined | null): DetailEnti
     return null;
   }
 
-  const type = value.slice(0, separatorIndex) as DetailEntityType;
+  const rawType = value.slice(0, separatorIndex);
   const id = value.slice(separatorIndex + 1);
 
   if (!id) {
     return null;
   }
 
-  if (!['item', 'character', 'birthday', 'monster', 'fish', 'map', 'festival', 'crop'].includes(type)) {
+  if (!['item', 'character', 'birthday', 'monster', 'fish', 'map', 'festival', 'crop'].includes(rawType)) {
     return null;
   }
+
+  const type = rawType as DetailEntityType;
 
   return { type, id };
 }

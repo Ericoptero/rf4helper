@@ -17,10 +17,6 @@ type CatalogSortOptionBase = {
   value: string;
 };
 
-export type SortOption<T> = CatalogSortOptionBase & {
-  sortFn: (a: T, b: T) => number;
-};
-
 export type ServerSortOption = CatalogSortOptionBase;
 
 type CatalogFilterDefinitionBase = {
@@ -31,10 +27,6 @@ type CatalogFilterDefinitionBase = {
   control?: 'combobox' | 'boolean-toggle';
   selectionMode?: 'single' | 'multiple';
   options: Array<{ label: string; value: string }>;
-};
-
-export type CatalogFilterDefinition<T> = CatalogFilterDefinitionBase & {
-  predicate: (item: T, value: string) => boolean;
 };
 
 export type ServerCatalogFilterDefinition = CatalogFilterDefinitionBase;
@@ -48,7 +40,7 @@ export type CatalogTableColumn<T> = {
   cell: (item: T) => React.ReactNode;
 };
 
-type CatalogPageLayoutSharedProps<T> = {
+export type CatalogPageLayoutProps<T> = {
   data: T[];
   totalCount?: number;
   title: string;
@@ -67,25 +59,9 @@ type CatalogPageLayoutSharedProps<T> = {
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   emptyState?: string;
-};
-
-type ClientCatalogPageLayoutProps<T> = CatalogPageLayoutSharedProps<T> & {
-  mode?: 'client';
-  searchKey?: keyof T | ((item: T) => string);
-  sortOptions?: SortOption<T>[];
-  filters?: CatalogFilterDefinition<T>[];
-};
-
-type ServerCatalogPageLayoutProps<T> = CatalogPageLayoutSharedProps<T> & {
-  mode: 'server';
-  searchKey?: never;
   sortOptions?: ServerSortOption[];
   filters?: ServerCatalogFilterDefinition[];
 };
-
-export type CatalogPageLayoutProps<T> =
-  | ClientCatalogPageLayoutProps<T>
-  | ServerCatalogPageLayoutProps<T>;
 
 function normalizeFilterValue(value: CatalogFilterValue) {
   if (Array.isArray(value)) {
@@ -126,6 +102,299 @@ function CatalogSkeletonCard() {
   );
 }
 
+function CatalogSearchBar({
+  searchTerm,
+  onSearchTermChange,
+}: {
+  searchTerm: string;
+  onSearchTermChange?: (value: string) => void;
+}) {
+  return (
+    <div className="relative min-w-0 flex-1">
+      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <Input
+        aria-label="Search"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(event) => onSearchTermChange?.(event.target.value)}
+        className="h-11 rounded-xl border-border/70 bg-card pl-9 pr-9"
+      />
+      {searchTerm ? (
+        <button
+          type="button"
+          onClick={() => onSearchTermChange?.('')}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+          aria-label="Clear search"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+function CatalogViewToggle({
+  viewMode,
+  onViewModeChange,
+}: {
+  viewMode: 'cards' | 'table';
+  onViewModeChange?: (value: 'cards' | 'table') => void;
+}) {
+  return (
+    <div className="inline-flex h-11 items-center rounded-xl border bg-card p-1">
+      <Button
+        type="button"
+        variant={viewMode === 'cards' ? 'default' : 'ghost'}
+        size="default"
+        className="h-9 rounded-lg px-3"
+        data-state={viewMode === 'cards' ? 'on' : 'off'}
+        onClick={() => onViewModeChange?.('cards')}
+      >
+        <LayoutGrid className="mr-2 h-4 w-4" />
+        Cards
+      </Button>
+      <Button
+        type="button"
+        variant={viewMode === 'table' ? 'default' : 'ghost'}
+        size="default"
+        className="h-9 rounded-lg px-3"
+        data-state={viewMode === 'table' ? 'on' : 'off'}
+        onClick={() => onViewModeChange?.('table')}
+      >
+        <Table2 className="mr-2 h-4 w-4" />
+        Table
+      </Button>
+    </div>
+  );
+}
+
+function CatalogAppliedFilters({
+  chips,
+  onRemove,
+}: {
+  chips: Array<{ key: string; filterKey: string; value: string; label: string; filterLabel: string }>;
+  onRemove: (filterKey: string, value: string) => void;
+}) {
+  if (chips.length === 0) return null;
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {chips.map((chip) => (
+        <Button
+          key={chip.key}
+          type="button"
+          variant="outline"
+          size="sm"
+          className="rounded-full"
+          aria-label={`Remove filter ${chip.filterLabel}: ${chip.label}`}
+          onClick={() => onRemove(chip.filterKey, chip.value)}
+        >
+          {chip.filterLabel}: {chip.label}
+          <X className="h-3.5 w-3.5" />
+        </Button>
+      ))}
+    </div>
+  );
+}
+
+function CatalogResultsTable<T>({
+  visibleItems,
+  tableColumns,
+  getItemKey,
+  onOpenItem,
+  hasMore,
+  sentinelRef,
+}: {
+  visibleItems: T[];
+  tableColumns: CatalogTableColumn<T>[];
+  getItemKey: (item: T) => string;
+  onOpenItem: (item: T) => void;
+  hasMore: boolean;
+  sentinelRef: React.RefCallback<HTMLElement>;
+}) {
+  return (
+    <div className="px-3 py-3">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            {tableColumns.map((column) => (
+              <TableHead key={column.key}>{column.header}</TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {visibleItems.map((item) => (
+            <TableRow
+              key={getItemKey(item)}
+              className="cursor-pointer"
+              onClick={() => onOpenItem(item)}
+            >
+              {tableColumns.map((column) => (
+                <TableCell key={column.key} className={column.className}>
+                  {column.cell(item)}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+          {hasMore ? (
+            <TableRow ref={sentinelRef as React.Ref<HTMLTableRowElement>} data-testid="catalog-infinite-scroll-sentinel" aria-hidden="true">
+              <TableCell colSpan={tableColumns.length} className="h-1 p-0" />
+            </TableRow>
+          ) : null}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+function CatalogResultsGrid<T>({
+  visibleItems,
+  getItemKey,
+  renderCard,
+  onOpenItem,
+  hasMore,
+  sentinelRef,
+}: {
+  visibleItems: T[];
+  getItemKey: (item: T) => string;
+  renderCard: (item: T, onOpen: () => void) => React.ReactNode;
+  onOpenItem: (item: T) => void;
+  hasMore: boolean;
+  sentinelRef: React.RefCallback<HTMLElement>;
+}) {
+  return (
+    <div className="px-3 py-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
+        {visibleItems.map((item) => (
+          <div key={getItemKey(item)} className={cn('min-w-0')}>
+            {renderCard(item, () => onOpenItem(item))}
+          </div>
+        ))}
+        {hasMore ? (
+          <div
+            ref={sentinelRef as React.Ref<HTMLDivElement>}
+            data-testid="catalog-infinite-scroll-sentinel"
+            className="col-span-full h-1 w-full"
+            aria-hidden="true"
+          />
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function CatalogFilterSheet({
+  open,
+  onOpenChange,
+  quickToggleFilters,
+  quickToggleValues,
+  detailedFilters,
+  draftFilterValues,
+  setDraftFilterValues,
+  onClearFilters,
+  onApplyFilters,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  quickToggleFilters: CatalogFilterDefinitionBase[];
+  quickToggleValues: string[];
+  detailedFilters: CatalogFilterDefinitionBase[];
+  draftFilterValues: Record<string, CatalogFilterValue>;
+  setDraftFilterValues: React.Dispatch<React.SetStateAction<Record<string, CatalogFilterValue>>>;
+  onClearFilters: () => void;
+  onApplyFilters: () => void;
+}) {
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="right" className="flex h-full w-full flex-col p-0 sm:max-w-xl">
+        <div className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur">
+          <SheetHeader className="px-6 py-4">
+            <SheetTitle>Advanced Filters</SheetTitle>
+            <SheetDescription>
+              Refine the current list using more specific criteria.
+            </SheetDescription>
+          </SheetHeader>
+        </div>
+        <ScrollArea className="min-h-0 flex-1">
+          <div className="space-y-5 px-6 pb-28 pt-6">
+            {quickToggleFilters.length > 0 ? (
+              <section className="space-y-3">
+                <div className="space-y-1">
+                  <h3 className="text-sm font-semibold text-foreground">Quick Toggles</h3>
+                  <p className="text-xs text-muted-foreground">Fast binary filters for the current list.</p>
+                </div>
+                <ToggleGroup
+                  type="multiple"
+                  value={quickToggleValues}
+                  onValueChange={(values) => {
+                    const selectedKeys = new Set(values);
+                    setDraftFilterValues((previous) => ({
+                      ...previous,
+                      ...Object.fromEntries(
+                        quickToggleFilters.map((definition) => [
+                          definition.key,
+                          selectedKeys.has(definition.key) ? (definition.options[0]?.value ?? 'yes') : undefined,
+                        ]),
+                      ),
+                    }));
+                  }}
+                >
+                  {quickToggleFilters.map((definition) => (
+                    <ToggleGroupItem
+                      key={definition.key}
+                      value={definition.key}
+                      aria-label={definition.options[0]?.label ?? definition.label}
+                    >
+                      {definition.options[0]?.label ?? definition.label}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+              </section>
+            ) : null}
+
+            {detailedFilters.length > 0 ? (
+              <section className="space-y-4">
+                <div className="space-y-1">
+                  <h3 className="text-sm font-semibold text-foreground">Detailed Filters</h3>
+                  <p className="text-xs text-muted-foreground">Refine the results with categories and multi-select options.</p>
+                </div>
+                <div className="space-y-5">
+                  {detailedFilters.map((definition) => (
+                    <CatalogFilterCombobox
+                      key={definition.key}
+                      label={definition.label}
+                      options={definition.options}
+                      multiple={definition.selectionMode === 'multiple'}
+                      allLabel={definition.allLabel}
+                      value={draftFilterValues[definition.key]}
+                      onValueChange={(value) =>
+                        setDraftFilterValues((previous) => ({
+                          ...previous,
+                          [definition.key]: normalizeFilterValue(value),
+                        }))
+                      }
+                    />
+                  ))}
+                </div>
+              </section>
+            ) : null}
+          </div>
+        </ScrollArea>
+        <div className="border-t bg-background/95 px-6 py-4 backdrop-blur">
+          <div className="flex gap-3">
+            <Button type="button" variant="outline" className="h-11 flex-1 rounded-xl" onClick={onClearFilters}>
+              Clear Filters
+            </Button>
+            <Button type="button" className="h-11 flex-1 rounded-xl" onClick={onApplyFilters}>
+              Apply Filters
+            </Button>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 export function CatalogPageLayout<T>({
   data,
   totalCount,
@@ -145,8 +414,6 @@ export function CatalogPageLayout<T>({
   viewMode = 'cards',
   onViewModeChange,
   emptyState = 'No results found.',
-  mode = 'client',
-  searchKey,
   sortOptions,
   filters,
 }: CatalogPageLayoutProps<T>) {
@@ -156,8 +423,7 @@ export function CatalogPageLayout<T>({
   const viewportRef = React.useCallback((node: HTMLDivElement | null) => {
     setViewportElement(node);
   }, []);
-  const isServerMode = mode === 'server';
-  const hasSearchControl = isServerMode ? Boolean(onSearchTermChange || searchTerm) : Boolean(searchKey);
+  const hasSearchControl = Boolean(onSearchTermChange || searchTerm);
 
   const orderedFilters = useMemo(() => {
     return [...(filters ?? [])].sort((left, right) => {
@@ -188,43 +454,7 @@ export function CatalogPageLayout<T>({
     );
   }, [filterValues, filtersSheetOpen, orderedFilters]);
 
-  const filteredAndSortedData = useMemo(() => {
-    if (isServerMode) {
-      return data;
-    }
-
-    let result = [...data];
-    const clientFilters = orderedFilters as CatalogFilterDefinition<T>[];
-    const clientSortOptions = sortOptions as SortOption<T>[] | undefined;
-
-    if (searchTerm && searchKey) {
-      const lower = searchTerm.toLowerCase();
-      result = result.filter((item) => {
-        const value = typeof searchKey === 'function' ? searchKey(item) : String(item[searchKey]);
-        return String(value).toLowerCase().includes(lower);
-      });
-    }
-
-    for (const definition of clientFilters) {
-      const activeValue = filterValues?.[definition.key];
-      const activeValues = getFilterValueList(activeValue);
-
-      if (activeValues.length === 0) {
-        continue;
-      }
-
-      result = result.filter((item) => activeValues.some((value) => definition.predicate(item, value)));
-    }
-
-    if (sortValue && clientSortOptions) {
-      const activeSort = clientSortOptions.find((option) => option.value === sortValue);
-      if (activeSort) {
-        result.sort(activeSort.sortFn);
-      }
-    }
-
-    return result;
-  }, [data, filterValues, isServerMode, orderedFilters, searchKey, searchTerm, sortOptions, sortValue]);
+  const filteredAndSortedData = data;
 
   const quickToggleFilters = useMemo(
     () => orderedFilters.filter((definition) => definition.control === 'boolean-toggle'),
@@ -249,21 +479,20 @@ export function CatalogPageLayout<T>({
       }));
     });
   }, [filterValues, orderedFilters]);
-  const revealResetToken = useMemo(
-    () =>
-      JSON.stringify({
-        filters: filterValues ?? {},
-        resultCount: filteredAndSortedData.length,
-        searchTerm,
-        sortValue,
-      }),
-    [filterValues, filteredAndSortedData.length, searchTerm, sortValue],
+  const revealResetKeys = useMemo(
+    () => [
+      filteredAndSortedData.length,
+      searchTerm,
+      sortValue,
+      ...appliedFilterChips.map((chip) => chip.key),
+    ],
+    [appliedFilterChips, filteredAndSortedData.length, searchTerm, sortValue],
   );
 
   const { hasMore, sentinelRef, visibleCount } = useIncrementalReveal<HTMLElement>({
     itemCount: filteredAndSortedData.length,
     batchSize: viewMode === 'table' ? 40 : 24,
-    resetKeys: [revealResetToken],
+    resetKeys: revealResetKeys,
     rootElement: viewportElement,
   });
   const visibleItems = filteredAndSortedData.slice(0, visibleCount);
@@ -355,26 +584,7 @@ export function CatalogPageLayout<T>({
       <div className="rounded-3xl border bg-card/90 p-4 shadow-sm">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
           {hasSearchControl ? (
-            <div className="relative min-w-0 flex-1">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                aria-label="Search"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={(event) => onSearchTermChange?.(event.target.value)}
-                className="h-11 rounded-xl border-border/70 bg-card pl-9 pr-9"
-              />
-              {searchTerm ? (
-                <button
-                  type="button"
-                  onClick={() => onSearchTermChange?.('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                  aria-label="Clear search"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              ) : null}
-            </div>
+            <CatalogSearchBar searchTerm={searchTerm} onSearchTermChange={onSearchTermChange} />
           ) : null}
 
           {sortOptions && sortOptions.length > 0 ? (
@@ -396,7 +606,7 @@ export function CatalogPageLayout<T>({
             <Button
               type="button"
               variant="outline"
-              className="h-11 rounded-xl lg:min-w-[9.75rem]"
+              className="h-11 rounded-xl lg:min-w-39"
               onClick={() => setFiltersSheetOpen(true)}
             >
               <Filter className="mr-2 h-4 w-4" />
@@ -404,105 +614,33 @@ export function CatalogPageLayout<T>({
             </Button>
           ) : null}
 
-          <div className="inline-flex h-11 items-center rounded-xl border bg-card p-1">
-            <Button
-              type="button"
-              variant={viewMode === 'cards' ? 'default' : 'ghost'}
-              size="default"
-              className="h-9 rounded-lg px-3"
-              data-state={viewMode === 'cards' ? 'on' : 'off'}
-              onClick={() => onViewModeChange?.('cards')}
-            >
-              <LayoutGrid className="mr-2 h-4 w-4" />
-              Cards
-            </Button>
-            <Button
-              type="button"
-              variant={viewMode === 'table' ? 'default' : 'ghost'}
-              size="default"
-              className="h-9 rounded-lg px-3"
-              data-state={viewMode === 'table' ? 'on' : 'off'}
-              onClick={() => onViewModeChange?.('table')}
-            >
-              <Table2 className="mr-2 h-4 w-4" />
-              Table
-            </Button>
-          </div>
+          <CatalogViewToggle viewMode={viewMode} onViewModeChange={onViewModeChange} />
         </div>
         {extraControls ? <div className="mt-3">{extraControls}</div> : null}
       </div>
 
-      {appliedFilterChips.length > 0 ? (
-        <div className="flex flex-wrap gap-2">
-          {appliedFilterChips.map((chip) => (
-            <Button
-              key={chip.key}
-              type="button"
-              variant="outline"
-              size="sm"
-              className="rounded-full"
-              aria-label={`Remove filter ${chip.filterLabel}: ${chip.label}`}
-              onClick={() => handleRemoveAppliedFilter(chip.filterKey, chip.value)}
-            >
-              {chip.filterLabel}: {chip.label}
-              <X className="h-3.5 w-3.5" />
-            </Button>
-          ))}
-        </div>
-      ) : null}
+      <CatalogAppliedFilters chips={appliedFilterChips} onRemove={handleRemoveAppliedFilter} />
 
       <div className="min-w-0 rounded-3xl border bg-card/90 p-4 shadow-sm">
-        <ScrollArea className="h-[calc(100vh-15rem)] min-h-[28rem] pr-2" viewportRef={viewportRef}>
+        <ScrollArea className="h-[calc(100vh-15rem)] min-h-112 pr-2" viewportRef={viewportRef}>
           {viewMode === 'table' && tableColumns && tableColumns.length > 0 ? (
-            <div className="px-3 py-3">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    {tableColumns.map((column) => (
-                      <TableHead key={column.key}>{column.header}</TableHead>
-                    ))}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {visibleItems.map((item) => (
-                    <TableRow
-                      key={getItemKey(item)}
-                      className="cursor-pointer"
-                      onClick={() => onOpenItem(item)}
-                    >
-                      {tableColumns.map((column) => (
-                        <TableCell key={column.key} className={column.className}>
-                          {column.cell(item)}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
-                  {hasMore ? (
-                    <TableRow ref={sentinelRef as React.Ref<HTMLTableRowElement>} data-testid="catalog-infinite-scroll-sentinel" aria-hidden="true">
-                      <TableCell colSpan={tableColumns.length} className="h-1 p-0" />
-                    </TableRow>
-                  ) : null}
-                </TableBody>
-              </Table>
-            </div>
+            <CatalogResultsTable
+              visibleItems={visibleItems}
+              tableColumns={tableColumns}
+              getItemKey={getItemKey}
+              onOpenItem={onOpenItem}
+              hasMore={hasMore}
+              sentinelRef={sentinelRef}
+            />
           ) : (
-            <div className="px-3 py-3">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
-                {visibleItems.map((item) => (
-                  <div key={getItemKey(item)} className={cn('min-w-0')}>
-                    {renderCard(item, () => onOpenItem(item))}
-                  </div>
-                ))}
-                {hasMore ? (
-                  <div
-                    ref={sentinelRef as React.Ref<HTMLDivElement>}
-                    data-testid="catalog-infinite-scroll-sentinel"
-                    className="col-span-full h-1 w-full"
-                    aria-hidden="true"
-                  />
-                ) : null}
-              </div>
-            </div>
+            <CatalogResultsGrid
+              visibleItems={visibleItems}
+              getItemKey={getItemKey}
+              renderCard={renderCard}
+              onOpenItem={onOpenItem}
+              hasMore={hasMore}
+              sentinelRef={sentinelRef}
+            />
           )}
 
           {filteredAndSortedData.length === 0 ? (
@@ -515,93 +653,17 @@ export function CatalogPageLayout<T>({
         </ScrollArea>
       </div>
 
-      <Sheet open={filtersSheetOpen} onOpenChange={setFiltersSheetOpen}>
-        <SheetContent side="right" className="flex h-full w-full flex-col p-0 sm:max-w-xl">
-          <div className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur">
-            <SheetHeader className="px-6 py-4">
-              <SheetTitle>Advanced Filters</SheetTitle>
-              <SheetDescription>
-                Refine the current list using more specific criteria.
-              </SheetDescription>
-            </SheetHeader>
-          </div>
-          <ScrollArea className="min-h-0 flex-1">
-            <div className="space-y-5 px-6 pb-28 pt-6">
-              {quickToggleFilters.length > 0 ? (
-                <section className="space-y-3">
-                  <div className="space-y-1">
-                    <h3 className="text-sm font-semibold text-foreground">Quick Toggles</h3>
-                    <p className="text-xs text-muted-foreground">Fast binary filters for the current list.</p>
-                  </div>
-                  <ToggleGroup
-                    type="multiple"
-                    value={quickToggleValues}
-                    onValueChange={(values) => {
-                      const selectedKeys = new Set(values);
-                      setDraftFilterValues((previous) => ({
-                        ...previous,
-                        ...Object.fromEntries(
-                          quickToggleFilters.map((definition) => [
-                            definition.key,
-                            selectedKeys.has(definition.key) ? (definition.options[0]?.value ?? 'yes') : undefined,
-                          ]),
-                        ),
-                      }));
-                    }}
-                  >
-                    {quickToggleFilters.map((definition) => (
-                      <ToggleGroupItem
-                        key={definition.key}
-                        value={definition.key}
-                        aria-label={definition.options[0]?.label ?? definition.label}
-                      >
-                        {definition.options[0]?.label ?? definition.label}
-                      </ToggleGroupItem>
-                    ))}
-                  </ToggleGroup>
-                </section>
-              ) : null}
-
-              {detailedFilters.length > 0 ? (
-                <section className="space-y-4">
-                  <div className="space-y-1">
-                    <h3 className="text-sm font-semibold text-foreground">Detailed Filters</h3>
-                    <p className="text-xs text-muted-foreground">Refine the results with categories and multi-select options.</p>
-                  </div>
-                  <div className="space-y-5">
-                    {detailedFilters.map((definition) => (
-                      <CatalogFilterCombobox
-                        key={definition.key}
-                        label={definition.label}
-                        options={definition.options}
-                        multiple={definition.selectionMode === 'multiple'}
-                        allLabel={definition.allLabel}
-                        value={draftFilterValues[definition.key]}
-                        onValueChange={(value) =>
-                          setDraftFilterValues((previous) => ({
-                            ...previous,
-                            [definition.key]: normalizeFilterValue(value),
-                          }))
-                        }
-                      />
-                    ))}
-                  </div>
-                </section>
-              ) : null}
-            </div>
-          </ScrollArea>
-          <div className="border-t bg-background/95 px-6 py-4 backdrop-blur">
-            <div className="flex gap-3">
-              <Button type="button" variant="outline" className="h-11 flex-1 rounded-xl" onClick={handleClearFilters}>
-                Clear Filters
-              </Button>
-              <Button type="button" className="h-11 flex-1 rounded-xl" onClick={handleApplyFilters}>
-                Apply Filters
-              </Button>
-            </div>
-          </div>
-        </SheetContent>
-      </Sheet>
+      <CatalogFilterSheet
+        open={filtersSheetOpen}
+        onOpenChange={setFiltersSheetOpen}
+        quickToggleFilters={quickToggleFilters}
+        quickToggleValues={quickToggleValues}
+        detailedFilters={detailedFilters}
+        draftFilterValues={draftFilterValues}
+        setDraftFilterValues={setDraftFilterValues}
+        onClearFilters={handleClearFilters}
+        onApplyFilters={handleApplyFilters}
+      />
     </div>
   );
 }

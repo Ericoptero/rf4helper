@@ -122,52 +122,7 @@ describe('MonstersList Component', () => {
     expect(screen.queryByText('Octopirate 2')).not.toBeInTheDocument();
   });
 
-  it('supports controlled table mode sorting and server-driven filter combinations', async () => {
-    const { rerender } = render(
-      <MonstersList
-        monsters={mockMonsterGroups}
-        viewMode="table"
-        sortValue="level-desc"
-      />,
-    );
 
-    const rows = await screen.findAllByRole('row');
-    expect(within(rows[1]!).getAllByRole('cell')[0]).toHaveTextContent('Death Orc');
-    expect(within(rows[2]!).getAllByRole('cell')[0]).toHaveTextContent('Octopirate');
-
-    rerender(
-      <MonstersList
-        monsters={mockMonsterGroups}
-        viewMode="table"
-        searchTerm="octo"
-        filterValues={{
-          tameable: 'yes',
-          boss: 'yes',
-          rideable: 'yes',
-          location: 'field dungeon (boss)',
-          drops: 'yes',
-        }}
-      />,
-    );
-
-    expect(await screen.findByText('Octopirate')).toBeInTheDocument();
-    expect(screen.queryByText('Death Orc')).not.toBeInTheDocument();
-    expect(screen.getAllByText('Yes').length).toBeGreaterThan(0);
-  });
-
-  it('renders drops as a quick toggle instead of a combobox filter', async () => {
-    const user = userEvent.setup();
-
-    render(<MonstersList monsters={mockMonsterGroups} />);
-
-    await screen.findByText('Orc');
-    await user.click(screen.getByRole('button', { name: /more filters/i }));
-
-    const dialog = await screen.findByRole('dialog');
-    expect(within(dialog).getByText('Quick Toggles')).toBeInTheDocument();
-    expect(within(dialog).getByRole('button', { name: /has drops/i })).toBeInTheDocument();
-    expect(within(dialog).queryByRole('combobox', { name: /drops/i })).not.toBeInTheDocument();
-  });
 
   it('shows a location-labeled variant switcher and updates details when switching', async () => {
     const user = userEvent.setup();

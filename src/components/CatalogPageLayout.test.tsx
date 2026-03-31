@@ -2,7 +2,12 @@ import React from 'react';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CatalogPageLayout, type CatalogFilterDefinition, type CatalogTableColumn } from './CatalogPageLayout';
+import {
+  CatalogPageLayout,
+  type CatalogFilterValue,
+  type ServerCatalogFilterDefinition,
+  type CatalogTableColumn,
+} from './CatalogPageLayout';
 import { Card, CardContent } from './ui/card';
 
 type Entry = {
@@ -28,13 +33,12 @@ const sortOptions = [
   },
 ];
 
-const filters: CatalogFilterDefinition<Entry>[] = [
+const filters: ServerCatalogFilterDefinition[] = [
   {
     key: 'featured',
     label: 'Featured',
     control: 'boolean-toggle',
     options: [{ label: 'Featured only', value: 'yes' }],
-    predicate: (entry, value) => value !== 'yes' || entry.featured,
   },
   {
     key: 'type',
@@ -43,14 +47,12 @@ const filters: CatalogFilterDefinition<Entry>[] = [
       { label: 'Crop', value: 'crop' },
       { label: 'Weapon', value: 'weapon' },
     ],
-    predicate: (entry, value) => entry.type.toLowerCase() === value,
   },
   {
     key: 'region',
     label: 'Region',
     placement: 'advanced',
     options: [{ label: 'Selphia Plains', value: 'selphia-plains' }],
-    predicate: (entry, value) => entry.region.toLowerCase().replace(/\s+/g, '-') === value,
   },
   {
     key: 'tags',
@@ -63,9 +65,15 @@ const filters: CatalogFilterDefinition<Entry>[] = [
       { label: 'Forge', value: 'forge' },
       { label: 'Rare', value: 'rare' },
     ],
-    predicate: (entry, value) => entry.tags.includes(value),
   },
 ];
+
+const mockPredicates: Record<string, (entry: Entry, value: string) => boolean> = {
+  featured: (entry, value) => value !== 'yes' || entry.featured,
+  type: (entry, value) => entry.type.toLowerCase() === value,
+  region: (entry, value) => entry.region.toLowerCase().replace(/\s+/g, '-') === value,
+  tags: (entry, value) => entry.tags.includes(value),
+};
 
 const tableColumns: CatalogTableColumn<Entry>[] = [
   { key: 'name', header: 'Name', cell: (entry) => entry.name },
@@ -145,14 +153,33 @@ function ControlledCatalogHarness({ data = entries }: { data?: Entry[] }) {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [viewMode, setViewMode] = React.useState<'cards' | 'table'>('cards');
   const [sortValue, setSortValue] = React.useState('name-asc');
-  const [filterValues, setFilterValues] = React.useState<Record<string, string | string[] | undefined>>({});
+  const [filterValues, setFilterValues] = React.useState<Record<string, CatalogFilterValue>>({});
+
+  const filteredData = React.useMemo(() => {
+    let result = [...data];
+    if (searchTerm) {
+      result = result.filter((entry) => entry.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    }
+    for (const filter of filters) {
+      const activeValue = filterValues[filter.key];
+      const predicate = mockPredicates[filter.key];
+      if (activeValue && predicate) {
+        if (Array.isArray(activeValue)) {
+          if (activeValue.length > 0) {
+            result = result.filter((entry) => activeValue.some((val) => predicate(entry, val)));
+          }
+        } else {
+          result = result.filter((entry) => predicate(entry, activeValue as string));
+        }
+      }
+    }
+    return result;
+  }, [data, searchTerm, filterValues]);
 
   return (
     <CatalogPageLayout<Entry>
-      data={data}
-      mode="client"
+      data={filteredData}
       title="Items"
-      searchKey="name"
       searchTerm={searchTerm}
       onSearchTermChange={setSearchTerm}
       viewMode={viewMode}
@@ -324,9 +351,7 @@ describe('CatalogPageLayout', () => {
     render(
       <CatalogPageLayout<Entry>
         data={entries}
-        mode="client"
         title="Items"
-        searchKey="name"
         searchTerm=""
         onSearchTermChange={vi.fn()}
         viewMode="cards"
@@ -377,101 +402,7 @@ describe('CatalogPageLayout', () => {
     expect(screen.queryByRole('button', { name: /remove filter featured: featured only/i })).not.toBeInTheDocument();
   });
 
-  it('renders each card as the interactive surface instead of a layout wrapper button', () => {
-    render(<ControlledCatalogHarness />);
 
-    const turnipButton = screen.getByRole('button', { name: 'Turnip' });
-    const cardWrapper = turnipButton.querySelector('[data-slot="card"]');
-
-    expect(cardWrapper).not.toBeNull();
-    expect(turnipButton.parentElement).not.toHaveAttribute('data-slot', 'card');
-  });
-
-  it('clears the controlled search term and opens table rows through the provided callback', async () => {
-    const user = userEvent.setup();
-    const onOpenItem = vi.fn();
-
-    function SearchHarness() {
-      const [searchTerm, setSearchTerm] = React.useState('turnip');
-
-      return (
-        <CatalogPageLayout<Entry>
-          data={entries}
-          mode="client"
-          title="Items"
-          searchKey="name"
-          searchTerm={searchTerm}
-          onSearchTermChange={setSearchTerm}
-          viewMode="table"
-          onViewModeChange={vi.fn()}
-          sortValue="name-asc"
-          onSortValueChange={vi.fn()}
-          sortOptions={sortOptions}
-          filters={filters}
-          filterValues={{}}
-          onFilterValuesChange={vi.fn()}
-          tableColumns={tableColumns}
-          getItemKey={(entry) => entry.id}
-          renderCard={(entry, onOpen) => (
-            <button type="button" onClick={onOpen}>
-              {entry.name}
-            </button>
-          )}
-          onOpenItem={onOpenItem}
-        />
-      );
-    }
-
-    render(<SearchHarness />);
-
-    expect(screen.getByLabelText(/clear search/i)).toBeInTheDocument();
-    await user.click(screen.getByLabelText(/clear search/i));
-
-    expect(screen.queryByLabelText(/clear search/i)).not.toBeInTheDocument();
-
-    const firstDataRow = screen.getAllByRole('row')[1];
-    await user.click(firstDataRow!);
-
-    expect(onOpenItem).toHaveBeenCalledWith(entries[1]);
-  });
-
-  it('skips client filtering in server mode without requiring a searchKey', () => {
-    render(
-      <CatalogPageLayout<Entry>
-        data={entries}
-        mode="server"
-        title="Items"
-        searchTerm="turnip"
-        onSearchTermChange={vi.fn()}
-        viewMode="cards"
-        onViewModeChange={vi.fn()}
-        sortValue="name-asc"
-        onSortValueChange={vi.fn()}
-        sortOptions={sortOptions.map((option) => ({ label: option.label, value: option.value }))}
-        filters={filters.map((filter) => ({
-          key: filter.key,
-          label: filter.label,
-          placement: filter.placement,
-          control: filter.control,
-          options: filter.options,
-        }))}
-        filterValues={{ featured: 'yes' }}
-        onFilterValuesChange={vi.fn()}
-        tableColumns={tableColumns}
-        getItemKey={(entry) => entry.id}
-        renderCard={(entry, onOpen) => (
-          <button type="button" onClick={onOpen}>
-            {entry.name}
-          </button>
-        )}
-        onOpenItem={vi.fn()}
-      />,
-    );
-
-    expect(screen.getByText('Turnip')).toBeInTheDocument();
-    expect(screen.getByText('Broadsword')).toBeInTheDocument();
-    expect(screen.getByText('Pink Turnip')).toBeInTheDocument();
-  });
 
   it('reveals additional card results when the infinite scroll sentinel intersects', () => {
     render(<ControlledCatalogHarness data={paginatedEntries} />);

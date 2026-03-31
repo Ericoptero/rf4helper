@@ -1,22 +1,20 @@
 import {
-  CRAFTER_RARITY_PLACEHOLDER_ID,
-  CRAFTER_RARITY_PLACEHOLDER_NAME,
   type CrafterBuildState,
-  type CrafterCalculation,
 } from '@/lib/crafter';
 import {
-  applyDefaultRecipeSelections,
   getFoodRecipeDefinition,
   getRecipeDefinition,
-  padSelections,
 } from '@/lib/crafterRecipeSelections';
 import {
+  CRAFTER_RARITY_PLACEHOLDER_ID,
+  CRAFTER_RARITY_PLACEHOLDER_NAME,
   CRAFTER_RARITY_PLACEHOLDER_VALUE,
   getCrafterSelectableRarity,
   getEffectiveCrafterNodeRarity,
 } from '@/lib/crafterRarity';
 import { itemMatchesCrafterSlot } from '@/lib/crafterData';
-import { getDisplayEffects, getDisplayStats, hasDisplayEffects } from '@/lib/itemPresentation';
+import type { CrafterOptionLists } from '@/lib/crafterOptions';
+import { getDisplayEffects, getDisplayStats } from '@/lib/itemPresentation';
 import type { CrafterData, CrafterMaterialSelection, CrafterSlotConfig, CrafterSlotKey, Item } from '@/lib/schemas';
 import type { CrafterItemPreviewData } from './CrafterSelectorDialog';
 import {
@@ -35,11 +33,8 @@ import {
   STATUS_RESISTANCE_ORDER,
 } from './crafterFormatters';
 import type {
-  CrafterEditorSlot,
   CrafterGridNode,
-  CrafterGridSection,
   CrafterNodeBehavior,
-  CrafterNodeType,
   CrafterSelectedNode,
   CrafterTab,
 } from './crafterTypes';
@@ -49,7 +44,11 @@ type SelectionUpdate = {
   level?: number;
 };
 
-const FOOD_RECIPE_SLOTS = 6;
+type EditableSelection = {
+  itemId?: string;
+  level: number;
+};
+
 const CRAFTER_RARITY_PLACEHOLDER_ITEM: Item = {
   id: CRAFTER_RARITY_PLACEHOLDER_ID,
   name: CRAFTER_RARITY_PLACEHOLDER_NAME,
@@ -58,11 +57,7 @@ const CRAFTER_RARITY_PLACEHOLDER_ITEM: Item = {
   rarityPoints: 15,
 };
 
-function createEmptySelections(count: number) {
-  return Array.from({ length: count }, () => ({ itemId: undefined, level: 1 }));
-}
-
-function getEquipmentRecipeDefaults(
+export function getEquipmentRecipeDefaults(
   slotKey: CrafterSlotKey,
   appearanceId: string | undefined,
   crafterData: CrafterData,
@@ -70,11 +65,11 @@ function getEquipmentRecipeDefaults(
   return getRecipeDefinition(slotKey, appearanceId, crafterData)?.materials;
 }
 
-function getFoodRecipeDefaults(baseId: string | undefined, crafterData: CrafterData) {
+export function getFoodRecipeDefaults(baseId: string | undefined, crafterData: CrafterData) {
   return getFoodRecipeDefinition(baseId, crafterData)?.materials;
 }
 
-function getEquipmentRecipeSourceItemId(
+export function getEquipmentRecipeSourceItemId(
   slotKey: CrafterSlotKey,
   build: CrafterBuildState,
   crafterData: CrafterData,
@@ -91,45 +86,18 @@ function getEquipmentRecipeSourceItemId(
   return candidates[0];
 }
 
-function getSlotOptions(items: Record<string, Item>, slotConfig: CrafterSlotConfig) {
-  return Object.values(items)
-    .filter((item) => itemMatchesCrafterSlot(item, slotConfig))
-    .sort((left, right) => left.name.localeCompare(right.name));
-}
+function resolveOptionItems(
+  itemIds: string[],
+  items: Record<string, Item>,
+  includeRarityPlaceholder = false,
+) {
+  const resolvedItems = itemIds
+    .map((itemId) => items[itemId])
+    .filter((item): item is Item => Boolean(item));
 
-function getFoodOptions(items: Record<string, Item>) {
-  return Object.values(items)
-    .filter((item) => item.craft?.some((craft) => craft.stationType === 'Cooking'))
-    .sort((left, right) => left.name.localeCompare(right.name));
-}
-
-function getMaterialOptions(items: Record<string, Item>) {
-  return Object.values(items)
-    .filter((item) =>
-      Boolean(item.crafter?.material?.weapon)
-      || Boolean(item.crafter?.material?.armor)
-      || Boolean(item.crafter?.material?.food)
-      || hasDisplayEffects(item)
-      || Boolean(getDisplayStats(item))
-      || item.rarityPoints != null
-      || Boolean(item.craft?.length),
-    )
-    .sort((left, right) => left.name.localeCompare(right.name));
-}
-
-function getAnyItemOptions(items: Record<string, Item>) {
-  const uniqueItems = new Map<string, Item>();
-
-  uniqueItems.set(CRAFTER_RARITY_PLACEHOLDER_ITEM.id, CRAFTER_RARITY_PLACEHOLDER_ITEM);
-  Object.values(items)
-    .sort((left, right) => left.name.localeCompare(right.name))
-    .forEach((item) => {
-      if (!uniqueItems.has(item.id)) {
-        uniqueItems.set(item.id, item);
-      }
-    });
-
-  return [...uniqueItems.values()];
+  return includeRarityPlaceholder
+    ? [CRAFTER_RARITY_PLACEHOLDER_ITEM, ...resolvedItems]
+    : resolvedItems;
 }
 
 export function getCrafterDisplayItem(itemId: string | undefined, items: Record<string, Item>) {
@@ -138,7 +106,7 @@ export function getCrafterDisplayItem(itemId: string | undefined, items: Record<
   return items[itemId];
 }
 
-function matchesSlotCraftCandidate(
+export function matchesSlotCraftCandidate(
   itemId: string | undefined,
   items: Record<string, Item>,
   slotConfig: CrafterSlotConfig,
@@ -306,26 +274,28 @@ export function isEquipmentTab(tab: CrafterTab): tab is CrafterSlotKey {
   return tab !== 'dashboard' && tab !== 'cooking';
 }
 
-function resolveEffectiveSelection(
+export function resolveEffectiveSelection(
   rawSelection: CrafterMaterialSelection | undefined,
   defaultItemId: string | null | undefined,
 ) {
   const rawItemId = rawSelection?.itemId;
   const hasExplicitOverride = rawSelection?.itemId != null || (rawSelection?.level ?? 1) !== 1;
-  const itemId = rawItemId === '' ? undefined : rawItemId ?? defaultItemId ?? undefined;
-  return {
-    itemId,
-    level:
-      rawItemId && rawItemId !== ''
-        ? rawSelection!.level
-        : rawItemId === ''
-          ? 1
-          : defaultItemId
-            ? hasExplicitOverride
-              ? rawSelection?.level ?? 10
-              : 10
-            : rawSelection?.level ?? 1,
-  };
+  const isCleared = rawItemId === '';
+  const hasDefault = Boolean(defaultItemId);
+  const isCustomSelection = Boolean(rawItemId && rawItemId !== '');
+
+  const itemId = isCleared ? undefined : rawItemId ?? defaultItemId ?? undefined;
+
+  let level = 1;
+  if (isCustomSelection) {
+    level = rawSelection!.level;
+  } else if (!isCleared && hasDefault) {
+    level = hasExplicitOverride ? (rawSelection?.level ?? 10) : 10;
+  } else {
+    level = rawSelection?.level ?? 1;
+  }
+
+  return { itemId, level };
 }
 
 function getRecipeDefaultItemIdForNode(
@@ -345,12 +315,50 @@ function getRecipeDefaultItemIdForNode(
   )?.[node.index];
 }
 
+export function applySelectionUpdate({
+  current,
+  updates,
+  behavior,
+  defaultItemId,
+}: {
+  current: EditableSelection;
+  updates: SelectionUpdate;
+  behavior?: Pick<CrafterNodeBehavior, 'canEditItem' | 'mode' | 'options'>;
+  defaultItemId?: string;
+}) {
+  const hasItemIdUpdate = Object.prototype.hasOwnProperty.call(updates, 'itemId');
+  const hasLevelUpdate = Object.prototype.hasOwnProperty.call(updates, 'level');
+  const canEditItem = behavior?.canEditItem ?? true;
+  const nextItemId = (() => {
+    if (!hasItemIdUpdate) return current.itemId;
+    if (!canEditItem) return current.itemId ?? defaultItemId;
+    if (behavior?.mode === 'category') {
+      return behavior.options.some((option) => option.id === updates.itemId) ? updates.itemId : current.itemId;
+    }
+    return updates.itemId ?? (defaultItemId ? '' : undefined);
+  })();
+
+  return {
+    itemId: nextItemId,
+    level: hasLevelUpdate
+      ? Math.max(1, Math.min(10, updates.level ?? current.level))
+      : hasItemIdUpdate
+        ? nextItemId
+          ? nextItemId === current.itemId
+            ? current.level
+            : 10
+          : 1
+        : current.level,
+  } satisfies CrafterMaterialSelection;
+}
+
 export function resolveNodeBehavior(
   node: CrafterSelectedNode | CrafterGridNode,
   build: CrafterBuildState,
   slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>,
   items: Record<string, Item>,
   crafterData: CrafterData,
+  optionLists: CrafterOptionLists,
 ): CrafterNodeBehavior {
   if (node.type === 'recipe') {
     const recipeSourceItemId = node.slot === 'food'
@@ -406,7 +414,9 @@ export function resolveNodeBehavior(
     if (recipeSourceItemId) {
       return {
         mode: 'free',
-        options: node.slot === 'food' ? [CRAFTER_RARITY_PLACEHOLDER_ITEM, ...getMaterialOptions(items)] : getAnyItemOptions(items),
+        options: node.slot === 'food'
+          ? resolveOptionItems(optionLists.materialItemIds, items, true)
+          : resolveOptionItems(optionLists.anyItemIds, items, true),
         canEditItem: true,
         canEditLevel: true,
         canClear: true,
@@ -429,7 +439,9 @@ export function resolveNodeBehavior(
   if (node.slot === 'food') {
     return {
       mode: 'free',
-      options: node.type === 'foodBase' ? getFoodOptions(items) : getMaterialOptions(items),
+      options: node.type === 'foodBase'
+        ? resolveOptionItems(optionLists.foodItemIds, items)
+        : resolveOptionItems(optionLists.materialItemIds, items),
       canEditItem: true,
       canEditLevel: node.type !== 'foodBase',
       canClear: true,
@@ -439,7 +451,7 @@ export function resolveNodeBehavior(
   if (node.type === 'base') {
     return {
       mode: 'free',
-      options: getSlotOptions(items, slotConfigByKey[node.slot]),
+      options: resolveOptionItems(optionLists.slotItemIds[node.slot], items),
       canEditItem: true,
       canEditLevel: false,
       canClear: true,
@@ -448,7 +460,7 @@ export function resolveNodeBehavior(
 
   return {
     mode: 'free',
-    options: [CRAFTER_RARITY_PLACEHOLDER_ITEM, ...getMaterialOptions(items)],
+    options: resolveOptionItems(optionLists.materialItemIds, items, true),
     canEditItem: true,
     canEditLevel: true,
     canClear: true,
@@ -490,339 +502,9 @@ export function getSelectedNodeOptions(
   crafterData: CrafterData,
   slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>,
   items: Record<string, Item>,
+  optionLists: CrafterOptionLists,
 ) {
-  return resolveNodeBehavior(node, build, slotConfigByKey, items, crafterData).options;
+  return resolveNodeBehavior(node, build, slotConfigByKey, items, crafterData, optionLists).options;
 }
 
-export function updateNodeInBuild(
-  build: CrafterBuildState,
-  node: CrafterSelectedNode,
-  updates: SelectionUpdate,
-  crafterData: CrafterData,
-  slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>,
-  items: Record<string, Item>,
-) {
-  const next = structuredClone(build);
-  const hasItemIdUpdate = Object.prototype.hasOwnProperty.call(updates, 'itemId');
-  const hasLevelUpdate = Object.prototype.hasOwnProperty.call(updates, 'level');
-
-  if (node.slot === 'food') {
-    if (node.type === 'foodBase') {
-      next.food.baseId = updates.itemId;
-      next.food.recipe = createEmptySelections(FOOD_RECIPE_SLOTS);
-      return next;
-    }
-
-    if (node.type === 'recipe' && node.index != null) {
-      const defaultItemId = getFoodRecipeDefaults(next.food.baseId, crafterData)?.[node.index];
-      const currentSelection = resolveEffectiveSelection(
-        next.food.recipe[node.index],
-        defaultItemId,
-      );
-      const behavior = resolveNodeBehavior(node, next, slotConfigByKey, items, crafterData);
-      const nextItemId = (() => {
-        if (!hasItemIdUpdate) return currentSelection.itemId;
-        if (!behavior.canEditItem) return currentSelection.itemId ?? defaultItemId;
-        if (behavior.mode === 'category') {
-          return behavior.options.some((option) => option.id === updates.itemId) ? updates.itemId : currentSelection.itemId;
-        }
-        return updates.itemId ?? (defaultItemId ? '' : undefined);
-      })();
-      next.food.recipe[node.index] = {
-        ...next.food.recipe[node.index],
-        itemId: nextItemId,
-        level: hasLevelUpdate
-          ? Math.max(1, Math.min(10, updates.level ?? currentSelection.level))
-          : hasItemIdUpdate
-            ? nextItemId
-              ? nextItemId === currentSelection.itemId
-                ? currentSelection.level
-                : 10
-              : 1
-            : currentSelection.level,
-      };
-    }
-
-    return next;
-  }
-
-  const slot = next[node.slot];
-  const slotConfig = slotConfigByKey[node.slot];
-  if (node.type === 'base') {
-    slot.appearanceId = updates.itemId;
-    slot.recipe = createEmptySelections(slotConfig.recipeSlots);
-    return next;
-  }
-
-  if (node.type === 'recipe' && node.index != null) {
-    const defaultItemId = getEquipmentRecipeDefaults(node.slot, slot.appearanceId, crafterData)?.[node.index];
-    const currentSelection = resolveEffectiveSelection(
-      slot.recipe[node.index],
-      defaultItemId,
-    );
-    const behavior = resolveNodeBehavior(node, next, slotConfigByKey, items, crafterData);
-    const nextItemId = (() => {
-      if (!hasItemIdUpdate) return currentSelection.itemId;
-      if (!behavior.canEditItem) return currentSelection.itemId ?? defaultItemId;
-      if (behavior.mode === 'category') {
-        return behavior.options.some((option) => option.id === updates.itemId) ? updates.itemId : currentSelection.itemId;
-      }
-      return updates.itemId ?? (defaultItemId ? '' : undefined);
-    })();
-    slot.recipe[node.index] = {
-      ...slot.recipe[node.index],
-      itemId: nextItemId,
-      level: hasLevelUpdate
-        ? Math.max(1, Math.min(10, updates.level ?? currentSelection.level))
-        : hasItemIdUpdate
-          ? nextItemId
-            ? nextItemId === currentSelection.itemId
-              ? currentSelection.level
-              : 10
-            : 1
-          : currentSelection.level,
-    };
-    if (hasItemIdUpdate && matchesSlotCraftCandidate(nextItemId, items, slotConfig)) {
-      slot.recipe = slot.recipe.map((selection, index) => {
-        if (index === node.index) return selection;
-        return matchesSlotCraftCandidate(selection.itemId, items, slotConfig)
-          ? { itemId: undefined, level: 1 }
-          : selection;
-      });
-    }
-    return next;
-  }
-
-  if (node.type === 'inherit' && node.index != null) {
-    const currentSelection = slot.inherits[node.index];
-    const nextItemId = hasItemIdUpdate ? updates.itemId : currentSelection.itemId;
-    slot.inherits[node.index] = {
-      ...currentSelection,
-      itemId: nextItemId,
-      level: hasLevelUpdate
-        ? Math.max(1, Math.min(10, updates.level ?? currentSelection.level))
-        : hasItemIdUpdate
-          ? nextItemId
-            ? nextItemId === currentSelection.itemId
-              ? currentSelection.level
-              : 10
-            : 1
-          : currentSelection.level,
-    };
-    return next;
-  }
-
-  if (node.type === 'upgrade' && node.index != null) {
-    const currentSelection = slot.upgrades[node.index];
-    const nextItemId = hasItemIdUpdate ? updates.itemId : currentSelection.itemId;
-    slot.upgrades[node.index] = {
-      ...currentSelection,
-      itemId: nextItemId,
-      level: hasLevelUpdate
-        ? Math.max(1, Math.min(10, updates.level ?? currentSelection.level))
-        : hasItemIdUpdate
-          ? nextItemId
-            ? nextItemId === currentSelection.itemId
-              ? currentSelection.level
-              : 10
-            : 1
-          : currentSelection.level,
-    };
-  }
-
-  return next;
-}
-
-export function buildGridSectionsForSlot({
-  activeSlot,
-  build,
-  items,
-  crafterData,
-  slotConfigByKey,
-  calculation,
-}: {
-  activeSlot: CrafterEditorSlot;
-  build: CrafterBuildState;
-  items: Record<string, Item>;
-  crafterData: CrafterData;
-  slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>;
-  calculation: CrafterCalculation;
-}): CrafterGridSection[] {
-  const resolveGridNodeRarity = (
-    slot: CrafterEditorSlot,
-    type: CrafterNodeType,
-    item: Item | undefined,
-    itemId: string | undefined,
-  ) => getNodeEffectiveRarity({ slot, type }, item, itemId, crafterData);
-
-  if (activeSlot === 'food') {
-    const baseItem = build.food.baseId ? items[build.food.baseId] : undefined;
-    const recipeSelections = applyDefaultRecipeSelections(
-      build.food.recipe,
-      getFoodRecipeDefaults(build.food.baseId, crafterData),
-      FOOD_RECIPE_SLOTS,
-    );
-
-    return [
-      {
-        id: 'food-base',
-        title: 'Base Food',
-        gridClassName: 'grid-cols-1',
-        nodes: [{
-          id: 'food-base',
-          slot: 'food',
-          type: 'foodBase',
-          label: 'Base Food',
-          item: baseItem,
-          itemId: baseItem?.id,
-          itemName: baseItem?.name,
-          level: 1,
-          rarity: resolveGridNodeRarity('food', 'foodBase', baseItem, baseItem?.id),
-          tier: 0,
-          emptyLabel: 'Base Food',
-          meta: 'Select a food recipe',
-        }],
-      },
-      {
-        id: 'food-recipe',
-        title: 'Recipe',
-        gridClassName: 'grid-cols-3 justify-start',
-        nodes: recipeSelections.map((selection, index) => {
-          const item = selection.itemId ? items[selection.itemId] : undefined;
-          const defaultItem = getCrafterDisplayItem(getFoodRecipeDefaults(build.food.baseId, crafterData)?.[index], items);
-          const isCategorySlot = defaultItem?.type === 'Category' && Boolean(defaultItem.groupMembers?.length);
-          return {
-            id: `food-recipe-${index}`,
-            slot: 'food' as const,
-            type: 'recipe' as const,
-            index,
-            label: `Recipe ${index + 1}`,
-            item,
-            itemId: selection.itemId,
-            itemName: item?.name,
-            level: selection.level,
-            rarity: resolveGridNodeRarity('food', 'recipe', item, selection.itemId),
-            tier: 0,
-            emptyLabel: `Recipe ${index + 1}`,
-            meta: 'Recipe slot',
-            interactionMode: isCategorySlot ? 'category' : defaultItem ? 'fixed' : 'free',
-            interactionLabel: isCategorySlot ? 'Choose material' : defaultItem ? 'Level only' : undefined,
-            categoryLabel: isCategorySlot ? defaultItem?.name : undefined,
-          };
-        }),
-      },
-    ];
-  }
-
-  const slotConfig = slotConfigByKey[activeSlot];
-  const slot = build[activeSlot];
-  const appearanceItem = getCrafterDisplayItem(slot.appearanceId, items);
-  const recipeSourceItemId = getEquipmentRecipeSourceItemId(activeSlot, build, crafterData);
-  const recipeSelections = applyDefaultRecipeSelections(
-    slot.recipe,
-    getEquipmentRecipeDefaults(activeSlot, recipeSourceItemId, crafterData),
-    slotConfig.recipeSlots,
-  );
-  const actualBaseItem = getCrafterDisplayItem(slot.baseId, items);
-  const slotResult = calculation.slotResults[activeSlot];
-  const sections: CrafterGridSection[] = [
-    {
-      id: `${activeSlot}-base`,
-      title: 'Base',
-      gridClassName: 'grid-cols-1',
-      nodes: [{
-        id: `${activeSlot}-base`,
-        slot: activeSlot,
-        type: 'base',
-        label: 'Base',
-        item: appearanceItem,
-        itemId: appearanceItem?.id,
-        itemName: appearanceItem?.name,
-        level: slotResult.itemLevel || 1,
-        rarity: resolveGridNodeRarity(activeSlot, 'base', appearanceItem, appearanceItem?.id),
-        tier: slotResult.tier,
-        emptyLabel: 'Base',
-        meta: actualBaseItem?.name ? `Actual Base: ${actualBaseItem.name}` : 'Select the crafted appearance item',
-      }],
-    },
-    {
-      id: `${activeSlot}-recipe`,
-      title: 'Recipe',
-      gridClassName: 'grid-cols-3 justify-start',
-      nodes: recipeSelections.map((selection, index) => {
-        const item = getCrafterDisplayItem(selection.itemId, items);
-        const defaultItem = getCrafterDisplayItem(
-          getEquipmentRecipeDefaults(activeSlot, recipeSourceItemId, crafterData)?.[index],
-          items,
-        );
-        const isCategorySlot = defaultItem?.type === 'Category' && Boolean(defaultItem.groupMembers?.length);
-        return {
-          id: `${activeSlot}-recipe-${index}`,
-          slot: activeSlot,
-          type: 'recipe' as const,
-          index,
-          label: `Recipe ${index + 1}`,
-          item,
-          itemId: selection.itemId,
-          itemName: item?.name,
-          level: selection.level,
-          rarity: resolveGridNodeRarity(activeSlot, 'recipe', item, selection.itemId),
-          tier: 0,
-          emptyLabel: `Recipe ${index + 1}`,
-          meta: 'Recipe slot',
-          interactionMode: isCategorySlot ? 'category' : defaultItem ? 'fixed' : 'free',
-          interactionLabel: isCategorySlot ? 'Choose material' : defaultItem ? 'Level only' : undefined,
-          categoryLabel: isCategorySlot ? defaultItem?.name : undefined,
-        };
-      }),
-    },
-    {
-      id: `${activeSlot}-inheritance`,
-      title: 'Inheritance',
-      gridClassName: 'grid-cols-3 justify-start',
-      nodes: padSelections(slot.inherits, slotConfig.inheritSlots).map((selection, index) => {
-        const item = getCrafterDisplayItem(selection.itemId, items);
-        return {
-          id: `${activeSlot}-inherit-${index}`,
-          slot: activeSlot,
-          type: 'inherit' as const,
-          index,
-          label: `Inheritance ${index + 1}`,
-          item,
-          itemId: selection.itemId,
-          itemName: item?.name,
-          level: selection.level,
-          rarity: resolveGridNodeRarity(activeSlot, 'inherit', item, selection.itemId),
-          tier: 0,
-          emptyLabel: `Inheritance ${index + 1}`,
-          meta: 'Inheritance slot',
-        };
-      }),
-    },
-    {
-      id: `${activeSlot}-upgrades`,
-      title: 'Upgrades',
-      gridClassName: 'grid-cols-3 justify-start',
-      nodes: padSelections(slot.upgrades, slotConfig.upgradeSlots).map((selection, index) => {
-        const item = getCrafterDisplayItem(selection.itemId, items);
-        return {
-          id: `${activeSlot}-upgrade-${index}`,
-          slot: activeSlot,
-          type: 'upgrade' as const,
-          index,
-          label: `Upgrade ${index + 1}`,
-          item,
-          itemId: selection.itemId,
-          itemName: item?.name,
-          level: selection.level,
-          rarity: resolveGridNodeRarity(activeSlot, 'upgrade', item, selection.itemId),
-          tier: 0,
-          emptyLabel: `Upgrade ${index + 1}`,
-          meta: 'Upgrade slot',
-        };
-      }),
-    },
-  ];
-
-  return sections;
-}
+// Extracted updateNodeInBuild and buildGridSectionsForSlot to separate modules.

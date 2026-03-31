@@ -168,12 +168,11 @@ function getSeasonSortValue(season: string | null | undefined) {
 }
 
 function applyCharactersSort(characters: Character[], sortValue: string | undefined) {
-  const sortedCharacters = [...characters];
   const resolvedSort = sortValue ?? 'name-asc';
 
   switch (resolvedSort) {
     case 'birthday-asc':
-      sortedCharacters.sort((left, right) => {
+      characters.sort((left, right) => {
         const seasonDelta =
           getSeasonSortValue(left.birthday?.season) - getSeasonSortValue(right.birthday?.season);
 
@@ -183,83 +182,79 @@ function applyCharactersSort(characters: Character[], sortValue: string | undefi
 
         return (left.birthday?.day || 99) - (right.birthday?.day || 99);
       });
-      return sortedCharacters;
+      return characters;
     case 'name-asc':
     default:
-      sortedCharacters.sort((left, right) => left.name.localeCompare(right.name));
-      return sortedCharacters;
+      characters.sort((left, right) => left.name.localeCompare(right.name));
+      return characters;
   }
 }
 
 function applyMonstersSort(groups: MonsterGroup[], sortValue: string | undefined) {
-  const sortedGroups = [...groups];
   const resolvedSort = sortValue ?? 'name-asc';
 
   switch (resolvedSort) {
     case 'level-desc':
-      sortedGroups.sort((left, right) => (right.representative.stats.baseLevel || 0) - (left.representative.stats.baseLevel || 0));
-      return sortedGroups;
+      groups.sort((left, right) => (right.representative.stats.baseLevel || 0) - (left.representative.stats.baseLevel || 0));
+      return groups;
     case 'name-asc':
     default:
-      sortedGroups.sort((left, right) => left.displayName.localeCompare(right.displayName));
-      return sortedGroups;
+      groups.sort((left, right) => left.displayName.localeCompare(right.displayName));
+      return groups;
   }
 }
 
 function applyFishingSort(fish: Fish[], sortValue: string | undefined) {
-  const sortedFish = [...fish];
   const resolvedSort = sortValue ?? 'name-asc';
 
   switch (resolvedSort) {
     case 'sell-desc':
-      sortedFish.sort((left, right) => (right.sell || 0) - (left.sell || 0));
-      return sortedFish;
+      fish.sort((left, right) => (right.sell || 0) - (left.sell || 0));
+      return fish;
     case 'locations-desc':
-      sortedFish.sort((left, right) => (right.locations?.length || 0) - (left.locations?.length || 0));
-      return sortedFish;
+      fish.sort((left, right) => (right.locations?.length || 0) - (left.locations?.length || 0));
+      return fish;
     case 'name-asc':
     default:
-      sortedFish.sort((left, right) => left.name.localeCompare(right.name));
-      return sortedFish;
+      fish.sort((left, right) => left.name.localeCompare(right.name));
+      return fish;
   }
 }
 
 function applyMapsSort(regions: MapRegionRecord[], sortValue: string | undefined) {
-  const sortedRegions = [...regions];
   const resolvedSort = sortValue ?? 'name-asc';
 
   switch (resolvedSort) {
     case 'chests-desc':
-      sortedRegions.sort((left, right) => right.chests.length - left.chests.length);
-      return sortedRegions;
+      regions.sort((left, right) => right.chests.length - left.chests.length);
+      return regions;
     case 'fishing-desc':
-      sortedRegions.sort((left, right) => right.fishingLocations.length - left.fishingLocations.length);
-      return sortedRegions;
+      regions.sort((left, right) => right.fishingLocations.length - left.fishingLocations.length);
+      return regions;
     case 'name-asc':
     default:
-      sortedRegions.sort((left, right) => left.name.localeCompare(right.name));
-      return sortedRegions;
+      regions.sort((left, right) => left.name.localeCompare(right.name));
+      return regions;
   }
 }
 
 function applyItemsSort(items: Item[], sortValue: string | undefined) {
-  const sortedItems = [...items];
   const resolvedSort = sortValue ?? 'name-asc';
 
   switch (resolvedSort) {
     case 'name-desc':
-      sortedItems.sort((left, right) => right.name.localeCompare(left.name));
-      return sortedItems;
+      items.sort((left, right) => right.name.localeCompare(left.name));
+      return items;
     case 'buy-desc':
-      sortedItems.sort((left, right) => (right.buy ?? 0) - (left.buy ?? 0));
-      return sortedItems;
+      items.sort((left, right) => (right.buy ?? 0) - (left.buy ?? 0));
+      return items;
     case 'sell-desc':
-      sortedItems.sort((left, right) => (right.sell ?? 0) - (left.sell ?? 0));
-      return sortedItems;
+      items.sort((left, right) => (right.sell ?? 0) - (left.sell ?? 0));
+      return items;
     case 'name-asc':
     default:
-      sortedItems.sort((left, right) => left.name.localeCompare(right.name));
-      return sortedItems;
+      items.sort((left, right) => left.name.localeCompare(right.name));
+      return items;
   }
 }
 
@@ -310,9 +305,9 @@ export function parseCrafterSearchParams(searchParams: SearchParamRecord): Craft
 export function buildItemsCatalogData(
   items: Record<string, Item>,
   search: ItemsSearchParams,
+  filterOptions = getItemsFilterOptionsForData(items),
 ): ItemsCatalogData {
   const sourceItems = Object.values(items);
-  const filterOptions = getItemsFilterOptionsForData(items);
   let results = [...sourceItems];
 
   if (search.q) {
@@ -366,9 +361,9 @@ export function buildItemsCatalogData(
 export function buildCharactersCatalogData(
   characters: Record<string, Character>,
   search: CharactersSearchParams,
+  filterOptions = getCharactersFilterOptionsForData(characters),
 ): CharactersCatalogData {
   const sourceCharacters = Object.values(characters);
-  const filterOptions = getCharactersFilterOptionsForData(characters);
   let results = [...sourceCharacters];
 
   if (search.q) {
@@ -406,9 +401,9 @@ export function buildCharactersCatalogData(
 export function buildMonstersCatalogData(
   monsters: Record<string, Monster>,
   search: MonstersSearchParams,
+  filterOptions = getMonstersFilterOptionsForData(monsters),
 ): MonstersCatalogData {
   const sourceGroups = getMonsterGroupsForData(monsters);
-  const filterOptions = getMonstersFilterOptionsForData(monsters);
   let results = [...sourceGroups];
 
   if (search.q) {
@@ -446,9 +441,9 @@ export function buildMonstersCatalogData(
 export function buildFishingCatalogData(
   fish: Fish[],
   search: FishingSearchParams,
+  filterOptions = getFishingFilterOptionsForData(fish),
 ): FishingCatalogData {
   const sourceFish = [...fish];
-  const filterOptions = getFishingFilterOptionsForData(fish);
   let results = [...sourceFish];
 
   if (search.q) {

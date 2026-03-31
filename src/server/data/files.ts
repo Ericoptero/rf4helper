@@ -1,5 +1,7 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
+
+const MAX_DATA_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
 
 export const DATA_FILE_NAMES = [
   'index.json',
@@ -30,14 +32,28 @@ export function isSupportedDataFile(fileName: string): fileName is DataFileName 
   return DATA_FILE_NAME_SET.has(fileName);
 }
 
-export function getDataFilePath(fileName: DataFileName) {
+function assertSupportedDataFile(fileName: string): asserts fileName is DataFileName {
+  if (!isSupportedDataFile(fileName)) {
+    throw new Error(`Unsupported data file: ${fileName}`);
+  }
+}
+
+export function getDataFilePath(fileName: string) {
+  assertSupportedDataFile(fileName);
   return path.resolve(getDataDirectoryPath(), fileName);
 }
 
-export async function readRawDataFile(fileName: DataFileName) {
+export async function readRawDataFile(fileName: string) {
   return readFile(getDataFilePath(fileName), 'utf8');
 }
 
-export async function readJsonDataFile(fileName: DataFileName) {
-  return JSON.parse(await readRawDataFile(fileName)) as unknown;
+export async function readJsonDataFile(fileName: string) {
+  const filePath = getDataFilePath(fileName);
+  const fileStats = await stat(filePath);
+
+  if (fileStats.size > MAX_DATA_FILE_BYTES) {
+    throw new Error(`Data file exceeds size limit: ${fileName}`);
+  }
+
+  return JSON.parse(await readFile(filePath, 'utf8')) as unknown;
 }

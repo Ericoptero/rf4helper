@@ -1,8 +1,7 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-import userEvent from '@testing-library/user-event';
 
 import type { MapRegionRecord } from '@/lib/mapFishingRelations';
 import type { Chest, Fish } from '@/lib/schemas';
@@ -83,7 +82,7 @@ describe('MapsList', () => {
   afterAll(() => server.close());
 
   it('renders immediately from server-provided regions without showing a loading fallback', () => {
-    render(<MapsList regions={mockRegions} serverDriven />);
+    render(<MapsList regions={mockRegions} />);
 
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     expect(screen.getByText('World Maps & Chests')).toBeInTheDocument();
@@ -98,33 +97,5 @@ describe('MapsList', () => {
     expect(screen.getByText('Obsidian Mansion')).toBeInTheDocument();
   });
 
-  it('supports controlled table sorting and filtering from region props', () => {
-    render(
-      <MapsList
-        regions={mockRegions}
-        viewMode="table"
-        sortValue="fishing-desc"
-        filterValues={{ hasFishing: 'yes' }}
-      />,
-    );
 
-    const rows = screen.getAllByRole('row');
-    expect(within(rows[1]!).getAllByRole('cell')[0]).toHaveTextContent('Selphia Plains');
-    expect(screen.queryByText('Obsidian Mansion')).not.toBeInTheDocument();
-  });
-
-  it('applies uncontrolled filters through the drawer controls', async () => {
-    const user = userEvent.setup();
-
-    render(<MapsList regions={mockRegions} />);
-
-    await user.click(screen.getByRole('button', { name: /more filters/i }));
-
-    const dialog = await screen.findByRole('dialog');
-    await user.click(within(dialog).getByRole('button', { name: /has fishing locations/i }));
-    await user.click(within(dialog).getByRole('button', { name: /apply filters/i }));
-
-    expect(screen.getByText('Selphia Plains')).toBeInTheDocument();
-    expect(screen.queryByText('Obsidian Mansion')).not.toBeInTheDocument();
-  });
 });

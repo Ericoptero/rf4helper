@@ -7,6 +7,7 @@ import { setupServer } from 'msw/node';
 import { resolveItemImage } from '@/lib/itemImages';
 import { buildMonsterGroups } from '@/lib/monsterGroups';
 import { buildMapRegions } from '@/lib/mapFishingRelations';
+import type { Item } from '@/lib/schemas';
 
 async function fetchMockedJson<T>(pathname: string): Promise<T> {
   const response = await fetch(`http://localhost:3000${pathname}`);
@@ -25,7 +26,7 @@ async function fetchMockedJsonOrDefault<T>(pathname: string, fallback: T): Promi
   }
 }
 
-function enrichItemsWithImages<T extends Record<string, { name?: string; image?: string }>>(items: T) {
+function enrichItemsWithImages<T extends Record<string, { name?: string; image?: string }>>(items: T): T {
   return Object.fromEntries(
     Object.entries(items).map(([key, item]) => [
       key,
@@ -34,7 +35,7 @@ function enrichItemsWithImages<T extends Record<string, { name?: string; image?:
         image: resolveItemImage(item.name, item.image),
       },
     ]),
-  );
+  ) as T;
 }
 
 // Setup MSW (handlers can still be extended per-test)
@@ -104,13 +105,31 @@ export const server = setupServer(
   }),
   http.get('http://localhost:3000/api/crafter/bootstrap', async () => {
     const [items, crafterData] = await Promise.all([
-      fetchMockedJsonOrDefault<Record<string, { name?: string; image?: string }>>('/data/items.json', {}),
+      fetchMockedJsonOrDefault<Record<string, Partial<Item>>>('/data/items.json', {}),
       fetchMockedJsonOrDefault<Record<string, unknown>>('/data/crafter.json', {}),
     ]);
 
     return HttpResponse.json({
-      items: enrichItemsWithImages(items),
+      items: Object.fromEntries(
+        Object.entries(enrichItemsWithImages(items)).map(([itemId, item]) => [
+          itemId,
+          {
+            id: item.id,
+            name: item.name,
+            image: item.image,
+            type: item.type,
+            category: item.category,
+            stats: item.stats,
+            craft: item.craft,
+            crafter: item.crafter,
+          },
+        ]),
+      ),
       crafterData,
+    }, {
+      headers: {
+        'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+      },
     });
   }),
 );

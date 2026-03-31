@@ -1,22 +1,46 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
+const DISABLE_MOTION_STYLES = `
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    caret-color: transparent !important;
+  }
+`;
+
+async function applyStableMotionStyles(page: Page) {
+  const nonce = await page.evaluate(() => {
+    const element = document.querySelector<HTMLElement>('script[nonce], style[nonce]');
+    return element?.nonce || element?.getAttribute('nonce') || null;
+  });
+
+  await page.evaluate(
+    ([content, nextNonce]) => {
+      if (document.getElementById('playwright-disable-motion')) {
+        return;
+      }
+
+      const style = document.createElement('style');
+      style.id = 'playwright-disable-motion';
+      if (nextNonce) {
+        style.setAttribute('nonce', nextNonce);
+      }
+      style.textContent = content;
+      document.head.appendChild(style);
+    },
+    [DISABLE_MOTION_STYLES, nonce] as const,
+  );
+}
+
 async function preparePage(page: Page, theme: 'light' | 'dark' = 'light') {
   await page.addInitScript((selectedTheme) => {
     window.localStorage.setItem('rf4-theme', selectedTheme);
   }, theme);
 
   await page.goto('/');
-  await page.addStyleTag({
-    content: `
-      *,
-      *::before,
-      *::after {
-        animation: none !important;
-        transition: none !important;
-        caret-color: transparent !important;
-      }
-    `,
-  });
+  await applyStableMotionStyles(page);
 }
 
 async function waitForLoadedImages(locator: Locator, minimumLoadedImages: number) {

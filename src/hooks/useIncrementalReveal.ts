@@ -19,8 +19,16 @@ export function useIncrementalReveal<TElement extends Element = HTMLDivElement>(
 }: UseIncrementalRevealOptions) {
   const [sentinelElement, setSentinelElement] = React.useState<TElement | null>(null);
   const [visibleCount, setVisibleCount] = React.useState(() => Math.min(itemCount, batchSize));
-  const resetSignature = React.useMemo(() => JSON.stringify(resetKeys), [resetKeys]);
   const batchSizeRef = React.useRef(batchSize);
+  const previousResetKeysRef = React.useRef(resetKeys);
+
+  function areResetKeysEqual(left: readonly unknown[], right: readonly unknown[]) {
+    if (left.length !== right.length) {
+      return false;
+    }
+
+    return left.every((value, index) => Object.is(value, right[index]));
+  }
 
   React.useEffect(() => {
     batchSizeRef.current = batchSize;
@@ -31,8 +39,13 @@ export function useIncrementalReveal<TElement extends Element = HTMLDivElement>(
   }, []);
 
   React.useEffect(() => {
+    if (areResetKeysEqual(previousResetKeysRef.current, resetKeys)) {
+      return;
+    }
+
+    previousResetKeysRef.current = resetKeys;
     setVisibleCount(Math.min(itemCount, batchSizeRef.current));
-  }, [itemCount, resetSignature]);
+  }, [itemCount, resetKeys]);
 
   const loadMore = React.useCallback(() => {
     setVisibleCount((current) => {

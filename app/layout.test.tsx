@@ -1,18 +1,23 @@
-import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it } from 'vitest';
+import { render } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 import RootLayout from './layout';
 
-describe('RootLayout', () => {
-  it('injects the theme bootstrap script before the app content', () => {
-    const markup = renderToStaticMarkup(
-      <RootLayout>
-        <main id="app-content">Rune Factory 4 Helper</main>
-      </RootLayout>,
-    );
+vi.mock('next/headers', () => ({
+  headers: vi.fn(async () => new Headers([['x-nonce', 'test-nonce']])),
+}));
 
-    expect(markup).toContain('id="theme-bootstrap"');
-    expect(markup).toContain('src="/theme-bootstrap.js"');
-    expect(markup.indexOf('id="theme-bootstrap"')).toBeLessThan(markup.indexOf('id="app-content"'));
+describe('RootLayout', () => {
+  it('applies the request nonce to the theme bootstrap script', async () => {
+    const ui = await RootLayout({
+      children: <div>Children</div>,
+    });
+
+    render(ui);
+
+    const script = document.querySelector('script#theme-bootstrap');
+
+    expect(script).toHaveAttribute('nonce', 'test-nonce');
+    expect(script?.textContent).toContain("localStorage.getItem('rf4-theme')");
   });
 });

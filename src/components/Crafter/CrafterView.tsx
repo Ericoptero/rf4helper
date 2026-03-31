@@ -12,28 +12,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   calculateCrafterBuild,
-  CRAFTER_RARITY_PLACEHOLDER_ID,
   createDefaultCrafterBuild,
   deserializeCrafterBuild,
-  normalizeCrafterBuild,
   serializeCrafterBuild,
   type CrafterBuildState,
 } from '@/lib/crafter';
+import { buildCrafterOptionLists } from '@/lib/crafterOptions';
+import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafterRarity';
 import { getSlotConfigByKey } from '@/lib/crafterRecipeSelections';
 import type { CrafterData, Item } from '@/lib/schemas';
 import { cn } from '@/lib/utils';
 import { resolveCrafterItemImage } from './crafterFormatters';
-import {
-  buildGridSectionsForSlot,
-  getCrafterDisplayItem,
-  getEditableSelection,
-  getNodePreviewData,
-  getNodeTitle,
-  getSelectedNodeOptions,
-  isEquipmentTab,
-  resolveNodeBehavior,
-  updateNodeInBuild,
-} from './crafterNodeBehavior';
+import { getEditableSelection, getNodePreviewData, getNodeTitle, getSelectedNodeOptions, isEquipmentTab, resolveNodeBehavior } from './crafterNodeBehavior';
+import { updateNodeInBuild } from './crafterBuildMutations';
+import { buildGridSectionsForSlot } from './crafterGridBuilder';
+import { useCrafterTabSummary } from './useCrafterTabSummary';
 import type { CrafterEditorSlot, CrafterSelectedNode, CrafterTab } from './crafterTypes';
 
 type CrafterViewProps = {
@@ -102,13 +95,21 @@ export function CrafterView({
   serializedBuild,
   onSerializedBuildChange,
 }: CrafterViewProps) {
+  const previousCalculationRef = React.useRef<ReturnType<typeof calculateCrafterBuild> | undefined>(undefined);
   const build = React.useMemo(
     () => deserializeCrafterBuild(serializedBuild, crafterData),
     [crafterData, serializedBuild],
   );
   const calculation = React.useMemo(
-    () => calculateCrafterBuild(build, items, crafterData),
+    () => calculateCrafterBuild(build, items, crafterData, previousCalculationRef.current),
     [build, crafterData, items],
+  );
+  React.useEffect(() => {
+    previousCalculationRef.current = calculation;
+  }, [calculation]);
+  const optionLists = React.useMemo(
+    () => buildCrafterOptionLists(items, crafterData),
+    [crafterData, items],
   );
   const slotConfigByKey = React.useMemo(() => getSlotConfigByKey(crafterData), [crafterData]);
   const [activeTab, setActiveTab] = React.useState<CrafterTab>('dashboard');
@@ -119,51 +120,8 @@ export function CrafterView({
   }, [activeTab]);
 
   const updateBuild = (next: CrafterBuildState) => {
-    const normalized = normalizeCrafterBuild(next, items, crafterData);
-    const serializedBuildState: CrafterBuildState = {
-      ...normalized,
-      food: {
-        ...normalized.food,
-        recipe: next.food.recipe,
-      },
-      weapon: {
-        ...normalized.weapon,
-        recipe: next.weapon.recipe,
-        inherits: next.weapon.inherits,
-        upgrades: next.weapon.upgrades,
-      },
-      armor: {
-        ...normalized.armor,
-        recipe: next.armor.recipe,
-        inherits: next.armor.inherits,
-        upgrades: next.armor.upgrades,
-      },
-      headgear: {
-        ...normalized.headgear,
-        recipe: next.headgear.recipe,
-        inherits: next.headgear.inherits,
-        upgrades: next.headgear.upgrades,
-      },
-      shield: {
-        ...normalized.shield,
-        recipe: next.shield.recipe,
-        inherits: next.shield.inherits,
-        upgrades: next.shield.upgrades,
-      },
-      accessory: {
-        ...normalized.accessory,
-        recipe: next.accessory.recipe,
-        inherits: next.accessory.inherits,
-        upgrades: next.accessory.upgrades,
-      },
-      shoes: {
-        ...normalized.shoes,
-        recipe: next.shoes.recipe,
-        inherits: next.shoes.inherits,
-        upgrades: next.shoes.upgrades,
-      },
-    };
-    onSerializedBuildChange(serializeCrafterBuild(serializedBuildState, crafterData));
+    // Rely exclusively on shallow clone mutators instead of massive clone overlays. 
+    onSerializedBuildChange(serializeCrafterBuild(next, crafterData));
   };
 
   const resetBuild = () => {
@@ -177,114 +135,54 @@ export function CrafterView({
       ? activeTab
       : null;
 
-  const gridSections = activeEditorSlot
-    ? buildGridSectionsForSlot({
-        activeSlot: activeEditorSlot,
-        build,
-        items,
-        crafterData,
-        slotConfigByKey,
-        calculation,
-      })
-    : [];
+  const gridSections = React.useMemo(
+    () =>
+      activeEditorSlot
+        ? buildGridSectionsForSlot({
+            activeSlot: activeEditorSlot,
+            build,
+            items,
+            crafterData,
+            slotConfigByKey,
+            calculation,
+          })
+        : [],
+    [activeEditorSlot, build, calculation, crafterData, items, slotConfigByKey],
+  );
   const gridNodes = gridSections.flatMap((section) => section.nodes);
   const selectedGridNode = selectedNode
     ? gridNodes.find((node) => node.slot === selectedNode.slot && node.type === selectedNode.type && node.index === selectedNode.index)
     : undefined;
   const selectedNodeBehavior = selectedNode
-    ? resolveNodeBehavior(selectedNode, build, slotConfigByKey, items, crafterData)
+    ? resolveNodeBehavior(selectedNode, build, slotConfigByKey, items, crafterData, optionLists)
     : undefined;
-  const editorOptions = selectedNode ? getSelectedNodeOptions(selectedNode, build, crafterData, slotConfigByKey, items) : [];
+  const editorOptions = selectedNode
+    ? getSelectedNodeOptions(selectedNode, build, crafterData, slotConfigByKey, items, optionLists)
+    : [];
   const selectedEditableValue = selectedNode ? getEditableSelection(build, selectedNode, crafterData) : undefined;
   const canEditLevel = selectedNodeBehavior?.canEditLevel ?? false;
 
-  const summaryStats = activeTab === 'dashboard'
-    ? calculation.totalStats
-    : activeTab === 'cooking'
-      ? calculation.foodSummary.stats.additive
-      : isEquipmentTab(activeTab)
-        ? calculation.slotResults[activeTab].stats
-        : {};
-  const summaryStatMultipliers = activeTab === 'cooking'
-    ? calculation.foodSummary.stats.multipliers
-    : undefined;
-  const summaryHealing = activeTab === 'cooking'
-    ? calculation.foodSummary.healing
-    : undefined;
-  const summaryStatusAttacks = activeTab === 'dashboard'
-    ? calculation.statusAttacks
-    : activeTab === 'cooking'
-      ? calculation.foodSummary.statusAttacks
-      : isEquipmentTab(activeTab)
-        ? calculation.slotResults[activeTab].statusAttacks
-        : {};
-  const summaryGeometry = activeTab === 'dashboard'
-    ? calculation.geometry
-    : isEquipmentTab(activeTab)
-      ? calculation.slotResults[activeTab].geometry
-      : {};
-  const summaryResistances = activeTab === 'dashboard'
-    ? calculation.resistances
-    : activeTab === 'cooking'
-      ? calculation.foodSummary.resistances
-      : isEquipmentTab(activeTab)
-        ? calculation.slotResults[activeTab].resistances
-        : {};
-  const summaryEffects = activeTab === 'dashboard'
-    ? calculation.allEffects
-    : activeTab === 'cooking'
-      ? []
-      : isEquipmentTab(activeTab)
-        ? calculation.slotResults[activeTab].effects
-        : [];
-  const activeBonusSummaries =
-    isEquipmentTab(activeTab)
-      ? {
-          level: calculation.slotResults[activeTab].levelBonusSummary,
-          rarity: calculation.slotResults[activeTab].rarityBonusSummary,
-        }
-      : undefined;
-
-  const activeBaseNode = activeEditorSlot && activeEditorSlot !== 'food'
-    ? gridSections.find((section) => section.id === `${activeEditorSlot}-base`)?.nodes[0]
-    : undefined;
-  const activeRecipeNodes = activeEditorSlot
-    ? gridSections.find((section) => section.id === `${activeEditorSlot}-recipe`)?.nodes ?? []
-    : [];
-  const activeInheritNodes = activeEditorSlot && activeEditorSlot !== 'food'
-    ? gridSections.find((section) => section.id === `${activeEditorSlot}-inheritance`)?.nodes ?? []
-    : [];
-  const activeUpgradeNodes = activeEditorSlot && activeEditorSlot !== 'food'
-    ? gridSections.find((section) => section.id === `${activeEditorSlot}-upgrades`)?.nodes ?? []
-    : [];
-  const activeSlotResult = activeEditorSlot && activeEditorSlot !== 'food'
-    ? calculation.slotResults[activeEditorSlot]
-    : undefined;
-  const activePreviewItem = (() => {
-    if (activeEditorSlot === 'food') {
-      return getCrafterDisplayItem(build.food.baseId, items);
-    }
-    if (activeEditorSlot) {
-      return getCrafterDisplayItem(build[activeEditorSlot].appearanceId, items);
-    }
-    return undefined;
-  })();
-  const activeRecipeSummary = (() => {
-    if (!activeEditorSlot) return [];
-    const explicitSelections = activeEditorSlot === 'food' ? build.food.recipe : build[activeEditorSlot].recipe;
-
-    return explicitSelections
-      .filter((selection) => Boolean(selection.itemId))
-      .map((selection) => getCrafterDisplayItem(selection.itemId, items)?.name ?? selection.itemId!);
-  })();
-  const activeInheritSummary = activeInheritNodes.filter((node) => node.itemName).map((node) => node.itemName!);
-  const activeUpgradeSummary = activeUpgradeNodes.filter((node) => node.itemName).map((node) => node.itemName!);
-  const cookingBaseNode = activeEditorSlot === 'food'
-    ? gridSections.find((section) => section.id === 'food-base')?.nodes[0]
-    : undefined;
-  const activePrimaryPreviewName = activePreviewItem?.name
-    ?? activeSlotResult?.appearanceName
-    ?? (activeEditorSlot === 'food' ? 'No dish selected' : 'No item selected');
+  const {
+    summaryStats,
+    summaryStatMultipliers,
+    summaryHealing,
+    summaryStatusAttacks,
+    summaryGeometry,
+    summaryResistances,
+    summaryEffects,
+    activeBonusSummaries,
+    activeBaseNode,
+    activeRecipeNodes,
+    activeInheritNodes,
+    activeUpgradeNodes,
+    activeSlotResult,
+    activePreviewItem,
+    activeRecipeSummary,
+    activeInheritSummary,
+    activeUpgradeSummary,
+    cookingBaseNode,
+    activePrimaryPreviewName,
+  } = useCrafterTabSummary({ activeTab, activeEditorSlot, calculation, build, items, gridSections });
 
   return (
     <div className="flex flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
@@ -582,6 +480,7 @@ export function CrafterView({
               crafterData,
               slotConfigByKey,
               items,
+              optionLists,
             ),
           );
           setSelectedNode(null);
@@ -596,6 +495,7 @@ export function CrafterView({
               crafterData,
               slotConfigByKey,
               items,
+              optionLists,
             ),
           );
           setSelectedNode(null);

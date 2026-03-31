@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   CatalogPageLayout,
-  type CatalogFilterDefinition,
+  type ServerCatalogFilterDefinition,
   type CatalogFilterValue,
   type CatalogTableColumn,
 } from '@/components/CatalogPageLayout';
@@ -62,10 +62,9 @@ function FishCard({ fish, onClick }: { fish: Fish; onClick: () => void }) {
 }
 
 function FishingCatalog({
-  fishData,
+  fish,
   totalCount,
   filterOptions,
-  serverDriven = false,
   searchTerm,
   onSearchTermChange,
   viewMode,
@@ -75,14 +74,13 @@ function FishingCatalog({
   filterValues,
   onFilterValuesChange,
 }: {
-  fishData: Fish[];
+  fish: Fish[];
   totalCount?: number;
   filterOptions?: {
     shadow: CatalogOption[];
     region: CatalogOption[];
     season: CatalogOption[];
   };
-  serverDriven?: boolean;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
   viewMode?: 'cards' | 'table';
@@ -94,70 +92,59 @@ function FishingCatalog({
 }) {
   const { openRoot } = useDetailDrawer();
 
-  const shadowOptions = Array.from(new Set(fishData.map((fish) => fish.shadow).filter(Boolean) as string[])).sort();
-  const regionOptions = Array.from(new Set(fishData.flatMap((fish) => (fish.locations ?? []).map((location) => location.region)))).sort();
+  const shadowOptions = Array.from(new Set(fish.map((f) => f.shadow).filter(Boolean) as string[])).sort();
+  const regionOptions = Array.from(new Set(fish.flatMap((f) => (f.locations ?? []).map((location) => location.region)))).sort();
   const seasonOptions = Array.from(
-    new Set(fishData.flatMap((fish) => (fish.locations ?? []).flatMap((location) => location.seasons ?? []))),
+    new Set(fish.flatMap((f) => (f.locations ?? []).flatMap((location) => location.seasons ?? []))),
   ).sort((a, b) => SEASON_ORDER.indexOf(a) - SEASON_ORDER.indexOf(b));
 
-  const filters: CatalogFilterDefinition<Fish>[] = [
+  const filters: ServerCatalogFilterDefinition[] = [
     {
       key: 'shadow',
       label: 'Shadow',
       placement: 'primary',
       options: filterOptions?.shadow ?? shadowOptions.map((shadow) => ({ label: `${shadow} Shadow`, value: shadow })),
-      predicate: (fish, value) => fish.shadow === value,
     },
     {
       key: 'region',
       label: 'Region',
       placement: 'advanced',
       options: filterOptions?.region ?? regionOptions.map((region) => ({ label: region, value: region })),
-      predicate: (fish, value) => (fish.locations ?? []).some((location) => location.region === value),
     },
     {
       key: 'season',
       label: 'Season',
       placement: 'advanced',
       options: filterOptions?.season ?? seasonOptions.map((season) => ({ label: season, value: season })),
-      predicate: (fish, value) => (fish.locations ?? []).some((location) => location.seasons?.includes(value)),
     },
     {
       key: 'hasMap',
-      label: 'Mapped Spot',
+      label: 'Map Detail',
+      placement: 'advanced',
       control: 'boolean-toggle',
       options: [{ label: 'Has map reference', value: 'yes' }],
-      predicate: (fish, value) => value !== 'yes' || (fish.locations ?? []).some((location) => Boolean(location.map)),
     },
   ];
 
-  const sortOptions = [
-    { label: 'Name (A-Z)', value: 'name-asc', sortFn: (a: Fish, b: Fish) => a.name.localeCompare(b.name) },
-    { label: 'Sell Price (High-Low)', value: 'sell-desc', sortFn: (a: Fish, b: Fish) => (b.sell || 0) - (a.sell || 0) },
-    { label: 'Locations (High-Low)', value: 'locations-desc', sortFn: (a: Fish, b: Fish) => (b.locations?.length || 0) - (a.locations?.length || 0) },
+  const serverSortOptions = [
+    { label: 'Name (A-Z)', value: 'name-asc' },
+    { label: 'Sell Price (High-Low)', value: 'sell-desc' },
+    { label: 'Locations (High-Low)', value: 'locations-desc' },
   ];
-  const serverFilters = filters.map((filter) => ({
-    key: filter.key,
-    label: filter.label,
-    placement: filter.placement,
-    control: filter.control,
-    options: filter.options,
-  }));
-  const serverSortOptions = sortOptions.map((option) => ({ label: option.label, value: option.value }));
 
   const tableColumns: CatalogTableColumn<Fish>[] = [
-    { key: 'name', header: 'Name', cell: (fish) => fish.name },
-    { key: 'shadow', header: 'Shadow', cell: (fish) => fish.shadow ?? '—' },
-    { key: 'buy', header: 'Buy', cell: (fish) => fish.buy ?? '-' },
-    { key: 'sell', header: 'Sell', cell: (fish) => fish.sell ?? '-' },
-    { key: 'regions', header: 'Region Count', cell: (fish) => new Set((fish.locations ?? []).map((location) => location.region)).size },
-    { key: 'season', header: 'Season Coverage', cell: (fish) => getFishSeasonCoverage(fish).join(', ') || '—' },
+    { key: 'name', header: 'Name', cell: (f) => f.name },
+    { key: 'shadow', header: 'Shadow', cell: (f) => f.shadow ?? '—' },
+    { key: 'buy', header: 'Buy', cell: (f) => f.buy ?? '-' },
+    { key: 'sell', header: 'Sell', cell: (f) => f.sell ?? '-' },
+    { key: 'regions', header: 'Region Count', cell: (f) => new Set((f.locations ?? []).map((location) => location.region)).size },
+    { key: 'season', header: 'Season Coverage', cell: (f) => getFishSeasonCoverage(f).join(', ') || '—' },
   ];
 
   return (
     <>
       <CatalogPageLayout<Fish>
-        data={fishData}
+        data={fish}
         totalCount={totalCount}
         title="Fishing Guide"
         searchTerm={searchTerm}
@@ -169,21 +156,11 @@ function FishingCatalog({
         filterValues={filterValues}
         onFilterValuesChange={onFilterValuesChange}
         tableColumns={tableColumns}
-        getItemKey={(fish) => fish.id}
-        renderCard={(fish, onClick) => <FishCard fish={fish} onClick={onClick} />}
-        onOpenItem={(fish) => openRoot({ type: 'fish', id: fish.id })}
-        {...(serverDriven
-          ? {
-              mode: 'server' as const,
-              sortOptions: serverSortOptions,
-              filters: serverFilters,
-            }
-          : {
-              mode: 'client' as const,
-              searchKey: 'name' as const,
-              sortOptions,
-              filters,
-            })}
+        getItemKey={(f) => f.id}
+        renderCard={(f, onClick) => <FishCard fish={f} onClick={onClick} />}
+        onOpenItem={(f) => openRoot({ type: 'fish', id: f.id })}
+        sortOptions={serverSortOptions}
+        filters={filters}
       />
       <UniversalDetailsDrawer />
     </>
@@ -194,7 +171,6 @@ export function FishingList({
   fish,
   totalCount,
   filterOptions,
-  serverDriven = false,
   detailReference,
   onDetailReferenceChange,
   searchTerm,
@@ -213,7 +189,6 @@ export function FishingList({
     region: CatalogOption[];
     season: CatalogOption[];
   };
-  serverDriven?: boolean;
   detailReference?: DetailEntityReference | null;
   onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
@@ -237,10 +212,9 @@ export function FishingList({
       onDetailReferenceChange={onDetailReferenceChange ?? setInternalDetailReference}
     >
       <FishingCatalog
-        fishData={fish}
+        fish={fish}
         totalCount={totalCount}
         filterOptions={filterOptions}
-        serverDriven={serverDriven}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
         viewMode={viewMode ?? internalViewMode}

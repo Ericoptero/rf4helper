@@ -152,11 +152,35 @@ function effectsFromFoodStatus(status: CrafterFoodPayload['status']) {
 function dedupeEffects(effects: DisplayEffect[]) {
   const seen = new Set<string>();
   return effects.filter((effect) => {
-    const key = JSON.stringify(effect);
+    const key = effect.type === 'label'
+      ? `label:${effect.label}`
+      : effect.type === 'cure'
+        ? `cure:${effect.targets.join('|')}`
+        : effect.type === 'resistance'
+          ? `resistance:${effect.target}:${effect.value}`
+          : `inflict:${effect.target}:${effect.trigger}:${effect.chance ?? ''}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
+}
+
+function hasNonZeroValues(value: Record<string, number | undefined> | undefined) {
+  if (!value) {
+    return false;
+  }
+
+  for (const entry of Object.values(value)) {
+    if (entry != null && entry !== 0) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function hasFoodStatusEffect(status: CrafterFoodPayload['status']) {
+  return FOOD_CURE_FLAGS.some(([key]) => Number(status?.[key] ?? 0) !== 0);
 }
 
 function getRoleFromCraft(item: Item): DisplayRole | undefined {
@@ -309,7 +333,43 @@ export function getDisplayEffects(item: Item): DisplayEffect[] {
 }
 
 export function hasDisplayEffects(item: Item) {
-  return getDisplayEffects(item).length > 0;
+  const role = getDisplayRole(item);
+
+  if (role === 'weapon' && item.crafter?.equipment?.weapon) {
+    return hasNonZeroValues(item.crafter.equipment.weapon.resistances)
+      || hasNonZeroValues(item.crafter.equipment.weapon.statusAttacks)
+      || Boolean(item.crafter.specialMaterialRule)
+      || Boolean(item.crafter.bonusEffect)
+      || Boolean(item.effects?.length);
+  }
+
+  if (role === 'armor' && item.crafter?.equipment?.armor) {
+    return hasNonZeroValues(item.crafter.equipment.armor.resistances)
+      || hasNonZeroValues(item.crafter.equipment.armor.statusAttacks)
+      || Boolean(item.crafter.specialMaterialRule)
+      || Boolean(item.crafter.bonusEffect)
+      || Boolean(item.effects?.length);
+  }
+
+  if (role === 'food' && item.crafter?.foodBase) {
+    return hasNonZeroValues(item.crafter.foodBase.resistances)
+      || hasNonZeroValues(item.crafter.foodBase.statusAttacks)
+      || hasNonZeroValues(item.crafter.material?.food?.resistances)
+      || hasNonZeroValues(item.crafter.material?.food?.statusAttacks)
+      || hasFoodStatusEffect(item.crafter.material?.food?.status)
+      || Boolean(item.crafter.specialMaterialRule)
+      || Boolean(item.crafter.bonusEffect)
+      || Boolean(item.effects?.length);
+  }
+
+  return hasNonZeroValues(item.crafter?.material?.food?.resistances)
+    || hasNonZeroValues(item.crafter?.material?.food?.statusAttacks)
+    || hasFoodStatusEffect(item.crafter?.material?.food?.status)
+    || hasNonZeroValues(mergeEquipmentResistances(item))
+    || hasNonZeroValues(mergeEquipmentStatusAttacks(item))
+    || Boolean(item.crafter?.specialMaterialRule)
+    || Boolean(item.crafter?.bonusEffect)
+    || Boolean(item.effects?.length);
 }
 
 export function getDisplayRarity(item: Item) {

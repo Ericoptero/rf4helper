@@ -14,7 +14,7 @@ import { type CrafterItemPreviewData } from '@/components/Crafter/CrafterSelecto
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafter';
+import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafterRarity';
 import { cn } from '@/lib/utils';
 import type { CrafterGridNode } from './crafterTypes';
 import { getItemTypeIcon, resolveCrafterItemImage } from './crafterFormatters';
