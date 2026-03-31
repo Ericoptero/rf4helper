@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { CrafterBuild, CrafterCalculation } from '@/lib/crafter';
-import type { Item } from '@/lib/schemas';
+import type { CrafterBootstrapItem } from '@/lib/crafterCommon';
 import { getCrafterDisplayItem, isEquipmentTab } from './crafterNodeBehavior';
 import type { CrafterEditorSlot, CrafterGridSection, CrafterTab } from './crafterTypes';
 
@@ -16,7 +16,7 @@ export function useCrafterTabSummary({
   activeEditorSlot: CrafterEditorSlot | null;
   calculation: CrafterCalculation;
   build: CrafterBuild;
-  items: Record<string, Item>;
+  items: Record<string, CrafterBootstrapItem>;
   gridSections: CrafterGridSection[];
 }) {
   return React.useMemo(() => {

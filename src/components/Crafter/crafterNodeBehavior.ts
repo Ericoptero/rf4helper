@@ -15,6 +15,7 @@ import {
 import { itemMatchesCrafterSlot } from '@/lib/crafterData';
 import type { CrafterOptionLists } from '@/lib/crafterOptions';
 import { getDisplayEffects, getDisplayStats } from '@/lib/itemPresentation';
+import type { CrafterBootstrapItem } from '@/lib/crafterCommon';
 import type { CrafterData, CrafterMaterialSelection, CrafterSlotConfig, CrafterSlotKey, Item } from '@/lib/schemas';
 import type { CrafterItemPreviewData } from './CrafterSelectorDialog';
 import {
@@ -49,7 +50,7 @@ type EditableSelection = {
   level: number;
 };
 
-const CRAFTER_RARITY_PLACEHOLDER_ITEM: Item = {
+const CRAFTER_RARITY_PLACEHOLDER_ITEM: CrafterBootstrapItem = {
   id: CRAFTER_RARITY_PLACEHOLDER_ID,
   name: CRAFTER_RARITY_PLACEHOLDER_NAME,
   type: 'Special',
@@ -88,19 +89,19 @@ export function getEquipmentRecipeSourceItemId(
 
 function resolveOptionItems(
   itemIds: string[],
-  items: Record<string, Item>,
+  items: Record<string, CrafterBootstrapItem>,
   includeRarityPlaceholder = false,
 ) {
   const resolvedItems = itemIds
     .map((itemId) => items[itemId])
-    .filter((item): item is Item => Boolean(item));
+    .filter((item): item is CrafterBootstrapItem => Boolean(item));
 
   return includeRarityPlaceholder
     ? [CRAFTER_RARITY_PLACEHOLDER_ITEM, ...resolvedItems]
     : resolvedItems;
 }
 
-export function getCrafterDisplayItem(itemId: string | undefined, items: Record<string, Item>) {
+export function getCrafterDisplayItem(itemId: string | undefined, items: Record<string, CrafterBootstrapItem>) {
   if (!itemId) return undefined;
   if (itemId === CRAFTER_RARITY_PLACEHOLDER_ID) return CRAFTER_RARITY_PLACEHOLDER_ITEM;
   return items[itemId];
@@ -108,7 +109,7 @@ export function getCrafterDisplayItem(itemId: string | undefined, items: Record<
 
 export function matchesSlotCraftCandidate(
   itemId: string | undefined,
-  items: Record<string, Item>,
+  items: Record<string, CrafterBootstrapItem>,
   slotConfig: CrafterSlotConfig,
 ) {
   if (!itemId || itemId === CRAFTER_RARITY_PLACEHOLDER_ID) return false;
@@ -127,7 +128,7 @@ function normalizeLegacyPreviewStats(stats: Item['stats'] | undefined) {
 
 function resolvePreviewStats(
   payloadStats: Partial<NonNullable<Item['stats']>> | undefined,
-  item: Item | undefined,
+  item: CrafterBootstrapItem | undefined,
 ) {
   if (payloadStats && Object.keys(payloadStats).length > 0) {
     return payloadStats;
@@ -138,7 +139,7 @@ function resolvePreviewStats(
     return legacyStats;
   }
 
-  return normalizeLegacyPreviewStats(item ? getDisplayStats(item) : undefined);
+  return normalizeLegacyPreviewStats(item ? getDisplayStats(item as Item) : undefined);
 }
 
 function getEquipmentPayloadForSlot(slotKey: CrafterSlotKey, itemId: string | undefined, crafterData: CrafterData) {
@@ -169,7 +170,7 @@ function getNodePayload(
 
 export function getNodeEffectiveRarity(
   node: CrafterSelectedNode | CrafterGridNode | undefined,
-  item: Item | undefined,
+  item: CrafterBootstrapItem | undefined,
   itemId: string | undefined,
   crafterData: CrafterData,
 ) {
@@ -204,7 +205,7 @@ export function getNodeEffectiveRarity(
 
 export function getNodePreviewData(
   node: CrafterSelectedNode | CrafterGridNode | undefined,
-  item: Item | undefined,
+  item: CrafterBootstrapItem | undefined,
   itemId: string | undefined,
   crafterData: CrafterData,
 ): CrafterItemPreviewData {
@@ -248,7 +249,7 @@ export function getNodePreviewData(
     buildResistanceGroup('Reaction Res', REACTION_RESISTANCE_ORDER),
     buildResistanceGroup('Status Res', STATUS_RESISTANCE_ORDER),
   ].filter((group) => group.values.length > 0);
-  const effects = item ? getDisplayEffects(item).map(formatItemEffect) : [];
+  const effects = item ? getDisplayEffects(item as Item).map(formatItemEffect) : [];
   const placeholderStats = itemId === CRAFTER_RARITY_PLACEHOLDER_ID ? [`Rarity +${CRAFTER_RARITY_PLACEHOLDER_VALUE}`] : [];
 
   return {
@@ -356,7 +357,7 @@ export function resolveNodeBehavior(
   node: CrafterSelectedNode | CrafterGridNode,
   build: CrafterBuild,
   slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>,
-  items: Record<string, Item>,
+  items: Record<string, CrafterBootstrapItem>,
   crafterData: CrafterData,
   optionLists: CrafterOptionLists,
 ): CrafterNodeBehavior {
@@ -501,7 +502,7 @@ export function getSelectedNodeOptions(
   build: CrafterBuild,
   crafterData: CrafterData,
   slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>,
-  items: Record<string, Item>,
+  items: Record<string, CrafterBootstrapItem>,
   optionLists: CrafterOptionLists,
 ) {
   return resolveNodeBehavior(node, build, slotConfigByKey, items, crafterData, optionLists).options;

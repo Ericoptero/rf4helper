@@ -172,7 +172,7 @@ function applyCharactersSort(characters: Character[], sortValue: string | undefi
 
   switch (resolvedSort) {
     case 'birthday-asc':
-      characters.sort((left, right) => {
+      return characters.toSorted((left, right) => {
         const seasonDelta =
           getSeasonSortValue(left.birthday?.season) - getSeasonSortValue(right.birthday?.season);
 
@@ -182,11 +182,9 @@ function applyCharactersSort(characters: Character[], sortValue: string | undefi
 
         return (left.birthday?.day || 99) - (right.birthday?.day || 99);
       });
-      return characters;
     case 'name-asc':
     default:
-      characters.sort((left, right) => left.name.localeCompare(right.name));
-      return characters;
+      return characters.toSorted((left, right) => left.name.localeCompare(right.name));
   }
 }
 
@@ -195,12 +193,10 @@ function applyMonstersSort(groups: MonsterGroup[], sortValue: string | undefined
 
   switch (resolvedSort) {
     case 'level-desc':
-      groups.sort((left, right) => (right.representative.stats.baseLevel || 0) - (left.representative.stats.baseLevel || 0));
-      return groups;
+      return groups.toSorted((left, right) => (right.representative.stats.baseLevel || 0) - (left.representative.stats.baseLevel || 0));
     case 'name-asc':
     default:
-      groups.sort((left, right) => left.displayName.localeCompare(right.displayName));
-      return groups;
+      return groups.toSorted((left, right) => left.displayName.localeCompare(right.displayName));
   }
 }
 
@@ -209,15 +205,12 @@ function applyFishingSort(fish: Fish[], sortValue: string | undefined) {
 
   switch (resolvedSort) {
     case 'sell-desc':
-      fish.sort((left, right) => (right.sell || 0) - (left.sell || 0));
-      return fish;
+      return fish.toSorted((left, right) => (right.sell || 0) - (left.sell || 0));
     case 'locations-desc':
-      fish.sort((left, right) => (right.locations?.length || 0) - (left.locations?.length || 0));
-      return fish;
+      return fish.toSorted((left, right) => (right.locations?.length || 0) - (left.locations?.length || 0));
     case 'name-asc':
     default:
-      fish.sort((left, right) => left.name.localeCompare(right.name));
-      return fish;
+      return fish.toSorted((left, right) => left.name.localeCompare(right.name));
   }
 }
 
@@ -226,15 +219,12 @@ function applyMapsSort(regions: MapRegionRecord[], sortValue: string | undefined
 
   switch (resolvedSort) {
     case 'chests-desc':
-      regions.sort((left, right) => right.chests.length - left.chests.length);
-      return regions;
+      return regions.toSorted((left, right) => right.chests.length - left.chests.length);
     case 'fishing-desc':
-      regions.sort((left, right) => right.fishingLocations.length - left.fishingLocations.length);
-      return regions;
+      return regions.toSorted((left, right) => right.fishingLocations.length - left.fishingLocations.length);
     case 'name-asc':
     default:
-      regions.sort((left, right) => left.name.localeCompare(right.name));
-      return regions;
+      return regions.toSorted((left, right) => left.name.localeCompare(right.name));
   }
 }
 
@@ -243,18 +233,14 @@ function applyItemsSort(items: Item[], sortValue: string | undefined) {
 
   switch (resolvedSort) {
     case 'name-desc':
-      items.sort((left, right) => right.name.localeCompare(left.name));
-      return items;
+      return items.toSorted((left, right) => right.name.localeCompare(left.name));
     case 'buy-desc':
-      items.sort((left, right) => (right.buy ?? 0) - (left.buy ?? 0));
-      return items;
+      return items.toSorted((left, right) => (right.buy ?? 0) - (left.buy ?? 0));
     case 'sell-desc':
-      items.sort((left, right) => (right.sell ?? 0) - (left.sell ?? 0));
-      return items;
+      return items.toSorted((left, right) => (right.sell ?? 0) - (left.sell ?? 0));
     case 'name-asc':
     default:
-      items.sort((left, right) => left.name.localeCompare(right.name));
-      return items;
+      return items.toSorted((left, right) => left.name.localeCompare(right.name));
   }
 }
 
@@ -443,7 +429,7 @@ export function buildFishingCatalogData(
   search: FishingSearchParams,
   filterOptions = getFishingFilterOptionsForData(fish),
 ): FishingCatalogData {
-  let results = [...fish];
+  let results = fish;
 
   if (search.q) {
     const query = search.q.toLowerCase();

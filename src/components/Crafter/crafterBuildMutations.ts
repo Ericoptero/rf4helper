@@ -1,6 +1,7 @@
 import type { CrafterBuild } from '@/lib/crafter';
 import type { CrafterOptionLists } from '@/lib/crafterOptions';
-import type { CrafterData, CrafterSlotConfig, CrafterSlotKey, Item } from '@/lib/schemas';
+import type { CrafterBootstrapItem } from '@/lib/crafterCommon';
+import type { CrafterData, CrafterSlotConfig, CrafterSlotKey } from '@/lib/schemas';
 import type { CrafterSelectedNode } from './crafterTypes';
 import {
   applySelectionUpdate,
@@ -28,7 +29,7 @@ export function updateNodeInBuild(
   updates: SelectionUpdate,
   crafterData: CrafterData,
   slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>,
-  items: Record<string, Item>,
+  items: Record<string, CrafterBootstrapItem>,
   optionLists: CrafterOptionLists,
 ): CrafterBuild {
   if (node.slot === 'food') {

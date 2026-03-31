@@ -240,9 +240,7 @@ function getLegacyFoodSummary(item: Item) {
   };
 }
 
-export function getDisplayStats(item: Item) {
-  const role = getDisplayRole(item);
-
+function getDisplayStatsForRole(item: Item, role: DisplayRole | undefined) {
   if (role === 'weapon') {
     return toDisplayStats(item.crafter?.equipment?.weapon?.stats) ?? item.stats;
   }
@@ -262,8 +260,11 @@ export function getDisplayStats(item: Item) {
   );
 }
 
-export function getDisplayCombat(item: Item) {
-  const role = getDisplayRole(item);
+export function getDisplayStats(item: Item) {
+  return getDisplayStatsForRole(item, getDisplayRole(item));
+}
+
+function getDisplayCombatForRole(item: Item, role: DisplayRole | undefined) {
   if (role !== 'weapon') return item.combat;
 
   const payload = item.crafter?.equipment?.weapon;
@@ -281,12 +282,15 @@ export function getDisplayCombat(item: Item) {
   };
 }
 
+export function getDisplayCombat(item: Item) {
+  return getDisplayCombatForRole(item, getDisplayRole(item));
+}
+
 export function getDisplayFoodSummary(item: Item) {
   return toDisplayFoodSummary(item.crafter?.foodBase ?? item.crafter?.material?.food) ?? getLegacyFoodSummary(item);
 }
 
-export function getDisplayEffects(item: Item): DisplayEffect[] {
-  const role = getDisplayRole(item);
+function getDisplayEffectsForRole(item: Item, role: DisplayRole | undefined): DisplayEffect[] {
   const effects: DisplayEffect[] = [];
 
   if (role === 'weapon' && item.crafter?.equipment?.weapon) {
@@ -332,6 +336,10 @@ export function getDisplayEffects(item: Item): DisplayEffect[] {
   return (item.effects ?? []) as DisplayEffect[];
 }
 
+export function getDisplayEffects(item: Item): DisplayEffect[] {
+  return getDisplayEffectsForRole(item, getDisplayRole(item));
+}
+
 export function hasDisplayEffects(item: Item) {
   const role = getDisplayRole(item);
 
@@ -374,4 +382,14 @@ export function hasDisplayEffects(item: Item) {
 
 export function getDisplayRarity(item: Item) {
   return item.rarityPoints;
+}
+
+export function getItemPresentation(item: Item) {
+  const role = getDisplayRole(item);
+  return {
+    stats: getDisplayStatsForRole(item, role),
+    combat: getDisplayCombatForRole(item, role),
+    food: getDisplayFoodSummary(item),
+    effects: getDisplayEffectsForRole(item, role),
+  };
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { cloneElement, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -142,6 +142,7 @@ function NavigationContent({
             {section.items.map(({ to, label, icon }) => {
               const navItem = (
                 <NavItem
+                  key={to}
                   href={to}
                   label={label}
                   icon={icon}
@@ -150,7 +151,7 @@ function NavigationContent({
                 />
               );
 
-              return renderItem ? renderItem(navItem, to) : cloneElement(navItem, { key: to });
+              return renderItem ? renderItem(navItem, to) : navItem;
             })}
           </div>
         </div>

@@ -8,6 +8,7 @@ import {
   type CrafterFoodPayload,
   type CrafterStaffChargeAttack,
 } from './schemas';
+import type { CrafterBootstrapItem } from './crafterCommon';
 import { resolveCrafterRuntimeRarity } from './crafterRarity';
 
 function resolveCrafterRarity(item: Item, payload?: { rarity?: number }) {
@@ -92,7 +93,7 @@ export function craftMatchesCrafterSlot(
   return slotConfig.stations.some((candidate) => normalizeCrafterStation(candidate) === station);
 }
 
-export function itemMatchesCrafterSlot(item: Item | undefined, slotConfig: CrafterSlotConfig) {
+export function itemMatchesCrafterSlot(item: CrafterBootstrapItem | Item | undefined, slotConfig: CrafterSlotConfig) {
   return Boolean(item?.craft?.some((craft) => craftMatchesCrafterSlot(craft, slotConfig)));
 }
 

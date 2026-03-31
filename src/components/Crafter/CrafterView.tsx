@@ -20,7 +20,8 @@ import {
 import { buildCrafterOptionLists } from '@/lib/crafterOptions';
 import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafterRarity';
 import { getSlotConfigByKey } from '@/lib/crafterRecipeSelections';
-import type { CrafterData, Item } from '@/lib/schemas';
+import type { CrafterBootstrapItem } from '@/lib/crafterCommon';
+import type { CrafterData } from '@/lib/schemas';
 import { cn } from '@/lib/utils';
 import { resolveCrafterItemImage } from './crafterFormatters';
 import { getEditableSelection, getNodePreviewData, getNodeTitle, getSelectedNodeOptions, isEquipmentTab, resolveNodeBehavior } from './crafterNodeBehavior';
@@ -30,7 +31,7 @@ import { useCrafterTabSummary } from './useCrafterTabSummary';
 import type { CrafterEditorSlot, CrafterSelectedNode, CrafterTab } from './crafterTypes';
 
 type CrafterViewProps = {
-  items: Record<string, Item>;
+  items: Record<string, CrafterBootstrapItem>;
   crafterData: CrafterData;
   serializedBuild?: string;
   onSerializedBuildChange: (serializedBuild: string) => void;

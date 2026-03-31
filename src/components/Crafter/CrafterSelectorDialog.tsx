@@ -22,7 +22,7 @@ import {
 import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafterRarity';
 import { useIncrementalReveal } from '@/hooks/useIncrementalReveal';
 import { cn } from '@/lib/utils';
-import type { Item } from '@/lib/schemas';
+import type { CrafterBootstrapItem } from '@/lib/crafterCommon';
 
 export type CrafterItemPreviewData = {
   imageSrc?: string;
@@ -38,13 +38,13 @@ type CrafterSelectorDialogProps = {
   open: boolean;
   title: string;
   description: string;
-  selectedItem?: Item;
+  selectedItem?: CrafterBootstrapItem;
   selectedItemId?: string;
   selectedLevel?: number;
   canEditLevel: boolean;
   canClear?: boolean;
-  options: Item[];
-  getItemPreviewData: (item?: Item) => CrafterItemPreviewData;
+  options: CrafterBootstrapItem[];
+  getItemPreviewData: (item?: CrafterBootstrapItem) => CrafterItemPreviewData;
   interactionMode?: 'free' | 'fixed' | 'category';
   interactionLabel?: string;
   interactionCallout?: string;
@@ -109,7 +109,7 @@ export function CrafterSelectorDialog({
       if (!normalizedQuery) return true;
       return item.name.toLowerCase().includes(normalizedQuery) || item.type.toLowerCase().includes(normalizedQuery);
     });
-    const toEntry = (item: Item) => {
+    const toEntry = (item: CrafterBootstrapItem) => {
       const preview = getItemPreviewData(item);
       return {
         item,

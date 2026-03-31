@@ -1,5 +1,6 @@
 import { getDisplayStats, hasDisplayEffects } from './itemPresentation';
 import { itemMatchesCrafterSlot } from './crafterData';
+import type { CrafterBootstrapItem } from './crafterCommon';
 import type { CrafterData, CrafterSlotKey, Item } from './schemas';
 
 export type CrafterOptionLists = {
@@ -10,7 +11,7 @@ export type CrafterOptionLists = {
 };
 
 export function buildCrafterOptionLists(
-  items: Record<string, Item>,
+  items: Record<string, CrafterBootstrapItem>,
   crafterData: CrafterData,
 ): CrafterOptionLists {
   const sortedItems = Object.values(items).sort((left, right) => left.name.localeCompare(right.name));
@@ -25,8 +26,8 @@ export function buildCrafterOptionLists(
         Boolean(item.crafter?.material?.weapon)
         || Boolean(item.crafter?.material?.armor)
         || Boolean(item.crafter?.material?.food)
-        || hasDisplayEffects(item)
-        || Boolean(getDisplayStats(item))
+        || hasDisplayEffects(item as Item)
+        || Boolean(getDisplayStats(item as Item))
         || item.rarityPoints != null
         || Boolean(item.craft?.length),
       )

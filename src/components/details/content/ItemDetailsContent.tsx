@@ -4,10 +4,7 @@ import { Box, Coins, Hammer, MapPin, PawPrint, Sparkles, Sword, Heart } from 'lu
 import { LinkedEntityToken } from '@/components/details/LinkedEntityToken';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import {
-  getDisplayCombat,
-  getDisplayEffects,
-  getDisplayFoodSummary,
-  getDisplayStats,
+  getItemPresentation,
 } from '@/lib/itemPresentation';
 import type { Item } from '@/lib/schemas';
 import {
@@ -24,10 +21,7 @@ import {
 import { capitalize, formatNumber } from '@/lib/formatters';
 
 export function ItemDetailsContent({ item, items }: { item: Item; items?: Record<string, Item> }) {
-  const displayStats = getDisplayStats(item);
-  const displayEffects = getDisplayEffects(item);
-  const displayFood = getDisplayFoodSummary(item);
-  const displayCombat = getDisplayCombat(item);
+  const { stats: displayStats, effects: displayEffects, food: displayFood, combat: displayCombat } = getItemPresentation(item);
   const stats = Object.entries(displayStats ?? {}).filter(([, value]) => value !== 0);
   const effects = displayEffects ?? [];
   const crafts = item.craft ?? item.craftedFrom ?? [];

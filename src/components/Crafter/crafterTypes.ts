@@ -1,4 +1,5 @@
-import type { CrafterSlotKey, Item } from '@/lib/schemas';
+import type { CrafterBootstrapItem } from '@/lib/crafterCommon';
+import type { CrafterSlotKey } from '@/lib/schemas';
 
 export type CrafterTab = 'dashboard' | CrafterSlotKey | 'cooking';
 export type CrafterEditorSlot = CrafterSlotKey | 'food';
@@ -17,7 +18,7 @@ export type CrafterGridNode = {
   type: CrafterNodeType;
   index?: number;
   label: string;
-  item?: Item;
+  item?: CrafterBootstrapItem;
   itemId?: string;
   itemName?: string;
   level: number;
@@ -32,7 +33,7 @@ export type CrafterGridNode = {
 
 export type CrafterNodeBehavior = {
   mode: CrafterNodeInteractionMode;
-  options: Item[];
+  options: CrafterBootstrapItem[];
   canEditItem: boolean;
   canEditLevel: boolean;
   canClear: boolean;

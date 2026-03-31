@@ -20,7 +20,7 @@ import {
 import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafterRarity';
 import { resolveItemImage } from '@/lib/itemImages';
 import type { DisplayEffect } from '@/lib/itemPresentation';
-import type { Item } from '@/lib/schemas';
+import type { CrafterBootstrapItem } from '@/lib/crafterCommon';
 
 export const STAT_DISPLAY_ORDER = ['atk', 'matk', 'def', 'mdef', 'str', 'int', 'vit', 'diz', 'crit', 'knock', 'stun'] as const;
 export const PERCENT_STAT_DISPLAY_KEYS = ['crit', 'knock', 'stun'] as const;
@@ -183,7 +183,7 @@ export function getStatIcon(stat: string): LucideIcon {
   }
 }
 
-export function resolveCrafterItemImage(item?: Item) {
+export function resolveCrafterItemImage(item?: CrafterBootstrapItem) {
   if (!item) return undefined;
   if (item.id === CRAFTER_RARITY_PLACEHOLDER_ID) return undefined;
   return resolveItemImage(item.name, item.image) ?? item.image;

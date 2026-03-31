@@ -1,6 +1,7 @@
 import type { CrafterBuild, CrafterCalculation } from '@/lib/crafter';
 import { applyDefaultRecipeSelections, padSelections } from '@/lib/crafterRecipeSelections';
-import type { CrafterData, CrafterSlotConfig, CrafterSlotKey, Item } from '@/lib/schemas';
+import type { CrafterBootstrapItem } from '@/lib/crafterCommon';
+import type { CrafterData, CrafterSlotConfig, CrafterSlotKey } from '@/lib/schemas';
 import type { CrafterEditorSlot, CrafterGridSection, CrafterNodeType } from './crafterTypes';
 import {
   getCrafterDisplayItem,
@@ -22,7 +23,7 @@ export function buildGridSectionsForSlot({
 }: {
   activeSlot: CrafterEditorSlot;
   build: CrafterBuild;
-  items: Record<string, Item>;
+  items: Record<string, CrafterBootstrapItem>;
   crafterData: CrafterData;
   slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>;
   calculation: CrafterCalculation;
@@ -30,7 +31,7 @@ export function buildGridSectionsForSlot({
   const resolveGridNodeRarity = (
     slot: CrafterEditorSlot,
     type: CrafterNodeType,
-    item: Item | undefined,
+    item: CrafterBootstrapItem | undefined,
     itemId: string | undefined,
   ) => getNodeEffectiveRarity({ slot, type }, item, itemId, crafterData);
 

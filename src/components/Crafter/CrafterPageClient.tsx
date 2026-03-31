@@ -5,8 +5,9 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { CrafterView } from '@/components/Crafter/CrafterView';
 import { deserializeCrafterBuild, serializeCrafterBuild } from '@/lib/crafter';
+import type { CrafterBootstrapItem } from '@/lib/crafterCommon';
 import type { CrafterSearchParams } from '@/server/catalogQueries';
-import type { CrafterData, Item } from '@/lib/schemas';
+import type { CrafterData } from '@/lib/schemas';
 
 export const CRAFTER_BUILD_STORAGE_KEY = 'rf4-helper:crafter-build:v2';
 
@@ -30,7 +31,7 @@ export function CrafterPageClient({
   crafterData,
   search,
 }: {
-  items: Record<string, Item>;
+  items: Record<string, CrafterBootstrapItem>;
   crafterData: CrafterData;
   search: CrafterSearchParams;
 }) {

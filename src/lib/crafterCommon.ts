@@ -14,7 +14,35 @@ import type {
   Item,
 } from './schemas';
 
-export function getItemName(itemId: string | undefined, items: Record<string, Item>, fallback?: string) {
+export type CrafterBootstrapItem = Pick<
+  Item,
+  'id' | 'name' | 'image' | 'type' | 'category' | 'stats' | 'craft' | 'crafter' | 'groupMembers' | 'rarityPoints' | 'effects'
+>;
+
+export function sanitizeCrafterBootstrapItems(
+  items: Record<string, Item>,
+): Record<string, CrafterBootstrapItem> {
+  return Object.fromEntries(
+    Object.entries(items).map(([itemId, item]) => [
+      itemId,
+      {
+        id: item.id,
+        name: item.name,
+        image: item.image,
+        type: item.type,
+        category: item.category,
+        stats: item.stats,
+        craft: item.craft,
+        crafter: item.crafter,
+        groupMembers: item.groupMembers,
+        rarityPoints: item.rarityPoints,
+        effects: item.effects,
+      } satisfies CrafterBootstrapItem,
+    ]),
+  );
+}
+
+export function getItemName(itemId: string | undefined, items: Record<string, CrafterBootstrapItem>, fallback?: string) {
   if (!itemId) return fallback;
   if (isCrafterRarityPlaceholder(itemId)) return CRAFTER_RARITY_PLACEHOLDER_NAME;
   return items[itemId]?.name ?? fallback ?? itemId;
@@ -76,7 +104,7 @@ export function getFoodIngredientPayload(itemId: string | undefined, data: Craft
   return data.materials.food[itemId];
 }
 
-export function getWeaponClass(itemId: string | undefined, items: Record<string, Item>, data: CrafterData) {
+export function getWeaponClass(itemId: string | undefined, items: Record<string, CrafterBootstrapItem>, data: CrafterData) {
   if (!itemId) return 'Unknown';
 
   const payload = data.stats.weapon[itemId];
@@ -91,7 +119,7 @@ export function getDerivedRecipeBase(
   slotKey: CrafterSlotKey,
   appearanceId: string | undefined,
   recipeSelections: CrafterMaterialSelection[],
-  items: Record<string, Item>,
+  items: Record<string, CrafterBootstrapItem>,
   data: CrafterData,
   slotConfig: CrafterSlotConfig,
 ) {

@@ -1,5 +1,6 @@
 import { type CrafterBuild, type CrafterCalculation } from '@/lib/crafter';
-import type { CrafterData, Item } from '@/lib/schemas';
+import type { CrafterBootstrapItem } from '@/lib/crafterCommon';
+import type { CrafterData } from '@/lib/schemas';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CrafterOverviewCard } from './CrafterItemSlot';
 import { getCrafterDisplayItem, getNodeEffectiveRarity, getNodePreviewData } from './crafterNodeBehavior';
@@ -8,7 +9,7 @@ import { EQUIPMENT_SLOTS } from './crafterTypes';
 
 type CrafterDashboardProps = {
   calculation: CrafterCalculation;
-  items: Record<string, Item>;
+  items: Record<string, CrafterBootstrapItem>;
   crafterData: CrafterData;
   build: CrafterBuild;
   onSelectTab: (tab: CrafterTab) => void;
@@ -16,7 +17,7 @@ type CrafterDashboardProps = {
 
 function renderDashboardCards(
   calculation: CrafterCalculation,
-  items: Record<string, Item>,
+  items: Record<string, CrafterBootstrapItem>,
   crafterData: CrafterData,
   build: CrafterBuild,
   onSelectTab: (tab: CrafterTab) => void,
