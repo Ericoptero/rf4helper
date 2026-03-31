@@ -111,14 +111,17 @@ export function useDetailPayload(reference: DetailEntityReference | null) {
   const [payload, setPayload] = React.useState<DetailPayload | null>(null);
   const [status, setStatus] = React.useState<DetailPayloadStatus>('idle');
 
+  const referenceType = reference?.type ?? null;
+  const referenceId = reference?.id ?? null;
+
   React.useEffect(() => {
-    if (!reference) {
+    if (!referenceType || !referenceId) {
       setPayload(null);
       setStatus('idle');
       return;
     }
 
-    const activeReference = reference;
+    const activeReference: DetailEntityReference = { type: referenceType, id: referenceId };
     const cacheKey = encodeDetailEntity(activeReference);
     const cachedPayload = getCachedDetailPayload(cacheKey);
 
@@ -164,7 +167,7 @@ export function useDetailPayload(reference: DetailEntityReference | null) {
     void loadDetail();
 
     return () => controller.abort();
-  }, [reference]);
+  }, [referenceType, referenceId]);
 
   return { payload, status };
 }

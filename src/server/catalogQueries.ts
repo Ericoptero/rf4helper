@@ -308,7 +308,7 @@ export function buildItemsCatalogData(
   filterOptions = getItemsFilterOptionsForData(items),
 ): ItemsCatalogData {
   const sourceItems = Object.values(items);
-  let results = [...sourceItems];
+  let results = sourceItems;
 
   if (search.q) {
     const query = search.q.toLowerCase();
@@ -364,7 +364,7 @@ export function buildCharactersCatalogData(
   filterOptions = getCharactersFilterOptionsForData(characters),
 ): CharactersCatalogData {
   const sourceCharacters = Object.values(characters);
-  let results = [...sourceCharacters];
+  let results = sourceCharacters;
 
   if (search.q) {
     const query = search.q.toLowerCase();
@@ -404,7 +404,7 @@ export function buildMonstersCatalogData(
   filterOptions = getMonstersFilterOptionsForData(monsters),
 ): MonstersCatalogData {
   const sourceGroups = getMonsterGroupsForData(monsters);
-  let results = [...sourceGroups];
+  let results = sourceGroups;
 
   if (search.q) {
     const query = search.q.toLowerCase();
@@ -443,8 +443,7 @@ export function buildFishingCatalogData(
   search: FishingSearchParams,
   filterOptions = getFishingFilterOptionsForData(fish),
 ): FishingCatalogData {
-  const sourceFish = [...fish];
-  let results = [...sourceFish];
+  let results = [...fish];
 
   if (search.q) {
     const query = search.q.toLowerCase();
@@ -468,7 +467,7 @@ export function buildFishingCatalogData(
   }
 
   return {
-    totalCount: sourceFish.length,
+    totalCount: fish.length,
     results: applyFishingSort(results, search.sort),
     filterOptions,
   };
@@ -480,7 +479,7 @@ export function buildMapsCatalogData(
   search: MapsSearchParams,
 ): MapsCatalogData {
   const sourceRegions = getMapRegionsForData(chests, fish);
-  let results = [...sourceRegions];
+  let results = sourceRegions;
 
   if (search.q) {
     const query = search.q.toLowerCase();

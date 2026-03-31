@@ -15,7 +15,7 @@ import {
   createDefaultCrafterBuild,
   deserializeCrafterBuild,
   serializeCrafterBuild,
-  type CrafterBuildState,
+  type CrafterBuild,
 } from '@/lib/crafter';
 import { buildCrafterOptionLists } from '@/lib/crafterOptions';
 import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafterRarity';
@@ -119,7 +119,7 @@ export function CrafterView({
     setSelectedNode(null);
   }, [activeTab]);
 
-  const updateBuild = (next: CrafterBuildState) => {
+  const updateBuild = (next: CrafterBuild) => {
     // Rely exclusively on shallow clone mutators instead of massive clone overlays. 
     onSerializedBuildChange(serializeCrafterBuild(next, crafterData));
   };

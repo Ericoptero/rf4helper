@@ -10,6 +10,14 @@ type UseIncrementalRevealOptions = {
   disabled?: boolean;
 };
 
+function areResetKeysEqual(left: readonly unknown[], right: readonly unknown[]) {
+  if (left.length !== right.length) {
+    return false;
+  }
+
+  return left.every((value, index) => Object.is(value, right[index]));
+}
+
 export function useIncrementalReveal<TElement extends Element = HTMLDivElement>({
   itemCount,
   batchSize,
@@ -21,14 +29,6 @@ export function useIncrementalReveal<TElement extends Element = HTMLDivElement>(
   const [visibleCount, setVisibleCount] = React.useState(() => Math.min(itemCount, batchSize));
   const batchSizeRef = React.useRef(batchSize);
   const previousResetKeysRef = React.useRef(resetKeys);
-
-  function areResetKeysEqual(left: readonly unknown[], right: readonly unknown[]) {
-    if (left.length !== right.length) {
-      return false;
-    }
-
-    return left.every((value, index) => Object.is(value, right[index]));
-  }
 
   React.useEffect(() => {
     batchSizeRef.current = batchSize;

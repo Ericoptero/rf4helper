@@ -454,8 +454,6 @@ export function CatalogPageLayout<T>({
     );
   }, [filterValues, filtersSheetOpen, orderedFilters]);
 
-  const filteredAndSortedData = data;
-
   const quickToggleFilters = useMemo(
     () => orderedFilters.filter((definition) => definition.control === 'boolean-toggle'),
     [orderedFilters],
@@ -481,21 +479,21 @@ export function CatalogPageLayout<T>({
   }, [filterValues, orderedFilters]);
   const revealResetKeys = useMemo(
     () => [
-      filteredAndSortedData.length,
+      data.length,
       searchTerm,
       sortValue,
       ...appliedFilterChips.map((chip) => chip.key),
     ],
-    [appliedFilterChips, filteredAndSortedData.length, searchTerm, sortValue],
+    [appliedFilterChips, data.length, searchTerm, sortValue],
   );
 
   const { hasMore, sentinelRef, visibleCount } = useIncrementalReveal<HTMLElement>({
-    itemCount: filteredAndSortedData.length,
+    itemCount: data.length,
     batchSize: viewMode === 'table' ? 40 : 24,
     resetKeys: revealResetKeys,
     rootElement: viewportElement,
   });
-  const visibleItems = filteredAndSortedData.slice(0, visibleCount);
+  const visibleItems = data.slice(0, visibleCount);
   const quickToggleValues = quickToggleFilters.flatMap((definition) =>
     draftFilterValues[definition.key] ? [definition.key] : [],
   );
@@ -574,9 +572,9 @@ export function CatalogPageLayout<T>({
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {filteredAndSortedData.length === resolvedTotalCount
+            {data.length === resolvedTotalCount
               ? `${resolvedTotalCount.toLocaleString()} total`
-              : `${filteredAndSortedData.length.toLocaleString()} of ${resolvedTotalCount.toLocaleString()}`}
+              : `${data.length.toLocaleString()} of ${resolvedTotalCount.toLocaleString()}`}
           </p>
         </div>
       </div>
@@ -643,7 +641,7 @@ export function CatalogPageLayout<T>({
             />
           )}
 
-          {filteredAndSortedData.length === 0 ? (
+          {data.length === 0 ? (
             <div className="px-3 py-3">
               <div className="rounded-2xl border border-dashed px-6 py-20 text-center text-muted-foreground">
                 {emptyState}

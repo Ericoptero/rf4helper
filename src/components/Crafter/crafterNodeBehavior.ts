@@ -1,5 +1,5 @@
 import {
-  type CrafterBuildState,
+  type CrafterBuild,
 } from '@/lib/crafter';
 import {
   getFoodRecipeDefinition,
@@ -71,7 +71,7 @@ export function getFoodRecipeDefaults(baseId: string | undefined, crafterData: C
 
 export function getEquipmentRecipeSourceItemId(
   slotKey: CrafterSlotKey,
-  build: CrafterBuildState,
+  build: CrafterBuild,
   crafterData: CrafterData,
 ) {
   const slot = build[slotKey];
@@ -300,7 +300,7 @@ export function resolveEffectiveSelection(
 
 function getRecipeDefaultItemIdForNode(
   node: CrafterSelectedNode | CrafterGridNode,
-  build: CrafterBuildState,
+  build: CrafterBuild,
   crafterData: CrafterData,
 ) {
   if (node.type !== 'recipe' || node.index == null) return undefined;
@@ -354,7 +354,7 @@ export function applySelectionUpdate({
 
 export function resolveNodeBehavior(
   node: CrafterSelectedNode | CrafterGridNode,
-  build: CrafterBuildState,
+  build: CrafterBuild,
   slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>,
   items: Record<string, Item>,
   crafterData: CrafterData,
@@ -468,7 +468,7 @@ export function resolveNodeBehavior(
 }
 
 export function getEditableSelection(
-  build: CrafterBuildState,
+  build: CrafterBuild,
   node: CrafterSelectedNode,
   crafterData: CrafterData,
 ) {
@@ -498,7 +498,7 @@ export function getEditableSelection(
 
 export function getSelectedNodeOptions(
   node: CrafterSelectedNode,
-  build: CrafterBuildState,
+  build: CrafterBuild,
   crafterData: CrafterData,
   slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>,
   items: Record<string, Item>,

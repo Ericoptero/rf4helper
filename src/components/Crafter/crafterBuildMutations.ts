@@ -1,4 +1,4 @@
-import type { CrafterBuildState } from '@/lib/crafter';
+import type { CrafterBuild } from '@/lib/crafter';
 import type { CrafterOptionLists } from '@/lib/crafterOptions';
 import type { CrafterData, CrafterSlotConfig, CrafterSlotKey, Item } from '@/lib/schemas';
 import type { CrafterSelectedNode } from './crafterTypes';
@@ -23,14 +23,14 @@ function createEmptySelections(count: number) {
 }
 
 export function updateNodeInBuild(
-  build: CrafterBuildState,
+  build: CrafterBuild,
   node: CrafterSelectedNode,
   updates: SelectionUpdate,
   crafterData: CrafterData,
   slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>,
   items: Record<string, Item>,
   optionLists: CrafterOptionLists,
-): CrafterBuildState {
+): CrafterBuild {
   if (node.slot === 'food') {
     const nextFood = { ...build.food };
 

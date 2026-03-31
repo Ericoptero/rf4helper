@@ -1,14 +1,13 @@
 import type { CrafterBonusSummary, CrafterSlotKey, CrafterWarning } from './schemas';
 import type {
   CrafterBuild,
-  CrafterBuildState,
   CrafterStatBlock,
   GeometryMap,
   ResistanceMap,
   StatusAttackMap,
 } from './crafterMath';
 
-export type { CrafterBuild, CrafterBuildState, CrafterStatBlock, GeometryMap, ResistanceMap, StatusAttackMap };
+export type { CrafterBuild, CrafterStatBlock, GeometryMap, ResistanceMap, StatusAttackMap };
 
 export type CrafterContribution = {
   itemId: string;

@@ -8,8 +8,6 @@ import type {
 } from './schemas';
 
 export type CrafterBuild = CrafterDefaults;
-/** @deprecated Prefer CrafterBuild for new code. */
-export type CrafterBuildState = CrafterBuild;
 export type CrafterStatBlock = Partial<NonNullable<Item['stats']>>;
 export type ResistanceMap = CrafterResistanceBlock;
 export type StatusAttackMap = CrafterStatusAttackBlock;

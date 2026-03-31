@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { CrafterBuildState, CrafterCalculation } from '@/lib/crafter';
+import type { CrafterBuild, CrafterCalculation } from '@/lib/crafter';
 import type { Item } from '@/lib/schemas';
 import { getCrafterDisplayItem, isEquipmentTab } from './crafterNodeBehavior';
 import type { CrafterEditorSlot, CrafterGridSection, CrafterTab } from './crafterTypes';
@@ -15,7 +15,7 @@ export function useCrafterTabSummary({
   activeTab: CrafterTab;
   activeEditorSlot: CrafterEditorSlot | null;
   calculation: CrafterCalculation;
-  build: CrafterBuildState;
+  build: CrafterBuild;
   items: Record<string, Item>;
   gridSections: CrafterGridSection[];
 }) {

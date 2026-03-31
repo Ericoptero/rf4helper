@@ -1,4 +1,4 @@
-import { type CrafterBuildState, type CrafterCalculation } from '@/lib/crafter';
+import { type CrafterBuild, type CrafterCalculation } from '@/lib/crafter';
 import type { CrafterData, Item } from '@/lib/schemas';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CrafterOverviewCard } from './CrafterItemSlot';
@@ -10,7 +10,7 @@ type CrafterDashboardProps = {
   calculation: CrafterCalculation;
   items: Record<string, Item>;
   crafterData: CrafterData;
-  build: CrafterBuildState;
+  build: CrafterBuild;
   onSelectTab: (tab: CrafterTab) => void;
 };
 
@@ -18,7 +18,7 @@ function renderDashboardCards(
   calculation: CrafterCalculation,
   items: Record<string, Item>,
   crafterData: CrafterData,
-  build: CrafterBuildState,
+  build: CrafterBuild,
   onSelectTab: (tab: CrafterTab) => void,
 ) {
   const equipmentCards = EQUIPMENT_SLOTS.map((slotKey) => {

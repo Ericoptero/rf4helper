@@ -1,4 +1,4 @@
-import type { CrafterBuildState, CrafterCalculation } from '@/lib/crafter';
+import type { CrafterBuild, CrafterCalculation } from '@/lib/crafter';
 import { applyDefaultRecipeSelections, padSelections } from '@/lib/crafterRecipeSelections';
 import type { CrafterData, CrafterSlotConfig, CrafterSlotKey, Item } from '@/lib/schemas';
 import type { CrafterEditorSlot, CrafterGridSection, CrafterNodeType } from './crafterTypes';
@@ -21,7 +21,7 @@ export function buildGridSectionsForSlot({
   calculation,
 }: {
   activeSlot: CrafterEditorSlot;
-  build: CrafterBuildState;
+  build: CrafterBuild;
   items: Record<string, Item>;
   crafterData: CrafterData;
   slotConfigByKey: Record<CrafterSlotKey, CrafterSlotConfig>;
