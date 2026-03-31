@@ -27,7 +27,7 @@ export function LinkedEntityToken({
       type="button"
       onClick={() => openLinked(reference)}
       className={cn(
-        'inline-flex min-w-0 items-center gap-2 rounded-xl border border-border/70 bg-muted/40 px-2.5 py-1.5 text-left text-sm transition-colors hover:border-primary/40 hover:bg-muted',
+        'inline-flex min-w-0 items-center w-full gap-2 rounded-xl border border-border/70 bg-muted/40 px-2.5 py-1.5 text-left text-sm transition-colors hover:border-primary/40 hover:bg-muted',
         className,
       )}
     >
@@ -35,10 +35,10 @@ export function LinkedEntityToken({
         {imageSrc ? <img src={imageSrc} alt={`${label} image`} className="h-5 w-5 rounded object-contain" /> : icon}
       </span>
       <span className="min-w-0">
-        <span className="block truncate font-medium">{label}</span>
-        {meta ? <span className="block truncate text-xs text-muted-foreground">{meta}</span> : null}
+        <span className="block font-medium">{label}</span>
+        {meta ? <span className="block text-xs text-muted-foreground">{meta}</span> : null}
       </span>
-      <Badge variant="outline" className="ml-1 shrink-0">
+      <Badge variant="outline" className="ml-auto shrink-0">
         <ChevronRight className="h-3 w-3" />
       </Badge>
     </button>

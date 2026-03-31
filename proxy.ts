@@ -17,7 +17,7 @@ export function buildContentSecurityPolicy(nonce: string) {
     "font-src 'self' data:",
     "img-src 'self' data: blob:",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ''}`,
-    `style-src 'self' 'nonce-${nonce}'`,
+    `style-src 'self' 'unsafe-inline'`,
     "connect-src 'self'",
     "frame-ancestors 'none'",
     "form-action 'self'",

@@ -37,6 +37,7 @@ export default async function RootLayout({
         <script
           id="theme-bootstrap"
           nonce={nonce}
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }}
         />
       </head>

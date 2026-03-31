@@ -3283,7 +3283,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-amethyst-ring": {
     "id": "item-amethyst-ring",
@@ -3331,7 +3331,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-anettes-necklace": {
     "id": "item-anettes-necklace",
@@ -3379,7 +3379,7 @@
         "armor": {}
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-aquamarine-brooch": {
     "id": "item-aquamarine-brooch",
@@ -3430,7 +3430,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-aquamarine-ring": {
     "id": "item-aquamarine-ring",
@@ -3478,7 +3478,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-art-of-attack": {
     "id": "item-art-of-attack",
@@ -3530,7 +3530,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-art-of-defense": {
     "id": "item-art-of-defense",
@@ -3582,7 +3582,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-art-of-magic": {
     "id": "item-art-of-magic",
@@ -3634,7 +3634,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-badge": {
     "id": "item-badge",
@@ -3684,7 +3684,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-black-ribbon": {
     "id": "item-black-ribbon",
@@ -3737,7 +3737,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-blue-ribbon": {
     "id": "item-blue-ribbon",
@@ -3789,7 +3789,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-bone-boots": {
     "id": "item-bone-boots",
@@ -3838,7 +3838,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-bone-shield": {
     "id": "item-bone-shield",
@@ -3887,7 +3887,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-brand-glasses": {
     "id": "item-brand-glasses",
@@ -3937,7 +3937,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-bronze-bracelet": {
     "id": "item-bronze-bracelet",
@@ -3985,7 +3985,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-cat-ears": {
     "id": "item-cat-ears",
@@ -4033,7 +4033,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-chain-mail": {
     "id": "item-chain-mail",
@@ -4082,7 +4082,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-champ-belt": {
     "id": "item-champ-belt",
@@ -4134,7 +4134,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-chaos-shield": {
     "id": "item-chaos-shield",
@@ -4188,7 +4188,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-charm": {
     "id": "item-charm",
@@ -4236,7 +4236,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-cheap-bracelet": {
     "id": "item-cheap-bracelet",
@@ -4283,7 +4283,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-cotton-cloth": {
     "id": "item-cotton-cloth",
@@ -4333,7 +4333,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-courage-badge": {
     "id": "item-courage-badge",
@@ -4401,7 +4401,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-critical-ring": {
     "id": "item-critical-ring",
@@ -4453,7 +4453,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-crown": {
     "id": "item-crown",
@@ -4509,7 +4509,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-cursed-ring": {
     "id": "item-cursed-ring",
@@ -4557,7 +4557,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-cute-knitting": {
     "id": "item-cute-knitting",
@@ -4605,7 +4605,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-dew-pendant": {
     "id": "item-dew-pendant",
@@ -4657,7 +4657,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-diamond-brooch": {
     "id": "item-diamond-brooch",
@@ -4714,7 +4714,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-diamond-ring": {
     "id": "item-diamond-ring",
@@ -4769,7 +4769,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-dolphin-brooch": {
     "id": "item-dolphin-brooch",
@@ -4813,7 +4813,7 @@
         "armor": {}
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-dragon-cloak": {
     "id": "item-dragon-cloak",
@@ -4865,7 +4865,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-earrings": {
     "id": "item-earrings",
@@ -4917,7 +4917,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-earth-pendant": {
     "id": "item-earth-pendant",
@@ -4969,7 +4969,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-earth-ring": {
     "id": "item-earth-ring",
@@ -5018,7 +5018,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-element-shield": {
     "id": "item-element-shield",
@@ -5076,7 +5076,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-elvish-cloak": {
     "id": "item-elvish-cloak",
@@ -5127,7 +5127,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-emerald-brooch": {
     "id": "item-emerald-brooch",
@@ -5178,7 +5178,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-emerald-ring": {
     "id": "item-emerald-ring",
@@ -5226,7 +5226,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-engagement-ring": {
     "id": "item-engagement-ring",
@@ -5274,7 +5274,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-fairy-boots": {
     "id": "item-fairy-boots",
@@ -5334,7 +5334,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-fancy-hat": {
     "id": "item-fancy-hat",
@@ -5382,7 +5382,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-fast-step-boots": {
     "id": "item-fast-step-boots",
@@ -5434,7 +5434,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-feather-boots": {
     "id": "item-feather-boots",
@@ -5489,7 +5489,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-feathered-hat": {
     "id": "item-feathered-hat",
@@ -5544,7 +5544,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-field-pendant": {
     "id": "item-field-pendant",
@@ -5596,7 +5596,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-fire-ring": {
     "id": "item-fire-ring",
@@ -5645,7 +5645,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-fireproof-hood": {
     "id": "item-fireproof-hood",
@@ -5694,7 +5694,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-fluffy-scarf": {
     "id": "item-fluffy-scarf",
@@ -5748,7 +5748,7 @@
         }
       }
     },
-    "rarityPoints": 5
+    "rarityPoints": 0
   },
   "item-four-dragons-vest": {
     "id": "item-four-dragons-vest",
@@ -5806,7 +5806,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-four-seasons": {
     "id": "item-four-seasons",
@@ -5863,7 +5863,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-free-farming-shoes": {
     "id": "item-free-farming-shoes",
@@ -5918,7 +5918,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-ghost-boots": {
     "id": "item-ghost-boots",
@@ -5976,7 +5976,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-gloves": {
     "id": "item-gloves",
@@ -6054,7 +6054,7 @@
         "armor": {}
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-gold-boots": {
     "id": "item-gold-boots",
@@ -6103,7 +6103,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-gold-bracelet": {
     "id": "item-gold-bracelet",
@@ -6151,7 +6151,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-gold-hairpin": {
     "id": "item-gold-hairpin",
@@ -6203,7 +6203,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-gold-ring": {
     "id": "item-gold-ring",
@@ -6255,7 +6255,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-green-ribbon": {
     "id": "item-green-ribbon",
@@ -6307,7 +6307,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-hand-knit-scarf": {
     "id": "item-hand-knit-scarf",
@@ -6356,7 +6356,7 @@
         "armor": {}
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-happy-ring": {
     "id": "item-happy-ring",
@@ -6403,7 +6403,7 @@
         "armor": {}
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-headband": {
     "id": "item-headband",
@@ -6450,7 +6450,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-headdress": {
     "id": "item-headdress",
@@ -6501,7 +6501,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-heart-pendant": {
     "id": "item-heart-pendant",
@@ -6548,7 +6548,7 @@
         "armor": {}
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-heavy-boots": {
     "id": "item-heavy-boots",
@@ -6605,7 +6605,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-heavy-shield": {
     "id": "item-heavy-shield",
@@ -6658,7 +6658,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-heros-proof": {
     "id": "item-heros-proof",
@@ -6710,7 +6710,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-holy-amulet": {
     "id": "item-holy-amulet",
@@ -6761,7 +6761,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-ice-skates": {
     "id": "item-ice-skates",
@@ -6819,7 +6819,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-indigo-ribbon": {
     "id": "item-indigo-ribbon",
@@ -6873,7 +6873,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-intelligent-glasses": {
     "id": "item-intelligent-glasses",
@@ -6922,7 +6922,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-iron-geta": {
     "id": "item-iron-geta",
@@ -6980,7 +6980,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-iron-shield": {
     "id": "item-iron-shield",
@@ -7028,7 +7028,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-kite-shield": {
     "id": "item-kite-shield",
@@ -7082,7 +7082,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-knight-boots": {
     "id": "item-knight-boots",
@@ -7134,7 +7134,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-knight-shield": {
     "id": "item-knight-shield",
@@ -7187,7 +7187,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-lamellar-vest": {
     "id": "item-lamellar-vest",
@@ -7237,7 +7237,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-leather-belt": {
     "id": "item-leather-belt",
@@ -7285,7 +7285,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-leather-boots": {
     "id": "item-leather-boots",
@@ -7332,7 +7332,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-lolita-headdress": {
     "id": "item-lolita-headdress",
@@ -7383,7 +7383,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-lucky-strike": {
     "id": "item-lucky-strike",
@@ -7433,7 +7433,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-magic-charm": {
     "id": "item-magic-charm",
@@ -7482,7 +7482,7 @@
         "armor": {}
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-magic-earrings": {
     "id": "item-magic-earrings",
@@ -7539,7 +7539,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-magic-ring": {
     "id": "item-magic-ring",
@@ -7590,7 +7590,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-magic-shield": {
     "id": "item-magic-shield",
@@ -7645,7 +7645,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-magical-shield": {
     "id": "item-magical-shield",
@@ -7705,7 +7705,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-mail": {
     "id": "item-mail",
@@ -7754,7 +7754,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-mercenarys-cloak": {
     "id": "item-mercenarys-cloak",
@@ -7804,7 +7804,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-monkey-plush": {
     "id": "item-monkey-plush",
@@ -7856,7 +7856,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-orange-ribbon": {
     "id": "item-orange-ribbon",
@@ -7908,7 +7908,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-paralysis-ring": {
     "id": "item-paralysis-ring",
@@ -7959,7 +7959,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-piyo-sandals": {
     "id": "item-piyo-sandals",
@@ -8015,7 +8015,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-platinum-bracelet": {
     "id": "item-platinum-bracelet",
@@ -8063,7 +8063,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-platinum-mail": {
     "id": "item-platinum-mail",
@@ -8114,7 +8114,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-platinum-ring": {
     "id": "item-platinum-ring",
@@ -8167,7 +8167,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-platinum-shield": {
     "id": "item-platinum-shield",
@@ -8221,7 +8221,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-poison-ring": {
     "id": "item-poison-ring",
@@ -8272,7 +8272,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-power-gloves": {
     "id": "item-power-gloves",
@@ -8323,7 +8323,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-power-protector": {
     "id": "item-power-protector",
@@ -8375,7 +8375,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-prism-shield": {
     "id": "item-prism-shield",
@@ -8431,7 +8431,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-proof-of-wisdom": {
     "id": "item-proof-of-wisdom",
@@ -8483,7 +8483,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-protector": {
     "id": "item-protector",
@@ -8532,7 +8532,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-pumpkin-headgear": {
     "id": "item-pumpkin-headgear",
@@ -8579,7 +8579,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-purple-ribbon": {
     "id": "item-purple-ribbon",
@@ -8632,7 +8632,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-red-ribbon": {
     "id": "item-red-ribbon",
@@ -8684,7 +8684,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-rocket-wing": {
     "id": "item-rocket-wing",
@@ -8740,7 +8740,7 @@
         }
       }
     },
-    "rarityPoints": 20
+    "rarityPoints": 0
   },
   "item-rosary": {
     "id": "item-rosary",
@@ -8787,7 +8787,7 @@
         "armor": {}
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-round-shield": {
     "id": "item-round-shield",
@@ -8835,7 +8835,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-royal-garter": {
     "id": "item-royal-garter",
@@ -8887,7 +8887,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-ruby-brooch": {
     "id": "item-ruby-brooch",
@@ -8938,7 +8938,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-ruby-ring": {
     "id": "item-ruby-ring",
@@ -8986,7 +8986,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-rune-shield": {
     "id": "item-rune-shield",
@@ -9042,7 +9042,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-rune-vest": {
     "id": "item-rune-vest",
@@ -9094,7 +9094,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-sapphire-brooch": {
     "id": "item-sapphire-brooch",
@@ -9145,7 +9145,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-sapphire-ring": {
     "id": "item-sapphire-ring",
@@ -9193,7 +9193,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-scale-vest": {
     "id": "item-scale-vest",
@@ -9243,7 +9243,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-secret-shoes": {
     "id": "item-secret-shoes",
@@ -9294,7 +9294,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-shield-ring": {
     "id": "item-shield-ring",
@@ -9346,7 +9346,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-shirt": {
     "id": "item-shirt",
@@ -9393,7 +9393,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-silent-ring": {
     "id": "item-silent-ring",
@@ -9444,7 +9444,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-silk-hat": {
     "id": "item-silk-hat",
@@ -9494,7 +9494,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-silver-boots": {
     "id": "item-silver-boots",
@@ -9542,7 +9542,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-silver-bracelet": {
     "id": "item-silver-bracelet",
@@ -9590,7 +9590,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-silver-hairpin": {
     "id": "item-silver-hairpin",
@@ -9641,7 +9641,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-silver-pendant": {
     "id": "item-silver-pendant",
@@ -9696,7 +9696,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-silver-ring": {
     "id": "item-silver-ring",
@@ -9745,7 +9745,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-small-shield": {
     "id": "item-small-shield",
@@ -9792,7 +9792,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-sneaking-boots": {
     "id": "item-sneaking-boots",
@@ -9848,7 +9848,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-snow-boots": {
     "id": "item-snow-boots",
@@ -9900,7 +9900,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-sparkling-shirt": {
     "id": "item-sparkling-shirt",
@@ -9950,7 +9950,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-spectacles": {
     "id": "item-spectacles",
@@ -9999,7 +9999,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-star-pendant": {
     "id": "item-star-pendant",
@@ -10051,7 +10051,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-stay-up-ring": {
     "id": "item-stay-up-ring",
@@ -10104,7 +10104,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-step-in-boots": {
     "id": "item-step-in-boots",
@@ -10160,7 +10160,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-strange-pendant": {
     "id": "item-strange-pendant",
@@ -10208,7 +10208,7 @@
         "armor": {}
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-straw-hat": {
     "id": "item-straw-hat",
@@ -10256,7 +10256,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-strider-boots": {
     "id": "item-strider-boots",
@@ -10309,7 +10309,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-sun-pendant": {
     "id": "item-sun-pendant",
@@ -10361,7 +10361,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-talisman": {
     "id": "item-talisman",
@@ -10409,7 +10409,7 @@
         "armor": {}
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-throwing-ring": {
     "id": "item-throwing-ring",
@@ -10456,7 +10456,7 @@
         "armor": {}
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-turnip-headgear": {
     "id": "item-turnip-headgear",
@@ -10504,7 +10504,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-turtle-shield": {
     "id": "item-turtle-shield",
@@ -10558,7 +10558,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-umbrella": {
     "id": "item-umbrella",
@@ -10607,7 +10607,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-ventis-charm": {
     "id": "item-ventis-charm",
@@ -10691,7 +10691,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-water-ring": {
     "id": "item-water-ring",
@@ -10740,7 +10740,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-water-shoes": {
     "id": "item-water-shoes",
@@ -10789,7 +10789,7 @@
         "armor": {}
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-wet-boots": {
     "id": "item-wet-boots",
@@ -10842,7 +10842,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-white-ribbon": {
     "id": "item-white-ribbon",
@@ -10894,7 +10894,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-wind-cloak": {
     "id": "item-wind-cloak",
@@ -10949,7 +10949,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-wind-ring": {
     "id": "item-wind-ring",
@@ -10998,7 +10998,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-witch-earrings": {
     "id": "item-witch-earrings",
@@ -11053,7 +11053,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-wooly-shirt": {
     "id": "item-wooly-shirt",
@@ -11104,7 +11104,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-work-gloves": {
     "id": "item-work-gloves",
@@ -11153,7 +11153,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-yarn": {
     "id": "item-yarn",
@@ -11258,7 +11258,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-4-leaf-clover": {
     "id": "item-4-leaf-clover",
@@ -28759,7 +28759,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-aerial-blade": {
     "id": "item-aerial-blade",
@@ -28821,7 +28821,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-algernon": {
     "id": "item-algernon",
@@ -28894,7 +28894,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-alldale": {
     "id": "item-alldale",
@@ -28956,7 +28956,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-amethyst-rod": {
     "id": "item-amethyst-rod",
@@ -29020,7 +29020,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-animal-puppets": {
     "id": "item-animal-puppets",
@@ -29084,7 +29084,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-aqua-sword": {
     "id": "item-aqua-sword",
@@ -29143,7 +29143,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-aquamarine-rod": {
     "id": "item-aquamarine-rod",
@@ -29207,7 +29207,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-axe": {
     "id": "item-axe",
@@ -29266,7 +29266,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-back-scratcher": {
     "id": "item-back-scratcher",
@@ -29329,7 +29329,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-balmung": {
     "id": "item-balmung",
@@ -29389,7 +29389,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-basilisk-fang": {
     "id": "item-basilisk-fang",
@@ -29417,7 +29417,7 @@
     "category": "axe",
     "description": "A weapon that can cut through anything as if it were cloth. Has a paralyzing effect.",
     "image": "items/basilisk-fang.png",
-    "rarityPoints": 13,
+    "rarityPoints": 0,
     "crafter": {
       "equipment": {
         "weapon": {
@@ -29519,7 +29519,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-bat": {
     "id": "item-bat",
@@ -29581,7 +29581,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-battle-axe": {
     "id": "item-battle-axe",
@@ -29640,7 +29640,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-battle-hammer": {
     "id": "item-battle-hammer",
@@ -29698,7 +29698,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-battle-scythe": {
     "id": "item-battle-scythe",
@@ -29757,7 +29757,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-bazal-katar": {
     "id": "item-bazal-katar",
@@ -29820,7 +29820,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-bear-claws": {
     "id": "item-bear-claws",
@@ -29879,7 +29879,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-beginners-pole": {
     "id": "item-beginners-pole",
@@ -29938,7 +29938,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-belvarose": {
     "id": "item-belvarose",
@@ -30001,7 +30001,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-belzebuth": {
     "id": "item-belzebuth",
@@ -30065,7 +30065,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-big-knife": {
     "id": "item-big-knife",
@@ -30124,7 +30124,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-bio-smasher": {
     "id": "item-bio-smasher",
@@ -30187,7 +30187,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-bjor": {
     "id": "item-bjor",
@@ -30255,7 +30255,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-blessed-hoe": {
     "id": "item-blessed-hoe",
@@ -30319,7 +30319,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-blood-lance": {
     "id": "item-blood-lance",
@@ -30382,7 +30382,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-blue-eyed-blade": {
     "id": "item-blue-eyed-blade",
@@ -30444,7 +30444,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-bone-hammer": {
     "id": "item-bone-hammer",
@@ -30506,7 +30506,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-brass-knuckles": {
     "id": "item-brass-knuckles",
@@ -30565,7 +30565,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-braveheart": {
     "id": "item-braveheart",
@@ -30627,7 +30627,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-brionac": {
     "id": "item-brionac",
@@ -30689,7 +30689,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-broadsword": {
     "id": "item-broadsword",
@@ -30746,7 +30746,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-broken-wall": {
     "id": "item-broken-wall",
@@ -30806,7 +30806,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-bubble-staff": {
     "id": "item-bubble-staff",
@@ -30872,7 +30872,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-burning-sword": {
     "id": "item-burning-sword",
@@ -30931,7 +30931,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-caestus": {
     "id": "item-caestus",
@@ -30994,7 +30994,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-caliburn": {
     "id": "item-caliburn",
@@ -31056,7 +31056,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-cat-punch": {
     "id": "item-cat-punch",
@@ -31121,7 +31121,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-chaos-blade": {
     "id": "item-chaos-blade",
@@ -31185,7 +31185,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-chaos-edge": {
     "id": "item-chaos-edge",
@@ -31250,7 +31250,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-cheap-axe": {
     "id": "item-cheap-axe",
@@ -31311,7 +31311,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-cheap-hammer": {
     "id": "item-cheap-hammer",
@@ -31373,7 +31373,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-cheap-hoe": {
     "id": "item-cheap-hoe",
@@ -31429,7 +31429,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-cheap-pole": {
     "id": "item-cheap-pole",
@@ -31487,7 +31487,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-cheap-sickle": {
     "id": "item-cheap-sickle",
@@ -31544,7 +31544,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-cheap-waterpot": {
     "id": "item-cheap-waterpot",
@@ -31601,7 +31601,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-chopping-axe": {
     "id": "item-chopping-axe",
@@ -31660,7 +31660,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-claymore": {
     "id": "item-claymore",
@@ -31717,7 +31717,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-corsesca": {
     "id": "item-corsesca",
@@ -31780,7 +31780,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-crescent-axe": {
     "id": "item-crescent-axe",
@@ -31843,7 +31843,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-crimson-staff": {
     "id": "item-crimson-staff",
@@ -31908,7 +31908,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-crystal-hammer": {
     "id": "item-crystal-hammer",
@@ -31970,7 +31970,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-cutlass": {
     "id": "item-cutlass",
@@ -32028,7 +32028,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-cyclone-blade": {
     "id": "item-cyclone-blade",
@@ -32087,7 +32087,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-cyclone-rod": {
     "id": "item-cyclone-rod",
@@ -32153,7 +32153,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-daicone": {
     "id": "item-daicone",
@@ -32213,7 +32213,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-dancing-dicer": {
     "id": "item-dancing-dicer",
@@ -32275,7 +32275,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-dark-invitation": {
     "id": "item-dark-invitation",
@@ -32340,7 +32340,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-deep-blizzard": {
     "id": "item-deep-blizzard",
@@ -32401,7 +32401,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-defender": {
     "id": "item-defender",
@@ -32460,7 +32460,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-dekash": {
     "id": "item-dekash",
@@ -32518,7 +32518,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-demon-axe": {
     "id": "item-demon-axe",
@@ -32579,7 +32579,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-desert-wind": {
     "id": "item-desert-wind",
@@ -32640,7 +32640,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-devil-finger": {
     "id": "item-devil-finger",
@@ -32707,7 +32707,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-diamond-rod": {
     "id": "item-diamond-rod",
@@ -32771,7 +32771,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-double-edge": {
     "id": "item-double-edge",
@@ -32832,7 +32832,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-double-scratch": {
     "id": "item-double-scratch",
@@ -32891,7 +32891,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-dragon-claws": {
     "id": "item-dragon-claws",
@@ -32952,7 +32952,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-dragon-slayer": {
     "id": "item-dragon-slayer",
@@ -33013,7 +33013,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-dragons-fang": {
     "id": "item-dragons-fang",
@@ -33077,7 +33077,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-dragoon-claw": {
     "id": "item-dragoon-claw",
@@ -33138,7 +33138,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-durendal": {
     "id": "item-durendal",
@@ -33200,7 +33200,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-earnest-edge": {
     "id": "item-earnest-edge",
@@ -33262,7 +33262,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-earth-shade": {
     "id": "item-earth-shade",
@@ -33323,7 +33323,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-earth-staff": {
     "id": "item-earth-staff",
@@ -33387,7 +33387,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-efreet": {
     "id": "item-efreet",
@@ -33449,7 +33449,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-elvish-harp": {
     "id": "item-elvish-harp",
@@ -33519,7 +33519,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-emerald-edge": {
     "id": "item-emerald-edge",
@@ -33579,7 +33579,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-emerald-rod": {
     "id": "item-emerald-rod",
@@ -33643,7 +33643,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-executioner": {
     "id": "item-executioner",
@@ -33706,7 +33706,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-famous-pole": {
     "id": "item-famous-pole",
@@ -33765,7 +33765,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-fatal-crush": {
     "id": "item-fatal-crush",
@@ -33828,7 +33828,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-feather-lance": {
     "id": "item-feather-lance",
@@ -33891,7 +33891,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-fenrir": {
     "id": "item-fenrir",
@@ -33955,7 +33955,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-fists-of-dark": {
     "id": "item-fists-of-dark",
@@ -34018,7 +34018,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-fists-of-fire": {
     "id": "item-fists-of-fire",
@@ -34081,7 +34081,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-fists-of-light": {
     "id": "item-fists-of-light",
@@ -34145,7 +34145,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-fists-of-the-earth": {
     "id": "item-fists-of-the-earth",
@@ -34209,7 +34209,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-fists-of-water": {
     "id": "item-fists-of-water",
@@ -34273,7 +34273,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-fists-of-wind": {
     "id": "item-fists-of-wind",
@@ -34335,7 +34335,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-fivestaff": {
     "id": "item-fivestaff",
@@ -34396,7 +34396,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-flamberge": {
     "id": "item-flamberge",
@@ -34460,7 +34460,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-flame-hammer": {
     "id": "item-flame-hammer",
@@ -34522,7 +34522,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-flame-saber": {
     "id": "item-flame-saber",
@@ -34582,7 +34582,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-flare-lance": {
     "id": "item-flare-lance",
@@ -34645,7 +34645,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-flare-staff": {
     "id": "item-flare-staff",
@@ -34709,7 +34709,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-force-divide": {
     "id": "item-force-divide",
@@ -34771,7 +34771,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-force-element": {
     "id": "item-force-element",
@@ -34834,7 +34834,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-friendly-rod": {
     "id": "item-friendly-rod",
@@ -34901,7 +34901,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-frost-axe": {
     "id": "item-frost-axe",
@@ -34964,7 +34964,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-frost-edge": {
     "id": "item-frost-edge",
@@ -35024,7 +35024,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-gae-bolg": {
     "id": "item-gae-bolg",
@@ -35086,7 +35086,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-gaia-rod": {
     "id": "item-gaia-rod",
@@ -35152,7 +35152,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-gaia-sword": {
     "id": "item-gaia-sword",
@@ -35212,7 +35212,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-gigant-hammer": {
     "id": "item-gigant-hammer",
@@ -35276,7 +35276,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-gladius": {
     "id": "item-gladius",
@@ -35339,7 +35339,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-golden-hammer": {
     "id": "item-golden-hammer",
@@ -35399,7 +35399,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-golden-turnip-staff": {
     "id": "item-golden-turnip-staff",
@@ -35469,7 +35469,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-golem-punch": {
     "id": "item-golem-punch",
@@ -35532,7 +35532,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-gorgeous-lx": {
     "id": "item-gorgeous-lx",
@@ -35592,7 +35592,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-gorgeous-sword": {
     "id": "item-gorgeous-sword",
@@ -35656,7 +35656,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-grand-smasher": {
     "id": "item-grand-smasher",
@@ -35717,7 +35717,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-grantale": {
     "id": "item-grantale",
@@ -35779,7 +35779,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-graviton-hammer": {
     "id": "item-graviton-hammer",
@@ -35840,7 +35840,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-great-axe": {
     "id": "item-great-axe",
@@ -35899,7 +35899,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-great-hammer": {
     "id": "item-great-hammer",
@@ -35958,7 +35958,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-great-sword": {
     "id": "item-great-sword",
@@ -36016,7 +36016,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-gungnir": {
     "id": "item-gungnir",
@@ -36080,7 +36080,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-halberd": {
     "id": "item-halberd",
@@ -36139,7 +36139,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-hammer": {
     "id": "item-hammer",
@@ -36199,7 +36199,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-hand-of-god": {
     "id": "item-hand-of-god",
@@ -36263,7 +36263,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-heart-fire": {
     "id": "item-heart-fire",
@@ -36324,7 +36324,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-heat-axe": {
     "id": "item-heat-axe",
@@ -36386,7 +36386,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-heaven-asunder": {
     "id": "item-heaven-asunder",
@@ -36452,7 +36452,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-heavy-lance": {
     "id": "item-heavy-lance",
@@ -36512,7 +36512,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-hell-branch": {
     "id": "item-hell-branch",
@@ -36578,7 +36578,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-hell-curse": {
     "id": "item-hell-curse",
@@ -36651,7 +36651,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-ice-hammer": {
     "id": "item-ice-hammer",
@@ -36712,7 +36712,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-ice-staff": {
     "id": "item-ice-staff",
@@ -36776,7 +36776,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-iceberg": {
     "id": "item-iceberg",
@@ -36839,7 +36839,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-icifier": {
     "id": "item-icifier",
@@ -36901,7 +36901,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-invisiblade": {
     "id": "item-invisiblade",
@@ -36961,7 +36961,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-iron-bat": {
     "id": "item-iron-bat",
@@ -37021,7 +37021,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-iron-edge": {
     "id": "item-iron-edge",
@@ -37080,7 +37080,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-iron-hammer": {
     "id": "item-iron-hammer",
@@ -37139,7 +37139,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-iron-sickle": {
     "id": "item-iron-sickle",
@@ -37196,7 +37196,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-ironleaf-fists": {
     "id": "item-ironleaf-fists",
@@ -37261,7 +37261,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-joy-waterpot": {
     "id": "item-joy-waterpot",
@@ -37324,7 +37324,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-katana": {
     "id": "item-katana",
@@ -37386,7 +37386,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-katzbalger": {
     "id": "item-katzbalger",
@@ -37445,7 +37445,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-kongo": {
     "id": "item-kongo",
@@ -37505,7 +37505,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-kote": {
     "id": "item-kote",
@@ -37565,7 +37565,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-lance": {
     "id": "item-lance",
@@ -37627,7 +37627,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-leather-gloves": {
     "id": "item-leather-gloves",
@@ -37685,7 +37685,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-legendary-sickle": {
     "id": "item-legendary-sickle",
@@ -37747,7 +37747,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-legion": {
     "id": "item-legion",
@@ -37811,7 +37811,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-lightning-wand": {
     "id": "item-lightning-wand",
@@ -37875,7 +37875,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-lion-waterpot": {
     "id": "item-lion-waterpot",
@@ -37932,7 +37932,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-lollipop": {
     "id": "item-lollipop",
@@ -37993,7 +37993,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-love-love-rod": {
     "id": "item-love-love-rod",
@@ -38059,7 +38059,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-luck-blade": {
     "id": "item-luck-blade",
@@ -38119,7 +38119,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-lumber-axe": {
     "id": "item-lumber-axe",
@@ -38179,7 +38179,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-mages-staff": {
     "id": "item-mages-staff",
@@ -38243,7 +38243,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-magic-broom": {
     "id": "item-magic-broom",
@@ -38310,7 +38310,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-magic-shot": {
     "id": "item-magic-shot",
@@ -38387,7 +38387,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-magical-lance": {
     "id": "item-magical-lance",
@@ -38450,7 +38450,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-metus": {
     "id": "item-metus",
@@ -38516,7 +38516,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-miracle-axe": {
     "id": "item-miracle-axe",
@@ -38581,7 +38581,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-mjolnir": {
     "id": "item-mjolnir",
@@ -38643,7 +38643,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-monk-staff": {
     "id": "item-monk-staff",
@@ -38705,7 +38705,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-moon-shadow": {
     "id": "item-moon-shadow",
@@ -38770,7 +38770,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-mountain-axe": {
     "id": "item-mountain-axe",
@@ -38830,7 +38830,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-needle-spear": {
     "id": "item-needle-spear",
@@ -38890,7 +38890,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-orcus-sword": {
     "id": "item-orcus-sword",
@@ -38951,7 +38951,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-orochi": {
     "id": "item-orochi",
@@ -39012,7 +39012,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-overbreak": {
     "id": "item-overbreak",
@@ -39075,7 +39075,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-pine-club": {
     "id": "item-pine-club",
@@ -39135,7 +39135,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-pitchfork": {
     "id": "item-pitchfork",
@@ -39195,7 +39195,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-platinum-edge": {
     "id": "item-platinum-edge",
@@ -39255,7 +39255,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-platinum-hammer": {
     "id": "item-platinum-hammer",
@@ -39318,7 +39318,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-platinum-sword": {
     "id": "item-platinum-sword",
@@ -39381,7 +39381,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-poison-blade": {
     "id": "item-poison-blade",
@@ -39443,7 +39443,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-poison-queen": {
     "id": "item-poison-queen",
@@ -39509,7 +39509,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-poison-spear": {
     "id": "item-poison-spear",
@@ -39572,7 +39572,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-pole-axe": {
     "id": "item-pole-axe",
@@ -39635,7 +39635,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-priest-saber": {
     "id": "item-priest-saber",
@@ -39699,7 +39699,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-psycho": {
     "id": "item-psycho",
@@ -39765,7 +39765,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-punisher": {
     "id": "item-punisher",
@@ -39825,7 +39825,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-quality-sickle": {
     "id": "item-quality-sickle",
@@ -39882,7 +39882,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-rainbow-waterpot": {
     "id": "item-rainbow-waterpot",
@@ -39945,7 +39945,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-rampage": {
     "id": "item-rampage",
@@ -40005,7 +40005,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-raventine": {
     "id": "item-raventine",
@@ -40067,7 +40067,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-rock-axe": {
     "id": "item-rock-axe",
@@ -40129,7 +40129,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-rod": {
     "id": "item-rod",
@@ -40192,7 +40192,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-ruby-rod": {
     "id": "item-ruby-rod",
@@ -40256,7 +40256,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-rune-blade": {
     "id": "item-rune-blade",
@@ -40318,7 +40318,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-rune-edge": {
     "id": "item-rune-edge",
@@ -40378,7 +40378,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-rune-legend": {
     "id": "item-rune-legend",
@@ -40440,7 +40440,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-rune-staff": {
     "id": "item-rune-staff",
@@ -40512,7 +40512,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-sacred-pole": {
     "id": "item-sacred-pole",
@@ -40579,7 +40579,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-safety-lance": {
     "id": "item-safety-lance",
@@ -40639,7 +40639,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-saint-axe": {
     "id": "item-saint-axe",
@@ -40702,7 +40702,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-sakura": {
     "id": "item-sakura",
@@ -40766,7 +40766,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-salamander": {
     "id": "item-salamander",
@@ -40827,7 +40827,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-sapphire-rod": {
     "id": "item-sapphire-rod",
@@ -40891,7 +40891,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-schnabel": {
     "id": "item-schnabel",
@@ -40952,7 +40952,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-scrap-metal": {
     "id": "item-scrap-metal",
@@ -41048,7 +41048,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-seasoned-hoe": {
     "id": "item-seasoned-hoe",
@@ -41105,7 +41105,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-shine-blade": {
     "id": "item-shine-blade",
@@ -41166,7 +41166,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-shiny-hoe": {
     "id": "item-shiny-hoe",
@@ -41223,7 +41223,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-shooting-star-staff": {
     "id": "item-shooting-star-staff",
@@ -41294,7 +41294,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-short-dagger": {
     "id": "item-short-dagger",
@@ -41352,7 +41352,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-silent-grave": {
     "id": "item-silent-grave",
@@ -41417,7 +41417,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-silver-hammer": {
     "id": "item-silver-hammer",
@@ -41477,7 +41477,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-silver-staff": {
     "id": "item-silver-staff",
@@ -41541,7 +41541,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-skilled-pole": {
     "id": "item-skilled-pole",
@@ -41600,7 +41600,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-sky-hammer": {
     "id": "item-sky-hammer",
@@ -41662,7 +41662,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-smash-blade": {
     "id": "item-smash-blade",
@@ -41726,7 +41726,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-snakesword": {
     "id": "item-snakesword",
@@ -41784,7 +41784,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-snow-crown": {
     "id": "item-snow-crown",
@@ -41845,7 +41845,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-sonic-dagger": {
     "id": "item-sonic-dagger",
@@ -41907,7 +41907,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-sorcerers-wand": {
     "id": "item-sorcerers-wand",
@@ -41980,7 +41980,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-soul-eater": {
     "id": "item-soul-eater",
@@ -42045,7 +42045,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-spear": {
     "id": "item-spear",
@@ -42103,7 +42103,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-spiked-hammer": {
     "id": "item-spiked-hammer",
@@ -42165,7 +42165,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-splash-star": {
     "id": "item-splash-star",
@@ -42228,7 +42228,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-spoon": {
     "id": "item-spoon",
@@ -42287,7 +42287,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-staff": {
     "id": "item-staff",
@@ -42351,7 +42351,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-star-saber": {
     "id": "item-star-saber",
@@ -42412,7 +42412,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-steel-edge": {
     "id": "item-steel-edge",
@@ -42471,7 +42471,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-steel-katana": {
     "id": "item-steel-katana",
@@ -42530,7 +42530,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-steel-slicer": {
     "id": "item-steel-slicer",
@@ -42591,7 +42591,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-steel-sword": {
     "id": "item-steel-sword",
@@ -42652,7 +42652,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-storm-wand": {
     "id": "item-storm-wand",
@@ -42718,7 +42718,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-strong-stone": {
     "id": "item-strong-stone",
@@ -42782,7 +42782,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-sturdy-hoe": {
     "id": "item-sturdy-hoe",
@@ -42839,7 +42839,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-sunspot": {
     "id": "item-sunspot",
@@ -42901,7 +42901,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-super-sickle": {
     "id": "item-super-sickle",
@@ -42960,7 +42960,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-sweet-potato-staff": {
     "id": "item-sweet-potato-staff",
@@ -43030,7 +43030,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-syringe": {
     "id": "item-syringe",
@@ -43098,7 +43098,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-thief-knife": {
     "id": "item-thief-knife",
@@ -43156,7 +43156,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-tin-waterpot": {
     "id": "item-tin-waterpot",
@@ -43213,7 +43213,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-tomahawk": {
     "id": "item-tomahawk",
@@ -43275,7 +43275,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-toy-hammer": {
     "id": "item-toy-hammer",
@@ -43335,7 +43335,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-trident": {
     "id": "item-trident",
@@ -43394,7 +43394,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-twin-blade": {
     "id": "item-twin-blade",
@@ -43458,7 +43458,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-twin-justice": {
     "id": "item-twin-justice",
@@ -43520,7 +43520,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-twin-leeks": {
     "id": "item-twin-leeks",
@@ -43585,7 +43585,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-veggieblade": {
     "id": "item-veggieblade",
@@ -43644,7 +43644,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-volcanon": {
     "id": "item-volcanon",
@@ -43705,7 +43705,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-war-hammer": {
     "id": "item-war-hammer",
@@ -43767,7 +43767,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-water-spear": {
     "id": "item-water-spear",
@@ -43828,7 +43828,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-wind-edge": {
     "id": "item-wind-edge",
@@ -43888,7 +43888,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-wind-sword": {
     "id": "item-wind-sword",
@@ -43948,7 +43948,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-wizards-staff": {
     "id": "item-wizards-staff",
@@ -44012,7 +44012,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-wood-staff": {
     "id": "item-wood-staff",
@@ -44070,7 +44070,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-zweihaender": {
     "id": "item-zweihaender",
@@ -44131,7 +44131,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-apple": {
     "id": "item-apple",
@@ -55107,7 +55107,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-platinum-sword-plus": {
     "id": "item-platinum-sword-plus",
@@ -55165,7 +55165,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-zweihaender-plus": {
     "id": "item-zweihaender-plus",
@@ -55224,7 +55224,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-flamberge-plus": {
     "id": "item-flamberge-plus",
@@ -55282,7 +55282,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-lance-plus": {
     "id": "item-lance-plus",
@@ -55341,7 +55341,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-corsesca-plus": {
     "id": "item-corsesca-plus",
@@ -55400,7 +55400,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-pole-axe-plus": {
     "id": "item-pole-axe-plus",
@@ -55459,7 +55459,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-crescent-axe-plus": {
     "id": "item-crescent-axe-plus",
@@ -55519,7 +55519,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-war-hammer-plus": {
     "id": "item-war-hammer-plus",
@@ -55578,7 +55578,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-gigant-hammer-plus": {
     "id": "item-gigant-hammer-plus",
@@ -55640,7 +55640,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-mages-staff-plus": {
     "id": "item-mages-staff-plus",
@@ -55708,7 +55708,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-no-rot-alpha": {
     "id": "item-no-rot-alpha",

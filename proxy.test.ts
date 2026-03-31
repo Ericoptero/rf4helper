@@ -13,8 +13,8 @@ describe('proxy', () => {
 
     expect(result).toContain("default-src 'self'");
     expect(result).toContain("script-src 'self' 'nonce-test-nonce' 'strict-dynamic'");
-    expect(result).toContain("style-src 'self' 'nonce-test-nonce'");
-    expect(result).not.toContain("'unsafe-inline'");
+    expect(result).toContain("style-src 'self' 'unsafe-inline'");
+    expect(result).not.toContain(`script-src 'self' 'nonce-test-nonce' 'strict-dynamic' 'unsafe-inline'`);
   });
 
   it('adds CSP, nonce, and fixed security headers to responses', () => {

@@ -308,7 +308,8 @@ describe('items.json recipe normalization', () => {
   });
 
   it('keeps rarityPoints as the only persisted rarity field', () => {
-    expect(items['item-broadsword']?.rarityPoints).toBe(15);
+    // item-broadsword is an equipment base — rarityPoints is 0 by design (equipment bases do not contribute rarity)
+    expect(items['item-broadsword']?.rarityPoints).toBe(0);
     expect(items['item-broadsword']?.crafter?.equipment?.weapon?.rarity).toBeUndefined();
     expect(items['item-fire-crystal']?.rarityPoints).toBe(7);
     expect(items['item-fire-crystal']?.crafter?.material?.weapon?.rarity).toBeUndefined();
