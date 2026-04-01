@@ -108,7 +108,7 @@ export function CharacterDetailsContent({
                 {character.battle.description ?? 'Battle description unavailable.'}
               </p>
             </div>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="flex flex-col gap-4">
               <div className="rounded-xl border bg-muted/30 p-4">
                 <h4 className="mb-3 font-semibold">Equipment</h4>
                 <div className="space-y-2 text-sm">
@@ -133,11 +133,11 @@ export function CharacterDetailsContent({
                 </div>
               </div>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="space-y-1">
               {battleStats.map(([label, value]) => (
-                <div key={label} className="rounded-xl border bg-muted/30 p-3">
-                  <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
-                  <div className="mt-1 text-lg font-semibold">{value}</div>
+                <div key={label} className="flex items-center gap-2 rounded-lg bg-background/60 px-3 py-2">
+                  <span className="text-sm text-muted-foreground">{label}</span>
+                  <span className="ml-auto text-sm font-semibold">{value}</span>
                 </div>
               ))}
             </div>

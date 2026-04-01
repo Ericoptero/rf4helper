@@ -236,6 +236,10 @@ function applyItemsSort(items: Item[], sortValue: string | undefined) {
       return items.toSorted((left, right) => right.name.localeCompare(left.name));
     case 'buy-desc':
       return items.toSorted((left, right) => (right.buy ?? 0) - (left.buy ?? 0));
+    case 'sell-asc':
+      return items.toSorted((left, right) => (left.sell ?? 0) - (right.sell ?? 0));
+    case 'rarity-desc':
+      return items.toSorted((left, right) => (right.rarityPoints ?? 0) - (left.rarityPoints ?? 0));
     case 'sell-desc':
       return items.toSorted((left, right) => (right.sell ?? 0) - (left.sell ?? 0));
     case 'name-asc':

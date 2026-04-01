@@ -13332,7 +13332,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-apple-juice": {
     "id": "item-apple-juice",
@@ -13378,7 +13378,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-apple-pie": {
     "id": "item-apple-pie",
@@ -13427,7 +13427,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-baked-apple": {
     "id": "item-baked-apple",
@@ -13475,7 +13475,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-baked-onigiri": {
     "id": "item-baked-onigiri",
@@ -13521,7 +13521,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-bamboo-rice": {
     "id": "item-bamboo-rice",
@@ -13570,7 +13570,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-blowfish-sashimi": {
     "id": "item-blowfish-sashimi",
@@ -13624,7 +13624,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-boiled-egg": {
     "id": "item-boiled-egg",
@@ -13670,7 +13670,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-boiled-gyoza": {
     "id": "item-boiled-gyoza",
@@ -13726,7 +13726,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-boiled-pumpkin": {
     "id": "item-boiled-pumpkin",
@@ -13772,7 +13772,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-boiled-spinach": {
     "id": "item-boiled-spinach",
@@ -13818,7 +13818,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-bread": {
     "id": "item-bread",
@@ -13873,7 +13873,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-butter": {
     "id": "item-butter",
@@ -13924,7 +13924,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-butter-roll": {
     "id": "item-butter-roll",
@@ -13973,7 +13973,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-cabbage-cakes": {
     "id": "item-cabbage-cakes",
@@ -14032,7 +14032,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-cake": {
     "id": "item-cake",
@@ -14091,7 +14091,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-char-sashimi": {
     "id": "item-char-sashimi",
@@ -14137,7 +14137,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-cheese": {
     "id": "item-cheese",
@@ -14197,7 +14197,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-cheese-bread": {
     "id": "item-cheese-bread",
@@ -14252,7 +14252,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-cheese-fondue": {
     "id": "item-cheese-fondue",
@@ -14299,7 +14299,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-cheesecake": {
     "id": "item-cheesecake",
@@ -14352,7 +14352,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-cherry-sashimi": {
     "id": "item-cherry-sashimi",
@@ -14398,7 +14398,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-chinese-manju": {
     "id": "item-chinese-manju",
@@ -14448,7 +14448,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-choco-cookie": {
     "id": "item-choco-cookie",
@@ -14498,7 +14498,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-chocolate-cake": {
     "id": "item-chocolate-cake",
@@ -14553,7 +14553,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-chocolate-sponge": {
     "id": "item-chocolate-sponge",
@@ -14604,7 +14604,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-cookie": {
     "id": "item-cookie",
@@ -14653,7 +14653,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-corn-cereal": {
     "id": "item-corn-cereal",
@@ -14706,7 +14706,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-corn-on-the-cob": {
     "id": "item-corn-on-the-cob",
@@ -14755,7 +14755,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-croquettes": {
     "id": "item-croquettes",
@@ -14805,7 +14805,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-curry-bread": {
     "id": "item-curry-bread",
@@ -14866,7 +14866,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-curry-manju": {
     "id": "item-curry-manju",
@@ -14920,7 +14920,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-curry-rice": {
     "id": "item-curry-rice",
@@ -14975,7 +14975,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-curry-udon": {
     "id": "item-curry-udon",
@@ -15028,7 +15028,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-disastrous-dish": {
     "id": "item-disastrous-dish",
@@ -15147,7 +15147,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-doria": {
     "id": "item-doria",
@@ -15203,7 +15203,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-dried-sardines": {
     "id": "item-dried-sardines",
@@ -15251,7 +15251,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-dry-curry": {
     "id": "item-dry-curry",
@@ -15314,7 +15314,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-dumplings": {
     "id": "item-dumplings",
@@ -15362,7 +15362,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-egg-bowl": {
     "id": "item-egg-bowl",
@@ -15409,7 +15409,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-failed-dish": {
     "id": "item-failed-dish",
@@ -15509,7 +15509,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-flan": {
     "id": "item-flan",
@@ -15559,7 +15559,7 @@
         }
       }
     },
-    "rarityPoints": 5
+    "rarityPoints": 0
   },
   "item-flounder-sashimi": {
     "id": "item-flounder-sashimi",
@@ -15605,7 +15605,7 @@
         }
       }
     },
-    "rarityPoints": 5
+    "rarityPoints": 0
   },
   "item-french-fries": {
     "id": "item-french-fries",
@@ -15654,7 +15654,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-french-toast": {
     "id": "item-french-toast",
@@ -15703,7 +15703,7 @@
         }
       }
     },
-    "rarityPoints": 5
+    "rarityPoints": 0
   },
   "item-fried-eggs": {
     "id": "item-fried-eggs",
@@ -15751,7 +15751,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-fried-rice": {
     "id": "item-fried-rice",
@@ -15801,7 +15801,7 @@
         }
       }
     },
-    "rarityPoints": 5
+    "rarityPoints": 0
   },
   "item-fried-udon": {
     "id": "item-fried-udon",
@@ -15864,7 +15864,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-fried-veggies": {
     "id": "item-fried-veggies",
@@ -15920,7 +15920,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-fruit-juice": {
     "id": "item-fruit-juice",
@@ -15971,7 +15971,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-fruit-sandwich": {
     "id": "item-fruit-sandwich",
@@ -16020,7 +16020,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-fruit-smoothie": {
     "id": "item-fruit-smoothie",
@@ -16067,7 +16067,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-girella-sashimi": {
     "id": "item-girella-sashimi",
@@ -16113,7 +16113,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-glazed-yam": {
     "id": "item-glazed-yam",
@@ -16166,7 +16166,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-glitter-sashimi": {
     "id": "item-glitter-sashimi",
@@ -16220,7 +16220,7 @@
         "lightRes": 0.5
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-gold-juice": {
     "id": "item-gold-juice",
@@ -16281,7 +16281,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-grape-jam": {
     "id": "item-grape-jam",
@@ -16326,7 +16326,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-grape-juice": {
     "id": "item-grape-juice",
@@ -16372,7 +16372,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-grape-liqueur": {
     "id": "item-grape-liqueur",
@@ -16430,7 +16430,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-gratin": {
     "id": "item-gratin",
@@ -16486,7 +16486,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-grilled-blowfish": {
     "id": "item-grilled-blowfish",
@@ -16547,7 +16547,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-grilled-c-carp": {
     "id": "item-grilled-c-carp",
@@ -16594,7 +16594,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-grilled-fflounder": {
     "id": "item-grilled-fflounder",
@@ -16645,7 +16645,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-grilled-flounder": {
     "id": "item-grilled-flounder",
@@ -16692,7 +16692,7 @@
         }
       }
     },
-    "rarityPoints": 5
+    "rarityPoints": 0
   },
   "item-grilled-g-snapper": {
     "id": "item-grilled-g-snapper",
@@ -16750,7 +16750,7 @@
         "lightRes": 0.5
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-grilled-gibelio": {
     "id": "item-grilled-gibelio",
@@ -16797,7 +16797,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-grilled-girella": {
     "id": "item-grilled-girella",
@@ -16844,7 +16844,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-grilled-l-snapper": {
     "id": "item-grilled-l-snapper",
@@ -16897,7 +16897,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-grilled-lamp-squid": {
     "id": "item-grilled-lamp-squid",
@@ -16955,7 +16955,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-grilled-lobster": {
     "id": "item-grilled-lobster",
@@ -17002,7 +17002,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-grilled-mackerel": {
     "id": "item-grilled-mackerel",
@@ -17049,7 +17049,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-grilled-miso": {
     "id": "item-grilled-miso",
@@ -17095,7 +17095,7 @@
         }
       }
     },
-    "rarityPoints": 5
+    "rarityPoints": 0
   },
   "item-grilled-needlefish": {
     "id": "item-grilled-needlefish",
@@ -17142,7 +17142,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-grilled-sflounder": {
     "id": "item-grilled-sflounder",
@@ -17193,7 +17193,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-grilled-shrimp": {
     "id": "item-grilled-shrimp",
@@ -17240,7 +17240,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-grilled-skipjack": {
     "id": "item-grilled-skipjack",
@@ -17287,7 +17287,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-grilled-snapper": {
     "id": "item-grilled-snapper",
@@ -17338,7 +17338,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-grilled-squid": {
     "id": "item-grilled-squid",
@@ -17385,7 +17385,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-grilled-sunsquid": {
     "id": "item-grilled-sunsquid",
@@ -17439,7 +17439,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-grilled-turbot": {
     "id": "item-grilled-turbot",
@@ -17486,7 +17486,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-grilled-yellowtail": {
     "id": "item-grilled-yellowtail",
@@ -17539,7 +17539,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-gyoza": {
     "id": "item-gyoza",
@@ -17601,7 +17601,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-hot-chocolate": {
     "id": "item-hot-chocolate",
@@ -17647,7 +17647,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-hot-juice": {
     "id": "item-hot-juice",
@@ -17702,7 +17702,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-hot-milk": {
     "id": "item-hot-milk",
@@ -17751,7 +17751,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-ice-cream": {
     "id": "item-ice-cream",
@@ -17809,7 +17809,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-jam-roll": {
     "id": "item-jam-roll",
@@ -17858,7 +17858,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-ketchup": {
     "id": "item-ketchup",
@@ -17903,7 +17903,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-lamp-squid-sashimi": {
     "id": "item-lamp-squid-sashimi",
@@ -17955,7 +17955,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-lobster-sashimi": {
     "id": "item-lobster-sashimi",
@@ -18001,7 +18001,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-lover-sashimi": {
     "id": "item-lover-sashimi",
@@ -18050,7 +18050,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-marmalade": {
     "id": "item-marmalade",
@@ -18095,7 +18095,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-mayonnaise": {
     "id": "item-mayonnaise",
@@ -18150,7 +18150,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-meat-dumpling": {
     "id": "item-meat-dumpling",
@@ -18206,7 +18206,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-milk-porridge": {
     "id": "item-milk-porridge",
@@ -18257,7 +18257,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-miso-eggplant": {
     "id": "item-miso-eggplant",
@@ -18305,7 +18305,7 @@
         }
       }
     },
-    "rarityPoints": 5
+    "rarityPoints": 0
   },
   "item-mixed-juice": {
     "id": "item-mixed-juice",
@@ -18364,7 +18364,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-mixed-smoothie": {
     "id": "item-mixed-smoothie",
@@ -18416,7 +18416,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-needlefish-sashimi": {
     "id": "item-needlefish-sashimi",
@@ -18462,7 +18462,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-omelet": {
     "id": "item-omelet",
@@ -18514,7 +18514,7 @@
         }
       }
     },
-    "rarityPoints": 5
+    "rarityPoints": 0
   },
   "item-omelet-rice": {
     "id": "item-omelet-rice",
@@ -18572,7 +18572,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-onigiri": {
     "id": "item-onigiri",
@@ -18623,7 +18623,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-orange-juice": {
     "id": "item-orange-juice",
@@ -18669,7 +18669,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-pancakes": {
     "id": "item-pancakes",
@@ -18721,7 +18721,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-pickle-mix": {
     "id": "item-pickle-mix",
@@ -18781,7 +18781,7 @@
         "lightRes": 0.099854
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-pickled-turnip": {
     "id": "item-pickled-turnip",
@@ -18838,7 +18838,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-pickles": {
     "id": "item-pickles",
@@ -18886,7 +18886,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-pike-sashimi": {
     "id": "item-pike-sashimi",
@@ -18932,7 +18932,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-pineapple-juice": {
     "id": "item-pineapple-juice",
@@ -18983,7 +18983,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-pizza": {
     "id": "item-pizza",
@@ -19039,7 +19039,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-popcorn": {
     "id": "item-popcorn",
@@ -19091,7 +19091,7 @@
         }
       }
     },
-    "rarityPoints": 9
+    "rarityPoints": 0
   },
   "item-pound-cake": {
     "id": "item-pound-cake",
@@ -19140,7 +19140,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-prelude-to-love": {
     "id": "item-prelude-to-love",
@@ -19202,7 +19202,7 @@
         "lightRes": 0.5
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-pumpkin-flan": {
     "id": "item-pumpkin-flan",
@@ -19253,7 +19253,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-rainbow-sashimi": {
     "id": "item-rainbow-sashimi",
@@ -19302,7 +19302,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-raisin-bread": {
     "id": "item-raisin-bread",
@@ -19351,7 +19351,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-relax-tea": {
     "id": "item-relax-tea",
@@ -19409,7 +19409,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-relax-tea-leaves": {
     "id": "item-relax-tea-leaves",
@@ -19464,7 +19464,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-rice-porridge": {
     "id": "item-rice-porridge",
@@ -19514,7 +19514,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-risotto": {
     "id": "item-risotto",
@@ -19564,7 +19564,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-rockfish-stew": {
     "id": "item-rockfish-stew",
@@ -19612,7 +19612,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-royal-curry": {
     "id": "item-royal-curry",
@@ -19674,7 +19674,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-salad": {
     "id": "item-salad",
@@ -19731,7 +19731,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-salmon-onigiri": {
     "id": "item-salmon-onigiri",
@@ -19780,7 +19780,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-salmon-sashimi": {
     "id": "item-salmon-sashimi",
@@ -19826,7 +19826,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-salted-c-salmon": {
     "id": "item-salted-c-salmon",
@@ -19873,7 +19873,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-salted-char": {
     "id": "item-salted-char",
@@ -19920,7 +19920,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-salted-chub": {
     "id": "item-salted-chub",
@@ -19967,7 +19967,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-salted-masu-trout": {
     "id": "item-salted-masu-trout",
@@ -20014,7 +20014,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-salted-pike": {
     "id": "item-salted-pike",
@@ -20061,7 +20061,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-salted-pond-smelt": {
     "id": "item-salted-pond-smelt",
@@ -20108,7 +20108,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-salted-r-trout": {
     "id": "item-salted-r-trout",
@@ -20162,7 +20162,7 @@
         }
       }
     },
-    "rarityPoints": 4
+    "rarityPoints": 0
   },
   "item-salted-salmon": {
     "id": "item-salted-salmon",
@@ -20212,7 +20212,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-salted-taimen": {
     "id": "item-salted-taimen",
@@ -20266,7 +20266,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-sandwich": {
     "id": "item-sandwich",
@@ -20316,7 +20316,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-sardine-sashimi": {
     "id": "item-sardine-sashimi",
@@ -20362,7 +20362,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-seafood-doria": {
     "id": "item-seafood-doria",
@@ -20416,7 +20416,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-seafood-gratin": {
     "id": "item-seafood-gratin",
@@ -20470,7 +20470,7 @@
         }
       }
     },
-    "rarityPoints": 7
+    "rarityPoints": 0
   },
   "item-seafood-pizza": {
     "id": "item-seafood-pizza",
@@ -20527,7 +20527,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-shrimp-sashimi": {
     "id": "item-shrimp-sashimi",
@@ -20573,7 +20573,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-skipjack-sashimi": {
     "id": "item-skipjack-sashimi",
@@ -20619,7 +20619,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-snapper-sashimi": {
     "id": "item-snapper-sashimi",
@@ -20665,7 +20665,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-squid-sashimi": {
     "id": "item-squid-sashimi",
@@ -20711,7 +20711,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-steamed-bread": {
     "id": "item-steamed-bread",
@@ -20761,7 +20761,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-steamed-gyoza": {
     "id": "item-steamed-gyoza",
@@ -20822,7 +20822,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-stew": {
     "id": "item-stew",
@@ -20877,7 +20877,7 @@
         }
       }
     },
-    "rarityPoints": 14
+    "rarityPoints": 0
   },
   "item-strawberry-jam": {
     "id": "item-strawberry-jam",
@@ -20922,7 +20922,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-strawberry-milk": {
     "id": "item-strawberry-milk",
@@ -20969,7 +20969,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-sunsquid-sashimi": {
     "id": "item-sunsquid-sashimi",
@@ -21019,7 +21019,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-sweet-potato": {
     "id": "item-sweet-potato",
@@ -21074,7 +21074,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-taimen-sashimi": {
     "id": "item-taimen-sashimi",
@@ -21124,7 +21124,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-tempura": {
     "id": "item-tempura",
@@ -21179,7 +21179,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-tempura-bowl": {
     "id": "item-tempura-bowl",
@@ -21230,7 +21230,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-tempura-udon": {
     "id": "item-tempura-udon",
@@ -21283,7 +21283,7 @@
         }
       }
     },
-    "rarityPoints": 10
+    "rarityPoints": 0
   },
   "item-toast": {
     "id": "item-toast",
@@ -21329,7 +21329,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-tomato-juice": {
     "id": "item-tomato-juice",
@@ -21376,7 +21376,7 @@
         }
       }
     },
-    "rarityPoints": 6
+    "rarityPoints": 0
   },
   "item-trout-sashimi": {
     "id": "item-trout-sashimi",
@@ -21422,7 +21422,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-tuna-sashimi": {
     "id": "item-tuna-sashimi",
@@ -21472,7 +21472,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-tuna-teriyaki": {
     "id": "item-tuna-teriyaki",
@@ -21526,7 +21526,7 @@
         }
       }
     },
-    "rarityPoints": 13
+    "rarityPoints": 0
   },
   "item-turbot-sashimi": {
     "id": "item-turbot-sashimi",
@@ -21572,7 +21572,7 @@
         }
       }
     },
-    "rarityPoints": 3
+    "rarityPoints": 0
   },
   "item-turnip-heaven": {
     "id": "item-turnip-heaven",
@@ -21687,7 +21687,7 @@
         }
       }
     },
-    "rarityPoints": 1
+    "rarityPoints": 0
   },
   "item-ultimate-curry": {
     "id": "item-ultimate-curry",
@@ -21749,7 +21749,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-union-stew": {
     "id": "item-union-stew",
@@ -21807,7 +21807,7 @@
         }
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-vegetable-juice": {
     "id": "item-vegetable-juice",
@@ -21863,7 +21863,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-veggie-smoothie": {
     "id": "item-veggie-smoothie",
@@ -21914,7 +21914,7 @@
         }
       }
     },
-    "rarityPoints": 11
+    "rarityPoints": 0
   },
   "item-yam-of-the-ages": {
     "id": "item-yam-of-the-ages",
@@ -21963,7 +21963,7 @@
         }
       }
     },
-    "rarityPoints": 8
+    "rarityPoints": 0
   },
   "item-yellowtail-sashimi": {
     "id": "item-yellowtail-sashimi",
@@ -22013,7 +22013,7 @@
         }
       }
     },
-    "rarityPoints": 12
+    "rarityPoints": 0
   },
   "item-yogurt": {
     "id": "item-yogurt",
@@ -22062,7 +22062,7 @@
         }
       }
     },
-    "rarityPoints": 2
+    "rarityPoints": 0
   },
   "item-10-fold-steel": {
     "id": "item-10-fold-steel",

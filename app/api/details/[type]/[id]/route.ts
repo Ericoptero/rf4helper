@@ -12,7 +12,7 @@ const VALID_DETAIL_TYPES = [
   'crop',
 ] as const satisfies readonly DetailEntityType[];
 const VALID_DETAIL_TYPE_SET = new Set<string>(VALID_DETAIL_TYPES);
-const DETAIL_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9 _-]*$/;
+const DETAIL_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9 '_-]*$/;
 
 function isDetailEntityType(value: string): value is DetailEntityType {
   return VALID_DETAIL_TYPE_SET.has(value);

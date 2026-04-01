@@ -192,9 +192,9 @@ export function PlayerView({
               <div className="p-4 sm:p-5">
                 <TabsContent value="orders" className="m-0 mt-2 space-y-4">
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {orders?.map((order) => (
+                    {orders?.map((order, index) => (
                       <Card
-                        key={order.id}
+                        key={`${order.id}-${index}`}
                         className="py-0 hover:border-primary/50 transition-colors h-full flex flex-col rounded-3xl"
                       >
                         <CardHeader className="p-4 pb-2 space-y-0">

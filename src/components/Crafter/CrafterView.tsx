@@ -239,9 +239,6 @@ export function CrafterView({
                   {slotConfig.label}
                 </TabsTrigger>
               ))}
-              <TabsTrigger value="cooking" className="rounded-lg px-4 py-2 data-active:bg-background">
-                Cooking
-              </TabsTrigger>
             </TabsList>
           </div>
         </Tabs>

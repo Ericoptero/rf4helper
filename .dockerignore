@@ -1,0 +1,14 @@
+.git
+.gitignore
+node_modules
+.next
+.env*.local
+npm-debug.log*
+README.md
+docs/
+tests/
+test-results/
+*.test.ts
+*.test.tsx
+playwright.config.ts
+vitest.config.ts

@@ -31,3 +31,16 @@ export function capitalize(str: string): string {
   if (!str) return str;
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+/**
+ * Convert a camelCase category string like "collectibleShellsAndBones" into
+ * a human-readable label like "Collectible Shells & Bones"
+ */
+export function formatItemCategory(category: string): string {
+  return category
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .split(' ')
+    .map(capitalize)
+    .join(' ')
+    .replace(/\bAnd\b/g, '&');
+}

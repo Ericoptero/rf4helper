@@ -81,14 +81,7 @@ export function formatBirthday(character: Character) {
   return `${character.birthday.season} ${character.birthday.day}`;
 }
 
-export function formatItemCategory(category: string) {
-  return category
-    .replace(/([a-z])([A-Z])/g, '$1 $2')
-    .split(' ')
-    .map(capitalize)
-    .join(' ')
-    .replace(/\bAnd\b/g, '&');
-}
+export { formatItemCategory } from '@/lib/formatters';
 
 function formatEffectTarget(target: string) {
   return target

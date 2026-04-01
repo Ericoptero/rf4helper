@@ -93,11 +93,11 @@ export function ItemDetailsContent({ item, items }: { item: Item; items?: Record
 
       {stats.length > 0 ? (
         <DetailSection title="Stats" icon={<Sparkles className="h-4 w-4 text-emerald-300" />}>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="space-y-1">
             {stats.map(([stat, value]) => (
-              <div key={stat} className="flex items-center justify-between rounded-xl border bg-muted/30 px-4 py-3">
+              <div key={stat} className="flex items-center gap-2 rounded-lg bg-background/60 px-3 py-2">
                 <span className="text-sm text-muted-foreground">{itemStatLabels[stat] ?? stat.toUpperCase()}</span>
-                <span className="font-semibold">{formatNumber(value)}</span>
+                <span className="ml-auto text-sm font-semibold">{formatNumber(value)}</span>
               </div>
             ))}
           </div>
@@ -118,11 +118,11 @@ export function ItemDetailsContent({ item, items }: { item: Item; items?: Record
 
       {healingEntries.length > 0 ? (
         <DetailSection title="Healing" icon={<Heart className="h-4 w-4 text-rose-300" />}>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="space-y-1">
             {healingEntries.map(([key, value]) => (
-              <div key={key} className="flex items-center justify-between rounded-xl border bg-muted/30 px-4 py-3">
+              <div key={key} className="flex items-center gap-2 rounded-lg bg-background/60 px-3 py-2">
                 <span className="text-sm text-muted-foreground">{key === 'hpPercent' ? 'HP%' : 'RP%'}</span>
-                <span className="font-semibold">{formatSignedPercent(value as number)}</span>
+                <span className="ml-auto text-sm font-semibold">{formatSignedPercent(value as number)}</span>
               </div>
             ))}
           </div>
@@ -131,11 +131,11 @@ export function ItemDetailsContent({ item, items }: { item: Item; items?: Record
 
       {statMultiplierEntries.length > 0 ? (
         <DetailSection title="Stat Multipliers" icon={<Sparkles className="h-4 w-4 text-amber-300" />}>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="space-y-1">
             {statMultiplierEntries.map(([stat, value]) => (
-              <div key={stat} className="flex items-center justify-between rounded-xl border bg-muted/30 px-4 py-3">
+              <div key={stat} className="flex items-center gap-2 rounded-lg bg-background/60 px-3 py-2">
                 <span className="text-sm text-muted-foreground">{itemStatLabels[stat] ?? stat.toUpperCase()}</span>
-                <span className="font-semibold">{formatSignedPercent(value as number)}</span>
+                <span className="ml-auto text-sm font-semibold">{formatSignedPercent(value as number)}</span>
               </div>
             ))}
           </div>
@@ -146,11 +146,11 @@ export function ItemDetailsContent({ item, items }: { item: Item; items?: Record
         <DetailSection title="Combat Profile" icon={<Sword className="h-4 w-4 text-amber-300" />}>
           <div className="space-y-4">
             {combatEntries.length > 0 ? (
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1">
                 {combatEntries.map(([label, value]) => (
-                  <div key={label} className="flex items-center justify-between rounded-xl border bg-muted/30 px-4 py-3">
+                  <div key={label} className="flex items-center gap-2 rounded-lg bg-background/60 px-3 py-2">
                     <span className="text-sm text-muted-foreground">{label}</span>
-                    <span className="font-semibold">{formatCombatLabel(value as string)}</span>
+                    <span className="ml-auto text-sm font-semibold">{formatCombatLabel(value as string)}</span>
                   </div>
                 ))}
               </div>
@@ -158,11 +158,11 @@ export function ItemDetailsContent({ item, items }: { item: Item; items?: Record
             {geometryEntries.length > 0 ? (
               <div className="space-y-3">
                 <h4 className="text-sm font-semibold">Geometry</h4>
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="space-y-1">
                   {geometryEntries.map(([key, value]) => (
-                    <div key={key} className="flex items-center justify-between rounded-xl border bg-muted/30 px-4 py-3">
+                    <div key={key} className="flex items-center gap-2 rounded-lg bg-background/60 px-3 py-2">
                       <span className="text-sm text-muted-foreground">{capitalize(key)}</span>
-                      <span className="font-semibold">{formatNumber(value)}</span>
+                      <span className="ml-auto text-sm font-semibold">{formatNumber(value)}</span>
                     </div>
                   ))}
                 </div>

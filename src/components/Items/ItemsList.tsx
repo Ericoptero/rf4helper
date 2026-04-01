@@ -108,10 +108,6 @@ function ItemsCatalog({
   const { openRoot } = useDetailDrawer();
   const derivedTypes = Array.from(new Set(items.map((item) => item.type))).sort();
   const derivedCategories = Array.from(new Set(items.map((item) => item.category).filter(Boolean) as string[])).sort();
-  const derivedRegions = Array.from(new Set(items.map((item) => item.region).filter(Boolean) as string[])).sort();
-  const derivedRarityCategories = Array.from(
-    new Set(items.map((item) => item.rarityCategory).filter(Boolean) as string[]),
-  ).sort();
 
   const filters: ServerCatalogFilterDefinition[] = [
     {
@@ -125,12 +121,6 @@ function ItemsCatalog({
       label: 'Category',
       placement: 'advanced',
       options: filterOptions?.category ?? derivedCategories.map((category) => ({ label: category, value: category.toLowerCase() })),
-    },
-    {
-      key: 'region',
-      label: 'Region',
-      placement: 'advanced',
-      options: filterOptions?.region ?? derivedRegions.map((region) => ({ label: region, value: region.toLowerCase() })),
     },
     {
       key: 'ship',
@@ -151,12 +141,6 @@ function ItemsCatalog({
       options: [{ label: 'Sellable', value: 'yes' }],
     },
     {
-      key: 'rarity',
-      label: 'Rarity',
-      placement: 'advanced',
-      options: filterOptions?.rarity ?? derivedRarityCategories.map((rarity) => ({ label: rarity, value: rarity.toLowerCase() })),
-    },
-    {
       key: 'hasRecipe',
       label: 'Has Recipe',
       placement: 'advanced',
@@ -170,6 +154,8 @@ function ItemsCatalog({
     { label: 'Name (Z-A)', value: 'name-desc' },
     { label: 'Buy Price (High-Low)', value: 'buy-desc' },
     { label: 'Sell Price (High-Low)', value: 'sell-desc' },
+    { label: 'Sell Price (Low-High)', value: 'sell-asc' },
+    { label: 'Rarity (High-Low)', value: 'rarity-desc' },
   ];
 
   const tableColumns: CatalogTableColumn<Item>[] = [

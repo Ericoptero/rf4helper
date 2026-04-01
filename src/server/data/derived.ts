@@ -1,5 +1,6 @@
 import { buildMapRegions, type MapRegionRecord } from '@/lib/mapFishingRelations';
 import { buildMonsterGroups, type MonsterGroup } from '@/lib/monsterGroups';
+import { formatItemCategory } from '@/lib/formatters';
 import type { Character, Chest, Fish, Item, Monster } from '@/lib/schemas';
 
 type CatalogOption = {
@@ -70,7 +71,7 @@ export function getItemsFilterOptionsForData(items: Record<string, Item>): Items
         sourceItems
           .map((item) => item.category)
           .filter((value): value is string => Boolean(value)),
-      ),
+      ).map(({ label, value }) => ({ label: formatItemCategory(label), value })),
       region: buildOptions(
         sourceItems
           .map((item) => item.region)

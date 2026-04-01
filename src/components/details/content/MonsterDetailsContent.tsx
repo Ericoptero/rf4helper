@@ -105,11 +105,11 @@ export function MonsterDetailsContent({
       ) : null}
 
       <DetailSection title="Stats" icon={<Sword className="h-4 w-4 text-orange-300" />}>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="space-y-1">
           {statNodes.map(([label, value]) => (
-            <div key={label} className="rounded-xl border bg-muted/30 p-3 text-center">
-              <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
-              <div className="mt-1 text-lg font-semibold">{value ?? '—'}</div>
+            <div key={label} className="flex items-center gap-2 rounded-lg bg-background/60 px-3 py-2">
+              <span className="text-sm text-muted-foreground">{label}</span>
+              <span className="ml-auto text-sm font-semibold">{value ?? '—'}</span>
             </div>
           ))}
         </div>
@@ -117,9 +117,9 @@ export function MonsterDetailsContent({
 
       {monster.drops.length > 0 ? (
         <DetailSection title="Drops" icon={<Box className="h-4 w-4 text-amber-300" />}>
-          <div className="space-y-2">
+          <div className="rounded-xl border bg-muted/30 p-3 space-y-3">
             {monster.drops.map((drop) => (
-              <div key={`${monster.id}-${drop.name}`} className="rounded-xl border bg-muted/30 p-3">
+              <div key={`${monster.id}-${drop.name}`}>
                 {drop.id ? (
                   <LinkedEntityToken
                     reference={{ type: 'item', id: drop.id }}

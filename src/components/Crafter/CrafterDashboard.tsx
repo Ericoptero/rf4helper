@@ -49,30 +49,7 @@ function renderDashboardCards(
     );
   });
 
-  const foodItem = build.food.baseId ? items[build.food.baseId] : undefined;
-
-  return [
-    ...equipmentCards,
-    <CrafterOverviewCard
-      key="dashboard-food"
-      node={{
-        id: 'dashboard-food',
-        slot: 'food',
-        type: 'foodBase',
-        label: 'Cooking',
-        item: foodItem,
-        itemId: foodItem?.id,
-        itemName: foodItem?.name ?? 'Cooking',
-        level: calculation.foodSummary.finalLevel || 1,
-        rarity: getNodeEffectiveRarity({ slot: 'food', type: 'foodBase' }, foodItem, foodItem?.id, crafterData),
-        tier: 0,
-        emptyLabel: 'Cooking',
-        meta: 'Food bonuses and recipe ingredients',
-      }}
-      previewData={getNodePreviewData({ slot: 'food', type: 'foodBase' }, foodItem, foodItem?.id, crafterData)}
-      onClick={() => onSelectTab('cooking')}
-    />,
-  ];
+  return equipmentCards;
 }
 
 export function CrafterDashboard({

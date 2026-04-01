@@ -145,22 +145,22 @@ function CatalogViewToggle({
         variant={viewMode === 'cards' ? 'default' : 'ghost'}
         size="default"
         className="h-9 rounded-lg px-3"
+        aria-label="Cards"
         data-state={viewMode === 'cards' ? 'on' : 'off'}
         onClick={() => onViewModeChange?.('cards')}
       >
-        <LayoutGrid className="mr-2 h-4 w-4" />
-        Cards
+        <LayoutGrid className="h-4 w-4" />
       </Button>
       <Button
         type="button"
         variant={viewMode === 'table' ? 'default' : 'ghost'}
         size="default"
         className="h-9 rounded-lg px-3"
+        aria-label="Table"
         data-state={viewMode === 'table' ? 'on' : 'off'}
         onClick={() => onViewModeChange?.('table')}
       >
-        <Table2 className="mr-2 h-4 w-4" />
-        Table
+        <Table2 className="h-4 w-4" />
       </Button>
     </div>
   );

@@ -466,7 +466,7 @@ describe('CrafterView', () => {
     expect(screen.getByRole('tab', { name: /shield/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /accessory/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /shoes/i })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: /cooking/i })).toBeInTheDocument();
+    expect(screen.queryByRole('tab', { name: /cooking/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('tab', { name: /breakdown/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('tab', { name: /final build/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('tab', { name: /readme/i })).not.toBeInTheDocument();
@@ -1044,7 +1044,7 @@ describe('CrafterView', () => {
     expect(await screen.findByRole('dialog', { name: /select base/i })).toBeInTheDocument();
   });
 
-  it('renders cooking with healing groups and keeps the final build summary on the dashboard only', async () => {
+  it('keeps the cooking tab hidden and shows the final build summary on the dashboard only', async () => {
     const user = userEvent.setup();
 
     render(<CrafterHarness />);
@@ -1053,47 +1053,22 @@ describe('CrafterView', () => {
     expect(screen.queryByRole('tab', { name: /final build/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('tab', { name: /breakdown/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('tab', { name: /readme/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('tab', { name: /cooking/i })).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
     await chooseItemFromSelector(user, 'Broad', 'Broadsword');
 
-    await user.click(screen.getByRole('tab', { name: /cooking/i }));
-    expect(screen.getByText(/dish selection/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /base food/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /recipe 6/i })).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: /base food/i }));
-    await chooseItemFromSelector(user, 'Glitter', 'Glitter Sashimi');
-    const dishSelectionCard = screen.getByText(/dish selection/i).closest('[data-slot="card"]') as HTMLElement;
-    expect(within(dishSelectionCard).getByRole('button', { name: /iron/i })).toBeInTheDocument();
-
-    expect(screen.getByText(/^healing$/i)).toBeInTheDocument();
-    expect(screen.getByText(/^HP$/i)).toBeInTheDocument();
-    expect(screen.getByText(/^HP%$/i)).toBeInTheDocument();
-    expect(screen.getByText(/^RP$/i)).toBeInTheDocument();
-    expect(screen.getByText(/^RP%$/i)).toBeInTheDocument();
     expect(screen.getByText(/elem res/i)).toBeInTheDocument();
     expect(screen.getByText(/status attack/i)).toBeInTheDocument();
   });
 
-  it('unlocks cooking recipe slots as free pickers when a base dish is selected but no fixed ingredient resolves', async () => {
-    const user = userEvent.setup();
-
+  it('does not render the cooking tab trigger in the tab list', async () => {
     render(<CrafterHarness />);
 
-    await user.click(screen.getByRole('tab', { name: /cooking/i }));
-    await user.click(screen.getByRole('button', { name: /base food/i }));
-    await chooseItemFromSelector(user, 'Glitter', 'Glitter Sashimi');
-
-    await user.click(screen.getByRole('button', { name: /recipe 6/i }));
-
-    const dialog = await screen.findByRole('dialog', { name: /select recipe 6/i });
-
-    expect(within(dialog).queryByText(/recipe unavailable/i)).not.toBeInTheDocument();
-    expect(within(dialog).queryByText(/this recipe could not be resolved for the selected base/i)).not.toBeInTheDocument();
-    expect(within(dialog).getByRole('button', { name: /clear slot/i })).toBeInTheDocument();
-    expect(within(dialog).getByRole('button', { name: /rarity \+15/i })).toBeInTheDocument();
+    expect(screen.queryByRole('tab', { name: /cooking/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /dashboard/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /weapon/i })).toBeInTheDocument();
   });
 
   it('resets the current build without affecting the available crafter tabs', async () => {

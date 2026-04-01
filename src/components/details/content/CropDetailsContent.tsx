@@ -23,11 +23,11 @@ export function CropDetailsContent({ crop }: { crop: Crop }) {
         </div>
       </div>
       <DetailSection title="Growth" icon={<Wheat className="h-4 w-4 text-emerald-300" />}>
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {crop.growTime ? <div className="rounded-xl border bg-muted/30 p-3 text-center"><div className="text-xs text-muted-foreground">Growth</div><div className="mt-1 text-lg font-semibold">{crop.growTime} Days</div></div> : null}
-          {crop.harvested !== undefined ? <div className="rounded-xl border bg-muted/30 p-3 text-center"><div className="text-xs text-muted-foreground">Yield</div><div className="mt-1 text-lg font-semibold">{crop.harvested}</div></div> : null}
-          {crop.seedBuy != null ? <div className="rounded-xl border bg-muted/30 p-3 text-center"><div className="text-xs text-muted-foreground">Seed Cost</div><div className="mt-1 text-lg font-semibold">{crop.seedBuy}G</div></div> : null}
-          {crop.cropSell != null ? <div className="rounded-xl border bg-muted/30 p-3 text-center"><div className="text-xs text-muted-foreground">Sell For</div><div className="mt-1 text-lg font-semibold">{crop.cropSell}G</div></div> : null}
+        <div className="space-y-1">
+          {crop.growTime ? <div className="flex items-center gap-2 rounded-lg bg-background/60 px-3 py-2"><span className="text-sm text-muted-foreground">Growth</span><span className="ml-auto text-sm font-semibold">{crop.growTime} Days</span></div> : null}
+          {crop.harvested !== undefined ? <div className="flex items-center gap-2 rounded-lg bg-background/60 px-3 py-2"><span className="text-sm text-muted-foreground">Yield</span><span className="ml-auto text-sm font-semibold">{crop.harvested}</span></div> : null}
+          {crop.seedBuy != null ? <div className="flex items-center gap-2 rounded-lg bg-background/60 px-3 py-2"><span className="text-sm text-muted-foreground">Seed Cost</span><span className="ml-auto text-sm font-semibold">{crop.seedBuy}G</span></div> : null}
+          {crop.cropSell != null ? <div className="flex items-center gap-2 rounded-lg bg-background/60 px-3 py-2"><span className="text-sm text-muted-foreground">Sell For</span><span className="ml-auto text-sm font-semibold">{crop.cropSell}G</span></div> : null}
         </div>
       </DetailSection>
     </div>

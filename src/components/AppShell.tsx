@@ -4,7 +4,7 @@ import { type ReactNode } from 'react';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Moon, Sun } from 'lucide-react';
+import { Github, Menu, Moon, Sun } from 'lucide-react';
 
 import { appNavSections } from '@/lib/navigation';
 import { useTheme } from '@/hooks/useTheme';
@@ -108,17 +108,15 @@ function BrandLogo({ mobile = false }: { mobile?: boolean }) {
 
 function SidebarFooter() {
   return (
-    <div className="flex items-center gap-3 rounded-xl bg-muted/60 px-3 py-3">
-      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-xs font-semibold text-primary">
-        L
-      </div>
-      <div className="min-w-0">
-        <div className="truncate text-sm font-medium">Lest</div>
-        <div className="truncate text-xs text-muted-foreground">
-          Selphia helper
-        </div>
-      </div>
-    </div>
+    <a
+      href="https://github.com/Ericoptero/rf4helper"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-3 rounded-xl bg-muted/60 px-3 py-3 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+    >
+      <Github className="h-5 w-5 shrink-0" />
+      <span className="truncate text-sm font-medium">Ericoptero/rf4helper</span>
+    </a>
   );
 }
 

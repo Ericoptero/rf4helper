@@ -1,75 +1,71 @@
-# React + TypeScript + Vite
+# RF4 Helper
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A helper app for **Rune Factory 4**. Browse and search static game data, items, monsters, characters, maps, festivals, crafting, fishing, crops, and player systems.
 
-Currently, two official plugins are available:
+**Live**: [GitHub](https://github.com/Ericoptero/rf4helper)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Features
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- **Items** — Full item database with stats, recipes, effects, and crafting ingredients
+- **Monsters** — Stats, drops, taming info, and resistances
+- **Characters** — Profiles, battle info, gift preferences, and schedules
+- **Crafter** — Interactive slot-by-slot equipment planner with build serialization
+- **Fishing** — Fish catalog with locations, seasons, and shadow sizes
+- **Maps** — Region explorer with chest and fishing location data
+- **Calendar** — Festival and birthday calendar
+- **Player** — Prince/Princess orders and progression tracker
 
-Note: This will impact Vite dev & build performances.
+---
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- [Next.js](https://nextjs.org/) App Router (React 19, TypeScript)
+- [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
+- [Vitest](https://vitest.dev/) + [Playwright](https://playwright.dev/) for testing
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Getting Started
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open [http://localhost:3000](http://localhost:3000).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Available Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start development server |
+| `npm run build` | Production build |
+| `npm start` | Start production server |
+| `npm run typecheck` | TypeScript type checking |
+| `npm run lint` | ESLint |
+| `npm run test:run` | Run unit/integration tests |
+| `npm run test:e2e` | Run Playwright smoke tests |
+| `npm run ci` | Full CI pipeline (lint + types + tests + build) |
+
+---
+
+## Docker
+
+Build and run with Docker (standalone output):
+
+```bash
+docker build -t rf4-helper .
+docker run -p 3000:3000 rf4-helper
 ```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+> The `NEXT_OUTPUT=standalone` env var is set automatically in the Dockerfile. The Vercel deploy uses a standard build (no standalone output needed).
+
+---
+
+## Contributing contributions, bug reports, and feature requests are welcome! Please open an issue or submit a pull request.
