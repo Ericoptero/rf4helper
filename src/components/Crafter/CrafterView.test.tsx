@@ -162,7 +162,7 @@ const items: Record<string, Item> = {
     name: 'Turnip Heaven',
     type: 'Dish',
     image: '/images/items/turnip-heaven.png',
-    rarityPoints: 15,
+    rarityPoints: 0,
     craft: [{ recipeId: 'turnip-heaven#96', stationType: 'Cooking', station: 'No Tool', level: 96, ingredients: ['item-turnip'] }],
     stats: { hp: 5000, rp: 1000, str: 90, vit: 80, int: 50 },
   },
@@ -372,7 +372,7 @@ const crafterData: CrafterData = {
       'item-silver': equipmentPayload({ itemName: 'Silver', rarity: 2 }),
       'item-light-ore': equipmentPayload({ itemName: 'Light Ore', rarity: 13 }),
       'item-object-x': equipmentPayload({ itemName: 'Object X', rarity: 0 }),
-      'item-turnip-heaven': equipmentPayload({ itemName: 'Turnip Heaven', rarity: 15 }),
+      'item-turnip-heaven': equipmentPayload({ itemName: 'Turnip Heaven', rarity: 0 }),
       'item-minerals': equipmentPayload({ itemName: 'Minerals', rarity: 0 }),
       'item-shade-stone': equipmentPayload({ itemName: 'Shade Stone', stats: { atk: 1 }, rarity: 3 }),
       'item-firewyrm-scale': equipmentPayload({

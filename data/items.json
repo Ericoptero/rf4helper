@@ -3072,7 +3072,6 @@
       "item-material-stone",
       "item-tiny-golem-stone",
       "item-golem-stone",
-      "item-spirit-golem-stone",
       "item-golem-tablet",
       "item-tablet-of-truth",
       "item-round-stone"
@@ -21635,7 +21634,7 @@
         "lightRes": 0.199951
       }
     },
-    "rarityPoints": 15
+    "rarityPoints": 0
   },
   "item-udon": {
     "id": "item-udon",
@@ -55852,21 +55851,5 @@
       }
     },
     "rarityPoints": 2
-  },
-  "item-spirit-golem-stone": {
-    "id": "item-spirit-golem-stone",
-    "name": "Spirit Golem Stone",
-    "hexId": "",
-    "type": "Drop",
-    "region": "Floating Empire",
-    "shippable": true,
-    "buy": 1670,
-    "sell": 208,
-    "monster": "Golem",
-    "rarityPoints": 12,
-    "rarityCategory": "Materials",
-    "category": "collectibleStones",
-    "description": "A stone with a mark to activate a Golem. The mark might just come off if you rub it.",
-    "stats": {}
   }
 }

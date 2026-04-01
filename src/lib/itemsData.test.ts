@@ -138,7 +138,6 @@ describe('items.json recipe normalization', () => {
         'item-material-stone',
         'item-tiny-golem-stone',
         'item-golem-stone',
-        'item-spirit-golem-stone',
         'item-tablet-of-truth',
         'item-round-stone',
       ])
