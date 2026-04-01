@@ -30,7 +30,7 @@ const categories: CategoryCard[] = [
     description: 'Weapons, armor, crops, medicine and crafting sources.',
     icon: Package,
     accentClass: 'border-indigo-500/40 bg-indigo-500/5 text-indigo-400',
-    summary: 'Search-heavy browser with crafting and stat details.',
+    summary: 'Browse the full item database with stats, recipes, and sources.',
     countKey: 'items',
   },
   {
@@ -39,7 +39,7 @@ const categories: CategoryCard[] = [
     description: 'Grouped variants, drops, resistances and taming info.',
     icon: Skull,
     accentClass: 'border-orange-500/40 bg-orange-500/5 text-orange-400',
-    summary: 'Bestiary split view with variant-aware details.',
+    summary: 'Look up stats, drops, weaknesses, and taming details.',
     countKey: 'monsters',
   },
   {
@@ -48,7 +48,7 @@ const categories: CategoryCard[] = [
     description: 'Profiles, birthdays, gifts and battle information.',
     icon: Users,
     accentClass: 'border-pink-500/40 bg-pink-500/5 text-pink-400',
-    summary: 'Companion profiles with rich support data.',
+    summary: 'Gift preferences, schedules, and battle stats for every character.',
     countKey: 'characters',
   },
   {
@@ -57,7 +57,7 @@ const categories: CategoryCard[] = [
     description: 'Interactive loadout planner for inheritance, upgrades and food.',
     icon: Hammer,
     accentClass: 'border-emerald-500/40 bg-emerald-500/5 text-emerald-400',
-    summary: 'Single-page build planner with live totals and craft steps.',
+    summary: 'Plan your equipment builds with inheritance and upgrade calculations.'
   },
   {
     href: '/calendar',
@@ -65,7 +65,7 @@ const categories: CategoryCard[] = [
     description: 'Festivals, birthdays, seasons and crop timing.',
     icon: CalendarDays,
     accentClass: 'border-violet-500/40 bg-violet-500/5 text-violet-400',
-    summary: 'Season planner with event and crop context.',
+    summary: 'Check festival dates, birthdays, and crop schedules by season.'
   },
   {
     href: '/fishing',
@@ -73,7 +73,7 @@ const categories: CategoryCard[] = [
     description: 'Fish locations, shadow sizes and seasonal access.',
     icon: Fish,
     accentClass: 'border-cyan-500/40 bg-cyan-500/5 text-cyan-400',
-    summary: 'Region-grouped fishing reference.',
+    summary: 'See where and when to catch every fish.'
   },
   {
     href: '/maps',
@@ -81,7 +81,7 @@ const categories: CategoryCard[] = [
     description: 'Chest regions, room groupings and checklist details.',
     icon: Map,
     accentClass: 'border-amber-500/40 bg-amber-500/5 text-amber-400',
-    summary: 'Treasure tracking by region and room.',
+    summary: 'Track treasure chests and loot across all areas.'
   },
   {
     href: '/player',
@@ -89,7 +89,7 @@ const categories: CategoryCard[] = [
     description: 'Orders, requests, rune abilities, skills and trophies.',
     icon: Gamepad2,
     accentClass: 'border-sky-500/40 bg-sky-500/5 text-sky-400',
-    summary: 'Progression dashboard grouped by system.',
+    summary: 'Review orders, requests, skills, abilities, and trophies.'
   },
 ];
 
@@ -109,14 +109,13 @@ export default async function HomePage() {
             Rune Factory 4 Helper
           </h1>
           <p className="mt-3 text-base leading-7 text-muted-foreground sm:text-lg">
-            A premium searchable reference for items, monsters, characters,
-            festivals, maps, and progression systems across Selphia.
+            Your quick-reference guide for Rune Factory 4. Look up items, monsters, characters, festivals, maps, and more.
           </p>
         </div>
       </section>
 
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-4">
-        {categories.map(({ href, label, description, icon: Icon, accentClass, summary, countKey }) => (
+        {categories.map(({ href, label, description, icon: Icon, accentClass, countKey }) => (
           <Link
             key={href}
             href={href}
@@ -137,9 +136,6 @@ export default async function HomePage() {
                 {label}
               </h2>
               <p className="text-sm text-muted-foreground">{description}</p>
-              <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground/80">
-                {summary}
-              </p>
             </div>
           </Link>
         ))}

@@ -70,7 +70,7 @@ export function PlayerView({
       <div className="rounded-3xl border bg-card/90 p-6 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="rounded-2xl bg-indigo-500/10 p-3 text-indigo-600">
+            <div className="rounded-2xl bg-indigo-500/10 p-3 text-indigo-600 dark:text-indigo-400">
               <Trophy className="h-8 w-8" />
             </div>
             <div>
@@ -206,7 +206,7 @@ export function PlayerView({
                             {order.rpCost && (
                               <Badge
                                 variant="outline"
-                                className="text-blue-600 border-blue-200 bg-blue-50"
+                                className="text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950"
                               >
                                 Cost: {order.rpCost} RP
                               </Badge>
@@ -269,7 +269,7 @@ export function PlayerView({
                               )}
                             </div>
                             {req.reward && (
-                              <div className="p-2 mt-auto rounded bg-amber-500/10 text-amber-800 border border-amber-500/20">
+                              <div className="p-2 mt-auto rounded bg-amber-500/10 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300 border border-amber-500/20 dark:border-amber-700/30">
                                 <span className="font-semibold">Reward:</span>{" "}
                                 {req.reward}
                               </div>
@@ -316,7 +316,7 @@ export function PlayerView({
                     Object.entries(runeAbilitiesData).map(
                       ([category, abilities]) => (
                         <div key={category}>
-                          <h3 className="text-xl font-bold mb-4 capitalize border-b pb-2 text-purple-600">
+                          <h3 className="text-xl font-bold mb-4 capitalize border-b pb-2 text-purple-600 dark:text-purple-400">
                             {category}
                           </h3>
                           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -349,7 +349,7 @@ export function PlayerView({
                                       {ability.buy && (
                                         <Badge
                                           variant="outline"
-                                          className="text-green-600"
+                                          className="text-green-600 dark:text-green-400"
                                         >
                                           Buy: {ability.buy}
                                         </Badge>
@@ -357,7 +357,7 @@ export function PlayerView({
                                       {ability.sell && (
                                         <Badge
                                           variant="outline"
-                                          className="text-red-600"
+                                          className="text-red-600 dark:text-red-400"
                                         >
                                           Sell: {ability.sell}
                                         </Badge>
@@ -394,9 +394,9 @@ export function PlayerView({
                                 key={skill.id}
                                 className="py-0 overflow-hidden flex flex-col h-full rounded-3xl"
                               >
-                                <CardHeader className="bg-slate-50 border-b p-4 pb-3 space-y-0">
+                                <CardHeader className="bg-slate-50 dark:bg-muted border-b p-4 pb-3 space-y-0">
                                   <CardTitle className="text-lg flex items-center gap-2">
-                                    <Shield className="w-5 h-5 text-slate-500" />
+                                    <Shield className="w-5 h-5 text-slate-500 dark:text-muted-foreground" />
                                     {skill.name}
                                   </CardTitle>
                                 </CardHeader>
@@ -407,21 +407,21 @@ export function PlayerView({
 
                                   {skill.bonuses.length > 0 && (
                                     <div className="space-y-2">
-                                      <h4 className="font-semibold text-xs uppercase tracking-wider text-slate-500">
+                                      <h4 className="font-semibold text-xs uppercase tracking-wider text-slate-500 dark:text-muted-foreground">
                                         Bonuses
                                       </h4>
                                       <div className="space-y-2">
                                         {skill.bonuses.map((bonus) => (
                                           <div
                                             key={`${skill.id}-${bonus.kind}-${bonus.description}`}
-                                            className="rounded border bg-slate-50 p-3 text-sm"
+                                            className="rounded border bg-slate-50 dark:bg-muted p-3 text-sm"
                                           >
                                             <div className="flex items-center gap-2">
                                               <Badge variant="secondary">
                                                 {bonus.kind}
                                               </Badge>
                                               {bonus.stats.length > 0 && (
-                                                <span className="text-xs text-slate-500">
+                                                <span className="text-xs text-slate-500 dark:text-muted-foreground">
                                                   {bonus.stats.join(", ")}
                                                 </span>
                                               )}
@@ -437,14 +437,14 @@ export function PlayerView({
 
                                   {skill.unlocks.length > 0 && (
                                     <div className="pt-2 mt-auto">
-                                      <h4 className="font-semibold text-xs uppercase tracking-wider mb-2 text-slate-500">
+                                      <h4 className="font-semibold text-xs uppercase tracking-wider mb-2 text-slate-500 dark:text-muted-foreground">
                                         Unlocks
                                       </h4>
                                       <div className="space-y-2">
                                         {skill.unlocks.map((unlock) => (
                                           <div
                                             key={`${skill.id}-${unlock.level}`}
-                                            className="flex justify-between items-center text-sm p-2 rounded bg-slate-50 border gap-2"
+                                            className="flex justify-between items-center text-sm p-2 rounded bg-slate-50 dark:bg-muted border gap-2"
                                           >
                                             <Badge
                                               variant="secondary"
@@ -452,7 +452,7 @@ export function PlayerView({
                                             >
                                               Lv. {unlock.level}
                                             </Badge>
-                                            <span className="font-medium text-slate-700 text-right">
+                                            <span className="font-medium text-slate-700 dark:text-foreground text-right">
                                               {unlock.effect}
                                             </span>
                                           </div>
@@ -474,24 +474,24 @@ export function PlayerView({
                     {allTrophies.map((trophy) => (
                       <Card
                         key={trophy.id}
-                        className="py-0 overflow-hidden bg-amber-500/5 border-amber-200 hover:border-amber-400 transition-colors flex flex-col h-full rounded-3xl"
+                        className="py-0 overflow-hidden bg-amber-500/5 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800 hover:border-amber-400 dark:hover:border-amber-600 transition-colors flex flex-col h-full rounded-3xl"
                       >
-                        <CardHeader className="bg-amber-500/10 border-b border-amber-200/50 p-4 pb-3 space-y-0">
-                          <CardTitle className="text-lg text-amber-900 flex items-center gap-2">
-                            <Trophy className="w-5 h-5 text-amber-600" />
+                        <CardHeader className="bg-amber-500/10 dark:bg-amber-900/20 border-b border-amber-200/50 dark:border-amber-800/50 p-4 pb-3 space-y-0">
+                          <CardTitle className="text-lg text-amber-900 dark:text-amber-400 flex items-center gap-2">
+                            <Trophy className="w-5 h-5 text-amber-600 dark:text-amber-500" />
                             {trophy.name}
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="p-4 flex flex-col flex-1">
-                          <p className="text-sm text-amber-800/80 mb-4 flex-1">
+                          <p className="text-sm text-amber-800/80 dark:text-amber-300/80 mb-4 flex-1">
                             {trophy.description}
                           </p>
                           {trophy.requirements && (
-                            <div className="text-xs pt-3 mt-auto border-t border-amber-200/50">
-                              <span className="font-semibold text-amber-900">
+                            <div className="text-xs pt-3 mt-auto border-t border-amber-200/50 dark:border-amber-800/50">
+                              <span className="font-semibold text-amber-900 dark:text-amber-400">
                                 Req:
                               </span>{" "}
-                              <span className="text-amber-800">
+                              <span className="text-amber-800 dark:text-amber-300">
                                 {trophy.requirements}
                               </span>
                             </div>
