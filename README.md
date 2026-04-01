@@ -68,4 +68,4 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## Contributing contributions, bug reports, and feature requests are welcome! Please open an issue or submit a pull request.
+## Contributions, bug reports, and feature requests are welcome! Please open an issue or submit a pull request.
