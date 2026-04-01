@@ -112,10 +112,10 @@ function SidebarFooter() {
       href="https://github.com/Ericoptero/rf4helper"
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-3 rounded-xl bg-muted/60 px-3 py-3 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+      className="flex items-center justify-center gap-3 rounded-2xl bg-foreground px-5 py-3 text-background transition-all duration-200 hover:bg-foreground/80 active:scale-95"
     >
       <Github className="h-5 w-5 shrink-0" />
-      <span className="truncate text-sm font-medium">Ericoptero/rf4helper</span>
+      <span className="truncate text-sm font-semibold">View on GitHub</span>
     </a>
   );
 }
