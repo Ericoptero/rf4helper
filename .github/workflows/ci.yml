@@ -23,6 +23,12 @@ jobs:
 
       - run: npx playwright install --with-deps chromium
 
+      - name: Generate Linux visual snapshots if missing
+        run: |
+          if ! find tests/playwright/app.spec.ts-snapshots -name "*-linux.png" -exit 0 >/dev/null 2>&1; then
+            npx playwright test --grep @visual --update-snapshots
+          fi
+
       - run: npm run ci
 
       - name: Upload failure artifacts
