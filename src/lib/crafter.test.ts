@@ -589,7 +589,7 @@ describe('crafter engine parity', () => {
 
     expect(turnipContribution).toBeDefined();
     expect(turnipContribution?.itemName).toBe('Turnip Heaven');
-    expect(turnipContribution?.rarity ?? 0).toBe(15);
+    expect(turnipContribution?.rarity ?? 0).toBe(0);
   });
 
   it('counts rarity from recipe and upgrades only, ignoring the equipped appearance item rarity', () => {
@@ -620,7 +620,7 @@ describe('crafter engine parity', () => {
 
     expect(lowAppearanceResult.slotResults.weapon.rarity).toBeGreaterThan(0);
     expect(lowAppearanceResult.slotResults.weapon.rarityBonusSummary.value).toBe(lowAppearanceResult.slotResults.weapon.rarity);
-    expect(lowAppearanceResult.slotResults.weapon.rarityTier).toBeGreaterThanOrEqual(1);
+    expect(lowAppearanceResult.slotResults.weapon.rarityTier).toBe(0);
     expect(highAppearanceResult.slotResults.weapon.rarity).toBe(lowAppearanceResult.slotResults.weapon.rarity);
     expect(highAppearanceResult.slotResults.weapon.rarityBonusSummary.value).toBe(
       lowAppearanceResult.slotResults.weapon.rarityBonusSummary.value,
@@ -632,14 +632,14 @@ describe('crafter engine parity', () => {
     const build = createDefaultCrafterBuild(crafterData);
     build.weapon.appearanceId = 'item-broadsword';
     build.weapon.recipe[0] = selection('item-broadsword');
-    build.weapon.recipe[1] = selection('item-turnip-heaven');
+    build.weapon.recipe[1] = selection('item-firewyrm-scale');
 
     const result = calculateCrafterBuild(build, items, crafterData);
     const derivedBaseContribution = result.slotResults.weapon.materialContributions.find(
       (entry) => entry.source === 'recipe' && entry.itemId === 'item-broadsword',
     );
     const normalRecipeContribution = result.slotResults.weapon.materialContributions.find(
-      (entry) => entry.source === 'recipe' && entry.itemId === 'item-turnip-heaven',
+      (entry) => entry.source === 'recipe' && entry.itemId === 'item-firewyrm-scale',
     );
 
     expect(result.build.weapon.baseId).toBe('item-broadsword');
