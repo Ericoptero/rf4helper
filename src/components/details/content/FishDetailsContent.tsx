@@ -2,10 +2,11 @@ import React from 'react';
 import { MapPin, Search } from 'lucide-react';
 
 import { resolveFishImage } from '@/lib/fishImages';
+import { formatNumber } from '@/lib/formatters';
 import type { Fish } from '@/lib/schemas';
-import { DetailSection } from './shared';
 import { Badge } from '@/components/ui/badge';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
+import { DetailSection } from './shared';
 
 export function FishDetailsContent({ fish }: { fish: Fish }) {
   const locationsByRegion = (fish.locations ?? []).reduce<Record<string, NonNullable<Fish['locations']>>>((acc, location) => {
@@ -30,8 +31,8 @@ export function FishDetailsContent({ fish }: { fish: Fish }) {
             <h2 className="break-words text-3xl font-bold">{fish.name}</h2>
             <div className="flex flex-wrap gap-2">
               {fish.shadow ? <Badge className={getSemanticBadgeClass('fish')}>{fish.shadow} Shadow</Badge> : null}
-              <Badge variant="outline" className={getSemanticBadgeClass('success')}>Buy: {fish.buy ?? '-'}</Badge>
-              <Badge variant="outline" className={getSemanticBadgeClass('danger')}>Sell: {fish.sell ?? '-'}</Badge>
+              <Badge variant="outline" className={getSemanticBadgeClass('success')}>Buy: {fish.buy == null ? '-' : formatNumber(fish.buy)}</Badge>
+              <Badge variant="outline" className={getSemanticBadgeClass('danger')}>Sell: {fish.sell == null ? '-' : formatNumber(fish.sell)}</Badge>
             </div>
           </div>
         </div>

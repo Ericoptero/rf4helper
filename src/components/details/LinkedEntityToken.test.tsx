@@ -26,4 +26,22 @@ describe('LinkedEntityToken', () => {
 
     expect(onDetailReferenceChange).toHaveBeenCalledWith({ type: 'item', id: 'item-flour' });
   });
+
+  it('renders tooltip content when provided', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <DetailDrawerProvider onDetailReferenceChange={() => undefined}>
+        <LinkedEntityToken
+          reference={{ type: 'item', id: 'item-flour' }}
+          label="Flour"
+          tooltipContent={<div>Recipe preview</div>}
+        />
+      </DetailDrawerProvider>,
+    );
+
+    await user.hover(screen.getByRole('button', { name: /flour/i }));
+
+    expect(await screen.findByRole('tooltip')).toHaveTextContent('Recipe preview');
+  });
 });

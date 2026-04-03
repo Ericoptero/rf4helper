@@ -1,6 +1,10 @@
 'use client';
 
-import { CharactersList } from '@/components/Characters/CharactersList';
+import {
+  CharactersList,
+  CHARACTERS_TABLE_ONLY_SORT_VALUES,
+  DEFAULT_CHARACTERS_SORT,
+} from '@/components/Characters/CharactersList';
 import { readDetailSearchParams, writeDetailSearchParams } from '@/components/details/detailTypes';
 import { useCatalogRouteState } from '@/hooks/useCatalogRouteState';
 import { normalizeCatalogViewMode, type CatalogViewMode } from '@/lib/catalogPresentation';
@@ -26,6 +30,18 @@ export function CharactersPageClient({
     searchTermKey: 'q',
   });
   const detailReference = readDetailSearchParams(draftSearch);
+  const handleViewModeChange = (value: CatalogViewMode) => {
+    const normalizedView = value === 'cards' ? undefined : value;
+    const resolvedSort = draftSearch.sort ?? DEFAULT_CHARACTERS_SORT;
+    const nextSort = value === 'cards' && CHARACTERS_TABLE_ONLY_SORT_VALUES.has(resolvedSort)
+      ? undefined
+      : draftSearch.sort;
+
+    patchSearch({
+      view: normalizedView,
+      sort: nextSort,
+    });
+  };
 
   return (
     <CharactersList
@@ -42,7 +58,7 @@ export function CharactersPageClient({
       onCancelPendingSearch={cancelPendingSearch}
       isRoutePending={isRoutePending}
       viewMode={normalizeCatalogViewMode(draftSearch.view)}
-      onViewModeChange={(value: CatalogViewMode) => patchSearch({ view: value === 'cards' ? undefined : value })}
+      onViewModeChange={handleViewModeChange}
       sortValue={draftSearch.sort ?? 'name-asc'}
       onSortValueChange={(value) => patchSearch({ sort: value })}
       detailReference={detailReference}

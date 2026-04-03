@@ -51,6 +51,7 @@ type CrafterSelectorDialogProps = {
   categoryLabel?: string;
   emptyStateTitle?: string;
   emptyStateDescription?: string;
+  onOpenItemDetails?: (itemId: string) => void;
   onOpenChange: (open: boolean) => void;
   onApply: (updates: { itemId?: string; level: number }) => void;
   onClear: () => void;
@@ -75,6 +76,7 @@ export function CrafterSelectorDialog({
   categoryLabel,
   emptyStateTitle,
   emptyStateDescription,
+  onOpenItemDetails,
   onOpenChange,
   onApply,
   onClear,
@@ -360,6 +362,17 @@ export function CrafterSelectorDialog({
                       />
                     )}
                   </div>
+
+                  {previewItem && resolvedItemId && previewItem.id !== CRAFTER_RARITY_PLACEHOLDER_ID ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => onOpenItemDetails?.(resolvedItemId)}
+                    >
+                      Open Item Details
+                    </Button>
+                  ) : null}
 
                   {previewData.stats.length > 0 ? (
                     <div className="space-y-2">

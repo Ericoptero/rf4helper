@@ -45,17 +45,32 @@ export function UniversalDetailsDrawer() {
 
     switch (payload.type) {
       case 'item':
-        return { title: payload.item.name, content: <ItemDetailsContent item={payload.item} items={payload.items} /> };
+        return {
+          title: payload.item.name,
+          content: (
+            <ItemDetailsContent
+              item={payload.item}
+              items={payload.items}
+              dropSources={payload.dropSources}
+              cropRelations={payload.cropRelations}
+              monsterReferenceId={payload.monsterReferenceId}
+              mapReferenceId={payload.mapReferenceId}
+            />
+          ),
+        };
       case 'character':
         return { title: payload.character.name, content: <CharacterDetailsContent character={payload.character} items={payload.items} /> };
       case 'birthday':
-        return { title: `${payload.character.name}'s Birthday`, content: <BirthdayDetailsContent character={payload.character} /> };
+        return {
+          title: `${payload.character.name}'s Birthday`,
+          content: <BirthdayDetailsContent character={payload.character} items={payload.items} />,
+        };
       case 'monster':
         return { title: payload.group.displayName, content: <MonsterDetailsContent group={payload.group} items={payload.items} /> };
       case 'fish':
         return { title: payload.fish.name, content: <FishDetailsContent fish={payload.fish} /> };
       case 'map':
-        return { title: payload.region.name, content: <MapDetailsContent region={payload.region} /> };
+        return { title: payload.region.name, content: <MapDetailsContent region={payload.region} items={payload.items} /> };
       case 'festival':
         return { title: payload.festival.name, content: <FestivalDetailsContent festival={payload.festival} /> };
       case 'crop':

@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { render, screen, within } from '@testing-library/react';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { http, HttpResponse } from 'msw';
-import { setupServer } from 'msw/node';
 import { CalendarView } from './CalendarView';
 import userEvent from '@testing-library/user-event';
 import type { Character, Festival } from '@/lib/schemas';
+import { server } from '@/setupTests';
 
 const mockFestivals: Festival[] = [
   { id: 'fest-1', name: 'Spring Harvest Festival', season: 'Spring', day: 28, description: 'Spring crop judging.', orderable: true },
@@ -41,16 +41,15 @@ const mockCrops = {
   ]
 };
 
-const server = setupServer(
-  http.get('http://localhost:3000/data/festivals.json', () => HttpResponse.json(mockFestivals)),
-  http.get('http://localhost:3000/data/characters.json', () => HttpResponse.json(mockCharacters)),
-  http.get('http://localhost:3000/data/crops.json', () => HttpResponse.json(mockCrops)),
-);
-
-beforeAll(() => server.listen());
-afterAll(() => server.close());
-
 describe('CalendarView Component', () => {
+  beforeEach(() => {
+    server.use(
+      http.get('http://localhost:3000/data/festivals.json', () => HttpResponse.json(mockFestivals)),
+      http.get('http://localhost:3000/data/characters.json', () => HttpResponse.json(mockCharacters)),
+      http.get('http://localhost:3000/data/crops.json', () => HttpResponse.json(mockCrops)),
+    );
+  });
+
   it('renders immediately from server-provided props without falling back to client loading', () => {
     render(
       <CalendarView
@@ -92,9 +91,10 @@ describe('CalendarView Component', () => {
 
     const festivalButton = screen.getAllByText('Spring Harvest Festival')[0];
     await user.click(festivalButton);
+    const dialog = await screen.findByRole('dialog', { name: 'Spring Harvest Festival' });
 
     // Should open the drawer and display description
-    expect(await screen.findByText('Spring crop judging.')).toBeInTheDocument();
+    expect(within(dialog).getByText('Spring crop judging.')).toBeInTheDocument();
   });
 
   it('shows birthday drawer details with the small icon', async () => {

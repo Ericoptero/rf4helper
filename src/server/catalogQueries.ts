@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import type { MapRegionRecord } from '@/lib/mapFishingRelations';
 import { isMonsterActuallyTameable, type MonsterGroup } from '@/lib/monsterGroups';
-import { hasDisplayEffects } from '@/lib/itemPresentation';
+import { getDisplayStats, hasDisplayEffects } from '@/lib/itemPresentation';
 import type { Character, Chest, Fish, Item, Monster } from '@/lib/schemas';
 import {
   getCharactersFilterOptionsForData,
@@ -167,24 +167,197 @@ function getSeasonSortValue(season: string | null | undefined) {
   return index === -1 ? Number.MAX_SAFE_INTEGER : index;
 }
 
+function compareNullableNumber(
+  left: number | null | undefined,
+  right: number | null | undefined,
+  direction: 'asc' | 'desc',
+) {
+  if (left == null && right == null) {
+    return 0;
+  }
+
+  if (left == null) {
+    return 1;
+  }
+
+  if (right == null) {
+    return -1;
+  }
+
+  return direction === 'asc' ? left - right : right - left;
+}
+
+function compareNullableText(
+  left: string | null | undefined,
+  right: string | null | undefined,
+  direction: 'asc' | 'desc',
+) {
+  if (!left && !right) {
+    return 0;
+  }
+
+  if (!left) {
+    return 1;
+  }
+
+  if (!right) {
+    return -1;
+  }
+
+  return direction === 'asc'
+    ? left.localeCompare(right)
+    : right.localeCompare(left);
+}
+
+function sortByName<T>(values: T[], getName: (value: T) => string, direction: 'asc' | 'desc' = 'asc') {
+  return values.toSorted((left, right) => (
+    direction === 'asc'
+      ? getName(left).localeCompare(getName(right))
+      : getName(right).localeCompare(getName(left))
+  ));
+}
+
+function sortByNumber<T>(
+  values: T[],
+  getValue: (value: T) => number | null | undefined,
+  getName: (value: T) => string,
+  direction: 'asc' | 'desc',
+) {
+  return values.toSorted((left, right) => (
+    compareNullableNumber(getValue(left), getValue(right), direction)
+    || getName(left).localeCompare(getName(right))
+  ));
+}
+
+function sortByText<T>(
+  values: T[],
+  getValue: (value: T) => string | null | undefined,
+  getName: (value: T) => string,
+  direction: 'asc' | 'desc',
+) {
+  return values.toSorted((left, right) => (
+    compareNullableText(getValue(left), getValue(right), direction)
+    || getName(left).localeCompare(getName(right))
+  ));
+}
+
+function sortCharactersByBirthday(characters: Character[], direction: 'asc' | 'desc') {
+  return characters.toSorted((left, right) => {
+    const leftMissing = !left.birthday?.season || left.birthday.day == null;
+    const rightMissing = !right.birthday?.season || right.birthday.day == null;
+
+    if (leftMissing && rightMissing) {
+      return left.name.localeCompare(right.name);
+    }
+
+    if (leftMissing) {
+      return 1;
+    }
+
+    if (rightMissing) {
+      return -1;
+    }
+
+    const seasonDelta = compareNullableNumber(
+      getSeasonSortValue(left.birthday?.season),
+      getSeasonSortValue(right.birthday?.season),
+      direction,
+    );
+
+    if (seasonDelta !== 0) {
+      return seasonDelta;
+    }
+
+    return compareNullableNumber(left.birthday?.day, right.birthday?.day, direction)
+      || left.name.localeCompare(right.name);
+  });
+}
+
+function getItemStat(item: Item, key: keyof NonNullable<Item['stats']>) {
+  return getDisplayStats(item)?.[key];
+}
+
+function getItemCraftingLevel(item: Item) {
+  const recipeLevels = [...(item.craft ?? []), ...(item.craftedFrom ?? [])]
+    .map((recipe) => recipe.level)
+    .filter((level) => typeof level === 'number');
+
+  if (recipeLevels.length === 0) {
+    return undefined;
+  }
+
+  return Math.min(...recipeLevels);
+}
+
+function getFishRegionCount(fish: Fish) {
+  return new Set((fish.locations ?? []).map((location) => location.region)).size;
+}
+
+function getMapRoomCount(region: MapRegionRecord) {
+  return new Set(region.chests.map((chest) => chest.roomCode)).size;
+}
+
+function getMapNoteChestCount(region: MapRegionRecord) {
+  return region.chests.filter((chest) => chest.notes).length;
+}
+
+function getMapRecipeChestCount(region: MapRegionRecord) {
+  return region.chests.filter((chest) => chest.recipe).length;
+}
+
 function applyCharactersSort(characters: Character[], sortValue: string | undefined) {
   const resolvedSort = sortValue ?? 'name-asc';
 
   switch (resolvedSort) {
+    case 'name-desc':
+      return sortByName(characters, (character) => character.name, 'desc');
     case 'birthday-asc':
-      return characters.toSorted((left, right) => {
-        const seasonDelta =
-          getSeasonSortValue(left.birthday?.season) - getSeasonSortValue(right.birthday?.season);
-
-        if (seasonDelta !== 0) {
-          return seasonDelta;
-        }
-
-        return (left.birthday?.day || 99) - (right.birthday?.day || 99);
-      });
+      return sortCharactersByBirthday(characters, 'asc');
+    case 'birthday-desc':
+      return sortCharactersByBirthday(characters, 'desc');
+    case 'weapon-type-asc':
+      return sortByText(characters, (character) => character.battle?.weaponType, (character) => character.name, 'asc');
+    case 'weapon-type-desc':
+      return sortByText(characters, (character) => character.battle?.weaponType, (character) => character.name, 'desc');
+    case 'level-asc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.level, (character) => character.name, 'asc');
+    case 'level-desc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.level, (character) => character.name, 'desc');
+    case 'hp-asc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.hp, (character) => character.name, 'asc');
+    case 'hp-desc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.hp, (character) => character.name, 'desc');
+    case 'atk-asc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.atk, (character) => character.name, 'asc');
+    case 'atk-desc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.atk, (character) => character.name, 'desc');
+    case 'def-asc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.def, (character) => character.name, 'asc');
+    case 'def-desc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.def, (character) => character.name, 'desc');
+    case 'matk-asc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.matk, (character) => character.name, 'asc');
+    case 'matk-desc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.matk, (character) => character.name, 'desc');
+    case 'mdef-asc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.mdef, (character) => character.name, 'asc');
+    case 'mdef-desc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.mdef, (character) => character.name, 'desc');
+    case 'str-asc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.str, (character) => character.name, 'asc');
+    case 'str-desc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.str, (character) => character.name, 'desc');
+    case 'vit-asc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.vit, (character) => character.name, 'asc');
+    case 'vit-desc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.vit, (character) => character.name, 'desc');
+    case 'int-asc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.int, (character) => character.name, 'asc');
+    case 'int-desc':
+      return sortByNumber(characters, (character) => character.battle?.stats?.int, (character) => character.name, 'desc');
     case 'name-asc':
     default:
-      return characters.toSorted((left, right) => left.name.localeCompare(right.name));
+      return sortByName(characters, (character) => character.name, 'asc');
   }
 }
 
@@ -192,11 +365,55 @@ function applyMonstersSort(groups: MonsterGroup[], sortValue: string | undefined
   const resolvedSort = sortValue ?? 'name-asc';
 
   switch (resolvedSort) {
+    case 'name-desc':
+      return sortByName(groups, (group) => group.displayName, 'desc');
+    case 'location-asc':
+      return sortByText(groups, (group) => group.locations[0] ?? group.representative.location, (group) => group.displayName, 'asc');
+    case 'location-desc':
+      return sortByText(groups, (group) => group.locations[0] ?? group.representative.location, (group) => group.displayName, 'desc');
+    case 'level-asc':
+      return sortByNumber(groups, (group) => group.representative.stats.baseLevel, (group) => group.displayName, 'asc');
     case 'level-desc':
-      return groups.toSorted((left, right) => (right.representative.stats.baseLevel || 0) - (left.representative.stats.baseLevel || 0));
+      return sortByNumber(groups, (group) => group.representative.stats.baseLevel, (group) => group.displayName, 'desc');
+    case 'hp-asc':
+      return sortByNumber(groups, (group) => group.representative.stats.hp, (group) => group.displayName, 'asc');
+    case 'hp-desc':
+      return sortByNumber(groups, (group) => group.representative.stats.hp, (group) => group.displayName, 'desc');
+    case 'atk-asc':
+      return sortByNumber(groups, (group) => group.representative.stats.atk, (group) => group.displayName, 'asc');
+    case 'atk-desc':
+      return sortByNumber(groups, (group) => group.representative.stats.atk, (group) => group.displayName, 'desc');
+    case 'def-asc':
+      return sortByNumber(groups, (group) => group.representative.stats.def, (group) => group.displayName, 'asc');
+    case 'def-desc':
+      return sortByNumber(groups, (group) => group.representative.stats.def, (group) => group.displayName, 'desc');
+    case 'matk-asc':
+      return sortByNumber(groups, (group) => group.representative.stats.matk, (group) => group.displayName, 'asc');
+    case 'matk-desc':
+      return sortByNumber(groups, (group) => group.representative.stats.matk, (group) => group.displayName, 'desc');
+    case 'mdef-asc':
+      return sortByNumber(groups, (group) => group.representative.stats.mdef, (group) => group.displayName, 'asc');
+    case 'mdef-desc':
+      return sortByNumber(groups, (group) => group.representative.stats.mdef, (group) => group.displayName, 'desc');
+    case 'str-asc':
+      return sortByNumber(groups, (group) => group.representative.stats.str, (group) => group.displayName, 'asc');
+    case 'str-desc':
+      return sortByNumber(groups, (group) => group.representative.stats.str, (group) => group.displayName, 'desc');
+    case 'vit-asc':
+      return sortByNumber(groups, (group) => group.representative.stats.vit, (group) => group.displayName, 'asc');
+    case 'vit-desc':
+      return sortByNumber(groups, (group) => group.representative.stats.vit, (group) => group.displayName, 'desc');
+    case 'int-asc':
+      return sortByNumber(groups, (group) => group.representative.stats.int, (group) => group.displayName, 'asc');
+    case 'int-desc':
+      return sortByNumber(groups, (group) => group.representative.stats.int, (group) => group.displayName, 'desc');
+    case 'exp-asc':
+      return sortByNumber(groups, (group) => group.representative.stats.exp, (group) => group.displayName, 'asc');
+    case 'exp-desc':
+      return sortByNumber(groups, (group) => group.representative.stats.exp, (group) => group.displayName, 'desc');
     case 'name-asc':
     default:
-      return groups.toSorted((left, right) => left.displayName.localeCompare(right.displayName));
+      return sortByName(groups, (group) => group.displayName, 'asc');
   }
 }
 
@@ -204,13 +421,31 @@ function applyFishingSort(fish: Fish[], sortValue: string | undefined) {
   const resolvedSort = sortValue ?? 'name-asc';
 
   switch (resolvedSort) {
+    case 'name-desc':
+      return sortByName(fish, (entry) => entry.name, 'desc');
+    case 'shadow-asc':
+      return sortByText(fish, (entry) => entry.shadow, (entry) => entry.name, 'asc');
+    case 'shadow-desc':
+      return sortByText(fish, (entry) => entry.shadow, (entry) => entry.name, 'desc');
+    case 'buy-asc':
+      return sortByNumber(fish, (entry) => entry.buy, (entry) => entry.name, 'asc');
+    case 'buy-desc':
+      return sortByNumber(fish, (entry) => entry.buy, (entry) => entry.name, 'desc');
+    case 'sell-asc':
+      return sortByNumber(fish, (entry) => entry.sell, (entry) => entry.name, 'asc');
     case 'sell-desc':
-      return fish.toSorted((left, right) => (right.sell || 0) - (left.sell || 0));
+      return sortByNumber(fish, (entry) => entry.sell, (entry) => entry.name, 'desc');
+    case 'regions-asc':
+      return sortByNumber(fish, getFishRegionCount, (entry) => entry.name, 'asc');
+    case 'regions-desc':
+      return sortByNumber(fish, getFishRegionCount, (entry) => entry.name, 'desc');
+    case 'locations-asc':
+      return sortByNumber(fish, (entry) => entry.locations?.length, (entry) => entry.name, 'asc');
     case 'locations-desc':
-      return fish.toSorted((left, right) => (right.locations?.length || 0) - (left.locations?.length || 0));
+      return sortByNumber(fish, (entry) => entry.locations?.length, (entry) => entry.name, 'desc');
     case 'name-asc':
     default:
-      return fish.toSorted((left, right) => left.name.localeCompare(right.name));
+      return sortByName(fish, (entry) => entry.name, 'asc');
   }
 }
 
@@ -218,13 +453,31 @@ function applyMapsSort(regions: MapRegionRecord[], sortValue: string | undefined
   const resolvedSort = sortValue ?? 'name-asc';
 
   switch (resolvedSort) {
+    case 'name-desc':
+      return sortByName(regions, (region) => region.name, 'desc');
+    case 'rooms-asc':
+      return sortByNumber(regions, getMapRoomCount, (region) => region.name, 'asc');
+    case 'rooms-desc':
+      return sortByNumber(regions, getMapRoomCount, (region) => region.name, 'desc');
+    case 'chests-asc':
+      return sortByNumber(regions, (region) => region.chests.length, (region) => region.name, 'asc');
     case 'chests-desc':
-      return regions.toSorted((left, right) => right.chests.length - left.chests.length);
+      return sortByNumber(regions, (region) => region.chests.length, (region) => region.name, 'desc');
+    case 'notes-asc':
+      return sortByNumber(regions, getMapNoteChestCount, (region) => region.name, 'asc');
+    case 'notes-desc':
+      return sortByNumber(regions, getMapNoteChestCount, (region) => region.name, 'desc');
+    case 'recipes-asc':
+      return sortByNumber(regions, getMapRecipeChestCount, (region) => region.name, 'asc');
+    case 'recipes-desc':
+      return sortByNumber(regions, getMapRecipeChestCount, (region) => region.name, 'desc');
+    case 'fishing-asc':
+      return sortByNumber(regions, (region) => region.fishingLocations.length, (region) => region.name, 'asc');
     case 'fishing-desc':
-      return regions.toSorted((left, right) => right.fishingLocations.length - left.fishingLocations.length);
+      return sortByNumber(regions, (region) => region.fishingLocations.length, (region) => region.name, 'desc');
     case 'name-asc':
     default:
-      return regions.toSorted((left, right) => left.name.localeCompare(right.name));
+      return sortByName(regions, (region) => region.name, 'asc');
   }
 }
 
@@ -233,18 +486,54 @@ function applyItemsSort(items: Item[], sortValue: string | undefined) {
 
   switch (resolvedSort) {
     case 'name-desc':
-      return items.toSorted((left, right) => right.name.localeCompare(left.name));
+      return sortByName(items, (item) => item.name, 'desc');
+    case 'buy-asc':
+      return sortByNumber(items, (item) => item.buy, (item) => item.name, 'asc');
     case 'buy-desc':
-      return items.toSorted((left, right) => (right.buy ?? 0) - (left.buy ?? 0));
+      return sortByNumber(items, (item) => item.buy, (item) => item.name, 'desc');
+    case 'level-asc':
+      return sortByNumber(items, getItemCraftingLevel, (item) => item.name, 'asc');
+    case 'level-desc':
+      return sortByNumber(items, getItemCraftingLevel, (item) => item.name, 'desc');
     case 'sell-asc':
-      return items.toSorted((left, right) => (left.sell ?? 0) - (right.sell ?? 0));
+      return sortByNumber(items, (item) => item.sell, (item) => item.name, 'asc');
+    case 'rarity-asc':
+      return sortByNumber(items, (item) => item.rarityPoints, (item) => item.name, 'asc');
     case 'rarity-desc':
-      return items.toSorted((left, right) => (right.rarityPoints ?? 0) - (left.rarityPoints ?? 0));
+      return sortByNumber(items, (item) => item.rarityPoints, (item) => item.name, 'desc');
     case 'sell-desc':
-      return items.toSorted((left, right) => (right.sell ?? 0) - (left.sell ?? 0));
+      return sortByNumber(items, (item) => item.sell, (item) => item.name, 'desc');
+    case 'atk-asc':
+      return sortByNumber(items, (item) => getItemStat(item, 'atk'), (item) => item.name, 'asc');
+    case 'atk-desc':
+      return sortByNumber(items, (item) => getItemStat(item, 'atk'), (item) => item.name, 'desc');
+    case 'matk-asc':
+      return sortByNumber(items, (item) => getItemStat(item, 'matk'), (item) => item.name, 'asc');
+    case 'matk-desc':
+      return sortByNumber(items, (item) => getItemStat(item, 'matk'), (item) => item.name, 'desc');
+    case 'def-asc':
+      return sortByNumber(items, (item) => getItemStat(item, 'def'), (item) => item.name, 'asc');
+    case 'def-desc':
+      return sortByNumber(items, (item) => getItemStat(item, 'def'), (item) => item.name, 'desc');
+    case 'mdef-asc':
+      return sortByNumber(items, (item) => getItemStat(item, 'mdef'), (item) => item.name, 'asc');
+    case 'mdef-desc':
+      return sortByNumber(items, (item) => getItemStat(item, 'mdef'), (item) => item.name, 'desc');
+    case 'str-asc':
+      return sortByNumber(items, (item) => getItemStat(item, 'str'), (item) => item.name, 'asc');
+    case 'str-desc':
+      return sortByNumber(items, (item) => getItemStat(item, 'str'), (item) => item.name, 'desc');
+    case 'vit-asc':
+      return sortByNumber(items, (item) => getItemStat(item, 'vit'), (item) => item.name, 'asc');
+    case 'vit-desc':
+      return sortByNumber(items, (item) => getItemStat(item, 'vit'), (item) => item.name, 'desc');
+    case 'int-asc':
+      return sortByNumber(items, (item) => getItemStat(item, 'int'), (item) => item.name, 'asc');
+    case 'int-desc':
+      return sortByNumber(items, (item) => getItemStat(item, 'int'), (item) => item.name, 'desc');
     case 'name-asc':
     default:
-      return items.toSorted((left, right) => left.name.localeCompare(right.name));
+      return sortByName(items, (item) => item.name, 'asc');
   }
 }
 

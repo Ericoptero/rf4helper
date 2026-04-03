@@ -207,6 +207,8 @@ const server = setupServer(
       type: 'item',
       item,
       items: mockItems,
+      dropSources: [],
+      cropRelations: [],
     });
   })
 );
@@ -237,6 +239,40 @@ describe('ItemsList Component', () => {
     expect(screen.queryByRole('button', { name: '#' })).not.toBeInTheDocument();
   });
 
+  it('shows the compact 3x2 recipe preview when hovering item cells in table view', async () => {
+    const user = userEvent.setup();
+
+    render(<ItemsList items={mockItemList} />);
+
+    await user.click(screen.getByRole('button', { name: 'Table' }));
+    await user.hover(within(screen.getByRole('table')).getByText('Broadsword'));
+
+    const tooltip = await screen.findByRole('tooltip');
+    expect(within(tooltip).getByText('Broadsword')).toBeInTheDocument();
+    expect(within(tooltip).getByText(/Forging · Lv\. 1/i)).toBeInTheDocument();
+    expect(within(tooltip).getByTestId('recipe-preview-grid')).toBeInTheDocument();
+    expect(within(tooltip).getByText('Minerals')).toBeInTheDocument();
+  });
+
+  it('shows the crafting level column in table view and lets the header reorder results', async () => {
+    const user = userEvent.setup();
+
+    render(<ItemsList items={mockItemList} />);
+
+    await user.click(screen.getByRole('button', { name: 'Table' }));
+
+    const table = screen.getByRole('table');
+    expect(within(table).getByRole('button', { name: /^Level$/i })).toBeInTheDocument();
+    const breadRow = within(table).getAllByText('Bread')[0]?.closest('tr');
+    const broadswordRow = within(table).getAllByText('Broadsword')[0]?.closest('tr');
+    expect(within(breadRow as HTMLElement).getByText('5')).toBeInTheDocument();
+    expect(within(broadswordRow as HTMLElement).getByText('1')).toBeInTheDocument();
+
+    await user.click(within(table).getByRole('button', { name: /^Level$/i }));
+
+    expect(screen.getByText(/sorted by Level \(descending\)/i)).toBeInTheDocument();
+  });
+
 
 
   it('shows the item image and all meaningful details in the sheet', async () => {
@@ -245,28 +281,28 @@ describe('ItemsList Component', () => {
     render(<ItemsList items={mockItemList} />);
 
     await user.click((await screen.findAllByText('Bread'))[0]);
-    const dialog = await screen.findByRole('dialog');
+    const dialog = await screen.findByRole('dialog', { name: 'Bread' });
 
-    expect(await screen.findByText('Freshly baked bread.')).toBeInTheDocument();
+    expect(within(dialog).getByText('Freshly baked bread.')).toBeInTheDocument();
     expect(within(dialog).getByRole('img', { name: 'Bread image' })).toBeInTheDocument();
-    expect(screen.getAllByText('Food & Medicine Strings').length).toBeGreaterThan(0);
-    expect(screen.getByText('Selphia General Store')).toBeInTheDocument();
-    expect(screen.getByText('Buffamoo')).toBeInTheDocument();
-    expect(screen.getByText('4 RP')).toBeInTheDocument();
-    expect(screen.getByText('Crafted From')).toBeInTheDocument();
-    expect(screen.getByText('Cooking')).toBeInTheDocument();
-    expect(screen.getByText('Lv. 5')).toBeInTheDocument();
-    expect(screen.getAllByText('Flour').length).toBeGreaterThan(0);
+    expect(within(dialog).getAllByText('Food & Medicine Strings').length).toBeGreaterThan(0);
+    expect(within(dialog).getByText('Selphia General Store')).toBeInTheDocument();
+    expect(within(dialog).getByText('Buffamoo')).toBeInTheDocument();
+    expect(within(dialog).getByText('4 RP')).toBeInTheDocument();
+    expect(within(dialog).getByText('Crafted From')).toBeInTheDocument();
+    expect(within(dialog).getByText('Cooking')).toBeInTheDocument();
+    expect(within(dialog).getByText('Lv. 5')).toBeInTheDocument();
+    expect(within(dialog).getAllByText('Flour').length).toBeGreaterThan(0);
     expect(within(dialog).getByRole('img', { name: 'Flour image' })).toBeInTheDocument();
-    expect(screen.getByText('Stats')).toBeInTheDocument();
-    expect(screen.getByText('HP')).toBeInTheDocument();
-    expect(screen.getByText('10')).toBeInTheDocument();
-    expect(screen.getByText('RP')).toBeInTheDocument();
-    expect(screen.getByText('5')).toBeInTheDocument();
-    expect(screen.queryByText('Additional Effects')).not.toBeInTheDocument();
-    expect(screen.getByText('Used In Recipes')).toBeInTheDocument();
-    expect(screen.getAllByText('Toast').length).toBeGreaterThan(0);
-    expect(screen.queryByText(/Tier/i)).not.toBeInTheDocument();
+
+    expect(within(dialog).getByText('HP')).toBeInTheDocument();
+    expect(within(dialog).getByText('10')).toBeInTheDocument();
+    expect(within(dialog).getByText('RP')).toBeInTheDocument();
+    expect(within(dialog).getByText('5')).toBeInTheDocument();
+    expect(within(dialog).queryByText('Additional Effects')).not.toBeInTheDocument();
+
+    expect(within(dialog).getAllByText('Toast').length).toBeGreaterThan(0);
+    expect(within(dialog).queryByText(/Tier/i)).not.toBeInTheDocument();
   });
 
   it('hides optional detail sections when item data is missing', async () => {
@@ -290,7 +326,7 @@ describe('ItemsList Component', () => {
     render(<ItemsList items={mockItemList} />);
 
     await user.click(await screen.findByText('Broadsword'));
-    const dialog = await screen.findByRole('dialog');
+    const dialog = await screen.findByRole('dialog', { name: 'Broadsword' });
 
     expect(within(dialog).getByText('Crafted From')).toBeInTheDocument();
     expect(within(dialog).getByText('Forging')).toBeInTheDocument();
@@ -306,9 +342,9 @@ describe('ItemsList Component', () => {
     render(<ItemsList items={mockItemList} />);
 
     await user.click(await screen.findByText('Minerals'));
+    const dialog = await screen.findByRole('dialog', { name: 'Minerals' });
 
-    expect(await screen.findByText('Used In Recipes')).toBeInTheDocument();
-    expect(screen.getAllByText('Broadsword').length).toBeGreaterThan(0);
+    expect(within(dialog).getAllByText('Broadsword').length).toBeGreaterThan(0);
   });
 
   it('renders group members for category items', async () => {
@@ -317,9 +353,9 @@ describe('ItemsList Component', () => {
     render(<ItemsList items={mockItemList} />);
 
     await user.click(await screen.findByText('Minerals'));
+    const dialog = await screen.findByRole('dialog', { name: 'Minerals' });
 
-    expect(await screen.findByText('Group Members')).toBeInTheDocument();
-    expect(screen.getAllByText('Iron').length).toBeGreaterThan(0);
+    expect(within(dialog).getAllByText('Iron').length).toBeGreaterThan(0);
   });
 
   it('renders non-flat effects alongside normalized stats', async () => {
@@ -328,12 +364,11 @@ describe('ItemsList Component', () => {
     render(<ItemsList items={mockItemList} />);
 
     await user.click(await screen.findByText('Roundoff'));
+    const dialog = await screen.findByRole('dialog', { name: 'Roundoff' });
 
-    expect(await screen.findByText('Stats')).toBeInTheDocument();
-    expect(screen.getByText('HP')).toBeInTheDocument();
-    expect(screen.getByText('300')).toBeInTheDocument();
-    expect(screen.getByText('Additional Effects')).toBeInTheDocument();
-    expect(screen.getByText(/Cures Seal/i)).toBeInTheDocument();
+    expect(within(dialog).getByText('HP')).toBeInTheDocument();
+    expect(within(dialog).getByText('300')).toBeInTheDocument();
+    expect(within(dialog).getByText(/Cures Seal/i)).toBeInTheDocument();
   });
 
   it('renders effects without a stats section when the item has no stats', async () => {
@@ -342,10 +377,10 @@ describe('ItemsList Component', () => {
     render(<ItemsList items={mockItemList} />);
 
     await user.click(await screen.findByText('Fire Resist Charm'));
+    const dialog = await screen.findByRole('dialog', { name: 'Fire Resist Charm' });
 
-    expect(await screen.findByText('Additional Effects')).toBeInTheDocument();
-    expect(screen.getByText(/Fire resistance \+25%/i)).toBeInTheDocument();
-    expect(screen.queryByText('Stats')).not.toBeInTheDocument();
+    expect(within(dialog).getByText(/Fire resistance \+25%/i)).toBeInTheDocument();
+    expect(within(dialog).queryByText('Stats')).not.toBeInTheDocument();
   });
 
   it('renders healing, stat multipliers, and combat details when the item exposes them', async () => {
@@ -354,24 +389,20 @@ describe('ItemsList Component', () => {
     render(<ItemsList items={mockItemList} />);
 
     await user.click(await screen.findByText('Battle Broth'));
+    const dialog = await screen.findByRole('dialog', { name: 'Battle Broth' });
 
-    expect(await screen.findByText('Healing')).toBeInTheDocument();
-    expect(screen.getByText('HP%')).toBeInTheDocument();
-    expect(screen.getByText('+25%')).toBeInTheDocument();
-    expect(screen.getByText('RP%')).toBeInTheDocument();
-    expect(screen.getByText('+10%')).toBeInTheDocument();
-
-    expect(screen.getByText('Stat Multipliers')).toBeInTheDocument();
-    expect(screen.getByText('STR')).toBeInTheDocument();
-    expect(screen.getByText('RP MAX')).toBeInTheDocument();
-
-    expect(screen.getByText('Combat Profile')).toBeInTheDocument();
-    expect(screen.getByText('Weapon Class')).toBeInTheDocument();
-    expect(screen.getAllByText('Short Sword').length).toBeGreaterThan(0);
-    expect(screen.getByText('Element')).toBeInTheDocument();
-    expect(screen.getByText('Fire')).toBeInTheDocument();
-    expect(screen.getByText('Geometry')).toBeInTheDocument();
-    expect(screen.getByText(/Length/i)).toBeInTheDocument();
+    expect(within(dialog).getByText('HP%')).toBeInTheDocument();
+    expect(within(dialog).getByText('+25%')).toBeInTheDocument();
+    expect(within(dialog).getByText('RP%')).toBeInTheDocument();
+    expect(within(dialog).getByText('+10%')).toBeInTheDocument();
+    expect(within(dialog).getByText('STR')).toBeInTheDocument();
+    expect(within(dialog).getByText('RP MAX')).toBeInTheDocument();
+    expect(within(dialog).getByText('Weapon Class')).toBeInTheDocument();
+    expect(within(dialog).getAllByText('Short Sword').length).toBeGreaterThan(0);
+    expect(within(dialog).getByText('Element')).toBeInTheDocument();
+    expect(within(dialog).getByText('Fire')).toBeInTheDocument();
+    expect(within(dialog).getByText('Geometry')).toBeInTheDocument();
+    expect(within(dialog).getByText(/Length/i)).toBeInTheDocument();
   });
 
   it('renders the item drawer full width on mobile with a column hero layout', async () => {

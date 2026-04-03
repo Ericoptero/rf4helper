@@ -36,7 +36,12 @@ export type CatalogTableColumn<T> = {
   key: string;
   header: string;
   className?: string;
+  headerClassName?: string;
   cell: (item: T) => React.ReactNode;
+  tooltipContent?: (item: T) => React.ReactNode;
+  sortAscValue?: string;
+  sortDescValue?: string;
+  defaultDirection?: 'asc' | 'desc';
 };
 
 export type CatalogPageLayoutProps<T> = {
@@ -44,6 +49,7 @@ export type CatalogPageLayoutProps<T> = {
   totalCount?: number;
   title: string;
   sortValue?: string;
+  defaultSortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
@@ -234,6 +240,7 @@ export function CatalogPageLayout<T>({
   totalCount,
   title,
   sortValue,
+  defaultSortValue,
   onSortValueChange,
   filterValues,
   onFilterValuesChange,
@@ -258,9 +265,9 @@ export function CatalogPageLayout<T>({
 }: CatalogPageLayoutProps<T>) {
   const [filtersSheetOpen, setFiltersSheetOpen] = React.useState(false);
   const [draftFilterValues, setDraftFilterValues] = React.useState<Record<string, CatalogFilterValue>>({});
-  const [viewportElement, setViewportElement] = React.useState<HTMLDivElement | null>(null);
-  const viewportRef = React.useCallback((node: HTMLDivElement | null) => {
-    setViewportElement(node);
+  const [resultsViewportElement, setResultsViewportElement] = React.useState<HTMLElement | null>(null);
+  const resultsViewportRef = React.useCallback((node: HTMLElement | null) => {
+    setResultsViewportElement(node);
   }, []);
   const hasSearchControl = Boolean(onSearchTermChange || searchTerm);
 
@@ -331,12 +338,43 @@ export function CatalogPageLayout<T>({
     itemCount: data.length,
     batchSize: viewMode === 'table' ? 40 : 24,
     resetKeys: revealResetKeys,
-    rootElement: viewportElement,
+    rootElement: resultsViewportElement,
   });
   const visibleItems = data.slice(0, visibleCount);
   const quickToggleValues = quickToggleFilters.flatMap((definition) =>
     draftFilterValues[definition.key] ? [definition.key] : [],
   );
+  const resolvedDefaultSortValue = defaultSortValue ?? sortOptions?.[0]?.value;
+  const activeTableSort = useMemo(
+    () => tableColumns?.find((column) => column.sortAscValue === sortValue || column.sortDescValue === sortValue),
+    [sortValue, tableColumns],
+  );
+  const activeTableSortDirection = useMemo(() => {
+    if (!activeTableSort || !sortValue) {
+      return null;
+    }
+
+    if (activeTableSort.sortAscValue === sortValue) {
+      return 'asc';
+    }
+
+    if (activeTableSort.sortDescValue === sortValue) {
+      return 'desc';
+    }
+
+    return null;
+  }, [activeTableSort, sortValue]);
+  const toolbarSortValue = useMemo(() => {
+    if (!sortOptions?.length) {
+      return sortValue;
+    }
+
+    return sortOptions.some((option) => option.value === sortValue)
+      ? sortValue
+      : resolvedDefaultSortValue;
+  }, [resolvedDefaultSortValue, sortOptions, sortValue]);
+  const showTableSortHelper = viewMode === 'table'
+    && Boolean(tableColumns?.some((column) => column.sortAscValue && column.sortDescValue));
 
   const normalizeFilterRecord = React.useCallback(
     (values: Record<string, CatalogFilterValue>) =>
@@ -432,7 +470,7 @@ export function CatalogPageLayout<T>({
           ) : null}
 
           {sortOptions && sortOptions.length > 0 ? (
-            <Select value={sortValue} onValueChange={onSortValueChange}>
+            <Select value={toolbarSortValue} onValueChange={onSortValueChange}>
               <SelectTrigger size="lg" className="h-11 w-full rounded-xl bg-card lg:w-[220px]" aria-label="Sort">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
@@ -464,6 +502,13 @@ export function CatalogPageLayout<T>({
           <CatalogViewToggle viewMode={viewMode} onViewModeChange={onViewModeChange} />
         </div>
         {extraControls ? <div className="mt-3">{extraControls}</div> : null}
+        {showTableSortHelper ? (
+          <p className="mt-3 text-xs text-muted-foreground">
+            {activeTableSort && activeTableSortDirection
+              ? `Sorted by ${activeTableSort.header} (${activeTableSortDirection === 'asc' ? 'ascending' : 'descending'}). Click a column header to reverse or reset.`
+              : 'Click a column header to sort.'}
+          </p>
+        ) : null}
       </div>
 
       <CatalogAppliedFilters chips={appliedFilterChips} onRemove={handleRemoveAppliedFilter} />
@@ -475,17 +520,39 @@ export function CatalogPageLayout<T>({
         )}
         aria-busy={isRoutePending}
       >
-        <ScrollArea className="h-[calc(100vh-15rem)] min-h-112 pr-2" viewportRef={viewportRef}>
-          {viewMode === 'table' && tableColumns && tableColumns.length > 0 ? (
+        {viewMode === 'table' && tableColumns && tableColumns.length > 0 ? (
+          <div
+            ref={resultsViewportRef}
+            data-testid="catalog-table-results-scroll"
+            className="h-[calc(100vh-15rem)] min-h-112 overflow-auto"
+          >
             <CatalogResultsTable
               visibleItems={visibleItems}
               tableColumns={tableColumns}
               getItemKey={getItemKey}
               onOpenItem={onOpenItem}
+              sortValue={sortValue}
+              onSortValueChange={onSortValueChange}
+              defaultSortValue={resolvedDefaultSortValue}
               hasMore={hasMore}
               sentinelRef={sentinelRef}
+              scrollContainer={resultsViewportElement}
             />
-          ) : (
+
+            {data.length === 0 ? (
+              <div className="px-3 py-3">
+                <div className="rounded-2xl border border-dashed px-6 py-20 text-center text-muted-foreground">
+                  {emptyState}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        ) : (
+          <ScrollArea
+            data-testid="catalog-cards-scroll-area"
+            className="h-[calc(100vh-15rem)] min-h-112 pr-2"
+            viewportRef={resultsViewportRef}
+          >
             <CatalogResultsGrid
               visibleItems={visibleItems}
               getItemKey={getItemKey}
@@ -494,16 +561,16 @@ export function CatalogPageLayout<T>({
               hasMore={hasMore}
               sentinelRef={sentinelRef}
             />
-          )}
 
-          {data.length === 0 ? (
-            <div className="px-3 py-3">
-              <div className="rounded-2xl border border-dashed px-6 py-20 text-center text-muted-foreground">
-                {emptyState}
+            {data.length === 0 ? (
+              <div className="px-3 py-3">
+                <div className="rounded-2xl border border-dashed px-6 py-20 text-center text-muted-foreground">
+                  {emptyState}
+                </div>
               </div>
-            </div>
-          ) : null}
-        </ScrollArea>
+            ) : null}
+          </ScrollArea>
+        )}
       </div>
 
       <CatalogFilterSheet

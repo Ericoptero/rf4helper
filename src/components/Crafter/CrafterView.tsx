@@ -6,6 +6,7 @@ import { CrafterDashboard } from '@/components/Crafter/CrafterDashboard';
 import { CrafterEquipmentTab } from '@/components/Crafter/CrafterEquipmentTab';
 import { CrafterFoodTab } from '@/components/Crafter/CrafterFoodTab';
 import { CrafterStatsPanel } from '@/components/Crafter/CrafterStatsPanel';
+import { useDetailDrawer } from '@/components/details/DetailDrawerContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -96,6 +97,7 @@ export function CrafterView({
   serializedBuild,
   onSerializedBuildChange,
 }: CrafterViewProps) {
+  const { openRoot } = useDetailDrawer();
   const previousCalculationRef = React.useRef<ReturnType<typeof calculateCrafterBuild> | undefined>(undefined);
   const build = React.useMemo(
     () => deserializeCrafterBuild(serializedBuild, crafterData),
@@ -467,6 +469,7 @@ export function CrafterView({
         categoryLabel={selectedNodeBehavior?.categoryLabel}
         emptyStateTitle={selectedNodeBehavior?.emptyStateTitle}
         emptyStateDescription={selectedNodeBehavior?.emptyStateDescription}
+        onOpenItemDetails={(itemId) => openRoot({ type: 'item', id: itemId })}
         onOpenChange={(open) => !open && setSelectedNode(null)}
         onClear={() => {
           if (!selectedNode) return;

@@ -1,10 +1,15 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
+import { http, HttpResponse } from 'msw';
 import { CrafterView } from './CrafterView';
+import { DetailDrawerProvider } from '@/components/details/DetailDrawerContext';
+import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
+import { resetDetailPayloadCache } from '@/components/details/useDetailPayload';
 import { deserializeCrafterBuild } from '@/lib/crafter';
 import type { CrafterData, CrafterSlotConfig, Item } from '@/lib/schemas';
+import { server } from '@/setupTests';
 
 const items: Record<string, Item> = {
   'item-broadsword': {
@@ -425,6 +430,15 @@ const crafterData: CrafterData = {
   fixtures: {},
 };
 
+function renderWithDetailDrawer(ui: React.ReactNode) {
+  return render(
+    <DetailDrawerProvider onDetailReferenceChange={() => undefined}>
+      {ui}
+      <UniversalDetailsDrawer />
+    </DetailDrawerProvider>,
+  );
+}
+
 function CrafterHarness({
   onSerializedBuildChange = vi.fn(),
 }: {
@@ -445,6 +459,10 @@ function CrafterHarness({
   );
 }
 
+afterEach(() => {
+  resetDetailPayloadCache();
+});
+
 async function chooseItemFromSelector(user: ReturnType<typeof userEvent.setup>, query: string, itemName: string) {
   const dialog = await screen.findByRole('dialog');
   const search = within(dialog).getByRole('searchbox', { name: /search items/i });
@@ -456,7 +474,7 @@ async function chooseItemFromSelector(user: ReturnType<typeof userEvent.setup>, 
 
 describe('CrafterView', () => {
   it('renders the crafter header with the simplified tab set and dashboard final build summary', () => {
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     expect(screen.getByRole('button', { name: /reset build/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /dashboard/i })).toHaveAttribute('data-state', 'active');
@@ -484,7 +502,7 @@ describe('CrafterView', () => {
   it('renders compact slot groups, keeps the top slot labeled Base, and shows grouped stats', async () => {
     const user = userEvent.setup();
 
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
 
@@ -529,7 +547,7 @@ describe('CrafterView', () => {
   it('keeps long selector previews usable, rounds percentages visually, and hides default recipe items from Resume', async () => {
     const user = userEvent.setup();
 
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
@@ -598,7 +616,7 @@ describe('CrafterView', () => {
     }
 
     const user = userEvent.setup();
-    render(<LegacyHarness />);
+    renderWithDetailDrawer(<LegacyHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
@@ -616,7 +634,7 @@ describe('CrafterView', () => {
   it('keeps crafter selector images on the public images path for backend-enriched items', async () => {
     const user = userEvent.setup();
 
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
@@ -627,7 +645,39 @@ describe('CrafterView', () => {
     expect(previewIcon).toHaveAttribute('src', '/images/items/broadsword.png');
   });
 
-  it('rounds final stats to integers while keeping geometry precision in the final stats panel', async () => {
+  it('opens the shared item drawer from the selector preview without closing the selector dialog', async () => {
+    const user = userEvent.setup();
+
+    server.use(
+      http.get('http://localhost:3000/api/details/item/item-broadsword', () =>
+        HttpResponse.json({
+          type: 'item',
+          item: items['item-broadsword'],
+          items,
+          dropSources: [],
+          cropRelations: [],
+        })),
+    );
+
+    renderWithDetailDrawer(<CrafterHarness />);
+
+    await user.click(screen.getByRole('tab', { name: /weapon/i }));
+    await user.click(screen.getByRole('button', { name: /base/i }));
+
+    const selectorDialog = await screen.findByRole('dialog', { name: /select base/i });
+    const search = within(selectorDialog).getByRole('searchbox', { name: /search items/i });
+    await user.clear(search);
+    await user.type(search, 'Broad');
+    await user.click(within(selectorDialog).getByRole('button', { name: /broadsword/i }));
+
+    await user.click(within(selectorDialog).getByRole('button', { name: /open item details/i }));
+
+    expect(selectorDialog).toBeInTheDocument();
+    expect(within(selectorDialog).getByRole('button', { name: /apply/i, hidden: true })).toBeInTheDocument();
+    expect(await screen.findByRole('dialog', { name: /broadsword/i })).toBeInTheDocument();
+  });
+
+  it('shows final stats with at most one decimal place while keeping geometry precision in the final stats panel', async () => {
     const customCrafterData = structuredClone(crafterData);
     customCrafterData.stats.weapon['item-broadsword'] = equipmentPayload({
       itemName: 'Broadsword',
@@ -652,25 +702,25 @@ describe('CrafterView', () => {
     }
 
     const user = userEvent.setup();
-    render(<CustomHarness />);
+    renderWithDetailDrawer(<CustomHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
     await chooseItemFromSelector(user, 'Broad', 'Broadsword');
 
-    expect(screen.getByText(/\+1,235$/i)).toBeInTheDocument();
-    expect(screen.getByText(/^crit$/i).closest('div')).toHaveTextContent('+10%');
-    expect(screen.getByText(/^knock$/i).closest('div')).toHaveTextContent('+13%');
-    expect(screen.getByText(/^stun$/i).closest('div')).toHaveTextContent('+99%');
-    expect(screen.getByText(/fire: \+13%/i)).toBeInTheDocument();
-    expect(screen.getByText(/water: \+87%/i)).toBeInTheDocument();
-    expect(screen.getByText(/psn: \+10%/i)).toBeInTheDocument();
-    expect(screen.getByText(/^psn 13%$/i)).toBeInTheDocument();
-    expect(screen.getByText(/depth \+1\.65/i)).toBeInTheDocument();
-    expect(screen.getByText(/length \+2\.35/i)).toBeInTheDocument();
-    expect(screen.getByText(/width \+0\.65/i)).toBeInTheDocument();
-    expect(screen.queryByText(/\+1,234\.6$/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/10\.4%/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/\+1,234\.6$/i)).toBeInTheDocument();
+    expect(screen.getByText(/^crit$/i).closest('div')).toHaveTextContent('+10.4%');
+    expect(screen.getByText(/^knock$/i).closest('div')).toHaveTextContent('+12.6%');
+    expect(screen.getByText(/^stun$/i).closest('div')).toHaveTextContent('+99.4%');
+    expect(screen.getByText(/fire: \+12\.6%/i)).toBeInTheDocument();
+    expect(screen.getByText(/water: \+87\.4%/i)).toBeInTheDocument();
+    expect(screen.getByText(/psn: \+10\.4%/i)).toBeInTheDocument();
+    expect(screen.getByText(/^psn 12\.6%$/i)).toBeInTheDocument();
+    expect(screen.getByText(/depth \+1\.6/i)).toBeInTheDocument();
+    expect(screen.getByText(/length \+2\.3/i)).toBeInTheDocument();
+    expect(screen.getByText(/width \+0\.6/i)).toBeInTheDocument();
+    expect(screen.queryByText(/\+1,235$/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/^psn 13%$/i)).not.toBeInTheDocument();
   });
 
   it('renders raw crafter payload percent stats in selector previews without extra scaling', async () => {
@@ -695,7 +745,7 @@ describe('CrafterView', () => {
     }
 
     const user = userEvent.setup();
-    render(<CustomHarness />);
+    renderWithDetailDrawer(<CustomHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
@@ -754,7 +804,7 @@ describe('CrafterView', () => {
       );
     }
 
-    render(<DerivedHarness />);
+    renderWithDetailDrawer(<DerivedHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /upgrade 1/i }));
@@ -773,7 +823,7 @@ describe('CrafterView', () => {
     const user = userEvent.setup();
     const onSerializedBuildChange = vi.fn();
 
-    render(<CrafterHarness onSerializedBuildChange={onSerializedBuildChange} />);
+    renderWithDetailDrawer(<CrafterHarness onSerializedBuildChange={onSerializedBuildChange} />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
@@ -817,7 +867,7 @@ describe('CrafterView', () => {
   it('keeps recipe ingredients hydrated from the merged item recipes and restricts category slots to their group members', async () => {
     const user = userEvent.setup();
 
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
@@ -845,7 +895,7 @@ describe('CrafterView', () => {
   it('keeps empty equipment recipe slots freely editable with the rarity placeholder pinned once a base is selected', async () => {
     const user = userEvent.setup();
 
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
@@ -875,7 +925,7 @@ describe('CrafterView', () => {
   it('does not fall back to the free material picker for unresolved recipe slots', async () => {
     const user = userEvent.setup();
 
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /recipe 1/i }));
@@ -892,7 +942,7 @@ describe('CrafterView', () => {
   it('shows effective slot rarity in selector lists, keeping equipment base choices at zero and upgrade materials at their real values', async () => {
     const user = userEvent.setup();
 
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
@@ -935,7 +985,7 @@ describe('CrafterView', () => {
   it('shows derived-base recipe candidates as rarity zero in recipe slot dialogs', async () => {
     const user = userEvent.setup();
 
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
@@ -970,7 +1020,7 @@ describe('CrafterView', () => {
       );
     }
 
-    render(<BrokenHarness />);
+    renderWithDetailDrawer(<BrokenHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
@@ -988,7 +1038,7 @@ describe('CrafterView', () => {
   it('keeps fixed recipe slots level-only while leaving upgrade slots fully selectable with the placeholder pinned', async () => {
     const user = userEvent.setup();
 
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
@@ -1022,7 +1072,7 @@ describe('CrafterView', () => {
   it('shows hover tooltips for filled crafter slots without changing the click-to-edit flow', async () => {
     const user = userEvent.setup();
 
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));
@@ -1038,6 +1088,7 @@ describe('CrafterView', () => {
     expect(within(tooltip).getByText(/forge/i)).toBeInTheDocument();
     expect(within(tooltip).getByText(/^ATK \+5$/i)).toBeInTheDocument();
     expect(within(tooltip).getByText(/lv\. 1/i)).toBeInTheDocument();
+    expect(within(tooltip).getByRole('img', { name: /broadsword preview/i })).toHaveAttribute('src', '/images/items/broadsword.png');
 
     await user.unhover(slotButton);
     await user.click(slotButton);
@@ -1047,7 +1098,7 @@ describe('CrafterView', () => {
   it('keeps the cooking tab hidden and shows the final build summary on the dashboard only', async () => {
     const user = userEvent.setup();
 
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     expect(screen.getByRole('heading', { name: /final build/i })).toBeInTheDocument();
     expect(screen.queryByRole('tab', { name: /final build/i })).not.toBeInTheDocument();
@@ -1064,7 +1115,7 @@ describe('CrafterView', () => {
   });
 
   it('does not render the cooking tab trigger in the tab list', async () => {
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     expect(screen.queryByRole('tab', { name: /cooking/i })).not.toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /dashboard/i })).toBeInTheDocument();
@@ -1074,7 +1125,7 @@ describe('CrafterView', () => {
   it('resets the current build without affecting the available crafter tabs', async () => {
     const user = userEvent.setup();
 
-    render(<CrafterHarness />);
+    renderWithDetailDrawer(<CrafterHarness />);
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));
     await user.click(screen.getByRole('button', { name: /base/i }));

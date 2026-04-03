@@ -193,6 +193,7 @@ test.describe('app visual baselines', () => {
 
     const applyButton = dialog.getByRole('button', { name: /^apply$/i });
     await expect(applyButton).toBeVisible({ timeout: 30_000 });
+    await waitForLoadedImages(dialog, 3);
     const applyBox = await applyButton.boundingBox();
     expect(applyBox).not.toBeNull();
     expect((applyBox?.y ?? 0) + (applyBox?.height ?? 0)).toBeLessThanOrEqual(page.viewportSize()?.height ?? 0);

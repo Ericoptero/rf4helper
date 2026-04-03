@@ -1,6 +1,10 @@
 'use client';
 
-import { MonstersList } from '@/components/Monsters/MonstersList';
+import {
+  DEFAULT_MONSTERS_SORT,
+  MONSTERS_TABLE_ONLY_SORT_VALUES,
+  MonstersList,
+} from '@/components/Monsters/MonstersList';
 import { readDetailSearchParams, writeDetailSearchParams } from '@/components/details/detailTypes';
 import { useCatalogRouteState } from '@/hooks/useCatalogRouteState';
 import { normalizeCatalogViewMode, type CatalogViewMode } from '@/lib/catalogPresentation';
@@ -26,6 +30,18 @@ export function MonstersPageClient({
     searchTermKey: 'q',
   });
   const detailReference = readDetailSearchParams(draftSearch);
+  const handleViewModeChange = (value: CatalogViewMode) => {
+    const normalizedView = value === 'cards' ? undefined : value;
+    const resolvedSort = draftSearch.sort ?? DEFAULT_MONSTERS_SORT;
+    const nextSort = value === 'cards' && MONSTERS_TABLE_ONLY_SORT_VALUES.has(resolvedSort)
+      ? undefined
+      : draftSearch.sort;
+
+    patchSearch({
+      view: normalizedView,
+      sort: nextSort,
+    });
+  };
 
   return (
     <MonstersList
@@ -42,7 +58,7 @@ export function MonstersPageClient({
       onCancelPendingSearch={cancelPendingSearch}
       isRoutePending={isRoutePending}
       viewMode={normalizeCatalogViewMode(draftSearch.view)}
-      onViewModeChange={(value: CatalogViewMode) => patchSearch({ view: value === 'cards' ? undefined : value })}
+      onViewModeChange={handleViewModeChange}
       sortValue={draftSearch.sort ?? 'name-asc'}
       onSortValueChange={(value) => patchSearch({ sort: value })}
       detailReference={detailReference}

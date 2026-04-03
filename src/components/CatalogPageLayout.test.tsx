@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
@@ -17,12 +17,13 @@ type Entry = {
   region: string;
   tags: string[];
   featured: boolean;
+  atk: number;
 };
 
 const entries: Entry[] = [
-  { id: 'turnip', name: 'Turnip', type: 'Crop', region: 'Selphia Plains', tags: ['farm', 'spring'], featured: true },
-  { id: 'broadsword', name: 'Broadsword', type: 'Weapon', region: 'Selphia', tags: ['forge'], featured: false },
-  { id: 'pink-turnip', name: 'Pink Turnip', type: 'Crop', region: 'Sercerezo Hill', tags: ['rare'], featured: false },
+  { id: 'turnip', name: 'Turnip', type: 'Crop', region: 'Selphia Plains', tags: ['farm', 'spring'], featured: true, atk: 3 },
+  { id: 'broadsword', name: 'Broadsword', type: 'Weapon', region: 'Selphia', tags: ['forge'], featured: false, atk: 12 },
+  { id: 'pink-turnip', name: 'Pink Turnip', type: 'Crop', region: 'Sercerezo Hill', tags: ['rare'], featured: false, atk: 7 },
 ];
 
 const sortOptions = [
@@ -76,8 +77,24 @@ const mockPredicates: Record<string, (entry: Entry, value: string) => boolean> =
 };
 
 const tableColumns: CatalogTableColumn<Entry>[] = [
-  { key: 'name', header: 'Name', cell: (entry) => entry.name },
+  {
+    key: 'name',
+    header: 'Name',
+    cell: (entry) => entry.name,
+    tooltipContent: (entry) => <div>Preview for {entry.name}</div>,
+    sortAscValue: 'name-asc',
+    sortDescValue: 'name-desc',
+    defaultDirection: 'asc',
+  },
   { key: 'type', header: 'Type', cell: (entry) => entry.type },
+  {
+    key: 'atk',
+    header: 'ATK',
+    cell: (entry) => entry.atk,
+    sortAscValue: 'atk-asc',
+    sortDescValue: 'atk-desc',
+    defaultDirection: 'desc',
+  },
 ];
 
 const paginatedEntries: Entry[] = Array.from({ length: 60 }, (_, index) => ({
@@ -87,6 +104,7 @@ const paginatedEntries: Entry[] = Array.from({ length: 60 }, (_, index) => ({
   region: index % 2 === 0 ? 'Selphia Plains' : 'Selphia',
   tags: index % 3 === 0 ? ['farm', 'spring'] : ['forge'],
   featured: index % 5 === 0,
+  atk: index,
 }));
 
 class MockIntersectionObserver implements IntersectionObserver {
@@ -149,10 +167,20 @@ class MockIntersectionObserver implements IntersectionObserver {
   }
 }
 
-function ControlledCatalogHarness({ data = entries }: { data?: Entry[] }) {
+function ControlledCatalogHarness({
+  data = entries,
+  initialViewMode = 'cards',
+  initialSortValue = 'name-asc',
+  onOpenItem = vi.fn(),
+}: {
+  data?: Entry[];
+  initialViewMode?: 'cards' | 'table';
+  initialSortValue?: string;
+  onOpenItem?: (entry: Entry) => void;
+}) {
   const [searchTerm, setSearchTerm] = React.useState('');
-  const [viewMode, setViewMode] = React.useState<'cards' | 'table'>('cards');
-  const [sortValue, setSortValue] = React.useState('name-asc');
+  const [viewMode, setViewMode] = React.useState<'cards' | 'table'>(initialViewMode);
+  const [sortValue, setSortValue] = React.useState(initialSortValue);
   const [filterValues, setFilterValues] = React.useState<Record<string, CatalogFilterValue>>({});
 
   const filteredData = React.useMemo(() => {
@@ -173,13 +201,31 @@ function ControlledCatalogHarness({ data = entries }: { data?: Entry[] }) {
         }
       }
     }
+
+    switch (sortValue) {
+      case 'name-desc':
+        result.sort((left, right) => right.name.localeCompare(left.name));
+        break;
+      case 'atk-desc':
+        result.sort((left, right) => right.atk - left.atk || left.name.localeCompare(right.name));
+        break;
+      case 'atk-asc':
+        result.sort((left, right) => left.atk - right.atk || left.name.localeCompare(right.name));
+        break;
+      case 'name-asc':
+      default:
+        result.sort((left, right) => left.name.localeCompare(right.name));
+        break;
+    }
+
     return result;
-  }, [data, searchTerm, filterValues]);
+  }, [data, filterValues, searchTerm, sortValue]);
 
   return (
     <CatalogPageLayout<Entry>
       data={filteredData}
       title="Items"
+      defaultSortValue="name-asc"
       searchTerm={searchTerm}
       onSearchTermChange={setSearchTerm}
       viewMode={viewMode}
@@ -199,7 +245,7 @@ function ControlledCatalogHarness({ data = entries }: { data?: Entry[] }) {
           </Card>
         </button>
       )}
-      onOpenItem={vi.fn()}
+      onOpenItem={onOpenItem}
     />
   );
 }
@@ -263,12 +309,116 @@ describe('CatalogPageLayout', () => {
     expect(screen.getByRole('button', { name: 'Cards' })).toHaveAttribute('data-state', 'on');
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Turnip' })).toBeInTheDocument();
+    expect(screen.getByTestId('catalog-cards-scroll-area')).toBeInTheDocument();
+    expect(screen.queryByTestId('catalog-table-results-scroll')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Table' }));
 
     expect(screen.getByRole('button', { name: 'Table' })).toHaveAttribute('data-state', 'on');
     expect(screen.getByRole('table')).toBeInTheDocument();
     expect(within(screen.getByRole('table')).getByText('Broadsword')).toBeInTheDocument();
+    expect(screen.getByTestId('catalog-table-results-scroll')).toBeInTheDocument();
+    expect(screen.queryByTestId('catalog-cards-scroll-area')).not.toBeInTheDocument();
+  });
+
+  it('uses data table headers to update sort state without opening a row', async () => {
+    const user = userEvent.setup();
+    const onOpenItem = vi.fn();
+
+    render(<ControlledCatalogHarness initialViewMode="table" onOpenItem={onOpenItem} />);
+
+    const table = screen.getByRole('table');
+    const getAtkHeader = () => within(screen.getByRole('table')).getByRole('button', { name: /^ATK$/i });
+
+    expect(screen.getByText(/sorted by name \(ascending\)/i)).toBeInTheDocument();
+
+    await user.click(getAtkHeader());
+
+    expect(onOpenItem).not.toHaveBeenCalled();
+    expect(screen.getByText(/sorted by ATK \(descending\)/i)).toBeInTheDocument();
+    expect(
+      Boolean(
+        within(table).getByText('Broadsword').compareDocumentPosition(within(table).getByText('Turnip'))
+        & Node.DOCUMENT_POSITION_FOLLOWING,
+      ),
+    ).toBe(true);
+
+    await user.click(getAtkHeader());
+
+    expect(screen.getByText(/sorted by ATK \(ascending\)/i)).toBeInTheDocument();
+    expect(
+      Boolean(
+        within(table).getByText('Turnip').compareDocumentPosition(within(table).getByText('Broadsword'))
+        & Node.DOCUMENT_POSITION_FOLLOWING,
+      ),
+    ).toBe(true);
+
+    await user.click(getAtkHeader());
+
+    expect(screen.getByText(/sorted by name \(ascending\)/i)).toBeInTheDocument();
+  });
+
+  it('keeps row click behavior intact in table mode', async () => {
+    const user = userEvent.setup();
+    const onOpenItem = vi.fn();
+
+    render(<ControlledCatalogHarness initialViewMode="table" onOpenItem={onOpenItem} />);
+
+    await user.click(within(screen.getByRole('table')).getByText('Turnip'));
+
+    expect(onOpenItem).toHaveBeenCalledWith(expect.objectContaining({ id: 'turnip', name: 'Turnip' }));
+  });
+
+  it('applies desktop sticky classes to the table header row and first column', () => {
+    render(<ControlledCatalogHarness initialViewMode="table" />);
+
+    const headers = screen.getAllByRole('columnheader');
+
+    expect(headers[0]).toHaveClass('lg:sticky', 'lg:top-0', 'lg:left-0');
+    expect(headers[0]).not.toHaveClass('lg:border-r');
+    expect(headers[0]).toHaveAttribute('data-sticky-shadow', 'off');
+    expect(headers[1]).toHaveClass('lg:sticky', 'lg:top-0');
+    expect(headers[1]).not.toHaveClass('lg:left-0');
+
+    const firstCell = screen.getByText('Broadsword').closest('td');
+
+    expect(firstCell).toHaveClass('lg:sticky', 'lg:left-0');
+    expect(firstCell).toHaveClass('lg:group-hover:bg-muted');
+    expect(firstCell).not.toHaveClass('lg:border-r');
+    expect(firstCell).toHaveAttribute('data-sticky-shadow', 'off');
+  });
+
+  it('shows the sticky first-column shadow only after horizontal scroll starts', () => {
+    render(<ControlledCatalogHarness initialViewMode="table" />);
+
+    const scrollContainer = screen.getByTestId('catalog-table-results-scroll');
+    const firstHeader = screen.getAllByRole('columnheader')[0];
+    const firstCell = screen.getByText('Broadsword').closest('td');
+
+    expect(firstHeader).toHaveAttribute('data-sticky-shadow', 'off');
+    expect(firstCell).toHaveAttribute('data-sticky-shadow', 'off');
+
+    act(() => {
+      Object.defineProperty(scrollContainer, 'scrollLeft', {
+        value: 24,
+        configurable: true,
+      });
+      fireEvent.scroll(scrollContainer);
+    });
+
+    expect(firstHeader).toHaveAttribute('data-sticky-shadow', 'on');
+    expect(firstCell).toHaveAttribute('data-sticky-shadow', 'on');
+  });
+
+  it('shows table cell hover content when a column provides tooltip content', async () => {
+    const user = userEvent.setup();
+
+    render(<ControlledCatalogHarness initialViewMode="table" />);
+
+    await user.hover(within(screen.getByRole('table')).getByText('Turnip'));
+
+    const tooltip = await screen.findByRole('tooltip');
+    expect(within(tooltip).getByText('Preview for Turnip')).toBeInTheDocument();
   });
 
   it('keeps drawer changes as draft state until apply filters is clicked', async () => {

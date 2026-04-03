@@ -1,6 +1,10 @@
 'use client';
 
-import { MapsList } from '@/components/Maps/MapsList';
+import {
+  DEFAULT_MAPS_SORT,
+  MAPS_TABLE_ONLY_SORT_VALUES,
+  MapsList,
+} from '@/components/Maps/MapsList';
 import { readDetailSearchParams, writeDetailSearchParams } from '@/components/details/detailTypes';
 import { useCatalogRouteState } from '@/hooks/useCatalogRouteState';
 import { normalizeCatalogViewMode, type CatalogViewMode } from '@/lib/catalogPresentation';
@@ -26,6 +30,18 @@ export function MapsPageClient({
     searchTermKey: 'q',
   });
   const detailReference = readDetailSearchParams(draftSearch);
+  const handleViewModeChange = (value: CatalogViewMode) => {
+    const normalizedView = value === 'cards' ? undefined : value;
+    const resolvedSort = draftSearch.sort ?? DEFAULT_MAPS_SORT;
+    const nextSort = value === 'cards' && MAPS_TABLE_ONLY_SORT_VALUES.has(resolvedSort)
+      ? undefined
+      : draftSearch.sort;
+
+    patchSearch({
+      view: normalizedView,
+      sort: nextSort,
+    });
+  };
 
   return (
     <MapsList
@@ -41,7 +57,7 @@ export function MapsPageClient({
       onCancelPendingSearch={cancelPendingSearch}
       isRoutePending={isRoutePending}
       viewMode={normalizeCatalogViewMode(draftSearch.view)}
-      onViewModeChange={(value: CatalogViewMode) => patchSearch({ view: value === 'cards' ? undefined : value })}
+      onViewModeChange={handleViewModeChange}
       sortValue={draftSearch.sort ?? 'name-asc'}
       onSortValueChange={(value) => patchSearch({ sort: value })}
       detailReference={detailReference}

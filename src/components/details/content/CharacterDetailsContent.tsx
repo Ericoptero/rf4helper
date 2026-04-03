@@ -4,8 +4,15 @@ import { Calendar as CalendarIcon, Gift, Sword } from 'lucide-react';
 import { LinkedEntityToken } from '@/components/details/LinkedEntityToken';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import type { Character, Item } from '@/lib/schemas';
-import { Badge, CharacterAvatar, DetailSection, formatBirthday, getLinkedItemDisplay } from './shared';
 import { formatNumber } from '@/lib/formatters';
+import {
+  Badge,
+  CharacterAvatar,
+  DetailSection,
+  formatBirthday,
+  getLinkedItemDisplay,
+  ItemRecipeTooltipContent,
+} from './shared';
 
 export function CharacterDetailsContent({
   character,
@@ -52,6 +59,7 @@ export function CharacterDetailsContent({
                 label={linkedItem.label}
                 imageSrc={linkedItem.imageSrc}
                 icon={<Gift className="h-3.5 w-3.5" />}
+                tooltipContent={<ItemRecipeTooltipContent itemId={itemId} items={items} />}
               />
             );
           })}
@@ -144,7 +152,7 @@ export function CharacterDetailsContent({
             <div className="flex flex-wrap gap-2">
               {resistances.length > 0 ? resistances.map(([element, value]) => (
                 <Badge key={element} variant="outline" className={getSemanticBadgeClass('neutral')}>
-                  {element} {value == null ? '—' : `${value}%`}
+                  {element} {value == null ? '—' : `${formatNumber(value)}%`}
                 </Badge>
               )) : <span className="text-sm text-muted-foreground">Elemental resistance data unavailable.</span>}
             </div>

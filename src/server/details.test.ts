@@ -56,7 +56,7 @@ describe('detail payloads', () => {
 
     expect(payload?.type).toBe('birthday');
     expect(payload && 'character' in payload ? payload.character.birthday?.season : null).toBe('Spring');
-    expect(payload && 'items' in payload).toBe(false);
+    expect(payload && 'items' in payload ? payload.items['item-emery-flower']?.name : null).toBe('Emery Flower');
   });
 
   it('builds a monster detail payload with only linked item references', async () => {
@@ -79,6 +79,7 @@ describe('detail payloads', () => {
 
     expect(payload?.type).toBe('map');
     expect(payload && 'region' in payload ? payload.region.name : null).toBe('Selphia Plains');
+    expect(payload && 'items' in payload).toBe(true);
   });
 
   it('builds a festival detail payload', async () => {
@@ -93,6 +94,28 @@ describe('detail payloads', () => {
 
     expect(payload?.type).toBe('crop');
     expect(payload && 'crop' in payload ? payload.crop.name : null).toBe('Turnip');
+  });
+
+  it('builds item drop sources and crop relations', async () => {
+    const [dropPayload, cropPayload] = await Promise.all([
+      getDetailPayload({ type: 'item', id: 'item-ammonite' }),
+      getDetailPayload({ type: 'item', id: 'item-yam-seeds' }),
+    ]);
+
+    expect(dropPayload?.type).toBe('item');
+    expect(dropPayload && 'dropSources' in dropPayload ? dropPayload.dropSources.some((source) => source.referenceId === 'Octopirate 2') : false).toBe(true);
+    expect(dropPayload && 'monsterReferenceId' in dropPayload ? dropPayload.monsterReferenceId : null).toBe('Octopirate 2');
+
+    expect(cropPayload?.type).toBe('item');
+    expect(cropPayload && 'cropRelations' in cropPayload ? cropPayload.cropRelations.some((relation) => relation.crop.id === 'crop-yam') : false).toBe(true);
+    expect(cropPayload && 'cropRelations' in cropPayload ? cropPayload.cropRelations.some((relation) => relation.counterpartItemId === 'item-yam') : false).toBe(true);
+  });
+
+  it('resolves non-regular crops by id', async () => {
+    const payload = await getDetailPayload({ type: 'crop', id: 'crop-apple-tree-seed' });
+
+    expect(payload?.type).toBe('crop');
+    expect(payload && 'crop' in payload ? payload.crop.name : null).toBe('Apple Tree Seed');
   });
 
   it('returns null for unknown ids', async () => {

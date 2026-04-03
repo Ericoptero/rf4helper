@@ -38,6 +38,7 @@ describe('useDetailPayload', () => {
             chests: [],
             fishingLocations: [],
           },
+          items: {},
         }),
         {
           status: 200,
@@ -90,7 +91,7 @@ describe('useDetailPayload', () => {
   it('rejects malformed payloads before caching them', async () => {
     vi.stubGlobal(
       'fetch',
-      vi.fn(async () => new Response(JSON.stringify({ type: 'map', region: { id: 'bad-region' } }), { status: 200 })),
+      vi.fn(async () => new Response(JSON.stringify({ type: 'map', region: { id: 'bad-region' }, items: {} }), { status: 200 })),
     );
 
     const { result } = renderHook(() =>
@@ -118,6 +119,7 @@ describe('useDetailPayload', () => {
             chests: [],
             fishingLocations: [],
           },
+          items: {},
         }),
         {
           status: 200,

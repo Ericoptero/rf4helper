@@ -5,9 +5,10 @@ import { LinkedEntityToken } from '@/components/details/LinkedEntityToken';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import { Badge } from '@/components/ui/badge';
 import type { MapRegionRecord } from '@/lib/mapFishingRelations';
-import { DetailSection } from './shared';
+import type { Item } from '@/lib/schemas';
+import { DetailSection, getLinkedItemDisplay, ItemRecipeTooltipContent } from './shared';
 
-export function MapDetailsContent({ region }: { region: MapRegionRecord }) {
+export function MapDetailsContent({ region, items }: { region: MapRegionRecord; items?: Record<string, Item> }) {
   const rooms = Object.entries(
     region.chests.reduce((acc, chest) => {
       const room = chest.roomCode || 'Unknown';
@@ -67,15 +68,29 @@ export function MapDetailsContent({ region }: { region: MapRegionRecord }) {
                 </Badge>
               </div>
               <div className="space-y-3 p-4">
-                {chests.map((chest) => (
-                  <div key={chest.id} className="rounded-xl border bg-muted/30 p-3 text-sm">
-                    <div className="flex items-center gap-2 font-medium">
-                      <Box className="h-4 w-4 text-amber-300" />
-                      <span>{chest.itemName || 'Unknown Item'}</span>
+                {chests.map((chest) => {
+                  const linkedItem = chest.itemId ? getLinkedItemDisplay(items, chest.itemId) : null;
+
+                  return (
+                    <div key={chest.id} className="rounded-xl border bg-muted/30 p-3 text-sm">
+                      {chest.itemId && linkedItem ? (
+                        <LinkedEntityToken
+                          reference={{ type: 'item', id: chest.itemId }}
+                          label={linkedItem.label}
+                          imageSrc={linkedItem.imageSrc}
+                          icon={<Box className="h-3.5 w-3.5" />}
+                          tooltipContent={<ItemRecipeTooltipContent itemId={chest.itemId} items={items} />}
+                        />
+                      ) : (
+                        <div className="flex items-center gap-2 font-medium">
+                          <Box className="h-4 w-4 text-amber-300" />
+                          <span>{chest.itemName || 'Unknown Item'}</span>
+                        </div>
+                      )}
+                      {chest.notes ? <p className="mt-2 text-sm text-muted-foreground italic">{`(${chest.notes})`}</p> : null}
                     </div>
-                    {chest.notes ? <p className="mt-2 text-sm text-muted-foreground italic">{`(${chest.notes})`}</p> : null}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}

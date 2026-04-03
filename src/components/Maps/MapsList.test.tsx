@@ -1,7 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
+import userEvent from '@testing-library/user-event';
 
 import type { MapRegionRecord } from '@/lib/mapFishingRelations';
 import type { Chest, Fish } from '@/lib/schemas';
@@ -73,6 +74,7 @@ const server = setupServer(
     return HttpResponse.json({
       type: 'map',
       region,
+      items: {},
     });
   }),
 );
@@ -95,6 +97,23 @@ describe('MapsList', () => {
     expect(await screen.findByText('World Maps & Chests')).toBeInTheDocument();
     expect(screen.getByText('Selphia Plains')).toBeInTheDocument();
     expect(screen.getByText('Obsidian Mansion')).toBeInTheDocument();
+  });
+
+  it('renders the data table columns and header sorting helper in table view', async () => {
+    const user = userEvent.setup();
+
+    render(<MapsList regions={mockRegions} />);
+
+    await user.click(screen.getByRole('button', { name: 'Table' }));
+
+    const table = screen.getByRole('table');
+    expect(within(table).getByText('Selphia Plains')).toBeInTheDocument();
+    expect(within(table).getAllByText('1').length).toBeGreaterThan(0);
+    expect(screen.getByText(/sorted by region \(ascending\)/i)).toBeInTheDocument();
+
+    await user.click(within(table).getByRole('button', { name: /^Rooms$/i }));
+
+    expect(screen.getByText(/sorted by rooms \(descending\)/i)).toBeInTheDocument();
   });
 
 

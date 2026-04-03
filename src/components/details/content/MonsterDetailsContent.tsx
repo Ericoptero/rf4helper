@@ -5,10 +5,17 @@ import { LinkedEntityToken } from '@/components/details/LinkedEntityToken';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { resolveMonsterImageUrl } from '@/lib/publicAssetUrls';
 import { isMonsterActuallyTameable, type MonsterGroup } from '@/lib/monsterGroups';
+import { resolveMonsterImageUrl } from '@/lib/publicAssetUrls';
+import { formatNumber } from '@/lib/formatters';
 import type { Item } from '@/lib/schemas';
-import { DetailSection, formatDropRates, getLinkedItemDisplay, resistanceLabels } from './shared';
+import {
+  DetailSection,
+  formatDropRates,
+  getLinkedItemDisplay,
+  ItemRecipeTooltipContent,
+  resistanceLabels,
+} from './shared';
 
 function resolveMonsterImage(image?: string) {
   return resolveMonsterImageUrl(image);
@@ -109,7 +116,7 @@ export function MonsterDetailsContent({
           {statNodes.map(([label, value]) => (
             <div key={label} className="flex items-center gap-2 rounded-lg bg-background/60 px-3 py-2">
               <span className="text-sm text-muted-foreground">{label}</span>
-              <span className="ml-auto text-sm font-semibold">{value ?? '—'}</span>
+              <span className="ml-auto text-sm font-semibold">{formatNumber(value as number | null | undefined)}</span>
             </div>
           ))}
         </div>
@@ -127,6 +134,7 @@ export function MonsterDetailsContent({
                     imageSrc={getLinkedItemDisplay(items, drop.id).imageSrc}
                     meta={`Rate: ${formatDropRates(drop.dropRates)}`}
                     icon={<Box className="h-3.5 w-3.5" />}
+                    tooltipContent={<ItemRecipeTooltipContent itemId={drop.id} items={items} />}
                   />
                 ) : (
                   <div className="text-sm">
@@ -157,8 +165,9 @@ export function MonsterDetailsContent({
                         reference={{ type: 'item', id: favorite.id }}
                         label={getLinkedItemDisplay(items, favorite.id).label}
                         imageSrc={getLinkedItemDisplay(items, favorite.id).imageSrc}
-                        meta={`Affinity: ${favorite.favorite ?? '—'}`}
+                        meta={`Affinity: ${formatNumber(favorite.favorite)}`}
                         icon={<Heart className="h-3.5 w-3.5" />}
+                        tooltipContent={<ItemRecipeTooltipContent itemId={favorite.id} items={items} />}
                       />
                     ) : null,
                   )}
@@ -169,12 +178,36 @@ export function MonsterDetailsContent({
         </DetailSection>
       ) : null}
 
+      {(monster.taming?.produce?.length ?? 0) > 0 ? (
+        <DetailSection title="Produce" icon={<Box className="h-4 w-4 text-sky-300" />}>
+          <div className="flex flex-wrap gap-2">
+            {monster.taming!.produce!.map((produce, index) =>
+              produce.id ? (
+                <LinkedEntityToken
+                  key={`${produce.id}-${index}`}
+                  reference={{ type: 'item', id: produce.id }}
+                  label={getLinkedItemDisplay(items, produce.id).label}
+                  imageSrc={getLinkedItemDisplay(items, produce.id).imageSrc}
+                  meta={produce.level != null ? `Level ${produce.level}` : 'Produce Item'}
+                  icon={<Box className="h-3.5 w-3.5" />}
+                  tooltipContent={<ItemRecipeTooltipContent itemId={produce.id} items={items} />}
+                />
+              ) : (
+                <div key={`${produce.name}-${index}`} className="rounded-xl border bg-muted/30 px-3 py-2 text-sm">
+                  {produce.name}
+                </div>
+              ),
+            )}
+          </div>
+        </DetailSection>
+      ) : null}
+
       {monster.resistances && Object.keys(monster.resistances).length > 0 ? (
         <DetailSection title="Resistances" icon={<Shield className="h-4 w-4 text-blue-300" />}>
           <div className="flex flex-wrap gap-2">
             {Object.entries(monster.resistances).map(([key, value]) => (
               <Badge key={key} variant="outline" className={getSemanticBadgeClass('neutral')}>
-                {resistanceLabels[key] ?? key} {value == null ? '—' : `${value}%`}
+                {resistanceLabels[key] ?? key} {value == null ? '—' : `${formatNumber(value)}%`}
               </Badge>
             ))}
           </div>

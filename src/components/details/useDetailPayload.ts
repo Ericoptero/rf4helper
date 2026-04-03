@@ -34,11 +34,14 @@ function isDetailPayload(value: unknown): value is DetailPayload {
 
   switch (value.type) {
     case 'item':
-      return hasNamedEntity(value.item) && hasItemsRecord(value.items);
+      return hasNamedEntity(value.item)
+        && hasItemsRecord(value.items)
+        && Array.isArray(value.dropSources)
+        && Array.isArray(value.cropRelations);
     case 'character':
       return hasNamedEntity(value.character) && hasItemsRecord(value.items);
     case 'birthday':
-      return hasNamedEntity(value.character);
+      return hasNamedEntity(value.character) && hasItemsRecord(value.items);
     case 'monster':
       return isObjectRecord(value.group)
         && typeof value.group.displayName === 'string'
@@ -51,6 +54,7 @@ function isDetailPayload(value: unknown): value is DetailPayload {
         return false;
       }
       return Array.isArray(value.region.chests)
+        && hasItemsRecord(value.items)
         && Array.isArray(value.region.fishingLocations);
     case 'festival':
       return hasNamedEntity(value.festival);

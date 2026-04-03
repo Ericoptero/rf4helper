@@ -34,4 +34,13 @@ export default defineConfig([
       'react-hooks/refs': 'off',
     },
   },
+  {
+    // useReactTable returns functions that React Compiler cannot safely memoize.
+    // The "use no memo" directive in the component body handles the Babel build path;
+    // this config override suppresses the ESLint lint warning for this file.
+    files: ['src/components/CatalogResultsTable.tsx'],
+    rules: {
+      'react-hooks/incompatible-library': 'off',
+    },
+  },
 ])

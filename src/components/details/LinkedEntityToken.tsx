@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { useDetailDrawer } from './DetailDrawerContext';
 import type { DetailEntityReference } from './detailTypes';
@@ -12,6 +13,7 @@ export function LinkedEntityToken({
   imageSrc,
   icon,
   className,
+  tooltipContent,
 }: {
   reference: DetailEntityReference;
   label: string;
@@ -19,15 +21,16 @@ export function LinkedEntityToken({
   imageSrc?: string;
   icon?: ReactNode;
   className?: string;
+  tooltipContent?: ReactNode;
 }) {
   const { openLinked } = useDetailDrawer();
 
-  return (
+  const token = (
     <button
       type="button"
       onClick={() => openLinked(reference)}
       className={cn(
-        'inline-flex min-w-0 items-center w-full gap-2 rounded-xl border border-border/70 bg-muted/40 px-2.5 py-1.5 text-left text-sm transition-colors hover:border-primary/40 hover:bg-muted',
+        'inline-flex max-w-full min-w-0 items-center gap-2 rounded-xl border border-border/70 bg-muted/40 px-2.5 py-1.5 text-left text-sm transition-colors hover:border-primary/40 hover:bg-muted',
         className,
       )}
     >
@@ -42,5 +45,25 @@ export function LinkedEntityToken({
         <ChevronRight className="h-3 w-3" />
       </Badge>
     </button>
+  );
+
+  if (!tooltipContent) {
+    return token;
+  }
+
+  return (
+    <TooltipProvider delayDuration={120}>
+      <Tooltip>
+        <TooltipTrigger asChild>{token}</TooltipTrigger>
+        <TooltipContent
+          side="top"
+          collisionPadding={16}
+          arrowClassName="fill-popover"
+          className="max-w-none border-none bg-transparent p-0 text-popover-foreground shadow-none"
+        >
+          {tooltipContent}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }

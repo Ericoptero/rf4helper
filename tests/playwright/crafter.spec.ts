@@ -118,17 +118,17 @@ function escapeRegex(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function formatInteger(value: number) {
-  return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value);
+function formatDisplayNumber(value: number) {
+  return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(value);
 }
 
 function formatFinalStatValue(key: string, value: number) {
-  const formatted = PERCENT_STAT_KEYS.has(key) ? `${formatInteger(value * 100)}%` : formatInteger(value);
+  const formatted = PERCENT_STAT_KEYS.has(key) ? `${formatDisplayNumber(value * 100)}%` : formatDisplayNumber(value);
   return `${value > 0 ? '+' : ''}${formatted}`;
 }
 
 function formatResistanceValue(value: number) {
-  return `${value > 0 ? '+' : ''}${formatInteger(value * 100)}%`;
+  return `${value > 0 ? '+' : ''}${formatDisplayNumber(value * 100)}%`;
 }
 
 async function prepareCrafterPage(

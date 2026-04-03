@@ -2,11 +2,29 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-function Table({ className, ...props }: React.ComponentProps<"table">) {
+type TableContainerProps = React.ComponentProps<"div"> & {
+  [key: `data-${string}`]: string | undefined
+}
+
+function Table({
+  className,
+  containerClassName,
+  containerRef,
+  containerProps,
+  scrollable = true,
+  ...props
+}: React.ComponentProps<"table"> & {
+  containerClassName?: string
+  containerRef?: React.Ref<HTMLDivElement>
+  containerProps?: TableContainerProps
+  scrollable?: boolean
+}) {
   return (
     <div
+      ref={containerRef}
       data-slot="table-container"
-      className="relative w-full overflow-x-auto"
+      className={cn("relative w-full", scrollable ? "overflow-x-auto" : null, containerClassName)}
+      {...containerProps}
     >
       <table
         data-slot="table"

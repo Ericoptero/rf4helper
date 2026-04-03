@@ -1,12 +1,60 @@
 import React from 'react';
 import { Gift } from 'lucide-react';
 
+import { LinkedEntityToken } from '@/components/details/LinkedEntityToken';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
-import type { Character } from '@/lib/schemas';
-import { Badge, CharacterAvatar, DetailSection, formatBirthday } from './shared';
-import { formatName } from '@/lib/formatters';
+import type { Character, Item } from '@/lib/schemas';
+import {
+  Badge,
+  CharacterAvatar,
+  DetailSection,
+  formatBirthday,
+  getLinkedItemDisplay,
+  ItemRecipeTooltipContent,
+} from './shared';
 
-export function BirthdayDetailsContent({ character }: { character: Character }) {
+function BirthdayGiftGroup({
+  title,
+  itemIds,
+  items,
+}: {
+  title: string;
+  itemIds: string[];
+  items?: Record<string, Item>;
+}) {
+  return (
+    <div className="space-y-2">
+      <h4 className="text-sm font-semibold">{title}</h4>
+      {itemIds.length > 0 ? (
+        <div className="flex flex-wrap gap-2">
+          {itemIds.map((itemId) => {
+            const linkedItem = getLinkedItemDisplay(items, itemId);
+            return (
+              <LinkedEntityToken
+                key={`${title}-${itemId}`}
+                reference={{ type: 'item', id: itemId }}
+                label={linkedItem.label}
+                imageSrc={linkedItem.imageSrc}
+                icon={<Gift className="h-3.5 w-3.5" />}
+                tooltipContent={<ItemRecipeTooltipContent itemId={itemId} items={items} />}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        <div className="text-sm text-muted-foreground">None</div>
+      )}
+    </div>
+  );
+}
+
+export function BirthdayDetailsContent({
+  character,
+  items,
+}: {
+  character: Character;
+  items?: Record<string, Item>;
+}) {
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-pink-400/20 bg-pink-500/5 p-6">
@@ -26,32 +74,13 @@ export function BirthdayDetailsContent({ character }: { character: Character }) 
           </div>
         </div>
       </div>
+
       <DetailSection title="Gift Preferences" icon={<Gift className="h-4 w-4 text-pink-300" />}>
         <div className="space-y-4">
-          <div className="space-y-2">
-            <h4 className="text-sm font-semibold">Loves</h4>
-            <div className="text-sm text-muted-foreground">
-              {character.gifts?.love?.items?.length ? character.gifts.love.items.map(formatName).join(', ') : 'None'}
-            </div>
-          </div>
-          <div className="space-y-2">
-            <h4 className="text-sm font-semibold">Likes</h4>
-            <div className="text-sm text-muted-foreground">
-              {character.gifts?.like?.items?.length ? character.gifts.like.items.map(formatName).join(', ') : 'None'}
-            </div>
-          </div>
-          <div className="space-y-2">
-            <h4 className="text-sm font-semibold">Dislikes</h4>
-            <div className="text-sm text-muted-foreground">
-              {character.gifts?.dislike?.items?.length ? character.gifts.dislike.items.map(formatName).join(', ') : 'None'}
-            </div>
-          </div>
-          <div className="space-y-2">
-            <h4 className="text-sm font-semibold">Hates</h4>
-            <div className="text-sm text-muted-foreground">
-              {character.gifts?.hate?.items?.length ? character.gifts.hate.items.map(formatName).join(', ') : 'None'}
-            </div>
-          </div>
+          <BirthdayGiftGroup title="Loves" itemIds={character.gifts?.love?.items ?? []} items={items} />
+          <BirthdayGiftGroup title="Likes" itemIds={character.gifts?.like?.items ?? []} items={items} />
+          <BirthdayGiftGroup title="Dislikes" itemIds={character.gifts?.dislike?.items ?? []} items={items} />
+          <BirthdayGiftGroup title="Hates" itemIds={character.gifts?.hate?.items ?? []} items={items} />
         </div>
       </DetailSection>
     </div>

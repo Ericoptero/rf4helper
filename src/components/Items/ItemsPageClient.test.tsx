@@ -21,6 +21,16 @@ const mockItem = {
   type: 'Food',
   buy: 200,
   sell: 20,
+  craft: [
+    {
+      ingredients: ['item-flour'],
+      stationType: 'Cooking',
+      level: 5,
+    },
+  ],
+  stats: {
+    atk: 4,
+  },
   usedInRecipes: [],
 } satisfies Item;
 
@@ -46,6 +56,8 @@ describe('ItemsPageClient', () => {
           type: 'item',
           item: mockItem,
           items: { [mockItem.id]: mockItem },
+          dropSources: [],
+          cropRelations: [],
         }),
       })),
     );
@@ -86,5 +98,38 @@ describe('ItemsPageClient', () => {
     await user.click(screen.getByText('Bread').closest('button') as HTMLButtonElement);
 
     expect(replace).toHaveBeenCalledWith('/items?q=bread&detailType=item&detailId=item-bread', { scroll: false });
+  });
+
+  it('routes data table header sorting through the shared route state', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <ItemsPageClient
+        catalog={catalog}
+        search={{} satisfies ItemsSearchParams}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Table' }));
+    replace.mockClear();
+
+    await user.click(screen.getByRole('button', { name: /^ATK$/i }));
+
+    expect(replace).toHaveBeenCalledWith('/items?view=table&sort=atk-desc', { scroll: false });
+  });
+
+  it('resets table-only sorts when returning from table view to cards', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <ItemsPageClient
+        catalog={catalog}
+        search={{ view: 'table', sort: 'atk-desc' } satisfies ItemsSearchParams}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Cards' }));
+
+    expect(replace).toHaveBeenCalledWith('/items', { scroll: false });
   });
 });

@@ -17,7 +17,8 @@ export function CatalogDetailsDrawerShell({ resolved }: { resolved: ResolvedDeta
     <Sheet open={!!resolved} onOpenChange={(open) => !open && close()}>
       <SheetContent
         side="right"
-        className="w-full overflow-hidden p-0 sm:max-w-xl lg:max-w-2xl"
+        className="z-[70] w-full overflow-hidden p-0 sm:max-w-xl lg:max-w-2xl"
+        overlayClassName="z-[69]"
         showCloseButton={false}
       >
         {resolved ? (

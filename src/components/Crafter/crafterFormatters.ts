@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 
 import { CRAFTER_RARITY_PLACEHOLDER_ID } from '@/lib/crafterRarity';
+import { formatNumber } from '@/lib/formatters';
 import { resolveItemImage } from '@/lib/itemImages';
 import type { DisplayEffect } from '@/lib/itemPresentation';
 import type { CrafterBootstrapItem } from '@/lib/crafterCommon';
@@ -72,20 +73,19 @@ export function formatStatLabel(stat: string) {
 }
 
 export function formatStatValue(value: number) {
-  return new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(value);
+  return formatNumber(value);
 }
 
 export function formatPercentValue(value: number) {
-  const roundedPercent = Math.round(value * 1000) / 10;
-  return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(roundedPercent)}%`;
+  return `${formatNumber(value * 100)}%`;
 }
 
 export function formatFinalStatValue(value: number) {
-  return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value);
+  return formatNumber(value);
 }
 
 export function formatFinalPercentValue(value: number) {
-  return `${(value * 100).toFixed(0)}%`;
+  return `${formatNumber(value * 100)}%`;
 }
 
 export function isPercentDisplayStatKey(stat: string): stat is (typeof PERCENT_STAT_DISPLAY_KEYS)[number] {
@@ -147,7 +147,7 @@ export function formatItemEffect(effect: DisplayEffect) {
     case 'cure':
       return `Cures ${effect.targets.join(', ')}`;
     case 'resistance':
-      return `${formatStatLabel(effect.target)} resistance ${effect.value}`;
+      return `${formatStatLabel(effect.target)} resistance ${formatNumber(effect.value)}`;
     case 'inflict':
       return `Inflicts ${effect.target} on ${effect.trigger}`;
   }
