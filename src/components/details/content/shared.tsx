@@ -7,6 +7,7 @@ import { resolveCharacterImage } from '@/lib/characterImages';
 import { capitalize, formatName, formatNumber } from '@/lib/formatters';
 import type { DisplayEffect } from '@/lib/itemPresentation';
 import type { Character, Item } from '@/lib/schemas';
+import { cn } from '@/lib/utils';
 
 export const itemStatLabels: Record<string, string> = {
   hp: 'HP',
@@ -101,16 +102,16 @@ export function formatEffectLabel(effect: DisplayEffect) {
   }
 
   if (effect.type === 'resistance') {
-    return `${formatEffectTarget(effect.target)} resistance ${effect.value > 0 ? '+' : ''}${effect.value}%`;
+    return `${formatEffectTarget(effect.target)} resistance ${effect.value > 0 ? '+' : ''}${formatNumber(effect.value)}%`;
   }
 
-  const chance = effect.chance !== undefined ? ` (${effect.chance}%)` : '';
+  const chance = effect.chance !== undefined ? ` (${formatNumber(effect.chance)}%)` : '';
   return `Inflicts ${formatEffectTarget(effect.target)} on ${effect.trigger}${chance}`;
 }
 
 export function formatDropRates(dropRates: number[]) {
   if (dropRates.length === 0) return '—';
-  return dropRates.map((rate) => `${rate}%`).join(', ');
+  return dropRates.map((rate) => `${formatNumber(rate)}%`).join(', ');
 }
 
 export function formatSignedPercent(value: number) {
@@ -125,6 +126,14 @@ export function formatCombatLabel(value: string) {
     .join(' ');
 }
 
+function getPrimaryRecipe(item: Item | undefined) {
+  return item?.craft?.[0] ?? item?.craftedFrom?.[0] ?? null;
+}
+
+function getRecipeCount(item: Item | undefined) {
+  return (item?.craft?.length ?? 0) + (item?.craftedFrom?.length ?? 0);
+}
+
 export function getLinkedItemDisplay(items: Record<string, Item> | undefined, itemId: string) {
   const linkedItem = items?.[itemId];
 
@@ -134,44 +143,98 @@ export function getLinkedItemDisplay(items: Record<string, Item> | undefined, it
   };
 }
 
-export function CraftedFromRecipeGrid({
-  ingredients,
-  items,
-}: {
+type RecipeGridProps = {
   ingredients: string[];
   items?: Record<string, Item>;
-}) {
+  compact?: boolean;
+  onIngredientClick?: (itemId: string) => void;
+  showIngredientTooltip?: boolean;
+};
+
+function RecipeGrid({
+  ingredients,
+  items,
+  compact = false,
+  onIngredientClick,
+  showIngredientTooltip = false,
+}: RecipeGridProps) {
   const slots = Array.from({ length: 6 }, (_, index) => ingredients[index] ?? null);
 
   return (
     <TooltipProvider delayDuration={120}>
-      <div data-testid="crafted-from-grid" className="grid grid-cols-3 gap-3">
+      <div
+        data-testid={compact ? 'recipe-preview-grid' : 'crafted-from-grid'}
+        className={cn('grid grid-cols-3 gap-3', compact && 'gap-1.5')}
+      >
         {slots.map((ingredientId, index) => {
           const linkedItem = ingredientId ? getLinkedItemDisplay(items, ingredientId) : undefined;
+          const isInteractive = Boolean(ingredientId && onIngredientClick);
+          const slotContent = (
+            <>
+              {linkedItem?.imageSrc ? (
+                <img
+                  src={linkedItem.imageSrc}
+                  alt={`${linkedItem.label} image`}
+                  className={cn('object-contain', compact ? 'h-6 w-6' : 'h-9 w-9')}
+                />
+              ) : (
+                <div
+                  className={cn(
+                    'flex items-center justify-center rounded-xl bg-muted text-muted-foreground',
+                    compact ? 'h-6 w-6 rounded-lg' : 'h-9 w-9',
+                  )}
+                >
+                  <Box className={cn(compact ? 'h-3 w-3' : 'h-4 w-4')} />
+                </div>
+              )}
+              <span
+                className={cn(
+                  'font-medium leading-tight',
+                  compact ? 'mt-1 line-clamp-1 text-[10px]' : 'mt-2 line-clamp-2 text-[11px]',
+                )}
+              >
+                {linkedItem?.label ?? 'Empty slot'}
+              </span>
+            </>
+          );
+
+          const slot = isInteractive ? (
+            <button
+              type="button"
+              data-testid="crafted-from-slot"
+              onClick={() => onIngredientClick?.(ingredientId!)}
+              className={cn(
+                'flex aspect-square flex-col items-center justify-center text-center transition-colors hover:border-primary/40',
+                compact
+                  ? 'min-h-14 rounded-xl border bg-background/80 p-1.5'
+                  : 'min-h-20 rounded-2xl border bg-background/70 p-2',
+              )}
+            >
+              {slotContent}
+            </button>
+          ) : (
+            <div
+              data-testid={!compact ? 'crafted-from-slot' : undefined}
+              className={cn(
+                'flex aspect-square flex-col items-center justify-center text-center',
+                compact
+                  ? 'min-h-14 rounded-xl border bg-background/80 p-1.5'
+                  : 'min-h-20 rounded-2xl border bg-background/70 p-2',
+              )}
+            >
+              {slotContent}
+            </div>
+          );
+
+          if (!showIngredientTooltip) {
+            return <React.Fragment key={`${ingredientId ?? 'empty'}-${index}`}>{slot}</React.Fragment>;
+          }
 
           return (
             <Tooltip key={`${ingredientId ?? 'empty'}-${index}`}>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  data-testid="crafted-from-slot"
-                  className="flex aspect-square min-h-20 flex-col items-center justify-center rounded-2xl border bg-background/70 p-2 text-center transition-colors hover:border-primary/40"
-                >
-                  {linkedItem?.imageSrc ? (
-                    <img src={linkedItem.imageSrc} alt={`${linkedItem.label} image`} className="h-9 w-9 object-contain" />
-                  ) : (
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-                      <Box className="h-4 w-4" />
-                    </div>
-                  )}
-                  <span className="mt-2 line-clamp-2 text-[11px] font-medium leading-tight">
-                    {linkedItem?.label ?? 'Empty slot'}
-                  </span>
-                </button>
-              </TooltipTrigger>
+              <TooltipTrigger asChild>{slot}</TooltipTrigger>
               <TooltipContent
                 side="top"
-                sideOffset={8}
                 collisionPadding={16}
                 arrowClassName="fill-popover"
                 className="max-w-xs rounded-xl border border-border bg-popover px-3 py-3 text-popover-foreground shadow-lg"
@@ -190,6 +253,58 @@ export function CraftedFromRecipeGrid({
         })}
       </div>
     </TooltipProvider>
+  );
+}
+
+export function CraftedFromRecipeGrid({
+  ingredients,
+  items,
+  onIngredientClick,
+}: {
+  ingredients: string[];
+  items?: Record<string, Item>;
+  onIngredientClick?: (itemId: string) => void;
+}) {
+  return (
+    <RecipeGrid
+      ingredients={ingredients}
+      items={items}
+      onIngredientClick={onIngredientClick}
+      showIngredientTooltip
+    />
+  );
+}
+
+export function ItemRecipeTooltipContent({
+  itemId,
+  items,
+}: {
+  itemId: string;
+  items?: Record<string, Item>;
+}) {
+  const item = items?.[itemId];
+  const recipe = getPrimaryRecipe(item);
+  const recipeCount = getRecipeCount(item);
+
+  return (
+    <div className="max-w-[15rem] space-y-3 rounded-xl border border-border bg-popover px-3 py-3 text-popover-foreground shadow-lg">
+      <div className="space-y-1">
+        <div className="font-semibold">{item?.name ?? formatName(itemId)}</div>
+        {recipe ? (
+          <div className="text-[11px] text-muted-foreground">
+            {(recipe.station ?? recipe.stationType)} · Lv. {recipe.level}
+          </div>
+        ) : (
+          <div className="text-[11px] text-muted-foreground">No craft recipe available.</div>
+        )}
+      </div>
+      {recipe ? <RecipeGrid ingredients={recipe.ingredients} items={items} compact /> : null}
+      {recipeCount > 1 ? (
+        <div className="text-[11px] text-muted-foreground">
+          +{recipeCount - 1} more recipe{recipeCount - 1 === 1 ? '' : 's'}
+        </div>
+      ) : null}
+    </div>
   );
 }
 

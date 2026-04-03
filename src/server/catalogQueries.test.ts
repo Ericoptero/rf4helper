@@ -25,6 +25,7 @@ const items = {
     buy: 200,
     sell: 20,
     shippable: true,
+    rarityPoints: 1,
     rarityCategory: 'Common',
   },
   broadsword: {
@@ -36,8 +37,11 @@ const items = {
     buy: 800,
     sell: 120,
     shippable: false,
+    rarityPoints: 9,
     rarityCategory: 'Rare',
     craftedFrom: [{ source: 'Forge', ingredients: ['iron'] }],
+    craft: [{ recipeId: 'broadsword#1', stationType: 'Forging', level: 1, ingredients: ['iron'] }],
+    stats: { atk: 15, def: 5, str: 4 },
   },
   charm: {
     id: 'charm',
@@ -48,8 +52,10 @@ const items = {
     buy: 300,
     sell: 200,
     shippable: true,
+    rarityPoints: 7,
     rarityCategory: 'Rare',
     effects: [{ type: 'resistance', target: 'fire', value: 25 }],
+    stats: { matk: 8, mdef: 20, int: 6 },
   },
   antidote: {
     id: 'antidote',
@@ -60,7 +66,10 @@ const items = {
     buy: 90,
     sell: 30,
     shippable: true,
+    rarityPoints: 2,
     rarityCategory: 'Common',
+    craftedFrom: [{ recipeId: 'antidote#1', stationType: 'Chemistry', station: 'Medicine', level: 12, ingredients: ['iron'] }],
+    stats: { atk: 2, vit: 3 },
   },
 } as const;
 
@@ -71,7 +80,20 @@ const characters = {
     category: 'Bachelorettes',
     gender: 'Female',
     birthday: { season: 'Summer', day: 22 },
-    battle: { weaponType: 'Long Sword' },
+    battle: {
+      weaponType: 'Long Sword',
+      stats: {
+        level: 50,
+        hp: 1200,
+        atk: 300,
+        def: 450,
+        matk: 120,
+        mdef: 280,
+        str: 260,
+        vit: 400,
+        int: 100,
+      },
+    },
   },
   'char-vishnal': {
     id: 'char-vishnal',
@@ -79,7 +101,20 @@ const characters = {
     category: 'Bachelors',
     gender: 'Male',
     birthday: { season: 'Spring', day: 3 },
-    battle: { weaponType: 'Short Sword' },
+    battle: {
+      weaponType: 'Short Sword',
+      stats: {
+        level: 40,
+        hp: 900,
+        atk: 200,
+        def: 180,
+        matk: 90,
+        mdef: 110,
+        str: 180,
+        vit: 150,
+        int: 95,
+      },
+    },
   },
   'char-clorica': {
     id: 'char-clorica',
@@ -99,7 +134,7 @@ const monsters = {
     variantSuffix: null,
     location: 'Field Dungeon (Boss)',
     drops: [{ id: 'item-ammonite', name: 'Ammonite', dropRates: [70] }],
-    stats: { baseLevel: 84, hp: 1000, atk: 100, def: 80 },
+    stats: { baseLevel: 84, hp: 1000, atk: 100, def: 80, matk: 90, mdef: 70, str: 60, int: 50, vit: 55, exp: 400 },
     taming: { tameable: true, isRideable: true, befriend: 1 },
   },
   'monster-orc': {
@@ -107,7 +142,7 @@ const monsters = {
     name: 'Orc',
     location: 'Selphia Plains',
     drops: [],
-    stats: { baseLevel: 3, hp: 100, atk: 20, def: 10 },
+    stats: { baseLevel: 3, hp: 100, atk: 20, def: 10, matk: 5, mdef: 3, str: 12, int: 2, vit: 8, exp: 10 },
     taming: { tameable: false, isRideable: null, befriend: null },
   },
   'monster-buffamoo': {
@@ -115,7 +150,7 @@ const monsters = {
     name: 'Buffamoo',
     location: 'Selphia Plains',
     drops: [{ id: 'item-milk', name: 'Milk', dropRates: [50] }],
-    stats: { baseLevel: 8, hp: 200, atk: 30, def: 15 },
+    stats: { baseLevel: 8, hp: 200, atk: 30, def: 15, matk: 8, mdef: 6, str: 20, int: 4, vit: 12, exp: 20 },
     taming: { tameable: true, isRideable: false, befriend: 1 },
   },
 } as const;
@@ -125,16 +160,18 @@ const fish = [
     id: 'fish-squid',
     name: 'Squid',
     shadow: 'Large',
+    buy: 80,
     sell: 50,
     locations: [
       { region: 'Seaside', spot: 'Pier', seasons: ['Summer'], map: 'Sea Map' },
-      { region: 'Seaside', spot: 'Deep Water', seasons: ['Summer', 'Fall'] },
+      { region: 'Idra Cave', spot: 'Deep Water', seasons: ['Summer', 'Fall'] },
     ],
   },
   {
     id: 'fish-sardine',
     name: 'Sardine',
     shadow: 'Small',
+    buy: 20,
     sell: 10,
     locations: [{ region: 'Idra Cave', spot: 'Entrance', seasons: ['Spring'], map: 'Cave Map' }],
   },
@@ -142,23 +179,24 @@ const fish = [
     id: 'fish-taimen',
     name: 'Taimen',
     shadow: 'Large',
+    buy: 60,
     sell: 100,
     locations: [{ region: 'Yokmir Forest', spot: 'Pond', seasons: ['Fall', 'Winter'] }],
   },
 ] as const;
 
 const chests = [
-  { id: 'selphia-1', region: 'Selphia Plains', notes: 'Hidden by a tree' },
-  { id: 'selphia-2', region: 'Selphia Plains', recipe: 'Broadsword Recipe' },
-  { id: 'yokmir-1', region: 'Yokmir Forest' },
-  { id: 'yokmir-2', region: 'Yokmir Forest' },
-  { id: 'yokmir-3', region: 'Yokmir Forest' },
-  { id: 'obsidian-1', region: 'Obsidian Mansion' },
-  { id: 'obsidian-2', region: 'Obsidian Mansion' },
-  { id: 'obsidian-3', region: 'Obsidian Mansion' },
-  { id: 'obsidian-4', region: 'Obsidian Mansion' },
-  { id: 'obsidian-5', region: 'Obsidian Mansion' },
-  { id: 'obsidian-6', region: 'Obsidian Mansion' },
+  { id: 'selphia-1', region: 'Selphia Plains', roomCode: 'A', notes: 'Hidden by a tree' },
+  { id: 'selphia-2', region: 'Selphia Plains', roomCode: 'B', recipe: 'Broadsword Recipe' },
+  { id: 'yokmir-1', region: 'Yokmir Forest', roomCode: 'A' },
+  { id: 'yokmir-2', region: 'Yokmir Forest', roomCode: 'A' },
+  { id: 'yokmir-3', region: 'Yokmir Forest', roomCode: 'B' },
+  { id: 'obsidian-1', region: 'Obsidian Mansion', roomCode: 'A' },
+  { id: 'obsidian-2', region: 'Obsidian Mansion', roomCode: 'A' },
+  { id: 'obsidian-3', region: 'Obsidian Mansion', roomCode: 'B' },
+  { id: 'obsidian-4', region: 'Obsidian Mansion', roomCode: 'B' },
+  { id: 'obsidian-5', region: 'Obsidian Mansion', roomCode: 'C' },
+  { id: 'obsidian-6', region: 'Obsidian Mansion', roomCode: 'C' },
 ] as const;
 
 describe('catalog query parsing', () => {
@@ -339,7 +377,7 @@ describe('items catalog builder', () => {
     expect(buildItemsCatalogData(items as never, {
       craft: 'yes',
       sort: 'name-desc',
-    }).results.map((item) => item.id)).toEqual(['broadsword']);
+    }).results.map((item) => item.id)).toEqual(['broadsword', 'antidote']);
 
     expect(buildItemsCatalogData(items as never, {
       sort: 'sell-desc',
@@ -361,6 +399,51 @@ describe('items catalog builder', () => {
       'charm',
       'iron',
       'antidote',
+    ]);
+  });
+
+  it('supports stat-driven item sorts and keeps missing stats last', () => {
+    expect(buildItemsCatalogData(items as never, {
+      sort: 'atk-desc',
+    }).results.map((item) => item.id)).toEqual([
+      'broadsword',
+      'antidote',
+      'charm',
+      'iron',
+    ]);
+
+    expect(buildItemsCatalogData(items as never, {
+      sort: 'mdef-desc',
+    }).results[0]?.id).toBe('charm');
+
+    expect(buildItemsCatalogData(items as never, {
+      sort: 'int-desc',
+    }).results[0]?.id).toBe('charm');
+
+    expect(buildItemsCatalogData(items as never, {
+      sort: 'vit-desc',
+    }).results[0]?.id).toBe('antidote');
+
+    expect(buildItemsCatalogData(items as never, {
+      sort: 'def-desc',
+    }).results[0]?.id).toBe('broadsword');
+
+    expect(buildItemsCatalogData(items as never, {
+      sort: 'rarity-asc',
+    }).results.map((item) => item.id)).toEqual([
+      'iron',
+      'antidote',
+      'charm',
+      'broadsword',
+    ]);
+
+    expect(buildItemsCatalogData(items as never, {
+      sort: 'level-desc',
+    }).results.map((item) => item.id)).toEqual([
+      'antidote',
+      'broadsword',
+      'charm',
+      'iron',
     ]);
   });
 
@@ -432,6 +515,48 @@ describe('characters catalog builder', () => {
       'short sword',
     ]);
   });
+
+  it('supports the expanded character stat and metadata sorts', () => {
+    expect(buildCharactersCatalogData(characters as never, {
+      sort: 'name-desc',
+    }).results.map((character) => character.id)).toEqual([
+      'char-vishnal',
+      'char-forte',
+      'char-clorica',
+    ]);
+
+    expect(buildCharactersCatalogData(characters as never, {
+      sort: 'birthday-desc',
+    }).results.map((character) => character.id)).toEqual([
+      'char-forte',
+      'char-clorica',
+      'char-vishnal',
+    ]);
+
+    expect(buildCharactersCatalogData(characters as never, {
+      sort: 'weapon-type-desc',
+    }).results.map((character) => character.id)).toEqual([
+      'char-vishnal',
+      'char-forte',
+      'char-clorica',
+    ]);
+
+    expect(buildCharactersCatalogData(characters as never, {
+      sort: 'level-desc',
+    }).results.map((character) => character.id)).toEqual([
+      'char-forte',
+      'char-vishnal',
+      'char-clorica',
+    ]);
+
+    expect(buildCharactersCatalogData(characters as never, {
+      sort: 'mdef-desc',
+    }).results[0]?.id).toBe('char-forte');
+
+    expect(buildCharactersCatalogData(characters as never, {
+      sort: 'int-desc',
+    }).results[0]?.id).toBe('char-forte');
+  });
 });
 
 describe('monsters catalog builder', () => {
@@ -462,6 +587,36 @@ describe('monsters catalog builder', () => {
       'field dungeon (boss)',
       'selphia plains',
     ]);
+  });
+
+  it('supports the expanded monster table sorts', () => {
+    expect(buildMonstersCatalogData(monsters as never, {
+      sort: 'name-desc',
+    }).results.map((group) => group.displayName)).toEqual([
+      'Orc',
+      'Octopirate',
+      'Buffamoo',
+    ]);
+
+    expect(buildMonstersCatalogData(monsters as never, {
+      sort: 'location-asc',
+    }).results[0]?.displayName).toBe('Octopirate');
+
+    expect(buildMonstersCatalogData(monsters as never, {
+      sort: 'atk-desc',
+    }).results[0]?.displayName).toBe('Octopirate');
+
+    expect(buildMonstersCatalogData(monsters as never, {
+      sort: 'matk-desc',
+    }).results[0]?.displayName).toBe('Octopirate');
+
+    expect(buildMonstersCatalogData(monsters as never, {
+      sort: 'vit-desc',
+    }).results[0]?.displayName).toBe('Octopirate');
+
+    expect(buildMonstersCatalogData(monsters as never, {
+      sort: 'exp-desc',
+    }).results[0]?.displayName).toBe('Octopirate');
   });
 });
 
@@ -514,6 +669,36 @@ describe('fishing catalog builder', () => {
       'fish-taimen',
     ]);
   });
+
+  it('supports the expanded fishing table sorts', () => {
+    expect(buildFishingCatalogData(fish as never, {
+      sort: 'name-desc',
+    }).results.map((entry) => entry.id)).toEqual([
+      'fish-taimen',
+      'fish-squid',
+      'fish-sardine',
+    ]);
+
+    expect(buildFishingCatalogData(fish as never, {
+      sort: 'shadow-desc',
+    }).results[0]?.id).toBe('fish-sardine');
+
+    expect(buildFishingCatalogData(fish as never, {
+      sort: 'buy-desc',
+    }).results[0]?.id).toBe('fish-squid');
+
+    expect(buildFishingCatalogData(fish as never, {
+      sort: 'sell-asc',
+    }).results[0]?.id).toBe('fish-sardine');
+
+    expect(buildFishingCatalogData(fish as never, {
+      sort: 'regions-desc',
+    }).results[0]?.id).toBe('fish-squid');
+
+    expect(buildFishingCatalogData(fish as never, {
+      sort: 'locations-asc',
+    }).results[0]?.id).toBe('fish-sardine');
+  });
 });
 
 describe('maps catalog builder', () => {
@@ -543,5 +728,35 @@ describe('maps catalog builder', () => {
       hasRecipe: 'yes',
       sort: 'chests-desc',
     }).results.map((region) => region.name)).toEqual(['Selphia Plains']);
+  });
+
+  it('supports the expanded map table sorts', () => {
+    expect(buildMapsCatalogData(chests as never, fish as never, {
+      sort: 'name-desc',
+    }).results.map((region) => region.name)).toEqual([
+      'Yokmir Forest',
+      'Selphia Plains',
+      'Obsidian Mansion',
+    ]);
+
+    expect(buildMapsCatalogData(chests as never, fish as never, {
+      sort: 'rooms-desc',
+    }).results[0]?.name).toBe('Obsidian Mansion');
+
+    expect(buildMapsCatalogData(chests as never, fish as never, {
+      sort: 'chests-asc',
+    }).results[0]?.name).toBe('Selphia Plains');
+
+    expect(buildMapsCatalogData(chests as never, fish as never, {
+      sort: 'notes-desc',
+    }).results[0]?.name).toBe('Selphia Plains');
+
+    expect(buildMapsCatalogData(chests as never, fish as never, {
+      sort: 'recipes-desc',
+    }).results[0]?.name).toBe('Selphia Plains');
+
+    expect(buildMapsCatalogData(chests as never, fish as never, {
+      sort: 'fishing-asc',
+    }).results[0]?.name).toBe('Obsidian Mansion');
   });
 });

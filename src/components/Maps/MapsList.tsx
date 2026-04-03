@@ -15,6 +15,19 @@ import type { DetailEntityReference } from '@/components/details/detailTypes';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import type { MapRegionRecord } from '@/lib/mapFishingRelations';
 
+export const DEFAULT_MAPS_SORT = 'name-asc';
+export const MAPS_TABLE_ONLY_SORT_VALUES = new Set([
+  'name-desc',
+  'rooms-asc',
+  'rooms-desc',
+  'chests-asc',
+  'notes-asc',
+  'notes-desc',
+  'recipes-asc',
+  'recipes-desc',
+  'fishing-asc',
+]);
+
 function MapCard({ region, onClick }: { region: MapRegionRecord; onClick: () => void }) {
   return (
     <button type="button" onClick={onClick} className="block h-full w-full text-left">
@@ -51,23 +64,33 @@ function MapsCatalog({
   totalCount,
   searchTerm,
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  onCancelPendingSearch,
   viewMode,
   onViewModeChange,
   sortValue,
   onSortValueChange,
   filterValues,
   onFilterValuesChange,
+  isRoutePending,
+  resultResetKeys,
 }: {
   regions: MapRegionRecord[];
   totalCount?: number;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  onCancelPendingSearch?: () => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+  isRoutePending?: boolean;
+  resultResetKeys?: readonly unknown[];
 }) {
   const { openRoot } = useDetailDrawer();
 
@@ -99,17 +122,60 @@ function MapsCatalog({
   ];
 
   const serverSortOptions = [
-    { label: 'Name (A-Z)', value: 'name-asc' },
+    { label: 'Name (A-Z)', value: DEFAULT_MAPS_SORT },
     { label: 'Most Chests', value: 'chests-desc' },
     { label: 'Most Fishing Spots', value: 'fishing-desc' },
   ];
 
   const tableColumns: CatalogTableColumn<MapRegionRecord>[] = [
-    { key: 'region', header: 'Region', cell: (region) => region.name },
-    { key: 'rooms', header: 'Rooms', cell: (region) => new Set(region.chests.map((chest) => chest.roomCode)).size },
-    { key: 'chests', header: 'Chests', cell: (region) => region.chests.length },
-    { key: 'recipes', header: 'Recipe Chests', cell: (region) => region.chests.filter((chest) => chest.recipe).length },
-    { key: 'fishing', header: 'Fishing Locations', cell: (region) => region.fishingLocations.length },
+    {
+      key: 'region',
+      header: 'Region',
+      cell: (region) => region.name,
+      sortAscValue: DEFAULT_MAPS_SORT,
+      sortDescValue: 'name-desc',
+      defaultDirection: 'asc',
+    },
+    {
+      key: 'rooms',
+      header: 'Rooms',
+      cell: (region) => new Set(region.chests.map((chest) => chest.roomCode)).size,
+      sortAscValue: 'rooms-asc',
+      sortDescValue: 'rooms-desc',
+      defaultDirection: 'desc',
+    },
+    {
+      key: 'chests',
+      header: 'Chests',
+      cell: (region) => region.chests.length,
+      sortAscValue: 'chests-asc',
+      sortDescValue: 'chests-desc',
+      defaultDirection: 'desc',
+    },
+    {
+      key: 'notes',
+      header: 'Note Chests',
+      cell: (region) => region.chests.filter((chest) => chest.notes).length,
+      sortAscValue: 'notes-asc',
+      sortDescValue: 'notes-desc',
+      defaultDirection: 'desc',
+    },
+    {
+      key: 'recipes',
+      header: 'Recipe Chests',
+      cell: (region) => region.chests.filter((chest) => chest.recipe).length,
+      sortAscValue: 'recipes-asc',
+      sortDescValue: 'recipes-desc',
+      defaultDirection: 'desc',
+    },
+    {
+      key: 'fishing',
+      header: 'Fishing Locations',
+      cell: (region) => region.fishingLocations.length,
+      sortAscValue: 'fishing-asc',
+      sortDescValue: 'fishing-desc',
+      defaultDirection: 'desc',
+    },
   ];
 
   return (
@@ -118,14 +184,20 @@ function MapsCatalog({
         data={regions}
         totalCount={totalCount}
         title="World Maps & Chests"
+        defaultSortValue={DEFAULT_MAPS_SORT}
         searchTerm={searchTerm}
         onSearchTermChange={onSearchTermChange}
+        onCommitSearch={onCommitSearch}
+        onClearSearch={onClearSearch}
+        onCancelPendingSearch={onCancelPendingSearch}
         viewMode={viewMode}
         onViewModeChange={onViewModeChange}
         sortValue={sortValue}
         onSortValueChange={onSortValueChange}
         filterValues={filterValues}
         onFilterValuesChange={onFilterValuesChange}
+        isRoutePending={isRoutePending}
+        resultResetKeys={resultResetKeys}
         tableColumns={tableColumns}
         getItemKey={(region) => region.id}
         renderCard={(region, onClick) => <MapCard region={region} onClick={onClick} />}
@@ -145,12 +217,17 @@ export function MapsList({
   onDetailReferenceChange,
   searchTerm,
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  onCancelPendingSearch,
   viewMode,
   onViewModeChange,
   sortValue,
   onSortValueChange,
   filterValues,
   onFilterValuesChange,
+  isRoutePending,
+  resultResetKeys,
 }: {
   regions: MapRegionRecord[];
   totalCount?: number;
@@ -158,17 +235,22 @@ export function MapsList({
   onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  onCancelPendingSearch?: () => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+  isRoutePending?: boolean;
+  resultResetKeys?: readonly unknown[];
 }) {
   const [internalDetailReference, setInternalDetailReference] = React.useState<DetailEntityReference | null>(null);
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
   const [internalViewMode, setInternalViewMode] = React.useState<'cards' | 'table'>('cards');
-  const [internalSortValue, setInternalSortValue] = React.useState('name-asc');
+  const [internalSortValue, setInternalSortValue] = React.useState(DEFAULT_MAPS_SORT);
   const [internalFilterValues, setInternalFilterValues] = React.useState<Record<string, CatalogFilterValue>>({});
 
   return (
@@ -181,12 +263,17 @@ export function MapsList({
         totalCount={totalCount}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
+        onCommitSearch={onCommitSearch}
+        onClearSearch={onClearSearch}
+        onCancelPendingSearch={onCancelPendingSearch}
         viewMode={viewMode ?? internalViewMode}
         onViewModeChange={onViewModeChange ?? setInternalViewMode}
         sortValue={sortValue ?? internalSortValue}
         onSortValueChange={onSortValueChange ?? setInternalSortValue}
         filterValues={filterValues ?? internalFilterValues}
         onFilterValuesChange={onFilterValuesChange ?? setInternalFilterValues}
+        isRoutePending={isRoutePending}
+        resultResetKeys={resultResetKeys}
       />
     </DetailDrawerProvider>
   );

@@ -14,14 +14,41 @@ import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDra
 import type { DetailEntityReference } from '@/components/details/detailTypes';
 import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import { resolveFishImage } from '@/lib/fishImages';
+import { formatNumber } from '@/lib/formatters';
 import type { Fish } from '@/lib/schemas';
 import type { CatalogOption } from '@/server/catalogQueries';
+
+export const DEFAULT_FISHING_SORT = 'name-asc';
+export const FISHING_TABLE_ONLY_SORT_VALUES = new Set([
+  'name-desc',
+  'shadow-asc',
+  'shadow-desc',
+  'buy-asc',
+  'buy-desc',
+  'sell-asc',
+  'regions-asc',
+  'regions-desc',
+  'locations-asc',
+]);
 
 const SEASON_ORDER = ['Spring', 'Summer', 'Fall', 'Winter'];
 
 function getFishSeasonCoverage(fish: Fish) {
   return [...new Set((fish.locations ?? []).flatMap((location) => location.seasons ?? []))].sort(
     (a, b) => SEASON_ORDER.indexOf(a) - SEASON_ORDER.indexOf(b),
+  );
+}
+
+function renderFishIdentityCell(fish: Fish) {
+  const imageSrc = resolveFishImage(fish.image);
+
+  return (
+    <div className="flex min-w-[13rem] items-center gap-3">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-300">
+        {imageSrc ? <img src={imageSrc} alt={fish.name} className="h-8 w-8 object-contain" /> : <FishIcon className="h-4 w-4" />}
+      </div>
+      <span className="truncate font-medium">{fish.name}</span>
+    </div>
   );
 }
 
@@ -45,11 +72,11 @@ function FishCard({ fish, onClick }: { fish: Fish; onClick: () => void }) {
         <CardContent className="flex flex-wrap gap-2">
           <Badge variant="outline" className={getSemanticBadgeClass('success')}>
             <Coins className="mr-1 h-3 w-3" />
-            Buy: {fish.buy ?? '-'}
+            Buy: {fish.buy == null ? '-' : formatNumber(fish.buy)}
           </Badge>
           <Badge variant="outline" className={getSemanticBadgeClass('danger')}>
             <Coins className="mr-1 h-3 w-3" />
-            Sell: {fish.sell ?? '-'}
+            Sell: {fish.sell == null ? '-' : formatNumber(fish.sell)}
           </Badge>
           <Badge variant="outline" className={getSemanticBadgeClass('map')}>
             <MapPin className="mr-1 h-3 w-3" />
@@ -67,12 +94,17 @@ function FishingCatalog({
   filterOptions,
   searchTerm,
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  onCancelPendingSearch,
   viewMode,
   onViewModeChange,
   sortValue,
   onSortValueChange,
   filterValues,
   onFilterValuesChange,
+  isRoutePending,
+  resultResetKeys,
 }: {
   fish: Fish[];
   totalCount?: number;
@@ -83,12 +115,17 @@ function FishingCatalog({
   };
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  onCancelPendingSearch?: () => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+  isRoutePending?: boolean;
+  resultResetKeys?: readonly unknown[];
 }) {
   const { openRoot } = useDetailDrawer();
 
@@ -127,18 +164,66 @@ function FishingCatalog({
   ];
 
   const serverSortOptions = [
-    { label: 'Name (A-Z)', value: 'name-asc' },
+    { label: 'Name (A-Z)', value: DEFAULT_FISHING_SORT },
     { label: 'Sell Price (High-Low)', value: 'sell-desc' },
     { label: 'Locations (High-Low)', value: 'locations-desc' },
   ];
 
   const tableColumns: CatalogTableColumn<Fish>[] = [
-    { key: 'name', header: 'Name', cell: (f) => f.name },
-    { key: 'shadow', header: 'Shadow', cell: (f) => f.shadow ?? '—' },
-    { key: 'buy', header: 'Buy', cell: (f) => f.buy ?? '-' },
-    { key: 'sell', header: 'Sell', cell: (f) => f.sell ?? '-' },
-    { key: 'regions', header: 'Region Count', cell: (f) => new Set((f.locations ?? []).map((location) => location.region)).size },
+    {
+      key: 'name',
+      header: 'Name',
+      cell: renderFishIdentityCell,
+      sortAscValue: DEFAULT_FISHING_SORT,
+      sortDescValue: 'name-desc',
+      defaultDirection: 'asc',
+    },
+    {
+      key: 'shadow',
+      header: 'Shadow',
+      cell: (f) => f.shadow ?? '—',
+      sortAscValue: 'shadow-asc',
+      sortDescValue: 'shadow-desc',
+      defaultDirection: 'asc',
+    },
+    {
+      key: 'buy',
+      header: 'Buy',
+      cell: (f) => formatNumber(f.buy),
+      sortAscValue: 'buy-asc',
+      sortDescValue: 'buy-desc',
+      defaultDirection: 'desc',
+    },
+    {
+      key: 'sell',
+      header: 'Sell',
+      cell: (f) => formatNumber(f.sell),
+      sortAscValue: 'sell-asc',
+      sortDescValue: 'sell-desc',
+      defaultDirection: 'desc',
+    },
+    {
+      key: 'regions',
+      header: 'Regions',
+      cell: (f) => formatNumber(new Set((f.locations ?? []).map((location) => location.region)).size),
+      sortAscValue: 'regions-asc',
+      sortDescValue: 'regions-desc',
+      defaultDirection: 'desc',
+    },
+    {
+      key: 'locations',
+      header: 'Locations',
+      cell: (f) => formatNumber(f.locations?.length ?? 0),
+      sortAscValue: 'locations-asc',
+      sortDescValue: 'locations-desc',
+      defaultDirection: 'desc',
+    },
     { key: 'season', header: 'Season Coverage', cell: (f) => getFishSeasonCoverage(f).join(', ') || '—' },
+    {
+      key: 'hasMap',
+      header: 'Has Map',
+      cell: (f) => ((f.locations ?? []).some((location) => Boolean(location.map)) ? 'Yes' : 'No'),
+    },
   ];
 
   return (
@@ -147,14 +232,20 @@ function FishingCatalog({
         data={fish}
         totalCount={totalCount}
         title="Fishing Guide"
+        defaultSortValue={DEFAULT_FISHING_SORT}
         searchTerm={searchTerm}
         onSearchTermChange={onSearchTermChange}
+        onCommitSearch={onCommitSearch}
+        onClearSearch={onClearSearch}
+        onCancelPendingSearch={onCancelPendingSearch}
         viewMode={viewMode}
         onViewModeChange={onViewModeChange}
         sortValue={sortValue}
         onSortValueChange={onSortValueChange}
         filterValues={filterValues}
         onFilterValuesChange={onFilterValuesChange}
+        isRoutePending={isRoutePending}
+        resultResetKeys={resultResetKeys}
         tableColumns={tableColumns}
         getItemKey={(f) => f.id}
         renderCard={(f, onClick) => <FishCard fish={f} onClick={onClick} />}
@@ -175,12 +266,17 @@ export function FishingList({
   onDetailReferenceChange,
   searchTerm,
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  onCancelPendingSearch,
   viewMode,
   onViewModeChange,
   sortValue,
   onSortValueChange,
   filterValues,
   onFilterValuesChange,
+  isRoutePending,
+  resultResetKeys,
 }: {
   fish: Fish[];
   totalCount?: number;
@@ -193,17 +289,22 @@ export function FishingList({
   onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  onCancelPendingSearch?: () => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+  isRoutePending?: boolean;
+  resultResetKeys?: readonly unknown[];
 }) {
   const [internalDetailReference, setInternalDetailReference] = React.useState<DetailEntityReference | null>(null);
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
   const [internalViewMode, setInternalViewMode] = React.useState<'cards' | 'table'>('cards');
-  const [internalSortValue, setInternalSortValue] = React.useState('name-asc');
+  const [internalSortValue, setInternalSortValue] = React.useState(DEFAULT_FISHING_SORT);
   const [internalFilterValues, setInternalFilterValues] = React.useState<Record<string, CatalogFilterValue>>({});
 
   return (
@@ -217,12 +318,17 @@ export function FishingList({
         filterOptions={filterOptions}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
+        onCommitSearch={onCommitSearch}
+        onClearSearch={onClearSearch}
+        onCancelPendingSearch={onCancelPendingSearch}
         viewMode={viewMode ?? internalViewMode}
         onViewModeChange={onViewModeChange ?? setInternalViewMode}
         sortValue={sortValue ?? internalSortValue}
         onSortValueChange={onSortValueChange ?? setInternalSortValue}
         filterValues={filterValues ?? internalFilterValues}
         onFilterValuesChange={onFilterValuesChange ?? setInternalFilterValues}
+        isRoutePending={isRoutePending}
+        resultResetKeys={resultResetKeys}
       />
     </DetailDrawerProvider>
   );

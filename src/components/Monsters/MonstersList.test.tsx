@@ -1,9 +1,9 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { http, HttpResponse } from 'msw';
-import { setupServer } from 'msw/node';
 import type { Monster } from '@/lib/schemas';
+import { server } from '@/setupTests';
 import { MonstersList } from './MonstersList';
 import { buildMonsterGroups } from '@/lib/monsterGroups';
 
@@ -82,31 +82,15 @@ const mockMonsters: Record<string, Monster> = {
   }
 };
 
-const server = setupServer(
-  http.get('/data/monsters.json', () => {
-    return HttpResponse.json(mockMonsters);
-  }),
-  http.get('/api/details/:type/:id', ({ params }) => {
-    if (params.type !== 'monster') {
-      return HttpResponse.json({ message: 'Unsupported type' }, { status: 404 });
-    }
-
-    const groups = buildMonsterGroups(Object.values(mockMonsters));
-    const id = String(params.id);
-    const group = groups.find((entry) => entry.key === id || entry.representative.id === id);
-
-    return group
-      ? HttpResponse.json({ type: 'monster', group, items: {} })
-      : HttpResponse.json({ message: 'Not found' }, { status: 404 });
-  })
-);
-
-beforeAll(() => server.listen());
-afterAll(() => server.close());
-
 const mockMonsterGroups = buildMonsterGroups(Object.values(mockMonsters));
 
 describe('MonstersList Component', () => {
+  beforeEach(() => {
+    server.use(
+      http.get('http://localhost:3000/data/monsters.json', () => HttpResponse.json(mockMonsters)),
+    );
+  });
+
   it('renders monsters from server-provided groups', async () => {
     render(<MonstersList monsters={mockMonsterGroups} />);
 
@@ -129,8 +113,7 @@ describe('MonstersList Component', () => {
     render(<MonstersList monsters={mockMonsterGroups} />);
 
     await user.click(screen.getByText('Octopirate'));
-    const dialog = await screen.findByRole('dialog');
-    await within(dialog).findByText('Ammonite', {}, { timeout: 5000 });
+    const dialog = await screen.findByRole('dialog', { name: 'Octopirate' });
 
     expect(within(dialog).getAllByText('Octopirate').length).toBeGreaterThan(0);
     expect(dialog).toHaveTextContent('Ammonite');
@@ -146,7 +129,7 @@ describe('MonstersList Component', () => {
 
     expect(dialog).toHaveTextContent('A stronger Rune Prana encounter.');
     expect(dialog).toHaveTextContent('Vital Gummi');
-    expect(dialog).toHaveTextContent('42000');
+    expect(dialog).toHaveTextContent('42,000');
     expect(screen.queryByRole('heading', { name: 'Nicknames' })).not.toBeInTheDocument();
   });
 
@@ -199,6 +182,25 @@ describe('MonstersList Component', () => {
 
     expect(screen.queryByText('Rideable:')).not.toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'Nicknames' })).not.toBeInTheDocument();
+  });
+
+  it('renders the data table columns and header sorting helper in table view', async () => {
+    const user = userEvent.setup();
+
+    render(<MonstersList monsters={mockMonsterGroups} />);
+
+    await user.click(screen.getByRole('button', { name: 'Table' }));
+
+    const table = screen.getByRole('table');
+    expect(within(table).getByText('Octopirate')).toBeInTheDocument();
+    expect(within(table).getByText('Field Dungeon (Boss)')).toBeInTheDocument();
+    expect(within(table).getByText('84')).toBeInTheDocument();
+    expect(within(table).getByText('12,960')).toBeInTheDocument();
+    expect(screen.getByText(/sorted by name \(ascending\)/i)).toBeInTheDocument();
+
+    await user.click(within(table).getByRole('button', { name: /base lv/i }));
+
+    expect(screen.getByText(/sorted by base lv \(descending\)/i)).toBeInTheDocument();
   });
 
   it('hydrates the monster drawer from a detail reference without loading unrelated domain content', async () => {

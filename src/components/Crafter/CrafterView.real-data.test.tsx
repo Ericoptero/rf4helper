@@ -5,6 +5,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
+import { DetailDrawerProvider } from '@/components/details/DetailDrawerContext';
+import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
 import { buildCrafterData } from '@/lib/crafterData';
 import { CrafterConfigSchema, type Item } from '@/lib/schemas';
 import { CrafterView } from './CrafterView';
@@ -19,11 +21,14 @@ describe('CrafterView real data', () => {
     const user = userEvent.setup();
 
     render(
-      <CrafterView
-        items={items}
-        crafterData={crafterData}
-        onSerializedBuildChange={() => {}}
-      />,
+      <DetailDrawerProvider onDetailReferenceChange={() => undefined}>
+        <CrafterView
+          items={items}
+          crafterData={crafterData}
+          onSerializedBuildChange={() => {}}
+        />
+        <UniversalDetailsDrawer />
+      </DetailDrawerProvider>,
     );
 
     await user.click(screen.getByRole('tab', { name: /weapon/i }));

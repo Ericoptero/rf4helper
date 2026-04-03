@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { Analytics } from '@vercel/analytics/next';
 
 import './globals.css';
 
@@ -46,7 +45,6 @@ export default async function RootLayout({
         <TooltipProvider>
           <AppShell>{children}</AppShell>
         </TooltipProvider>
-        <Analytics />
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { ItemsList } from '@/components/Items/ItemsList';
+import { DEFAULT_ITEMS_SORT, ItemsList, ITEMS_TABLE_ONLY_SORT_VALUES } from '@/components/Items/ItemsList';
 import { readDetailSearchParams, writeDetailSearchParams } from '@/components/details/detailTypes';
 import { useCatalogRouteState } from '@/hooks/useCatalogRouteState';
 import { normalizeCatalogViewMode, type CatalogViewMode } from '@/lib/catalogPresentation';
@@ -13,11 +13,31 @@ export function ItemsPageClient({
   catalog: ItemsCatalogData;
   search: ItemsSearchParams;
 }) {
-  const { draftSearchTerm, setDraftSearchTerm, patchSearch } = useCatalogRouteState({
+  const {
+    draftSearch,
+    draftSearchTerm,
+    setDraftSearchTerm,
+    isRoutePending,
+    commitSearchNow,
+    cancelPendingSearch,
+    patchSearch,
+  } = useCatalogRouteState({
     search,
     searchTermKey: 'q',
   });
-  const detailReference = readDetailSearchParams(search);
+  const detailReference = readDetailSearchParams(draftSearch);
+  const handleViewModeChange = (value: CatalogViewMode) => {
+    const normalizedView = value === 'cards' ? undefined : value;
+    const resolvedSort = draftSearch.sort ?? DEFAULT_ITEMS_SORT;
+    const nextSort = value === 'cards' && ITEMS_TABLE_ONLY_SORT_VALUES.has(resolvedSort)
+      ? undefined
+      : draftSearch.sort;
+
+    patchSearch({
+      view: normalizedView,
+      sort: nextSort,
+    });
+  };
 
   return (
     <ItemsList
@@ -26,24 +46,45 @@ export function ItemsPageClient({
       filterOptions={catalog.filterOptions}
       searchTerm={draftSearchTerm}
       onSearchTermChange={setDraftSearchTerm}
-      viewMode={normalizeCatalogViewMode(search.view)}
-      onViewModeChange={(value: CatalogViewMode) => patchSearch({ view: value === 'cards' ? undefined : value })}
-      sortValue={search.sort ?? 'name-asc'}
+      onCommitSearch={commitSearchNow}
+      onClearSearch={() => {
+        setDraftSearchTerm('');
+        commitSearchNow();
+      }}
+      onCancelPendingSearch={cancelPendingSearch}
+      isRoutePending={isRoutePending}
+      viewMode={normalizeCatalogViewMode(draftSearch.view)}
+      onViewModeChange={handleViewModeChange}
+      sortValue={draftSearch.sort ?? 'name-asc'}
       onSortValueChange={(value) => patchSearch({ sort: value })}
       detailReference={detailReference}
       onDetailReferenceChange={(reference) => patchSearch({ ...writeDetailSearchParams(reference), detail: undefined })}
       filterValues={{
-        type: search.type,
-        category: search.category,
-        region: search.region,
-        ship: search.ship,
-        buyable: search.buyable,
-        sellable: search.sellable,
-        rarity: search.rarity,
-        craft: search.craft,
-        effects: search.effects,
+        type: draftSearch.type,
+        category: draftSearch.category,
+        region: draftSearch.region,
+        ship: draftSearch.ship,
+        buyable: draftSearch.buyable,
+        sellable: draftSearch.sellable,
+        rarity: draftSearch.rarity,
+        craft: draftSearch.craft,
+        effects: draftSearch.effects,
       }}
       onFilterValuesChange={(values) => patchSearch(values as Partial<ItemsSearchParams>)}
+      resultResetKeys={[
+        catalog.results.length,
+        search.q ?? '',
+        search.sort ?? 'name-asc',
+        search.type ?? '',
+        search.category ?? '',
+        search.region ?? '',
+        search.ship ?? '',
+        search.buyable ?? '',
+        search.sellable ?? '',
+        search.rarity ?? '',
+        search.craft ?? '',
+        search.effects ?? '',
+      ]}
     />
   );
 }

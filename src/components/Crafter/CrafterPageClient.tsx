@@ -4,6 +4,8 @@ import * as React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { CrafterView } from '@/components/Crafter/CrafterView';
+import { DetailDrawerProvider } from '@/components/details/DetailDrawerContext';
+import { UniversalDetailsDrawer } from '@/components/details/UniversalDetailsDrawer';
 import { deserializeCrafterBuild, serializeCrafterBuild } from '@/lib/crafter';
 import type { CrafterBootstrapItem } from '@/lib/crafterCommon';
 import type { CrafterSearchParams } from '@/server/catalogQueries';
@@ -97,11 +99,14 @@ export function CrafterPageClient({
   );
 
   return (
-    <CrafterView
-      items={items}
-      crafterData={crafterData}
-      serializedBuild={resolvedBuild}
-      onSerializedBuildChange={handleSerializedBuildChange}
-    />
+    <DetailDrawerProvider onDetailReferenceChange={() => undefined}>
+      <CrafterView
+        items={items}
+        crafterData={crafterData}
+        serializedBuild={resolvedBuild}
+        onSerializedBuildChange={handleSerializedBuildChange}
+      />
+      <UniversalDetailsDrawer />
+    </DetailDrawerProvider>
   );
 }

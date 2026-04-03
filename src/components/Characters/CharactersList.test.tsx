@@ -1,8 +1,8 @@
 import { render, screen, within } from '@testing-library/react';
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { http, HttpResponse } from 'msw';
-import { setupServer } from 'msw/node';
 import type { Character } from '@/lib/schemas';
+import { server } from '@/setupTests';
 import { CharactersList } from './CharactersList';
 import userEvent from '@testing-library/user-event';
 
@@ -52,19 +52,18 @@ const mockCharacters: Record<string, Character> = {
 
 const mockCharacterList = Object.values(mockCharacters);
 
-const server = setupServer(
-  http.get('http://localhost:3000/data/items.json', () => {
-    return HttpResponse.json({});
-  }),
-  http.get('http://localhost:3000/data/characters.json', () => {
-    return HttpResponse.json(mockCharacters);
-  })
-);
-
-beforeAll(() => server.listen());
-afterAll(() => server.close());
+function registerCharacterHandlers(characters: Record<string, Character | Record<string, unknown>>) {
+  server.use(
+    http.get('http://localhost:3000/data/items.json', () => HttpResponse.json({})),
+    http.get('http://localhost:3000/data/characters.json', () => HttpResponse.json(characters)),
+  );
+}
 
 describe('CharactersList Component', () => {
+  beforeEach(() => {
+    registerCharacterHandlers(mockCharacters);
+  });
+
   it('renders characters immediately from server-provided props', async () => {
     render(<CharactersList characters={mockCharacterList} />);
 
@@ -84,49 +83,46 @@ describe('CharactersList Component', () => {
 
     await screen.findByText('Forte');
     await user.click(screen.getByText('Forte'));
+    const dialog = await screen.findByRole('dialog', { name: 'Forte' });
 
-    expect(await screen.findByText('A steadfast knight of Selphia.')).toBeInTheDocument();
-    expect(screen.getAllByText('Gender: Female').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Birthday: Summer 22').length).toBeGreaterThan(0);
-    const portrait = screen.getByAltText('Forte portrait');
+    expect(within(dialog).getByText('A steadfast knight of Selphia.')).toBeInTheDocument();
+    expect(within(dialog).getAllByText('Gender: Female').length).toBeGreaterThan(0);
+    expect(within(dialog).getAllByText('Birthday: Summer 22').length).toBeGreaterThan(0);
+    const portrait = within(dialog).getByAltText('Forte portrait');
     expect(portrait.getAttribute('src')).toContain('forte');
     expect(portrait).toHaveClass('object-contain');
     expect(portrait).toHaveClass('max-h-[22rem]');
-    expect(screen.getByText('Battle Info')).toBeInTheDocument();
-    expect(screen.getByText('A defensive frontline fighter.')).toBeInTheDocument();
-    expect(screen.getByText('Weapon Type')).toBeInTheDocument();
-    expect(screen.getByText('Long Sword')).toBeInTheDocument();
-    expect(screen.getByText('Rush Attack')).toBeInTheDocument();
-    expect(screen.getByText('Shield Strike')).toBeInTheDocument();
-    expect(screen.getByText(/fire 0%/i)).toBeInTheDocument();
+
+    expect(within(dialog).getByText('A defensive frontline fighter.')).toBeInTheDocument();
+    expect(within(dialog).getByText('Weapon Type')).toBeInTheDocument();
+    expect(within(dialog).getByText('Long Sword')).toBeInTheDocument();
+    expect(within(dialog).getByText('Rush Attack')).toBeInTheDocument();
+    expect(within(dialog).getByText('Shield Strike')).toBeInTheDocument();
+    expect(within(dialog).getByText(/fire 0%/i)).toBeInTheDocument();
   });
 
   it('renders graceful fallbacks when optional character fields are null', async () => {
     const user = userEvent.setup();
-    server.use(
-      http.get('http://localhost:3000/data/characters.json', () => {
-        return HttpResponse.json({
-          'char-eliza': {
-            id: 'char-eliza',
-            name: 'Eliza',
-            category: 'Other Characters',
-            icon: { sm: null, md: null },
-            portrait: null,
-            gender: null,
-            description: null,
-            birthday: null,
-            battle: null,
-            gifts: {
-              love: { items: [], categories: [] },
-              like: { items: [], categories: [] },
-              neutral: { items: [], categories: [] },
-              dislike: { items: [], categories: [] },
-              hate: { items: [], categories: [] },
-            },
-          },
-        });
-      })
-    );
+    registerCharacterHandlers({
+      'char-eliza': {
+        id: 'char-eliza',
+        name: 'Eliza',
+        category: 'Other Characters',
+        icon: { sm: null, md: null },
+        portrait: null,
+        gender: null,
+        description: null,
+        birthday: null,
+        battle: null,
+        gifts: {
+          love: { items: [], categories: [] },
+          like: { items: [], categories: [] },
+          neutral: { items: [], categories: [] },
+          dislike: { items: [], categories: [] },
+          hate: { items: [], categories: [] },
+        },
+      },
+    });
 
     render(<CharactersList characters={Object.values({
       'char-eliza': {
@@ -151,21 +147,37 @@ describe('CharactersList Component', () => {
 
     await screen.findByText('Eliza');
     await user.click(screen.getByText('Eliza'));
+    const dialog = await screen.findByRole('dialog', { name: 'Eliza' });
 
-    expect((await screen.findAllByText('Birthday: Unknown')).length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Gender: Unknown').length).toBeGreaterThan(0);
-    expect(screen.getByText('Description unavailable.')).toBeInTheDocument();
-    expect(screen.getByText('Battle information unavailable.')).toBeInTheDocument();
+    expect(within(dialog).getAllByText('Birthday: Unknown').length).toBeGreaterThan(0);
+    expect(within(dialog).getAllByText('Gender: Unknown').length).toBeGreaterThan(0);
+    expect(within(dialog).getByText('Description unavailable.')).toBeInTheDocument();
+
+    expect(within(dialog).getByText('Battle information unavailable.')).toBeInTheDocument();
+  });
+
+  it('renders the data table columns and header sorting helper in table view', async () => {
+    const user = userEvent.setup();
+
+    render(<CharactersList characters={mockCharacterList} />);
+
+    await user.click(screen.getByRole('button', { name: 'Table' }));
+
+    const table = screen.getByRole('table');
+    expect(within(table).getByText('Forte')).toBeInTheDocument();
+    expect(within(table).getByText('Summer 22')).toBeInTheDocument();
+    expect(within(table).getByText('Long Sword')).toBeInTheDocument();
+    expect(within(table).getByText('50')).toBeInTheDocument();
+    expect(within(table).getByText('1,200')).toBeInTheDocument();
+    expect(screen.getByText(/sorted by name \(ascending\)/i)).toBeInTheDocument();
+
+    await user.click(within(table).getByRole('button', { name: /level/i }));
+
+    expect(screen.getByText(/sorted by level \(descending\)/i)).toBeInTheDocument();
   });
 
   it('renders the drawer full width on mobile with a column hero layout', async () => {
     const user = userEvent.setup();
-    server.use(
-      http.get('http://localhost:3000/data/characters.json', () => {
-        return HttpResponse.json(mockCharacters);
-      }),
-    );
-
     render(<CharactersList characters={mockCharacterList} />);
 
     await screen.findByText('Forte');

@@ -14,6 +14,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import type { SkillsData } from "@/lib/schemas";
+import { formatNumber } from "@/lib/formatters";
 import { resolveRuneAbilityImageUrl } from "@/lib/publicAssetUrls";
 
 const SKILL_CATEGORY_ORDER: Array<keyof SkillsData> = [
@@ -351,7 +352,7 @@ export function PlayerView({
                                           variant="outline"
                                           className="text-green-600 dark:text-green-400"
                                         >
-                                          Buy: {ability.buy}
+                                          Buy: {formatNumber(ability.buy)}
                                         </Badge>
                                       )}
                                       {ability.sell && (
@@ -359,7 +360,7 @@ export function PlayerView({
                                           variant="outline"
                                           className="text-red-600 dark:text-red-400"
                                         >
-                                          Sell: {ability.sell}
+                                          Sell: {formatNumber(ability.sell)}
                                         </Badge>
                                       )}
                                     </div>

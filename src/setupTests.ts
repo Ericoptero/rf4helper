@@ -45,9 +45,19 @@ export const server = setupServer(
     const id = String(params.id);
 
     if (type === 'item') {
-      const items = enrichItemsWithImages(await fetchMockedJson<Record<string, { name?: string; image?: string }>>('/data/items.json'));
+      const items = enrichItemsWithImages(await fetchMockedJson<Record<string, Partial<Item>>>('/data/items.json'));
       const item = items[id];
-      return item ? HttpResponse.json({ type: 'item', item, items }) : HttpResponse.json({ message: 'Not found' }, { status: 404 });
+      return item
+        ? HttpResponse.json({
+            type: 'item',
+            item,
+            items,
+            dropSources: [],
+            cropRelations: [],
+            monsterReferenceId: typeof item.monster === 'string' ? item.monster : undefined,
+            mapReferenceId: typeof item.region === 'string' ? item.region : undefined,
+          })
+        : HttpResponse.json({ message: 'Not found' }, { status: 404 });
     }
 
     if (type === 'character' || type === 'birthday') {
@@ -80,13 +90,16 @@ export const server = setupServer(
     }
 
     if (type === 'map') {
-      const [chests, fish] = await Promise.all([
+      const [chests, fish, items] = await Promise.all([
         fetchMockedJson<Array<Record<string, unknown>>>('/data/chests.json'),
         fetchMockedJson<Array<Record<string, unknown>>>('/data/fishing.json'),
+        fetchMockedJsonOrDefault<Record<string, Partial<Item>>>('/data/items.json', {}),
       ]);
       const regions = buildMapRegions(chests as never, fish as never);
       const region = regions.find((entry) => entry.id === id);
-      return region ? HttpResponse.json({ type: 'map', region }) : HttpResponse.json({ message: 'Not found' }, { status: 404 });
+      return region
+        ? HttpResponse.json({ type: 'map', region, items: enrichItemsWithImages(items) })
+        : HttpResponse.json({ message: 'Not found' }, { status: 404 });
     }
 
     if (type === 'festival') {
@@ -96,8 +109,11 @@ export const server = setupServer(
     }
 
     if (type === 'crop') {
-      const crops = await fetchMockedJson<{ regularCrops: Array<Record<string, unknown>> }>('/data/crops.json');
-      const crop = crops.regularCrops.find((entry) => entry.id === id);
+      const crops = await fetchMockedJson<Record<string, Array<Record<string, unknown>>>>('/data/crops.json');
+      const crop = Object.values(crops)
+        .filter(Array.isArray)
+        .flat()
+        .find((entry) => entry.id === id);
       return crop ? HttpResponse.json({ type: 'crop', crop }) : HttpResponse.json({ message: 'Not found' }, { status: 404 });
     }
 

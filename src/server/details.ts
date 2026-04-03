@@ -1,3 +1,4 @@
+import type { DetailEntityReference } from '@/components/details/detailTypes';
 import type { MapRegionRecord } from '@/lib/mapFishingRelations';
 import type { MonsterGroup } from '@/lib/monsterGroups';
 import type {
@@ -7,25 +8,39 @@ import type {
   Fish,
   Item,
 } from '@/lib/schemas';
-import type { DetailEntityReference } from '@/components/details/detailTypes';
 
 import {
-  getCropsById,
   getCharactersData,
+  getCropsById,
   getFestivalsById,
   getFishById,
+  getItemCropRelationsByItemId,
+  getItemDropSourcesByItemId,
   getItemsData,
   getMapRegionsById,
   getMonsterGroupsByDetailId,
+  type ItemCropRelation,
+  type MonsterDropSource,
 } from './data/loaders';
 
+export type DetailMonsterDropSource = MonsterDropSource;
+export type DetailItemCropRelation = ItemCropRelation;
+
 export type DetailPayload =
-  | { type: 'item'; item: Item; items: Record<string, Item> }
+  | {
+      type: 'item';
+      item: Item;
+      items: Record<string, Item>;
+      dropSources: DetailMonsterDropSource[];
+      cropRelations: DetailItemCropRelation[];
+      monsterReferenceId?: string;
+      mapReferenceId?: string;
+    }
   | { type: 'character'; character: Character; items: Record<string, Item> }
-  | { type: 'birthday'; character: Character }
+  | { type: 'birthday'; character: Character; items: Record<string, Item> }
   | { type: 'monster'; group: MonsterGroup; items: Record<string, Item> }
   | { type: 'fish'; fish: Fish }
-  | { type: 'map'; region: MapRegionRecord }
+  | { type: 'map'; region: MapRegionRecord; items: Record<string, Item> }
   | { type: 'festival'; festival: Festival }
   | { type: 'crop'; crop: Crop };
 
@@ -41,6 +56,28 @@ function pickItems(items: Record<string, Item>, itemIds: Iterable<string>) {
   }
 
   return subset;
+}
+
+function getPrimaryRecipeIngredientIds(item: Item | undefined) {
+  return item?.craft?.[0]?.ingredients ?? item?.craftedFrom?.[0]?.ingredients ?? [];
+}
+
+function expandLinkedItemIds(items: Record<string, Item>, itemIds: Iterable<string>) {
+  const expanded = new Set<string>();
+
+  for (const itemId of itemIds) {
+    if (!itemId || expanded.has(itemId)) {
+      continue;
+    }
+
+    expanded.add(itemId);
+
+    for (const ingredientId of getPrimaryRecipeIngredientIds(items[itemId])) {
+      expanded.add(ingredientId);
+    }
+  }
+
+  return expanded;
 }
 
 function getItemDetailItemIds(item: Item) {
@@ -66,7 +103,12 @@ function getMonsterDetailItemIds(group: MonsterGroup) {
   return group.variants.flatMap((variant) => [
     ...variant.drops.flatMap((drop) => (drop.id ? [drop.id] : [])),
     ...(variant.taming?.favorite?.flatMap((favorite) => (favorite.id ? [favorite.id] : [])) ?? []),
+    ...(variant.taming?.produce?.flatMap((produce) => (produce.id ? [produce.id] : [])) ?? []),
   ]);
+}
+
+function getMapDetailItemIds(region: MapRegionRecord) {
+  return region.chests.flatMap((chest) => (chest.itemId ? [chest.itemId] : []));
 }
 
 export async function getDetailPayload(
@@ -74,9 +116,40 @@ export async function getDetailPayload(
 ): Promise<DetailPayload | null> {
   switch (reference.type) {
     case 'item': {
-      const items = await getItemsData();
+      const [
+        items,
+        dropSourcesByItemId,
+        cropRelationsByItemId,
+        groupsById,
+        mapRegionsById,
+      ] = await Promise.all([
+        getItemsData(),
+        getItemDropSourcesByItemId(),
+        getItemCropRelationsByItemId(),
+        getMonsterGroupsByDetailId(),
+        getMapRegionsById(),
+      ]);
       const item = items[reference.id];
-      return item ? { type: 'item', item, items: pickItems(items, getItemDetailItemIds(item)) } : null;
+
+      if (!item) {
+        return null;
+      }
+
+      const cropRelations = cropRelationsByItemId.get(reference.id) ?? [];
+      const linkedItemIds = [
+        ...getItemDetailItemIds(item),
+        ...cropRelations.flatMap((relation) => (relation.counterpartItemId ? [relation.counterpartItemId] : [])),
+      ];
+
+      return {
+        type: 'item',
+        item,
+        items: pickItems(items, expandLinkedItemIds(items, linkedItemIds)),
+        dropSources: dropSourcesByItemId.get(reference.id) ?? [],
+        cropRelations,
+        monsterReferenceId: item.monster && groupsById.has(item.monster) ? item.monster : undefined,
+        mapReferenceId: item.region && mapRegionsById.has(item.region) ? item.region : undefined,
+      };
     }
     case 'character':
     case 'birthday': {
@@ -87,22 +160,25 @@ export async function getDetailPayload(
         return null;
       }
 
+      const linkedItems = pickItems(items, expandLinkedItemIds(items, getCharacterDetailItemIds(character)));
+
       return reference.type === 'character'
-        ? { type: 'character', character, items: pickItems(items, getCharacterDetailItemIds(character)) }
-        : { type: 'birthday', character };
+        ? { type: 'character', character, items: linkedItems }
+        : { type: 'birthday', character, items: linkedItems };
     }
     case 'monster': {
       const [groupsById, items] = await Promise.all([getMonsterGroupsByDetailId(), getItemsData()]);
       const group = groupsById.get(reference.id);
-      return group ? { type: 'monster', group, items: pickItems(items, getMonsterDetailItemIds(group)) } : null;
+      return group ? { type: 'monster', group, items: pickItems(items, expandLinkedItemIds(items, getMonsterDetailItemIds(group))) } : null;
     }
     case 'fish': {
       const fishEntry = (await getFishById()).get(reference.id);
       return fishEntry ? { type: 'fish', fish: fishEntry } : null;
     }
     case 'map': {
-      const region = (await getMapRegionsById()).get(reference.id);
-      return region ? { type: 'map', region } : null;
+      const [mapRegionsById, items] = await Promise.all([getMapRegionsById(), getItemsData()]);
+      const region = mapRegionsById.get(reference.id);
+      return region ? { type: 'map', region, items: pickItems(items, expandLinkedItemIds(items, getMapDetailItemIds(region))) } : null;
     }
     case 'festival': {
       const festival = (await getFestivalsById()).get(reference.id);

@@ -13,6 +13,8 @@ import {
   getFishById,
   getFishData,
   getFishingCatalogFilterOptions,
+  getItemCropRelationsByItemId,
+  getItemDropSourcesByItemId,
   getItemsCatalogFilterOptions,
   getItemsData,
   getMapRegionsById,
@@ -115,19 +117,25 @@ describe('server data loaders', () => {
   });
 
   it('builds detail lookup maps keyed by entity id', async () => {
-    const [monsterGroupsById, fishById, mapRegionsById, festivalsById, cropsById] = await Promise.all([
+    const [monsterGroupsById, fishById, mapRegionsById, festivalsById, cropsById, dropSourcesByItemId, cropRelationsByItemId] = await Promise.all([
       getMonsterGroupsByDetailId(),
       getFishById(),
       getMapRegionsById(),
       getFestivalsById(),
       getCropsById(),
+      getItemDropSourcesByItemId(),
+      getItemCropRelationsByItemId(),
     ]);
 
     expect(monsterGroupsById.get('Orc')?.representative.id).toBe('monster-orc');
     expect(monsterGroupsById.get('monster-orc')?.displayName).toBe('Orc');
+    expect(monsterGroupsById.get('Octopirate 2')?.displayName).toBe('Octopirate');
     expect(fishById.get('fish-squid')?.name).toBe('Squid');
     expect(mapRegionsById.get('Selphia Plains')?.name).toBe('Selphia Plains');
     expect(festivalsById.get('festival-cooking-contest')?.name).toBe('Cooking Contest');
     expect(cropsById.get('crop-turnip')?.name).toBe('Turnip');
+    expect(cropsById.get('crop-apple-tree-seed')?.name).toBe('Apple Tree Seed');
+    expect(dropSourcesByItemId.get('item-ammonite')?.some((source) => source.referenceId === 'Octopirate 2')).toBe(true);
+    expect(cropRelationsByItemId.get('item-yam-seeds')?.some((relation) => relation.crop.id === 'crop-yam')).toBe(true);
   });
 });

@@ -55,10 +55,10 @@ describe('crafterFormatters', () => {
   it('formats crafter stat labels and numeric values', () => {
     expect(formatStatLabel('atk')).toBe('ATK');
     expect(formatStatLabel('attackType')).toBe('Attack Type');
-    expect(formatStatValue(1234.567)).toBe('1,234.57');
+    expect(formatStatValue(1234.567)).toBe('1,234.6');
     expect(formatPercentValue(0.456)).toBe('45.6%');
-    expect(formatFinalStatValue(1234.567)).toBe('1,235');
-    expect(formatFinalPercentValue(0.456)).toBe('46%');
+    expect(formatFinalStatValue(1234.567)).toBe('1,234.6');
+    expect(formatFinalPercentValue(0.456)).toBe('45.6%');
     expect(formatSignedValue(12.5)).toBe('+12.5');
     expect(formatSignedPercentValue(-0.25)).toBe('-25%');
     expect(formatSignedCrafterStatValue('crit', 0.125)).toBe('+12.5%');

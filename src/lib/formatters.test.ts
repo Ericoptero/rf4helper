@@ -11,6 +11,8 @@ describe('formatters', () => {
 
   it('formats numbers with locale separators and nullish fallbacks', () => {
     expect(formatNumber(1234567)).toBe('1,234,567');
+    expect(formatNumber(1234.56)).toBe('1,234.6');
+    expect(formatNumber(1234.04)).toBe('1,234');
     expect(formatNumber(null)).toBe('—');
     expect(formatNumber(undefined)).toBe('—');
   });
