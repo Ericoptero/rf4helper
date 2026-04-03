@@ -71,6 +71,35 @@ describe('useCatalogRouteState', () => {
     expect(replace).toHaveBeenCalledWith('/items?q=bread&sort=name-asc', { scroll: false });
   });
 
+  it('merges immediate patches with the latest draft search term', async () => {
+    const { result } = renderHook(() =>
+      useCatalogRouteState<ItemsSearchParams>({
+        search: {
+          q: undefined,
+          sort: 'name-asc',
+          view: undefined,
+        } satisfies ItemsSearchParams,
+        searchTermKey: 'q',
+        debounceMs: 200,
+      }),
+    );
+
+    await act(async () => {});
+
+    act(() => {
+      result.current.setDraftSearchTerm('bread');
+      result.current.patchSearch({ view: 'table' });
+    });
+
+    expect(replace).toHaveBeenCalledWith('/items?q=bread&sort=name-asc&view=table', { scroll: false });
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(250);
+    });
+
+    expect(replace).toHaveBeenCalledTimes(1);
+  });
+
   it('patches multiple search params in one navigation', () => {
     const { result } = renderHook(() =>
       useCatalogRouteState<ItemsSearchParams>({
@@ -92,6 +121,50 @@ describe('useCatalogRouteState', () => {
     expect(replace).toHaveBeenCalledWith('/items?q=bread&sort=sell-desc&ship=yes', { scroll: false });
   });
 
+  it('flushes the current draft search immediately when requested', async () => {
+    const { result } = renderHook(() =>
+      useCatalogRouteState<ItemsSearchParams>({
+        search: {
+          q: undefined,
+          sort: 'name-asc',
+        } satisfies ItemsSearchParams,
+        searchTermKey: 'q',
+        debounceMs: 200,
+      }),
+    );
+
+    await act(async () => {});
+
+    act(() => {
+      result.current.setDraftSearchTerm('bread');
+      result.current.commitSearchNow();
+    });
+
+    expect(replace).toHaveBeenCalledWith('/items?q=bread&sort=name-asc', { scroll: false });
+  });
+
+  it('flushes a cleared search immediately without waiting for debounce', async () => {
+    const { result } = renderHook(() =>
+      useCatalogRouteState<ItemsSearchParams>({
+        search: {
+          q: 'bread',
+          sort: 'name-asc',
+        } satisfies ItemsSearchParams,
+        searchTermKey: 'q',
+        debounceMs: 200,
+      }),
+    );
+
+    await act(async () => {});
+
+    act(() => {
+      result.current.setDraftSearchTerm('');
+      result.current.commitSearchNow();
+    });
+
+    expect(replace).toHaveBeenCalledWith('/items?sort=name-asc', { scroll: false });
+  });
+
   it('does not navigate when the normalized search state is unchanged', () => {
     const { result } = renderHook(() =>
       useCatalogRouteState<ItemsSearchParams>({
@@ -106,6 +179,32 @@ describe('useCatalogRouteState', () => {
       result.current.patchSearch({
         q: '',
       });
+    });
+
+    expect(replace).not.toHaveBeenCalled();
+  });
+
+  it('cancels a pending search commit before the debounce fires', async () => {
+    const { result } = renderHook(() =>
+      useCatalogRouteState<ItemsSearchParams>({
+        search: {
+          q: undefined,
+          sort: 'name-asc',
+        } satisfies ItemsSearchParams,
+        searchTermKey: 'q',
+        debounceMs: 200,
+      }),
+    );
+
+    await act(async () => {});
+
+    act(() => {
+      result.current.setDraftSearchTerm('bread');
+      result.current.cancelPendingSearch();
+    });
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(250);
     });
 
     expect(replace).not.toHaveBeenCalled();
@@ -134,5 +233,57 @@ describe('useCatalogRouteState', () => {
     });
 
     expect(replace).not.toHaveBeenCalled();
+  });
+
+  it('keeps the active draft when an older committed search arrives from the server', async () => {
+    const initialSearch: ItemsSearchParams = {
+      q: undefined,
+      sort: 'name-asc',
+    };
+
+    const { result, rerender } = renderHook(
+      ({ search }: { search: ItemsSearchParams }) =>
+        useCatalogRouteState<ItemsSearchParams>({
+          search,
+          searchTermKey: 'q',
+          debounceMs: 50,
+        }),
+      {
+        initialProps: {
+          search: initialSearch,
+        },
+      },
+    );
+
+    await act(async () => {});
+
+    act(() => {
+      result.current.setDraftSearchTerm('br');
+    });
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(50);
+    });
+
+    expect(replace).toHaveBeenCalledWith('/items?q=br&sort=name-asc', { scroll: false });
+
+    act(() => {
+      result.current.setDraftSearchTerm('bread');
+    });
+
+    rerender({
+      search: {
+        q: 'br',
+        sort: 'name-asc',
+      } satisfies ItemsSearchParams,
+    });
+
+    expect(result.current.draftSearchTerm).toBe('bread');
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(50);
+    });
+
+    expect(replace).toHaveBeenLastCalledWith('/items?q=bread&sort=name-asc', { scroll: false });
   });
 });

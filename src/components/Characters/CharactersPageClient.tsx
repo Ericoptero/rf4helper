@@ -13,11 +13,19 @@ export function CharactersPageClient({
   catalog: CharactersCatalogData;
   search: CharactersSearchParams;
 }) {
-  const { draftSearchTerm, setDraftSearchTerm, patchSearch } = useCatalogRouteState({
+  const {
+    draftSearch,
+    draftSearchTerm,
+    setDraftSearchTerm,
+    isRoutePending,
+    commitSearchNow,
+    cancelPendingSearch,
+    patchSearch,
+  } = useCatalogRouteState({
     search,
     searchTermKey: 'q',
   });
-  const detailReference = readDetailSearchParams(search);
+  const detailReference = readDetailSearchParams(draftSearch);
 
   return (
     <CharactersList
@@ -26,20 +34,37 @@ export function CharactersPageClient({
       filterOptions={catalog.filterOptions}
       searchTerm={draftSearchTerm}
       onSearchTermChange={setDraftSearchTerm}
-      viewMode={normalizeCatalogViewMode(search.view)}
+      onCommitSearch={commitSearchNow}
+      onClearSearch={() => {
+        setDraftSearchTerm('');
+        commitSearchNow();
+      }}
+      onCancelPendingSearch={cancelPendingSearch}
+      isRoutePending={isRoutePending}
+      viewMode={normalizeCatalogViewMode(draftSearch.view)}
       onViewModeChange={(value: CatalogViewMode) => patchSearch({ view: value === 'cards' ? undefined : value })}
-      sortValue={search.sort ?? 'name-asc'}
+      sortValue={draftSearch.sort ?? 'name-asc'}
       onSortValueChange={(value) => patchSearch({ sort: value })}
       detailReference={detailReference}
       onDetailReferenceChange={(reference) => patchSearch({ ...writeDetailSearchParams(reference), detail: undefined })}
       filterValues={{
-        category: search.category,
-        gender: search.gender,
-        season: search.season,
-        battle: search.battle,
-        weaponType: search.weaponType,
+        category: draftSearch.category,
+        gender: draftSearch.gender,
+        season: draftSearch.season,
+        battle: draftSearch.battle,
+        weaponType: draftSearch.weaponType,
       }}
       onFilterValuesChange={(values) => patchSearch(values as Partial<CharactersSearchParams>)}
+      resultResetKeys={[
+        catalog.results.length,
+        search.q ?? '',
+        search.sort ?? 'name-asc',
+        search.category ?? '',
+        search.gender ?? '',
+        search.season ?? '',
+        search.battle ?? '',
+        search.weaponType ?? '',
+      ]}
     />
   );
 }

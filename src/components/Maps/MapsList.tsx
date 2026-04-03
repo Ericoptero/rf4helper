@@ -51,23 +51,33 @@ function MapsCatalog({
   totalCount,
   searchTerm,
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  onCancelPendingSearch,
   viewMode,
   onViewModeChange,
   sortValue,
   onSortValueChange,
   filterValues,
   onFilterValuesChange,
+  isRoutePending,
+  resultResetKeys,
 }: {
   regions: MapRegionRecord[];
   totalCount?: number;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  onCancelPendingSearch?: () => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+  isRoutePending?: boolean;
+  resultResetKeys?: readonly unknown[];
 }) {
   const { openRoot } = useDetailDrawer();
 
@@ -120,12 +130,17 @@ function MapsCatalog({
         title="World Maps & Chests"
         searchTerm={searchTerm}
         onSearchTermChange={onSearchTermChange}
+        onCommitSearch={onCommitSearch}
+        onClearSearch={onClearSearch}
+        onCancelPendingSearch={onCancelPendingSearch}
         viewMode={viewMode}
         onViewModeChange={onViewModeChange}
         sortValue={sortValue}
         onSortValueChange={onSortValueChange}
         filterValues={filterValues}
         onFilterValuesChange={onFilterValuesChange}
+        isRoutePending={isRoutePending}
+        resultResetKeys={resultResetKeys}
         tableColumns={tableColumns}
         getItemKey={(region) => region.id}
         renderCard={(region, onClick) => <MapCard region={region} onClick={onClick} />}
@@ -145,12 +160,17 @@ export function MapsList({
   onDetailReferenceChange,
   searchTerm,
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  onCancelPendingSearch,
   viewMode,
   onViewModeChange,
   sortValue,
   onSortValueChange,
   filterValues,
   onFilterValuesChange,
+  isRoutePending,
+  resultResetKeys,
 }: {
   regions: MapRegionRecord[];
   totalCount?: number;
@@ -158,12 +178,17 @@ export function MapsList({
   onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  onCancelPendingSearch?: () => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+  isRoutePending?: boolean;
+  resultResetKeys?: readonly unknown[];
 }) {
   const [internalDetailReference, setInternalDetailReference] = React.useState<DetailEntityReference | null>(null);
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
@@ -181,12 +206,17 @@ export function MapsList({
         totalCount={totalCount}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
+        onCommitSearch={onCommitSearch}
+        onClearSearch={onClearSearch}
+        onCancelPendingSearch={onCancelPendingSearch}
         viewMode={viewMode ?? internalViewMode}
         onViewModeChange={onViewModeChange ?? setInternalViewMode}
         sortValue={sortValue ?? internalSortValue}
         onSortValueChange={onSortValueChange ?? setInternalSortValue}
         filterValues={filterValues ?? internalFilterValues}
         onFilterValuesChange={onFilterValuesChange ?? setInternalFilterValues}
+        isRoutePending={isRoutePending}
+        resultResetKeys={resultResetKeys}
       />
     </DetailDrawerProvider>
   );

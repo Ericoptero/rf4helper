@@ -81,12 +81,17 @@ function ItemsCatalog({
   filterOptions,
   searchTerm,
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  onCancelPendingSearch,
   viewMode,
   onViewModeChange,
   sortValue,
   onSortValueChange,
   filterValues,
   onFilterValuesChange,
+  isRoutePending,
+  resultResetKeys,
 }: {
   items: Item[];
   totalCount?: number;
@@ -98,12 +103,17 @@ function ItemsCatalog({
   };
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  onCancelPendingSearch?: () => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+  isRoutePending?: boolean;
+  resultResetKeys?: readonly unknown[];
 }) {
   const { openRoot } = useDetailDrawer();
   const derivedTypes = Array.from(new Set(items.map((item) => item.type))).sort();
@@ -176,12 +186,17 @@ function ItemsCatalog({
         title="Items Database"
         searchTerm={searchTerm}
         onSearchTermChange={onSearchTermChange}
+        onCommitSearch={onCommitSearch}
+        onClearSearch={onClearSearch}
+        onCancelPendingSearch={onCancelPendingSearch}
         viewMode={viewMode}
         onViewModeChange={onViewModeChange}
         sortValue={sortValue}
         onSortValueChange={onSortValueChange}
         filterValues={filterValues}
         onFilterValuesChange={onFilterValuesChange}
+        isRoutePending={isRoutePending}
+        resultResetKeys={resultResetKeys}
         tableColumns={tableColumns}
         getItemKey={(item) => item.id}
         renderCard={(item, onClick) => <ItemCard item={item} onClick={onClick} />}
@@ -202,12 +217,17 @@ export function ItemsList({
   onDetailReferenceChange,
   searchTerm,
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  onCancelPendingSearch,
   viewMode,
   onViewModeChange,
   sortValue,
   onSortValueChange,
   filterValues,
   onFilterValuesChange,
+  isRoutePending,
+  resultResetKeys,
 }: {
   items: Item[];
   totalCount?: number;
@@ -221,12 +241,17 @@ export function ItemsList({
   onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  onCancelPendingSearch?: () => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+  isRoutePending?: boolean;
+  resultResetKeys?: readonly unknown[];
 }) {
   const [internalDetailReference, setInternalDetailReference] = React.useState<DetailEntityReference | null>(null);
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
@@ -245,12 +270,17 @@ export function ItemsList({
         filterOptions={filterOptions}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
+        onCommitSearch={onCommitSearch}
+        onClearSearch={onClearSearch}
+        onCancelPendingSearch={onCancelPendingSearch}
         viewMode={viewMode ?? internalViewMode}
         onViewModeChange={onViewModeChange ?? setInternalViewMode}
         sortValue={sortValue ?? internalSortValue}
         onSortValueChange={onSortValueChange ?? setInternalSortValue}
         filterValues={filterValues ?? internalFilterValues}
         onFilterValuesChange={onFilterValuesChange ?? setInternalFilterValues}
+        isRoutePending={isRoutePending}
+        resultResetKeys={resultResetKeys}
       />
     </DetailDrawerProvider>
   );

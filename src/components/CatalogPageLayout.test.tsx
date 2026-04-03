@@ -204,6 +204,47 @@ function ControlledCatalogHarness({ data = entries }: { data?: Entry[] }) {
   );
 }
 
+function PendingSearchHarness({ data = paginatedEntries }: { data?: Entry[] }) {
+  const [draftSearchTerm, setDraftSearchTerm] = React.useState('');
+  const [committedSearchTerm, setCommittedSearchTerm] = React.useState('');
+  const [viewMode, setViewMode] = React.useState<'cards' | 'table'>('cards');
+
+  const filteredData = React.useMemo(() => {
+    if (!committedSearchTerm) {
+      return data;
+    }
+
+    return data.filter((entry) => entry.name.toLowerCase().includes(committedSearchTerm.toLowerCase()));
+  }, [committedSearchTerm, data]);
+
+  return (
+    <CatalogPageLayout<Entry>
+      data={filteredData}
+      title="Items"
+      searchTerm={draftSearchTerm}
+      onSearchTermChange={setDraftSearchTerm}
+      onCommitSearch={() => setCommittedSearchTerm(draftSearchTerm)}
+      onClearSearch={() => {
+        setDraftSearchTerm('');
+        setCommittedSearchTerm('');
+      }}
+      viewMode={viewMode}
+      onViewModeChange={setViewMode}
+      getItemKey={(entry) => entry.id}
+      renderCard={(entry, onOpen) => (
+        <button type="button" onClick={onOpen}>
+          <Card>
+            <CardContent>{entry.name}</CardContent>
+          </Card>
+        </button>
+      )}
+      onOpenItem={vi.fn()}
+      isRoutePending={draftSearchTerm !== committedSearchTerm}
+      resultResetKeys={[filteredData.length, committedSearchTerm]}
+    />
+  );
+}
+
 describe('CatalogPageLayout', () => {
   beforeEach(() => {
     MockIntersectionObserver.reset();
@@ -460,5 +501,69 @@ describe('CatalogPageLayout', () => {
     expect(screen.getByRole('table')).toBeInTheDocument();
     expect(screen.getByText('Beta Weapon 39')).toBeInTheDocument();
     expect(screen.getByText('Beta Weapon 40')).toBeInTheDocument();
+  });
+
+  it('does not reset the revealed window while a search is still only draft state', async () => {
+    const user = userEvent.setup();
+
+    render(<PendingSearchHarness />);
+
+    const sentinel = screen.getByTestId('catalog-infinite-scroll-sentinel');
+    act(() => {
+      MockIntersectionObserver.trigger(sentinel);
+    });
+
+    expect(screen.getByRole('button', { name: 'Alpha Crop 24' })).toBeInTheDocument();
+
+    await user.type(screen.getByRole('textbox', { name: /search/i }), 'beta');
+
+    expect(screen.getByRole('button', { name: 'Alpha Crop 24' })).toBeInTheDocument();
+
+    await user.keyboard('{Enter}');
+
+    expect(screen.queryByRole('button', { name: 'Alpha Crop 24' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Beta Weapon 53' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Beta Weapon 54' })).not.toBeInTheDocument();
+  });
+
+  it('keeps the filter sheet interactive while a route update is pending', async () => {
+    const user = userEvent.setup();
+    const onCancelPendingSearch = vi.fn();
+
+    render(
+      <CatalogPageLayout<Entry>
+        data={entries}
+        title="Items"
+        searchTerm="turn"
+        onSearchTermChange={vi.fn()}
+        onCommitSearch={vi.fn()}
+        onCancelPendingSearch={onCancelPendingSearch}
+        viewMode="cards"
+        onViewModeChange={vi.fn()}
+        sortValue="name-asc"
+        onSortValueChange={vi.fn()}
+        sortOptions={sortOptions}
+        filters={filters}
+        filterValues={{}}
+        onFilterValuesChange={vi.fn()}
+        tableColumns={tableColumns}
+        getItemKey={(entry) => entry.id}
+        renderCard={(entry, onOpen) => (
+          <button type="button" onClick={onOpen}>
+            {entry.name}
+          </button>
+        )}
+        onOpenItem={vi.fn()}
+        isRoutePending
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: /search/i })).toHaveAttribute('aria-busy', 'true');
+
+    await user.click(screen.getByRole('button', { name: /more filters/i }));
+
+    expect(onCancelPendingSearch).toHaveBeenCalledTimes(1);
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /clear filters/i })).toBeInTheDocument();
   });
 });

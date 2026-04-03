@@ -67,12 +67,17 @@ function FishingCatalog({
   filterOptions,
   searchTerm,
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  onCancelPendingSearch,
   viewMode,
   onViewModeChange,
   sortValue,
   onSortValueChange,
   filterValues,
   onFilterValuesChange,
+  isRoutePending,
+  resultResetKeys,
 }: {
   fish: Fish[];
   totalCount?: number;
@@ -83,12 +88,17 @@ function FishingCatalog({
   };
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  onCancelPendingSearch?: () => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+  isRoutePending?: boolean;
+  resultResetKeys?: readonly unknown[];
 }) {
   const { openRoot } = useDetailDrawer();
 
@@ -149,12 +159,17 @@ function FishingCatalog({
         title="Fishing Guide"
         searchTerm={searchTerm}
         onSearchTermChange={onSearchTermChange}
+        onCommitSearch={onCommitSearch}
+        onClearSearch={onClearSearch}
+        onCancelPendingSearch={onCancelPendingSearch}
         viewMode={viewMode}
         onViewModeChange={onViewModeChange}
         sortValue={sortValue}
         onSortValueChange={onSortValueChange}
         filterValues={filterValues}
         onFilterValuesChange={onFilterValuesChange}
+        isRoutePending={isRoutePending}
+        resultResetKeys={resultResetKeys}
         tableColumns={tableColumns}
         getItemKey={(f) => f.id}
         renderCard={(f, onClick) => <FishCard fish={f} onClick={onClick} />}
@@ -175,12 +190,17 @@ export function FishingList({
   onDetailReferenceChange,
   searchTerm,
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  onCancelPendingSearch,
   viewMode,
   onViewModeChange,
   sortValue,
   onSortValueChange,
   filterValues,
   onFilterValuesChange,
+  isRoutePending,
+  resultResetKeys,
 }: {
   fish: Fish[];
   totalCount?: number;
@@ -193,12 +213,17 @@ export function FishingList({
   onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  onCancelPendingSearch?: () => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+  isRoutePending?: boolean;
+  resultResetKeys?: readonly unknown[];
 }) {
   const [internalDetailReference, setInternalDetailReference] = React.useState<DetailEntityReference | null>(null);
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
@@ -217,12 +242,17 @@ export function FishingList({
         filterOptions={filterOptions}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
+        onCommitSearch={onCommitSearch}
+        onClearSearch={onClearSearch}
+        onCancelPendingSearch={onCancelPendingSearch}
         viewMode={viewMode ?? internalViewMode}
         onViewModeChange={onViewModeChange ?? setInternalViewMode}
         sortValue={sortValue ?? internalSortValue}
         onSortValueChange={onSortValueChange ?? setInternalSortValue}
         filterValues={filterValues ?? internalFilterValues}
         onFilterValuesChange={onFilterValuesChange ?? setInternalFilterValues}
+        isRoutePending={isRoutePending}
+        resultResetKeys={resultResetKeys}
       />
     </DetailDrawerProvider>
   );

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Filter, LayoutGrid, Search, Table2, X } from 'lucide-react';
+import { Filter, LayoutGrid, LoaderCircle, Search, Table2, X } from 'lucide-react';
 
 import { CatalogFilterSheet } from './CatalogFilterSheet';
 import { CatalogResultsGrid } from './CatalogResultsGrid';
@@ -9,6 +9,7 @@ import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useIncrementalReveal } from '@/hooks/useIncrementalReveal';
+import { cn } from '@/lib/utils';
 
 type CatalogSortOptionBase = {
   label: string;
@@ -53,12 +54,17 @@ export type CatalogPageLayoutProps<T> = {
   isLoading?: boolean;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  onCancelPendingSearch?: () => void;
   extraControls?: React.ReactNode;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   emptyState?: string;
   sortOptions?: ServerSortOption[];
   filters?: ServerCatalogFilterDefinition[];
+  isRoutePending?: boolean;
+  resultResetKeys?: readonly unknown[];
 };
 
 function normalizeFilterValue(value: CatalogFilterValue) {
@@ -103,24 +109,52 @@ function CatalogSkeletonCard() {
 function CatalogSearchBar({
   searchTerm,
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  isRoutePending,
 }: {
   searchTerm: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  isRoutePending?: boolean;
 }) {
   return (
     <div className="relative min-w-0 flex-1">
       <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         aria-label="Search"
+        aria-busy={isRoutePending}
         placeholder="Search..."
         value={searchTerm}
         onChange={(event) => onSearchTermChange?.(event.target.value)}
-        className="h-11 rounded-xl border-border/70 bg-card pl-9 pr-9"
+        onKeyDown={(event) => {
+          if (event.key !== 'Enter') {
+            return;
+          }
+
+          event.preventDefault();
+          onCommitSearch?.();
+        }}
+        className="h-11 rounded-xl border-border/70 bg-card pl-9 pr-16"
       />
+      {isRoutePending ? (
+        <span className="pointer-events-none absolute right-9 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden="true">
+          <LoaderCircle className="h-4 w-4 animate-spin" />
+        </span>
+      ) : null}
       {searchTerm ? (
         <button
           type="button"
-          onClick={() => onSearchTermChange?.('')}
+          onClick={() => {
+            if (onClearSearch) {
+              onClearSearch();
+              return;
+            }
+
+            onSearchTermChange?.('');
+            onCommitSearch?.();
+          }}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
           aria-label="Clear search"
         >
@@ -210,12 +244,17 @@ export function CatalogPageLayout<T>({
   isLoading = false,
   searchTerm = '',
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  onCancelPendingSearch,
   extraControls,
   viewMode = 'cards',
   onViewModeChange,
   emptyState = 'No results found.',
   sortOptions,
   filters,
+  isRoutePending = false,
+  resultResetKeys,
 }: CatalogPageLayoutProps<T>) {
   const [filtersSheetOpen, setFiltersSheetOpen] = React.useState(false);
   const [draftFilterValues, setDraftFilterValues] = React.useState<Record<string, CatalogFilterValue>>({});
@@ -278,13 +317,14 @@ export function CatalogPageLayout<T>({
     });
   }, [filterValues, orderedFilters]);
   const revealResetKeys = useMemo(
-    () => [
-      data.length,
-      searchTerm,
-      sortValue,
-      ...appliedFilterChips.map((chip) => chip.key),
-    ],
-    [appliedFilterChips, data.length, searchTerm, sortValue],
+    () =>
+      resultResetKeys ?? [
+        data.length,
+        searchTerm,
+        sortValue,
+        ...appliedFilterChips.map((chip) => chip.key),
+      ],
+    [appliedFilterChips, data.length, resultResetKeys, searchTerm, sortValue],
   );
 
   const { hasMore, sentinelRef, visibleCount } = useIncrementalReveal<HTMLElement>({
@@ -380,9 +420,15 @@ export function CatalogPageLayout<T>({
       </div>
 
       <div className="rounded-3xl border bg-card/90 p-4 shadow-sm">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch" aria-busy={isRoutePending}>
           {hasSearchControl ? (
-            <CatalogSearchBar searchTerm={searchTerm} onSearchTermChange={onSearchTermChange} />
+            <CatalogSearchBar
+              searchTerm={searchTerm}
+              onSearchTermChange={onSearchTermChange}
+              onCommitSearch={onCommitSearch}
+              onClearSearch={onClearSearch}
+              isRoutePending={isRoutePending}
+            />
           ) : null}
 
           {sortOptions && sortOptions.length > 0 ? (
@@ -405,7 +451,10 @@ export function CatalogPageLayout<T>({
               type="button"
               variant="outline"
               className="h-11 rounded-xl lg:min-w-39"
-              onClick={() => setFiltersSheetOpen(true)}
+              onClick={() => {
+                onCancelPendingSearch?.();
+                setFiltersSheetOpen(true);
+              }}
             >
               <Filter className="mr-2 h-4 w-4" />
               More Filters
@@ -419,7 +468,13 @@ export function CatalogPageLayout<T>({
 
       <CatalogAppliedFilters chips={appliedFilterChips} onRemove={handleRemoveAppliedFilter} />
 
-      <div className="min-w-0 rounded-3xl border bg-card/90 p-4 shadow-sm">
+      <div
+        className={cn(
+          'min-w-0 rounded-3xl border bg-card/90 p-4 shadow-sm transition-colors',
+          isRoutePending ? 'border-primary/30' : null,
+        )}
+        aria-busy={isRoutePending}
+      >
         <ScrollArea className="h-[calc(100vh-15rem)] min-h-112 pr-2" viewportRef={viewportRef}>
           {viewMode === 'table' && tableColumns && tableColumns.length > 0 ? (
             <CatalogResultsTable

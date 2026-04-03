@@ -13,11 +13,19 @@ export function ItemsPageClient({
   catalog: ItemsCatalogData;
   search: ItemsSearchParams;
 }) {
-  const { draftSearchTerm, setDraftSearchTerm, patchSearch } = useCatalogRouteState({
+  const {
+    draftSearch,
+    draftSearchTerm,
+    setDraftSearchTerm,
+    isRoutePending,
+    commitSearchNow,
+    cancelPendingSearch,
+    patchSearch,
+  } = useCatalogRouteState({
     search,
     searchTermKey: 'q',
   });
-  const detailReference = readDetailSearchParams(search);
+  const detailReference = readDetailSearchParams(draftSearch);
 
   return (
     <ItemsList
@@ -26,24 +34,45 @@ export function ItemsPageClient({
       filterOptions={catalog.filterOptions}
       searchTerm={draftSearchTerm}
       onSearchTermChange={setDraftSearchTerm}
-      viewMode={normalizeCatalogViewMode(search.view)}
+      onCommitSearch={commitSearchNow}
+      onClearSearch={() => {
+        setDraftSearchTerm('');
+        commitSearchNow();
+      }}
+      onCancelPendingSearch={cancelPendingSearch}
+      isRoutePending={isRoutePending}
+      viewMode={normalizeCatalogViewMode(draftSearch.view)}
       onViewModeChange={(value: CatalogViewMode) => patchSearch({ view: value === 'cards' ? undefined : value })}
-      sortValue={search.sort ?? 'name-asc'}
+      sortValue={draftSearch.sort ?? 'name-asc'}
       onSortValueChange={(value) => patchSearch({ sort: value })}
       detailReference={detailReference}
       onDetailReferenceChange={(reference) => patchSearch({ ...writeDetailSearchParams(reference), detail: undefined })}
       filterValues={{
-        type: search.type,
-        category: search.category,
-        region: search.region,
-        ship: search.ship,
-        buyable: search.buyable,
-        sellable: search.sellable,
-        rarity: search.rarity,
-        craft: search.craft,
-        effects: search.effects,
+        type: draftSearch.type,
+        category: draftSearch.category,
+        region: draftSearch.region,
+        ship: draftSearch.ship,
+        buyable: draftSearch.buyable,
+        sellable: draftSearch.sellable,
+        rarity: draftSearch.rarity,
+        craft: draftSearch.craft,
+        effects: draftSearch.effects,
       }}
       onFilterValuesChange={(values) => patchSearch(values as Partial<ItemsSearchParams>)}
+      resultResetKeys={[
+        catalog.results.length,
+        search.q ?? '',
+        search.sort ?? 'name-asc',
+        search.type ?? '',
+        search.category ?? '',
+        search.region ?? '',
+        search.ship ?? '',
+        search.buyable ?? '',
+        search.sellable ?? '',
+        search.rarity ?? '',
+        search.craft ?? '',
+        search.effects ?? '',
+      ]}
     />
   );
 }

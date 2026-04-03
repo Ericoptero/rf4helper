@@ -88,12 +88,17 @@ function CharactersCatalog({
   filterOptions,
   searchTerm,
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  onCancelPendingSearch,
   viewMode,
   onViewModeChange,
   sortValue,
   onSortValueChange,
   filterValues,
   onFilterValuesChange,
+  isRoutePending,
+  resultResetKeys,
 }: {
   characters: Character[];
   totalCount?: number;
@@ -105,12 +110,17 @@ function CharactersCatalog({
   };
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  onCancelPendingSearch?: () => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+  isRoutePending?: boolean;
+  resultResetKeys?: readonly unknown[];
 }) {
   const { openRoot } = useDetailDrawer();
   const categories = Array.from(new Set(characters.map((character) => character.category))).sort();
@@ -178,12 +188,17 @@ function CharactersCatalog({
         title="Characters"
         searchTerm={searchTerm}
         onSearchTermChange={onSearchTermChange}
+        onCommitSearch={onCommitSearch}
+        onClearSearch={onClearSearch}
+        onCancelPendingSearch={onCancelPendingSearch}
         viewMode={viewMode}
         onViewModeChange={onViewModeChange}
         sortValue={sortValue}
         onSortValueChange={onSortValueChange}
         filterValues={filterValues}
         onFilterValuesChange={onFilterValuesChange}
+        isRoutePending={isRoutePending}
+        resultResetKeys={resultResetKeys}
         tableColumns={tableColumns}
         getItemKey={(character) => character.id}
         renderCard={(character, onClick) => <CharacterCard character={character} onClick={onClick} />}
@@ -204,12 +219,17 @@ export function CharactersList({
   onDetailReferenceChange,
   searchTerm,
   onSearchTermChange,
+  onCommitSearch,
+  onClearSearch,
+  onCancelPendingSearch,
   viewMode,
   onViewModeChange,
   sortValue,
   onSortValueChange,
   filterValues,
   onFilterValuesChange,
+  isRoutePending,
+  resultResetKeys,
 }: {
   characters: Character[];
   totalCount?: number;
@@ -223,12 +243,17 @@ export function CharactersList({
   onDetailReferenceChange?: (reference: DetailEntityReference | null) => void;
   searchTerm?: string;
   onSearchTermChange?: (value: string) => void;
+  onCommitSearch?: () => void;
+  onClearSearch?: () => void;
+  onCancelPendingSearch?: () => void;
   viewMode?: 'cards' | 'table';
   onViewModeChange?: (value: 'cards' | 'table') => void;
   sortValue?: string;
   onSortValueChange?: (value: string) => void;
   filterValues?: Record<string, CatalogFilterValue>;
   onFilterValuesChange?: (values: Record<string, CatalogFilterValue>) => void;
+  isRoutePending?: boolean;
+  resultResetKeys?: readonly unknown[];
 }) {
   const [internalDetailReference, setInternalDetailReference] = React.useState<DetailEntityReference | null>(null);
   const [internalSearchTerm, setInternalSearchTerm] = React.useState('');
@@ -247,12 +272,17 @@ export function CharactersList({
         filterOptions={filterOptions}
         searchTerm={searchTerm ?? internalSearchTerm}
         onSearchTermChange={onSearchTermChange ?? setInternalSearchTerm}
+        onCommitSearch={onCommitSearch}
+        onClearSearch={onClearSearch}
+        onCancelPendingSearch={onCancelPendingSearch}
         viewMode={viewMode ?? internalViewMode}
         onViewModeChange={onViewModeChange ?? setInternalViewMode}
         sortValue={sortValue ?? internalSortValue}
         onSortValueChange={onSortValueChange ?? setInternalSortValue}
         filterValues={filterValues ?? internalFilterValues}
         onFilterValuesChange={onFilterValuesChange ?? setInternalFilterValues}
+        isRoutePending={isRoutePending}
+        resultResetKeys={resultResetKeys}
       />
     </DetailDrawerProvider>
   );

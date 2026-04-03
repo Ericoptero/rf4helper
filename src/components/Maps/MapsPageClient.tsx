@@ -13,11 +13,19 @@ export function MapsPageClient({
   catalog: MapsCatalogData;
   search: MapsSearchParams;
 }) {
-  const { draftSearchTerm, setDraftSearchTerm, patchSearch } = useCatalogRouteState({
+  const {
+    draftSearch,
+    draftSearchTerm,
+    setDraftSearchTerm,
+    isRoutePending,
+    commitSearchNow,
+    cancelPendingSearch,
+    patchSearch,
+  } = useCatalogRouteState({
     search,
     searchTermKey: 'q',
   });
-  const detailReference = readDetailSearchParams(search);
+  const detailReference = readDetailSearchParams(draftSearch);
 
   return (
     <MapsList
@@ -25,19 +33,35 @@ export function MapsPageClient({
       totalCount={catalog.totalCount}
       searchTerm={draftSearchTerm}
       onSearchTermChange={setDraftSearchTerm}
-      viewMode={normalizeCatalogViewMode(search.view)}
+      onCommitSearch={commitSearchNow}
+      onClearSearch={() => {
+        setDraftSearchTerm('');
+        commitSearchNow();
+      }}
+      onCancelPendingSearch={cancelPendingSearch}
+      isRoutePending={isRoutePending}
+      viewMode={normalizeCatalogViewMode(draftSearch.view)}
       onViewModeChange={(value: CatalogViewMode) => patchSearch({ view: value === 'cards' ? undefined : value })}
-      sortValue={search.sort ?? 'name-asc'}
+      sortValue={draftSearch.sort ?? 'name-asc'}
       onSortValueChange={(value) => patchSearch({ sort: value })}
       detailReference={detailReference}
       onDetailReferenceChange={(reference) => patchSearch({ ...writeDetailSearchParams(reference), detail: undefined })}
       filterValues={{
-        hasFishing: search.hasFishing,
-        hasNotes: search.hasNotes,
-        hasRecipe: search.hasRecipe,
-        chestBand: search.chestBand,
+        hasFishing: draftSearch.hasFishing,
+        hasNotes: draftSearch.hasNotes,
+        hasRecipe: draftSearch.hasRecipe,
+        chestBand: draftSearch.chestBand,
       }}
       onFilterValuesChange={(values) => patchSearch(values as Partial<MapsSearchParams>)}
+      resultResetKeys={[
+        catalog.results.length,
+        search.q ?? '',
+        search.sort ?? 'name-asc',
+        search.hasFishing ?? '',
+        search.hasNotes ?? '',
+        search.hasRecipe ?? '',
+        search.chestBand ?? '',
+      ]}
     />
   );
 }
