@@ -16,6 +16,10 @@ import { getSemanticBadgeClass } from '@/components/details/semanticBadges';
 import { ItemRecipeTooltipContent } from '@/components/details/content/shared';
 
 import { formatNumber } from '@/lib/formatters';
+import {
+  buildItemRecipeTooltipLookup,
+  type ItemRecipeTooltipLookup,
+} from '@/lib/itemRecipeTooltip';
 import { getDisplayStats } from '@/lib/itemPresentation';
 import type { Item } from '@/lib/schemas';
 import type { CatalogOption } from '@/server/catalogQueries';
@@ -133,6 +137,7 @@ function ItemCard({ item, onClick }: { item: Item; onClick: () => void }) {
 
 function ItemsCatalog({
   items,
+  tooltipItems,
   totalCount,
   filterOptions,
   searchTerm,
@@ -150,6 +155,7 @@ function ItemsCatalog({
   resultResetKeys,
 }: {
   items: Item[];
+  tooltipItems?: ItemRecipeTooltipLookup;
   totalCount?: number;
   filterOptions?: {
     type: CatalogOption[];
@@ -174,9 +180,9 @@ function ItemsCatalog({
   const { openRoot } = useDetailDrawer();
   const derivedTypes = Array.from(new Set(items.map((item) => item.type))).sort();
   const derivedCategories = Array.from(new Set(items.map((item) => item.category).filter(Boolean) as string[])).sort();
-  const itemsById = React.useMemo(
-    () => Object.fromEntries(items.map((item) => [item.id, item])),
-    [items],
+  const tooltipItemLookup = React.useMemo(
+    () => tooltipItems ?? buildItemRecipeTooltipLookup(items),
+    [items, tooltipItems],
   );
 
   const filters: ServerCatalogFilterDefinition[] = [
@@ -233,7 +239,7 @@ function ItemsCatalog({
       key: 'name',
       header: 'Name',
       cell: renderItemIdentityCell,
-      tooltipContent: (item) => <ItemRecipeTooltipContent itemId={item.id} items={itemsById} />,
+      tooltipContent: (item) => <ItemRecipeTooltipContent itemId={item.id} items={tooltipItemLookup} />,
       sortAscValue: DEFAULT_ITEMS_SORT,
       sortDescValue: 'name-desc',
       defaultDirection: 'asc',
@@ -366,6 +372,7 @@ function ItemsCatalog({
 
 export function ItemsList({
   items,
+  tooltipItems,
   totalCount,
   filterOptions,
   detailReference,
@@ -385,6 +392,7 @@ export function ItemsList({
   resultResetKeys,
 }: {
   items: Item[];
+  tooltipItems?: ItemRecipeTooltipLookup;
   totalCount?: number;
   filterOptions?: {
     type: CatalogOption[];
@@ -421,6 +429,7 @@ export function ItemsList({
     >
       <ItemsCatalog
         items={items}
+        tooltipItems={tooltipItems}
         totalCount={totalCount}
         filterOptions={filterOptions}
         searchTerm={searchTerm ?? internalSearchTerm}

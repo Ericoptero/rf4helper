@@ -3,6 +3,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
+import { buildItemRecipeTooltipLookup } from '@/lib/itemRecipeTooltip';
 import type { Item } from '@/lib/schemas';
 import { ItemsList } from './ItemsList';
 
@@ -252,6 +253,24 @@ describe('ItemsList Component', () => {
     expect(within(tooltip).getByText(/Forging · Lv\. 1/i)).toBeInTheDocument();
     expect(within(tooltip).getByTestId('recipe-preview-grid')).toBeInTheDocument();
     expect(within(tooltip).getByText('Minerals')).toBeInTheDocument();
+  });
+
+  it('uses the global tooltip lookup so filtered table rows still show ingredient images', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <ItemsList
+        items={[mockItems['item-bread']]}
+        tooltipItems={buildItemRecipeTooltipLookup(mockItems)}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Table' }));
+    await user.hover(within(screen.getByRole('table')).getByText('Bread'));
+
+    const tooltip = await screen.findByRole('tooltip');
+    expect(within(tooltip).getByText('Bread')).toBeInTheDocument();
+    expect(within(tooltip).getByRole('img', { name: 'Flour image' })).toBeInTheDocument();
   });
 
   it('shows the crafting level column in table view and lets the header reorder results', async () => {

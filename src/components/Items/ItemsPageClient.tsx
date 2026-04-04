@@ -4,14 +4,17 @@ import { DEFAULT_ITEMS_SORT, ItemsList, ITEMS_TABLE_ONLY_SORT_VALUES } from '@/c
 import { readDetailSearchParams, writeDetailSearchParams } from '@/components/details/detailTypes';
 import { useCatalogRouteState } from '@/hooks/useCatalogRouteState';
 import { normalizeCatalogViewMode, type CatalogViewMode } from '@/lib/catalogPresentation';
+import type { ItemRecipeTooltipLookup } from '@/lib/itemRecipeTooltip';
 import type { ItemsCatalogData, ItemsSearchParams } from '@/server/catalogQueries';
 
 export function ItemsPageClient({
   catalog,
   search,
+  tooltipItems,
 }: {
   catalog: ItemsCatalogData;
   search: ItemsSearchParams;
+  tooltipItems?: ItemRecipeTooltipLookup;
 }) {
   const {
     draftSearch,
@@ -42,6 +45,7 @@ export function ItemsPageClient({
   return (
     <ItemsList
       items={catalog.results}
+      tooltipItems={tooltipItems}
       totalCount={catalog.totalCount}
       filterOptions={catalog.filterOptions}
       searchTerm={draftSearchTerm}

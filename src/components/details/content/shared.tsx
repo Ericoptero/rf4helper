@@ -5,8 +5,9 @@ import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { resolveCharacterImage } from '@/lib/characterImages';
 import { capitalize, formatName, formatNumber } from '@/lib/formatters';
+import type { ItemRecipeTooltipItem } from '@/lib/itemRecipeTooltip';
 import type { DisplayEffect } from '@/lib/itemPresentation';
-import type { Character, Item } from '@/lib/schemas';
+import type { Character } from '@/lib/schemas';
 import { cn } from '@/lib/utils';
 
 export const itemStatLabels: Record<string, string> = {
@@ -126,15 +127,15 @@ export function formatCombatLabel(value: string) {
     .join(' ');
 }
 
-function getPrimaryRecipe(item: Item | undefined) {
+function getPrimaryRecipe(item: ItemRecipeTooltipItem | undefined) {
   return item?.craft?.[0] ?? item?.craftedFrom?.[0] ?? null;
 }
 
-function getRecipeCount(item: Item | undefined) {
+function getRecipeCount(item: ItemRecipeTooltipItem | undefined) {
   return (item?.craft?.length ?? 0) + (item?.craftedFrom?.length ?? 0);
 }
 
-export function getLinkedItemDisplay(items: Record<string, Item> | undefined, itemId: string) {
+export function getLinkedItemDisplay(items: Record<string, ItemRecipeTooltipItem> | undefined, itemId: string) {
   const linkedItem = items?.[itemId];
 
   return {
@@ -145,7 +146,7 @@ export function getLinkedItemDisplay(items: Record<string, Item> | undefined, it
 
 type RecipeGridProps = {
   ingredients: string[];
-  items?: Record<string, Item>;
+  items?: Record<string, ItemRecipeTooltipItem>;
   compact?: boolean;
   onIngredientClick?: (itemId: string) => void;
   showIngredientTooltip?: boolean;
@@ -262,7 +263,7 @@ export function CraftedFromRecipeGrid({
   onIngredientClick,
 }: {
   ingredients: string[];
-  items?: Record<string, Item>;
+  items?: Record<string, ItemRecipeTooltipItem>;
   onIngredientClick?: (itemId: string) => void;
 }) {
   return (
@@ -280,7 +281,7 @@ export function ItemRecipeTooltipContent({
   items,
 }: {
   itemId: string;
-  items?: Record<string, Item>;
+  items?: Record<string, ItemRecipeTooltipItem>;
 }) {
   const item = items?.[itemId];
   const recipe = getPrimaryRecipe(item);
