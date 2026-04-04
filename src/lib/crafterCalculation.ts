@@ -467,7 +467,9 @@ export function calculateCrafterSlotResult(
       repeatCounts.set(material.itemId, repeatCount + 1);
     }
 
-    const scale = invertSign * repeatFactor * (level / 10);
+    const scale = source === 'upgrade'
+      ? invertSign * repeatFactor
+      : invertSign * (level / 10);
     const contribution = payloadToContribution(
       material.itemId,
       itemName,
@@ -488,7 +490,7 @@ export function calculateCrafterSlotResult(
         level,
         rarity,
         payload,
-        level / 10,
+        repeatFactor,
       );
     }
   };

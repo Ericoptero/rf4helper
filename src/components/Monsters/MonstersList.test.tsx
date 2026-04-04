@@ -113,7 +113,8 @@ describe('MonstersList Component', () => {
     render(<MonstersList monsters={mockMonsterGroups} />);
 
     await user.click(screen.getByText('Octopirate'));
-    const dialog = await screen.findByRole('dialog', { name: 'Octopirate' });
+    const dialog = await screen.findByRole('dialog');
+    await within(dialog).findByText('A shelled octopus found along the seashore in the summer. Spurts ink.');
 
     expect(within(dialog).getAllByText('Octopirate').length).toBeGreaterThan(0);
     expect(dialog).toHaveTextContent('Ammonite');
@@ -153,7 +154,8 @@ describe('MonstersList Component', () => {
     expect(deathOrcCard).not.toHaveTextContent(/tameable/i);
 
     await user.click(screen.getByText('Death Orc'));
-    const dialog = await screen.findByRole('dialog', { name: 'Death Orc' });
+    const dialog = await screen.findByRole('dialog');
+    await within(dialog).findByText('A dangerous foe that should not be marked tameable.');
 
     expect(screen.getAllByText('Death Orc').length).toBeGreaterThan(0);
     expect(dialog).toHaveTextContent('Not Tameable');
@@ -165,7 +167,8 @@ describe('MonstersList Component', () => {
     render(<MonstersList monsters={mockMonsterGroups} />);
 
     await user.click(screen.getByText('Octopirate'));
-    const dialog = await screen.findByRole('dialog', { name: 'Octopirate' });
+    const dialog = await screen.findByRole('dialog');
+    await within(dialog).findByText('A shelled octopus found along the seashore in the summer. Spurts ink.');
 
     expect(dialog).toHaveTextContent('Physical 0%');
     expect(screen.queryByText('HpDrain')).not.toBeInTheDocument();
@@ -211,7 +214,8 @@ describe('MonstersList Component', () => {
       />,
     );
 
-    const dialog = await screen.findByRole('dialog', { name: 'Octopirate' });
+    const dialog = await screen.findByRole('dialog');
+    await within(dialog).findByText('A shelled octopus found along the seashore in the summer. Spurts ink.');
 
     expect(dialog).toHaveTextContent('A shelled octopus found along the seashore in the summer. Spurts ink.');
     expect(dialog).toHaveTextContent('Drops');
@@ -226,7 +230,8 @@ describe('MonstersList Component', () => {
     await screen.findByText('Octopirate');
     await user.click(screen.getByText('Octopirate'));
 
-    const dialog = await screen.findByRole('dialog', { name: 'Octopirate' });
+    const dialog = await screen.findByRole('dialog');
+    await within(dialog).findByText('A shelled octopus found along the seashore in the summer. Spurts ink.');
     const heroImage = within(dialog).getByAltText('Octopirate');
     const hero = heroImage.closest('div')?.parentElement;
     const heroTitle = within(dialog).getAllByText('Octopirate', { selector: 'h2' })[1];

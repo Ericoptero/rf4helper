@@ -24,6 +24,8 @@ const crafterConfig = CrafterConfigSchema.parse(
   JSON.parse(readFileSync(path.join(dataDir, 'crafter.json'), 'utf8')),
 ) as CrafterConfig;
 const crafterData = buildCrafterData(items, crafterConfig);
+const serializedDancingDicerBuild =
+  'N4IgbiBcBMA0IHcCmBDADgewHZVCqIAlgC5IC2AtAMYA2KAnmRgE5IjzO4gAMXhBJchTR1ihLAFcy7EDSjQAvvACMfAaUrMJWJNWb0AzsRRz4cyAGYlIaGshENFACaEUTLE5nmA7NYt2HIRc3bE8zKAAWawiAwUpg9zDZSOsAVljHJxQsKnEAc2dCKiROBWsACy5eSFB+eziKACNCAqp9IxMQa1UaonUhZtb24zlrW166wMpBvUMRrusJKoyhADNCVmdmFDzsChQDSvDIZW6VymVuClWMGicKIyQkUfhx2v7pltmO02TIVL852cGAkjRoukezy68BiEw+FDIcxKhBBBmEGAQThKXnkaSBVHKqDQwmYGDQz3BnGOingADYgXkaIRHlh8k06FicZZrN4gYQwCx6BRiBIDABrLk0kAADiBBioLDQKKwwnExSpf0UZQUQA';
 
 function selection(itemId: string, level = 10) {
   return { itemId, level };
@@ -210,8 +212,8 @@ describe('crafter engine parity', () => {
     build.armor.appearanceId = 'item-four-dragons-vest';
     build.armor.recipe[0] = selection('item-four-dragons-vest');
     build.armor.upgrades[0] = selection('item-object-x');
-    build.armor.upgrades[1] = selection('item-firewyrm-scale');
-    build.armor.upgrades[2] = selection('item-firewyrm-scale');
+    build.armor.upgrades[1] = selection('item-firewyrm-scale', 1);
+    build.armor.upgrades[2] = selection('item-firewyrm-scale', 1);
 
     const result = calculateCrafterBuild(build, items, crafterData);
     const upgrades = result.slotResults.armor.materialContributions.filter((entry) => entry.source === 'upgrade');
@@ -226,9 +228,9 @@ describe('crafter engine parity', () => {
     const build = createDefaultCrafterBuild(crafterData);
     build.weapon.appearanceId = 'item-broadsword';
     build.weapon.recipe[0] = selection('item-broadsword');
-    build.weapon.upgrades[0] = selection('item-firewyrm-scale');
-    build.weapon.upgrades[1] = selection('item-double-steel');
-    build.weapon.upgrades[2] = selection('item-10-fold-steel');
+    build.weapon.upgrades[0] = selection('item-firewyrm-scale', 1);
+    build.weapon.upgrades[1] = selection('item-double-steel', 1);
+    build.weapon.upgrades[2] = selection('item-10-fold-steel', 1);
 
     const result = calculateCrafterBuild(build, items, crafterData);
     const upgrades = result.slotResults.weapon.materialContributions.filter((entry) => entry.source === 'upgrade');
@@ -239,6 +241,38 @@ describe('crafter engine parity', () => {
     expect(upgrades[0]?.stats.int).toBeCloseTo(-10, 6);
     expect(upgrades[1]?.stats.int).toBeCloseTo(-20, 6);
     expect(upgrades[2]?.stats.int).toBeCloseTo(-80, 6);
+  });
+
+  it('keeps level 1 upgrade contributions at full strength across offensive stats and status attacks', () => {
+    const build = createDefaultCrafterBuild(crafterData);
+    build.weapon.appearanceId = 'item-broadsword';
+    build.weapon.recipe[0] = selection('item-broadsword');
+    build.weapon.upgrades[0] = selection('item-fire-dragon-ash', 1);
+    build.weapon.upgrades[1] = selection('item-water-dragon-ash', 1);
+    build.weapon.upgrades[2] = selection('item-icy-nose', 1);
+    build.weapon.upgrades[3] = selection('item-holy-spore', 1);
+    build.weapon.upgrades[4] = selection('item-throne-of-the-empire', 1);
+
+    const result = calculateCrafterBuild(build, items, crafterData);
+    const upgrades = result.slotResults.weapon.materialContributions.filter((entry) => entry.source === 'upgrade');
+
+    expect(upgrades[0]?.stats.atk).toBeCloseTo(80, 6);
+    expect(upgrades[0]?.stats.str).toBeCloseTo(10, 6);
+    expect(upgrades[1]?.stats.matk).toBeCloseTo(80, 6);
+    expect(upgrades[1]?.stats.int).toBeCloseTo(10, 6);
+    expect(upgrades[2]?.stats.atk).toBeCloseTo(128, 6);
+    expect(upgrades[2]?.stats.matk).toBeCloseTo(90, 6);
+    expect(upgrades[2]?.stats.int).toBeCloseTo(-5, 6);
+    expect(upgrades[2]?.stats.crit).toBeCloseTo(0.019775390625, 6);
+    expect(upgrades[2]?.stats.diz).toBeCloseTo(1, 6);
+    expect(upgrades[2]?.stats.stun).toBeCloseTo(0.0498046875, 6);
+    expect(upgrades[3]?.stats.matk).toBeCloseTo(10, 6);
+    expect(upgrades[3]?.statusAttacks.psn).toBeCloseTo(0.329833984375, 6);
+    expect(upgrades[3]?.statusAttacks.seal).toBeCloseTo(0.329833984375, 6);
+    expect(upgrades[3]?.statusAttacks.par).toBeCloseTo(0.329833984375, 6);
+    expect(upgrades[4]?.stats.knock).toBeCloseTo(0.2998046875, 6);
+    expect(result.equipmentEffectiveStats.atk).toBeCloseTo((result.equipmentStats.atk ?? 0) + (result.equipmentStats.str ?? 0), 6);
+    expect(result.equipmentEffectiveStats.matk).toBeCloseTo((result.equipmentStats.matk ?? 0) + (result.equipmentStats.int ?? 0), 6);
   });
 
   it('transfers only special effects for accessory and shoes inheritance, ignoring numeric payloads', () => {
@@ -314,6 +348,40 @@ describe('crafter engine parity', () => {
     expect(result.attackSummary.staffCharges?.lv2).toBe('Fire Spread Lv2');
     expect(result.attackSummary.staffCharges?.lv3).toBe('Fire Spread Lv3');
     expect(result.attackSummary.staffCharges?.maxCharge).toBe(1);
+  });
+
+  it('keeps bonusType metadata audit-only for weapon upgrades', () => {
+    const data = structuredClone(crafterData);
+    data.materials.weapon['item-gloves'] = {
+      ...(data.materials.weapon['item-gloves'] ?? {
+        itemName: 'Gloves',
+        stats: {},
+        resistances: {},
+        statusAttacks: {},
+        geometry: {},
+        rarity: 0,
+      }),
+      stats: {},
+      resistances: {},
+      statusAttacks: {},
+      geometry: {},
+      bonusType: 'Atk',
+      bonusType2: '99',
+    };
+
+    const build = createDefaultCrafterBuild(data);
+    build.weapon.appearanceId = 'item-broadsword';
+    build.weapon.recipe[0] = selection('item-broadsword');
+    build.weapon.upgrades[0] = selection('item-gloves', 1);
+
+    const result = calculateCrafterBuild(build, items, data);
+    const upgrade = result.slotResults.weapon.materialContributions.find((entry) => entry.source === 'upgrade');
+
+    expect(upgrade?.stats.atk ?? 0).toBe(0);
+    expect(upgrade?.stats.matk ?? 0).toBe(0);
+    expect(upgrade?.stats.def ?? 0).toBe(0);
+    expect(upgrade?.stats.mdef ?? 0).toBe(0);
+    expect(upgrade?.statusAttacks.psn ?? 0).toBe(0);
   });
 
   it('computes cooking healing, stats, resistances, status attacks, and final level from selected ingredients', () => {
@@ -692,6 +760,7 @@ describe('crafter engine parity', () => {
     const build = createDefaultCrafterBuild(crafterData);
     build.weapon.appearanceId = 'item-broadsword';
     build.weapon.recipe[0] = selection('item-claymore');
+    build.weapon.upgrades[0] = selection('item-fire-dragon-ash', 1);
 
     const withoutLightOre = calculateCrafterBuild(build, items, crafterData);
     expect(withoutLightOre.build.weapon.baseId).toBeUndefined();
@@ -699,9 +768,51 @@ describe('crafter engine parity', () => {
 
     build.weapon.recipe[1] = selection('item-light-ore');
     const withLightOre = calculateCrafterBuild(build, items, crafterData);
+    const withoutLightOreUpgrade = withoutLightOre.slotResults.weapon.materialContributions.find(
+      (entry) => entry.source === 'upgrade' && entry.itemId === 'item-fire-dragon-ash',
+    );
+    const withLightOreUpgrade = withLightOre.slotResults.weapon.materialContributions.find(
+      (entry) => entry.source === 'upgrade' && entry.itemId === 'item-fire-dragon-ash',
+    );
 
     expect(withLightOre.build.weapon.baseId).toBe('item-claymore');
     expect(withLightOre.slotResults.weapon.baseName).toBe('Claymore');
     expect(withLightOre.attackSummary.weaponClass).toBe('Long Sword');
+    expect(withLightOre.attackSummary.attackType).toBe('Long Sword');
+    expect(withLightOreUpgrade?.stats).toEqual(withoutLightOreUpgrade?.stats);
+  });
+
+  it('matches the serialized Dancing Dicer build from the game with full-strength upgrade contributions', () => {
+    const build = deserializeCrafterBuild(serializedDancingDicerBuild, crafterData);
+    const result = calculateCrafterBuild(build, items, crafterData);
+    const upgrades = result.slotResults.weapon.materialContributions.filter((entry) => entry.source === 'upgrade');
+
+    expect(result.slotResults.weapon.appearanceName).toBe('Claymore');
+    expect(result.slotResults.weapon.baseName).toBe('Dancing Dicer');
+    expect(result.slotResults.weapon.stats.atk).toBeCloseTo(2198, 6);
+    expect(upgrades[0]?.itemName).toBe('Fire Dragon Ash');
+    expect(upgrades[0]?.stats.atk).toBeCloseTo(80, 6);
+    expect(upgrades[0]?.stats.str).toBeCloseTo(10, 6);
+    expect(upgrades[1]?.itemName).toBe('10-Fold Steel');
+    expect(upgrades[1]?.stats.atk).toBeCloseTo(640, 6);
+    expect(upgrades[1]?.stats.str).toBeCloseTo(80, 6);
+    expect(upgrades[2]?.itemName).toBe('Big Crystal');
+    expect(upgrades[2]?.stats.atk).toBeCloseTo(40, 6);
+    expect(upgrades[2]?.stats.matk).toBeCloseTo(40, 6);
+    expect(upgrades[3]?.itemName).toBe('Double Steel');
+    expect(upgrades[3]?.stats.atk).toBeCloseTo(80, 6);
+    expect(upgrades[3]?.stats.matk).toBeCloseTo(80, 6);
+    expect(upgrades[4]?.itemName).toBe('Mysterious Powder');
+    expect(upgrades[4]?.stats.matk).toBeCloseTo(15, 6);
+    expect(upgrades[4]?.statusAttacks.ftg).toBeCloseTo(0.099853515625, 6);
+    expect(upgrades[4]?.statusAttacks.sick).toBeCloseTo(0.0498046875, 6);
+    expect(upgrades[5]?.itemName).toBe('Cheap Propeller');
+    expect(upgrades[5]?.stats.atk).toBeCloseTo(29, 6);
+    expect(upgrades[6]?.itemName).toBe('Glistening Blade');
+    expect(upgrades[6]?.stats.atk).toBeCloseTo(38, 6);
+    expect(upgrades[7]?.itemName).toBe('Ivory Tusk');
+    expect(upgrades[7]?.stats.atk).toBeCloseTo(16, 6);
+    expect(upgrades[8]?.itemName).toBe('Scorpion Pincer');
+    expect(upgrades[8]?.stats.atk).toBeCloseTo(30, 6);
   });
 });
